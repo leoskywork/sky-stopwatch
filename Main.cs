@@ -6,16 +6,18 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
     public partial class Main : Form
     {
-        private bool _TopMost = false;//false;
-        private DateTime _TimeAroundGameStart = DateTime.MinValue;
-        private bool _IsUpdating = false;
         public const string UITimeFormat = @"mm\:ss";
+
+        private bool _TopMost = true;//false;
+        private bool _IsUpdating = false;
+        private DateTime _TimeAroundGameStart = DateTime.MinValue;
 
         public Main()
         {
@@ -27,17 +29,17 @@ namespace SkyStopwatch
 
         private void InitStopwatch()
         {
-            this.labelTimerPrefix.Hide();
+            //this.labelTimerPrefix.Hide();
             this.labelTimer.Text = "unset";
 
-            this.timerMain.Interval = 500;
+            this.timerMain.Interval = 1000;
 
         }
 
         private void SyncTopMost()
         {
             this.TopMost = _TopMost;
-            this.buttonTopMost.Text = this._TopMost ? "Pin" : "Unpin";
+            this.buttonTopMost.Text = this._TopMost ? "P" : "-P";
         }
 
         private void buttonOCR_Click(object sender, EventArgs e)
@@ -47,33 +49,55 @@ namespace SkyStopwatch
                 _IsUpdating = false;
 
                 buttonOCR.Enabled = false;
-                labelTimer.Text = "shot...";
+                labelTimer.Text = "shot";
 
-                string screenShotPath = MainHelper.PrintScreenAsTempFile();
-                labelTimer.Text = "ocr...";
 
-                screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp\test-1.bmp";
-
-                string data = MainHelper.ReadImageAsText(screenShotPath);
-                DateTime time = MainHelper.FindTime(data);
-
-                if (time != DateTime.MinValue)
+                Task.Factory.StartNew(() =>
                 {
-                    TimeSpan passedTime = time - DateTime.Today;
-                    _TimeAroundGameStart = DateTime.Now.AddSeconds(passedTime.TotalSeconds * -1);
-                    _IsUpdating = true;
-                    StartUIStopwatch();
-                }
-                else
-                {
-                    labelTimer.Text = "xxx";
-                }
+                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot");
+                    string screenShotPath = MainHelper.PrintScreenAsTempFile();
+                    return screenShotPath;
 
-                System.Diagnostics.Debug.Write(data);
+                }).ContinueWith(t =>
+                {
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        labelTimer.Text = "ocr";
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} xxx");
+                    }));
+
+                    string screenShotPath = t.Result;
+                    screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp\test-1.bmp";
+                    string data = MainHelper.ReadImageAsText(screenShotPath);
+                    System.Diagnostics.Debug.Write(data);
+
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        labelTimer.Text = "read";
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} xxx");
+                    }));
+
+                    DateTime time = MainHelper.FindTime(data);
+
+                    this.BeginInvoke((Action)(() =>
+                    {
+                        if (time != DateTime.MinValue)
+                        {
+                            TimeSpan passedTime = time - DateTime.Today;
+                            _TimeAroundGameStart = DateTime.Now.AddSeconds(passedTime.TotalSeconds * -1);
+                            _IsUpdating = true;
+                            StartUIStopwatch();
+                        }
+                        else
+                        {
+                            labelTimer.Text = "min";
+                        }
+                    }));
+                });
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString()); 
+                MessageBox.Show(ex.ToString());
             }
             finally
             {
@@ -90,7 +114,7 @@ namespace SkyStopwatch
                 this.timerMain.Start();
             }
 
-            this.labelTimerPrefix.Show();
+            //this.labelTimerPrefix.Show();
             var passed = DateTime.Now - _TimeAroundGameStart;
             this.labelTimer.Text = passed.ToString(UITimeFormat);
         }
@@ -99,7 +123,6 @@ namespace SkyStopwatch
         {
             try
             {
-                //leotodo improve this
                 buttonTopMost.Enabled = false;
                 _TopMost = !_TopMost;
 
@@ -128,6 +151,13 @@ namespace SkyStopwatch
             {
                 MessageBox.Show(ex.ToString());
             }
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            _IsUpdating = false;
+            _TimeAroundGameStart = DateTime.MinValue;
+            this.labelTimer.Text = "--";
         }
     }
 }
