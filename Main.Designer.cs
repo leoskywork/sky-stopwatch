@@ -28,10 +28,12 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonTopMost = new System.Windows.Forms.Button();
             this.labelTimerPrefix = new System.Windows.Forms.Label();
             this.labelTimer = new System.Windows.Forms.Label();
+            this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // buttonOCR
@@ -74,6 +76,10 @@
             this.labelTimer.TabIndex = 3;
             this.labelTimer.Text = "39:48";
             // 
+            // timerMain
+            // 
+            this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -97,6 +103,7 @@
         private System.Windows.Forms.Button buttonTopMost;
         private System.Windows.Forms.Label labelTimerPrefix;
         private System.Windows.Forms.Label labelTimer;
+        private System.Windows.Forms.Timer timerMain;
     }
 }
 

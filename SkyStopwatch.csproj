@@ -95,39 +95,6 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
-    <None Include="tessdata\chi_sim.traineddata" />
-    <None Include="tessdata\configs\ambigs.train" />
-    <None Include="tessdata\configs\api_config" />
-    <None Include="tessdata\configs\bigram" />
-    <None Include="tessdata\configs\box.train" />
-    <None Include="tessdata\configs\box.train.stderr" />
-    <None Include="tessdata\configs\digits" />
-    <None Include="tessdata\configs\hocr" />
-    <None Include="tessdata\configs\inter" />
-    <None Include="tessdata\configs\kannada" />
-    <None Include="tessdata\configs\linebox" />
-    <None Include="tessdata\configs\logfile" />
-    <None Include="tessdata\configs\makebox" />
-    <None Include="tessdata\configs\quiet" />
-    <None Include="tessdata\configs\rebox" />
-    <None Include="tessdata\configs\strokewidth" />
-    <None Include="tessdata\configs\unlv" />
-    <None Include="tessdata\eng.cube.bigrams" />
-    <None Include="tessdata\eng.cube.fold" />
-    <None Include="tessdata\eng.cube.lm" />
-    <None Include="tessdata\eng.cube.lm_" />
-    <None Include="tessdata\eng.cube.nn" />
-    <None Include="tessdata\eng.cube.params" />
-    <None Include="tessdata\eng.cube.size" />
-    <None Include="tessdata\eng.cube.word-freq" />
-    <None Include="tessdata\eng.tesseract_cube.nn" />
-    <None Include="tessdata\eng.traineddata" />
-    <None Include="tessdata\tessconfigs\batch" />
-    <None Include="tessdata\tessconfigs\batch.nochop" />
-    <None Include="tessdata\tessconfigs\matdemo" />
-    <None Include="tessdata\tessconfigs\msdemo" />
-    <None Include="tessdata\tessconfigs\nobatch" />
-    <None Include="tessdata\tessconfigs\segdemo" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

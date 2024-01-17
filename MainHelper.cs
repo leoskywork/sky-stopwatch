@@ -3,7 +3,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.IO;
 using System.Reflection;
-
+using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace SkyStopwatch
 {
@@ -57,10 +58,12 @@ namespace SkyStopwatch
         }
 
 
-        //调用tesseract实现OCR识别
         public static string ReadImageAsText(string imgPath)
         {
-            using (var engine = new Tesseract.TesseractEngine("tessdata", "chi_sim", Tesseract.EngineMode.Default))
+            const string language = "eng"; //chi_sim;
+            const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
+
+            using (var engine = new Tesseract.TesseractEngine(tessdataFolder, language, Tesseract.EngineMode.Default))
             {
                 using (var img = Tesseract.Pix.LoadFromFile(imgPath))
                 {
@@ -71,6 +74,44 @@ namespace SkyStopwatch
                 }
             }
 
+        }
+
+        public static DateTime FindTime(string data)
+        {
+            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            //hh:mm:ss
+            string regexPattern = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
+
+            foreach (string line in lines)
+            {
+                if(line.IndexOf(':') > 0)
+                {
+                    var timePart = line.Substring(line.IndexOf(":") + 1).Trim();
+
+                    if (Regex.IsMatch(timePart, regexPattern))
+                    {
+                        string timePartAdjust = timePart.Replace("00", "12");
+
+                        DateTime textTime = DateTime.ParseExact(timePartAdjust, "hh:mm:ss", CultureInfo.InvariantCulture);
+
+                        return textTime.AddSeconds(30);
+                    }
+
+                }
+
+
+                //"mﬁmra : 00:28:27"
+                //{
+                //    MatchCollection parts = Regex.Matches(line, regexPattern);
+
+                //    if (parts.Count >= 1)
+                //    {
+                //        string timePart = parts[parts.Count - 1].Value;
+                //    }
+                //}
+            }
+
+            return DateTime.MinValue;
         }
 
     }
