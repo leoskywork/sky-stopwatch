@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace SkyStopwatch
 {
-    class MainHelper
+    class MainOCR
     {
         public static void PrintScreen(string path)
         {
@@ -82,19 +82,31 @@ namespace SkyStopwatch
             //hh:mm:ss
             string regexPattern = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
 
+            string[] zeroAlikeArray = new [] {"o", "O" };
+
             foreach (string line in lines)
             {
                 if(line.IndexOf(':') > 0)
                 {
-                    var timePart = line.Substring(line.IndexOf(":") + 1).Trim();
+                    string timePart = line.Substring(line.IndexOf(":") + 1).Trim();
+                    string timePartAdjust = timePart;
 
-                    if (Regex.IsMatch(timePart, regexPattern))
+                    foreach (string item in zeroAlikeArray)
                     {
-                        string timePartAdjust = timePart.Replace("00", "12");
+                        timePartAdjust = timePartAdjust.Replace(item, "0");
+                    }
 
+                    if (Regex.IsMatch(timePartAdjust, regexPattern))
+                    {
+                        System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        System.Diagnostics.Debug.WriteLine(line);
+                        System.Diagnostics.Debug.WriteLine(timePart);
+                        System.Diagnostics.Debug.WriteLine(timePartAdjust);
+
+                        timePartAdjust = timePartAdjust.Replace("00", "12");
                         DateTime textTime = DateTime.ParseExact(timePartAdjust, "hh:mm:ss", CultureInfo.InvariantCulture);
 
-                        return textTime.AddSeconds(30);
+                        return textTime.AddSeconds(15);
                     }
 
                 }

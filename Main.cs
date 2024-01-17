@@ -32,7 +32,7 @@ namespace SkyStopwatch
             //this.labelTimerPrefix.Hide();
             this.labelTimer.Text = "unset";
 
-            this.timerMain.Interval = 1000;
+            this.timerMain.Interval = 900;
 
         }
 
@@ -55,7 +55,7 @@ namespace SkyStopwatch
                 Task.Factory.StartNew(() =>
                 {
                     System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot");
-                    string screenShotPath = MainHelper.PrintScreenAsTempFile();
+                    string screenShotPath = MainOCR.PrintScreenAsTempFile();
                     return screenShotPath;
 
                 }).ContinueWith(t =>
@@ -67,9 +67,9 @@ namespace SkyStopwatch
                     }));
 
                     string screenShotPath = t.Result;
-                    screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp\test-1.bmp";
-                    string data = MainHelper.ReadImageAsText(screenShotPath);
-                    System.Diagnostics.Debug.Write(data);
+                    //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp\test-1.bmp";
+                    string data = MainOCR.ReadImageAsText(screenShotPath);
+                    //System.Diagnostics.Debug.Write(data);
 
                     this.BeginInvoke((Action)(() =>
                     {
@@ -77,7 +77,7 @@ namespace SkyStopwatch
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} xxx");
                     }));
 
-                    DateTime time = MainHelper.FindTime(data);
+                    DateTime time = MainOCR.FindTime(data);
 
                     this.BeginInvoke((Action)(() =>
                     {
@@ -90,7 +90,7 @@ namespace SkyStopwatch
                         }
                         else
                         {
-                            labelTimer.Text = "min";
+                            labelTimer.Text = "none";
                         }
                     }));
                 });

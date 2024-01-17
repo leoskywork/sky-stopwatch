@@ -71,7 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainHelper.cs" />
+    <Compile Include="MainOCR.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>

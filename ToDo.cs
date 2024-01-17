@@ -11,6 +11,8 @@ namespace SkyStopwatch
 
     /*
      
+    ## todo
+
      # auto run ocr - so no need to manual click button
 
 
@@ -21,10 +23,11 @@ namespace SkyStopwatch
 
      # read img(sreen shot) from memory instead of disk
 
-     
+     # remember last close location
      
 
-     # fixed issues
+     ## fixed issues
+
         # tesseract not working
             -- reference failed -> update .net framework to 4.7 (was 4.0), then reinstall tesseract, tesseract-OCR from nuget
             -- tessact init error -> init args error, correct them, point to the right tessdata
