@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonTopMost = new System.Windows.Forms.Button();
             this.labelTimer = new System.Windows.Forms.Label();
@@ -98,6 +99,7 @@
             this.Controls.Add(this.buttonTopMost);
             this.Controls.Add(this.buttonOCR);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.Name = "Main";
