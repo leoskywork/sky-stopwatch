@@ -65,10 +65,8 @@ namespace SkyStopwatch
             try
             {
                 _IsUpdatingPassedTime = false;
-
                 buttonOCR.Enabled = false;
                 labelTimer.Text = "shot";
-
 
                 Task.Factory.StartNew(() =>
                 {

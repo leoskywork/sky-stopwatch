@@ -52,7 +52,15 @@ namespace SkyStopwatch
 
             if (Directory.GetFiles(subFolder).Length > 100)
             {
-                Directory.Delete(subFolder, true);
+                try
+                {
+                    Directory.Delete(subFolder, true);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                }
+
                 Directory.CreateDirectory(subFolder);
             }
 
