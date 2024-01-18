@@ -10,21 +10,21 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class TestBox : Form
+    public partial class ToolBox : Form
     {
-        public TestBox()
+        public ToolBox()
         {
             InitializeComponent();
         }
 
-        public TestBox(Bitmap image, string message) : this()
+        public ToolBox(Bitmap image, string message) : this()
         {
 
             this.pictureBoxOne.Image = image;
             this.labelMessage.Text = message;
         }
 
-        public TestBox(string imagePath, string message) : this()
+        public ToolBox(string imagePath, string message) : this()
         {
             var image = new Bitmap(imagePath);
             this.pictureBoxOne.Image = image;

@@ -80,11 +80,11 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestBox.cs">
+    <Compile Include="ToolBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TestBox.Designer.cs">
-      <DependentUpon>TestBox.cs</DependentUpon>
+    <Compile Include="ToolBox.Designer.cs">
+      <DependentUpon>ToolBox.cs</DependentUpon>
     </Compile>
     <Compile Include="ToDo.cs" />
     <EmbeddedResource Include="Main.resx">
@@ -100,8 +100,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="TestBox.resx">
-      <DependentUpon>TestBox.cs</DependentUpon>
+    <EmbeddedResource Include="ToolBox.resx">
+      <DependentUpon>ToolBox.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />

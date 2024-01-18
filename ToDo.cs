@@ -21,6 +21,8 @@ namespace SkyStopwatch
 
     ## todo
 
+    ### new game start - no timestamp
+
     [done-half] ### auto run ocr - so no need to manual click button every time into a new game
         - can not go full auto, to complicated
 

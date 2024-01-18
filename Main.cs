@@ -152,21 +152,20 @@ namespace SkyStopwatch
                 SyncTopMost();
 
 
-
                 //string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-1.bmp";
                 string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
 
 
                 // test part of the full screen - fixed pic
-                {
-                    Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                    int x = screenRect.Width * 25 / 100;
-                    int y = screenRect.Height * 60 / 100;
+                //{
+                //    Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+                //    int x = screenRect.Width * 25 / 100;
+                //    int y = screenRect.Height * 60 / 100;
 
-                    Bitmap bitPic = new Bitmap(screenShotPath);
-                    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 600, 300), bitPic.PixelFormat);
-                    (new TestBox(cloneBitmap, "fixed pic")).Show();
-                }
+                //    Bitmap bitPic = new Bitmap(screenShotPath);
+                //    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 600, 300), bitPic.PixelFormat);
+                //    (new TestBox(cloneBitmap, "fixed pic")).Show();
+                //}
 
 
                 // curren screen shot
@@ -181,7 +180,7 @@ namespace SkyStopwatch
                     gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
                     Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 400, 150), bitPic.PixelFormat);
-                    (new TestBox(cloneBitmap, "current screen")).Show();
+                    (new ToolBox(cloneBitmap, "current screen")).Show();
 
                     //(new TestBox(bitPic)).Show();
                 }

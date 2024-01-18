@@ -1,6 +1,6 @@
 ﻿namespace SkyStopwatch
 {
-    partial class TestBox
+    partial class ToolBox
     {
         /// <summary>
         /// Required designer variable.
