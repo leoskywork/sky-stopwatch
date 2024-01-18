@@ -97,7 +97,7 @@ namespace SkyStopwatch
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} xxx");
                     }));
 
-                    DateTime time = MainOCR.FindTime(data, 10);
+                    DateTime time = MainOCR.FindTime(data, MainOCR.ManualOCRDelaySeconds);
 
                     this.BeginInvoke((Action)(() =>
                     {
@@ -180,7 +180,8 @@ namespace SkyStopwatch
                     {
                         _IsUpdatingPassedTime = true;
                         this.buttonOCR.Enabled = false;
-                        StartUIStopwatch(DateTime.Today.AddSeconds(10));
+                        DateTime time = DateTime.Today.AddSeconds(MainOCR.NewGameDelaySeconds);
+                        StartUIStopwatch(time);
 
                         if (!this.timerAutoRefresh.Enabled)
                         {
@@ -265,19 +266,19 @@ namespace SkyStopwatch
                     System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
 
                     byte[] screenShotBytes = MainOCR.PrintScreenAsBytes(true);
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
+                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
 
                     if(_AutoOCREngine == null)
                     {
                         _AutoOCREngine = MainOCR.GetDefaultOCREngine();
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
                     }
 
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
+                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
-                    DateTime time = MainOCR.FindTime(data, 2);
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
+                    DateTime time = MainOCR.FindTime(data, MainOCR.AutoOCRDelaySeconds);
+                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
                     return time;
 

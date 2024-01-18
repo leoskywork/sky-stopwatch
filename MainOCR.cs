@@ -14,7 +14,12 @@ namespace SkyStopwatch
         public const int XPercent = 30;
         public const int YPercent = 65;
         public const int BlockWidth = 400;
-        public const int BlockHeigh = 160;
+        public const int BlockHeigh = 150;
+
+        public const int ManualOCRDelaySeconds = 10;
+        public const int AutoOCRDelaySeconds = 2;
+        public const int NewGameDelaySeconds = 10;
+
 
         public static void PrintScreenAsFile(string path)
         {
