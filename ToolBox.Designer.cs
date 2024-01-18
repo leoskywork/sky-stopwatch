@@ -34,6 +34,7 @@
             this.labelMessage = new System.Windows.Forms.Label();
             this.buttonNewGame = new System.Windows.Forms.Button();
             this.timerAutoClose = new System.Windows.Forms.Timer(this.components);
+            this.buttonTopMost = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.SuspendLayout();
             // 
@@ -78,17 +79,29 @@
             // 
             this.timerAutoClose.Tick += new System.EventHandler(this.timerAutoClose_Tick);
             // 
+            // buttonTopMost
+            // 
+            this.buttonTopMost.Location = new System.Drawing.Point(733, 142);
+            this.buttonTopMost.Name = "buttonTopMost";
+            this.buttonTopMost.Size = new System.Drawing.Size(120, 30);
+            this.buttonTopMost.TabIndex = 4;
+            this.buttonTopMost.Text = "Pin On/Off";
+            this.buttonTopMost.UseVisualStyleBackColor = true;
+            this.buttonTopMost.Click += new System.EventHandler(this.buttonTopMost_Click);
+            // 
             // ToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(918, 454);
+            this.Controls.Add(this.buttonTopMost);
             this.Controls.Add(this.buttonNewGame);
             this.Controls.Add(this.labelMessage);
             this.Controls.Add(this.labelSize);
             this.Controls.Add(this.pictureBoxOne);
             this.Name = "ToolBox";
             this.Text = "TestBox - auto close in  60 sec";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -102,5 +115,6 @@
         private System.Windows.Forms.Label labelMessage;
         private System.Windows.Forms.Button buttonNewGame;
         private System.Windows.Forms.Timer timerAutoClose;
+        private System.Windows.Forms.Button buttonTopMost;
     }
 }

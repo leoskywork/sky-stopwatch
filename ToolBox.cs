@@ -14,6 +14,7 @@ namespace SkyStopwatch
     public partial class ToolBox : Form
     {
         private Action _NewGameClick;
+        private Action _TopMostClick;
 
         public ToolBox()
         {
@@ -32,12 +33,13 @@ namespace SkyStopwatch
             this.timerAutoClose.Start();
         }
 
-        public ToolBox(Bitmap image, string message, Action onNewGame = null) : this()
+        public ToolBox(Bitmap image, string message, Action onNewGame = null, Action topMost = null) : this()
         {
 
             this.pictureBoxOne.Image = image;
             this.labelMessage.Text = message;
             this._NewGameClick = onNewGame;
+            _TopMostClick = topMost;
         }
 
         public ToolBox(string imagePath, string message, Action onNewGame = null) : this(new Bitmap(imagePath), message, onNewGame)
@@ -46,23 +48,25 @@ namespace SkyStopwatch
 
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
-            try
-            {
-                _NewGameClick?.Invoke();
-                _NewGameClick = null;
-                this.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-
+            _NewGameClick?.Invoke();
+            this.Close();
         }
 
         private void timerAutoClose_Tick(object sender, EventArgs e)
         {
-            _NewGameClick = null;
             this.Close();
+        }
+
+        private void buttonTopMost_Click(object sender, EventArgs e)
+        {
+            _TopMostClick?.Invoke();
+            this.Close();
+        }
+
+        private void ToolBox_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            _NewGameClick = null;
+            _TopMostClick = null;
         }
     }
 }

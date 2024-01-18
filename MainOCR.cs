@@ -72,7 +72,7 @@ namespace SkyStopwatch
                         int x = screenRect.Width * 30 / 100;
                         int y = screenRect.Height * 65 / 100;
 
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 400, 160), bitPic.PixelFormat);
+                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 400, 150), bitPic.PixelFormat);
                         return BitmapToBytes(cloneBitmap);
                     }
 
@@ -108,7 +108,23 @@ namespace SkyStopwatch
         {
             using (var engine = GetDefaultOCREngine())
             {
-                using (var img = Tesseract.Pix.LoadFromFile(imgPath))
+                //using (var img = Tesseract.Pix.LoadFromFile(imgPath))
+                //{
+                //    using (var page = engine.Process(img))
+                //    {
+                //        return page.GetText();
+                //    }
+                //}
+
+                //for speed up - only read part of the file
+                Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+                int x = screenRect.Width * 30 / 100;
+                int y = screenRect.Height * 65 / 100;
+                Bitmap bitmap = new Bitmap(imgPath);
+                Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, 400, 150), bitmap.PixelFormat);
+                byte[] bytes = BitmapToBytes(cloneBitmap);
+
+                using (var img = Tesseract.Pix.LoadFromMemory(bytes))
                 {
                     using (var page = engine.Process(img))
                     {
@@ -120,13 +136,13 @@ namespace SkyStopwatch
 
         public static string ReadImageFromMemory(Tesseract.TesseractEngine engine, byte[] imgData)
         {
-            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 1");
+            //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 1");
             using (var img = Tesseract.Pix.LoadFromMemory(imgData))
             {
-                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 2");
+               // System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 2");
                 using (var page = engine.Process(img))
                 {
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 3");
+                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 3");
                     return page.GetText();
                 }
             }

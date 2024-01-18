@@ -149,15 +149,12 @@ namespace SkyStopwatch
             try
             {
                 buttonTopMost.Enabled = false;
-                _TopMost = !_TopMost;
-                SyncTopMost();
-
 
                 // test part of the full screen - fixed pic
                 //{
                 //    Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                //    int x = screenRect.Width * 25 / 100;
-                //    int y = screenRect.Height * 60 / 100;
+                //    int x = screenRect.Width * 30 / 100;
+                //    int y = screenRect.Height * 65 / 100;
 
                 //    //string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-1.bmp";
                 //    string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
@@ -190,9 +187,13 @@ namespace SkyStopwatch
                             this.timerAutoRefresh.Start();
                         }
 
-                    })).Show();
+                    }, () =>
+                    {
+                        _TopMost = !_TopMost;
+                        SyncTopMost();
+                    }
+                    )).Show();
                 }
-
 
 
                 buttonTopMost.Enabled = true;
