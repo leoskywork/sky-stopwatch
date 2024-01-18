@@ -167,15 +167,15 @@ namespace SkyStopwatch
                 // curren screen shot
                 {
                     Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                    int x = screenRect.Width * 30 / 100;
-                    int y = screenRect.Height * 65 / 100;
+                    int x = screenRect.Width * MainOCR.XPercent / 100;
+                    int y = screenRect.Height * MainOCR.YPercent / 100;
 
                     Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height);
                     Graphics gra = Graphics.FromImage(bitPic);
                     gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
                     gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
-                    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 400, 150), bitPic.PixelFormat);
+                    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeigh), bitPic.PixelFormat);
                     (new ToolBox(cloneBitmap, "current screen", () =>
                     {
                         _IsUpdatingPassedTime = true;

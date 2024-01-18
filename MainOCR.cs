@@ -11,6 +11,11 @@ namespace SkyStopwatch
 {
     class MainOCR
     {
+        public const int XPercent = 30;
+        public const int YPercent = 65;
+        public const int BlockWidth = 400;
+        public const int BlockHeigh = 160;
+
         public static void PrintScreenAsFile(string path)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException("path");
@@ -69,10 +74,10 @@ namespace SkyStopwatch
 
                     if (onlyReturnPartOfImage) //for speed up
                     {
-                        int x = screenRect.Width * 30 / 100;
-                        int y = screenRect.Height * 65 / 100;
+                        int x = screenRect.Width * XPercent / 100;
+                        int y = screenRect.Height * YPercent / 100;
 
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 400, 150), bitPic.PixelFormat);
+                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitPic.PixelFormat);
                         return BitmapToBytes(cloneBitmap);
                     }
 
@@ -118,10 +123,10 @@ namespace SkyStopwatch
 
                 //for speed up - only read part of the file
                 Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                int x = screenRect.Width * 30 / 100;
-                int y = screenRect.Height * 65 / 100;
+                int x = screenRect.Width * XPercent / 100;
+                int y = screenRect.Height * YPercent / 100;
                 Bitmap bitmap = new Bitmap(imgPath);
-                Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, 400, 150), bitmap.PixelFormat);
+                Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitmap.PixelFormat);
                 byte[] bytes = BitmapToBytes(cloneBitmap);
 
                 using (var img = Tesseract.Pix.LoadFromMemory(bytes))
