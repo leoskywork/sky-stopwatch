@@ -34,6 +34,7 @@
             this.labelTimer = new System.Windows.Forms.Label();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.buttonClear = new System.Windows.Forms.Button();
+            this.timerAutoRefresh = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // buttonOCR
@@ -83,6 +84,10 @@
             this.buttonClear.UseVisualStyleBackColor = true;
             this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
             // 
+            // timerAutoRefresh
+            // 
+            this.timerAutoRefresh.Tick += new System.EventHandler(this.timerAutoRefresh_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -98,6 +103,7 @@
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LEO Stopwatch";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -110,6 +116,7 @@
         private System.Windows.Forms.Label labelTimer;
         private System.Windows.Forms.Timer timerMain;
         private System.Windows.Forms.Button buttonClear;
+        private System.Windows.Forms.Timer timerAutoRefresh;
     }
 }
 

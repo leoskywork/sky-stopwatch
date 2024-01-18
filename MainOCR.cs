@@ -5,12 +5,13 @@ using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Tesseract;
 
 namespace SkyStopwatch
 {
     class MainOCR
     {
-        public static void PrintScreen(string path)
+        public static void PrintScreenAsFile(string path)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException("path");
 
@@ -21,8 +22,6 @@ namespace SkyStopwatch
                     gra.CopyFromScreen(new Point(0, 0), new Point(0, 0), bitPic.Size);
                     //bitPic.Save("D:\\screen.bmp");
                     bitPic.Save(path);
-                    //bitPic.Dispose();
-                    //gra.Dispose();
                 }
             }
         }
@@ -52,18 +51,62 @@ namespace SkyStopwatch
                 File.Delete(path);
             }
 
-            PrintScreen(path);
+            PrintScreenAsFile(path);
 
             return path;
         }
 
-
-        public static string ReadImageAsText(string imgPath)
+        public static byte[] PrintScreenAsBytes(bool onlyReturnPartOfImage)
         {
-            const string language = "eng"; //chi_sim;
-            const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
+            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
-            using (var engine = new Tesseract.TesseractEngine(tessdataFolder, language, Tesseract.EngineMode.Default))
+            using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
+            {
+                using (Graphics gra = Graphics.FromImage(bitPic))
+                {
+                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
+                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+
+                    if (onlyReturnPartOfImage) //for speed up
+                    {
+                        int x = screenRect.Width * 25 / 100;
+                        int y = screenRect.Height * 50 / 100;
+
+                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 600, 300), bitPic.PixelFormat);
+                        return BitmapToBytes(cloneBitmap);
+                    }
+
+                    return BitmapToBytes(bitPic);
+                }
+            }
+        }
+
+        public static byte[] BitmapToBytes(System.Drawing.Bitmap bitmap)
+        {
+            System.IO.MemoryStream ms = new System.IO.MemoryStream();
+            bitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+            ms.Seek(0, System.IO.SeekOrigin.Begin);
+            byte[] bytes = new byte[ms.Length];
+            ms.Read(bytes, 0, bytes.Length);
+            ms.Dispose();
+
+            return bytes;
+        }
+
+        public Bitmap BytesToBitmap(byte[] imageByte)
+        {
+            Bitmap bitmap = null; 
+            using (MemoryStream stream = new MemoryStream(imageByte))
+            {
+                bitmap = new Bitmap((Image)new Bitmap(stream));
+            }
+            return bitmap;
+        }
+
+
+        public static string ReadImageFromFile(string imgPath)
+        {
+            using (var engine = GetDefaultOCREngine())
             {
                 using (var img = Tesseract.Pix.LoadFromFile(imgPath))
                 {
@@ -73,10 +116,34 @@ namespace SkyStopwatch
                     }
                 }
             }
-
         }
 
-        public static DateTime FindTime(string data)
+        public static string ReadImageFromMemory(Tesseract.TesseractEngine engine, byte[] imgData)
+        {
+            System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 1");
+            using (var img = Tesseract.Pix.LoadFromMemory(imgData))
+            {
+                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 2");
+                using (var page = engine.Process(img))
+                {
+                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 3");
+                    return page.GetText();
+                }
+            }
+        }
+
+        public static Tesseract.TesseractEngine GetDefaultOCREngine()
+        {
+            const string language = "eng"; //chi_sim;
+            const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
+
+            var engine = new Tesseract.TesseractEngine(tessdataFolder, language, Tesseract.EngineMode.Default);
+            engine.SetVariable("tessedit_char_whitelist", "0123456789:oO"); //only look for pre-set chars for speed up
+
+            return engine;
+        }
+
+        public static DateTime FindTime(string data, int kickOffDelaySeconds)
         {
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             //hh:mm:ss
@@ -98,29 +165,23 @@ namespace SkyStopwatch
 
                     if (Regex.IsMatch(timePartAdjust, regexPattern))
                     {
+                        //timePartAdjust = timePartAdjust.Replace("00", "12"); //got bug 00:00:123 -> 12:12:23
+                        if (timePartAdjust.StartsWith("00"))
+                        {
+                            timePartAdjust = "12" + timePartAdjust.Substring(2);
+                        }
+
                         System.Diagnostics.Debug.WriteLine("-----------------------------");
                         System.Diagnostics.Debug.WriteLine(line);
                         System.Diagnostics.Debug.WriteLine(timePart);
                         System.Diagnostics.Debug.WriteLine(timePartAdjust);
 
-                        timePartAdjust = timePartAdjust.Replace("00", "12");
                         DateTime textTime = DateTime.ParseExact(timePartAdjust, "hh:mm:ss", CultureInfo.InvariantCulture);
 
-                        return textTime.AddSeconds(15);
+                        return textTime.AddSeconds(kickOffDelaySeconds);
                     }
 
                 }
-
-
-                //"mﬁmra : 00:28:27"
-                //{
-                //    MatchCollection parts = Regex.Matches(line, regexPattern);
-
-                //    if (parts.Count >= 1)
-                //    {
-                //        string timePart = parts[parts.Count - 1].Value;
-                //    }
-                //}
             }
 
             return DateTime.MinValue;
