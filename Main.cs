@@ -25,7 +25,7 @@ namespace SkyStopwatch
         /// only the first time matter, the time does not auto update on the game label
         /// </summary>
         private bool _IsAutoRefreshing = false;
-        private DateTime _AutoOCRTimeOfLastRead = DateTime.MinValue;
+        private string _AutoOCRTimeOfLastRead;
         private Tesseract.TesseractEngine _AutoOCREngine;
 
         public Main()
@@ -57,7 +57,7 @@ namespace SkyStopwatch
         private void SyncTopMost()
         {
             this.TopMost = _TopMost;
-            this.buttonTopMost.Text = this._TopMost ? "Pin" : "-P";
+            this.buttonTopMost.Text = this._TopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void buttonOCR_Click(object sender, EventArgs e)
@@ -95,14 +95,14 @@ namespace SkyStopwatch
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} xxx");
                     }));
 
-                    DateTime time = MainOCR.FindTime(data, MainOCR.ManualOCRDelaySeconds);
+                    string ocrDisplayTime = MainOCR.FindTime(data);
 
                     this.BeginInvoke((Action)(() =>
                     {
-                        if (time != DateTime.MinValue)
+                        if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
                             _IsUpdatingPassedTime = true;
-                            StartUIStopwatch(time);
+                            StartUIStopwatch(ocrDisplayTime, MainOCR.ManualOCRDelaySeconds);
                         }
                         else
                         {
@@ -125,21 +125,21 @@ namespace SkyStopwatch
             }
         }
 
-        private void StartUIStopwatch(DateTime time)
+        private void StartUIStopwatch(string ocrDisplayTime, int kickOffDelaySeconds)
         {
+            if (string.IsNullOrEmpty(ocrDisplayTime)) return;
             if (!_IsUpdatingPassedTime) return;
 
             if (!this.timerMain.Enabled)
             {
                 this.timerMain.Start();
             }
+            
 
-            TimeSpan passedTime = time - DateTime.Today;
-            _TimeAroundGameStart = DateTime.Now.AddSeconds(passedTime.TotalSeconds * -1);
-
-            //this.labelTimerPrefix.Show();
-            var nowPassed = DateTime.Now - _TimeAroundGameStart;
-            this.labelTimer.Text = nowPassed.ToString(UITimeFormat);
+            TimeSpan ocrTimeSpan = TimeSpan.ParseExact(ocrDisplayTime, MainOCR.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
+            int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
+            _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
+            this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(UITimeFormat);
         }
 
         private void buttonTopMost_Click(object sender, EventArgs e)
@@ -174,24 +174,13 @@ namespace SkyStopwatch
                     gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
                     Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeigh), bitPic.PixelFormat);
-                    (new ToolBox(cloneBitmap, "current screen", () =>
-                    {
-                        _IsUpdatingPassedTime = true;
-                        this.buttonOCR.Enabled = false;
-                        DateTime time = DateTime.Today.AddSeconds(MainOCR.NewGameDelaySeconds);
-                        StartUIStopwatch(time);
-
-                        if (!this.timerAutoRefresh.Enabled)
-                        {
-                            this.timerAutoRefresh.Start();
-                        }
-
-                    }, () =>
-                    {
-                        _TopMost = !_TopMost;
-                        SyncTopMost();
-                    }
-                    )).Show();
+                    ToolBox tool = new ToolBox(cloneBitmap,
+                        "current screen",
+                        () => { this.OnNewGameStart(); },
+                        () => { this.OnSwitchTopMost(); },
+                        () => { this.OnClearOCR(); },
+                        (s) => { this.OnAddSeconds(s); });
+                    tool.Show();
                 }
 
 
@@ -201,8 +190,38 @@ namespace SkyStopwatch
             {
                 OnError(ex);
             }
-          
         }
+
+        private void OnNewGameStart()
+        {
+            _IsUpdatingPassedTime = true;
+            this.buttonOCR.Enabled = false;
+
+            StartUIStopwatch(TimeSpan.Zero.ToString(MainOCR.TimeFormat), MainOCR.NewGameDelaySeconds);
+
+            if (!this.timerAutoRefresh.Enabled)
+            {
+                this.timerAutoRefresh.Start();
+            }
+        }
+
+        private void OnAddSeconds(int seconds)
+        {
+            if (_TimeAroundGameStart == DateTime.MinValue) return;
+
+            _IsUpdatingPassedTime = true;
+            this.buttonOCR.Enabled = false;
+
+            TimeSpan passedTimeWithIncrease = DateTime.Now.AddSeconds(seconds) - _TimeAroundGameStart;
+            StartUIStopwatch(passedTimeWithIncrease.ToString(MainOCR.TimeFormat), MainOCR.NoDelay);
+        }
+
+        private void OnSwitchTopMost()
+        {
+            _TopMost = !_TopMost;
+            SyncTopMost();
+        }
+        
 
         private void timerMain_Tick(object sender, EventArgs e)
         {
@@ -220,7 +239,7 @@ namespace SkyStopwatch
             }
         }
 
-        private void buttonClear_Click(object sender, EventArgs e)
+        private void OnClearOCR()
         {
             try
             {
@@ -229,7 +248,7 @@ namespace SkyStopwatch
                 _IsUpdatingPassedTime = false;
                 _TimeAroundGameStart = DateTime.MinValue;
                 _IsAutoRefreshing = false;
-                _AutoOCRTimeOfLastRead = DateTime.MinValue;
+                _AutoOCRTimeOfLastRead = string.Empty;
 
 
                 this.labelTimer.Text = "--";
@@ -266,7 +285,7 @@ namespace SkyStopwatch
                     byte[] screenShotBytes = MainOCR.PrintScreenAsBytes(true);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
 
-                    if(_AutoOCREngine == null)
+                    if (_AutoOCREngine == null)
                     {
                         _AutoOCREngine = MainOCR.GetDefaultOCREngine();
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
@@ -275,7 +294,7 @@ namespace SkyStopwatch
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
-                    DateTime time = MainOCR.FindTime(data, MainOCR.AutoOCRDelaySeconds);
+                    string time = MainOCR.FindTime(data);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
                     return time;
@@ -284,14 +303,14 @@ namespace SkyStopwatch
                 {
                     this.BeginInvoke((Action)(() =>
                     {
-                        DateTime time = t.Result;
+                        string ocrDisplayTime = t.Result;
 
-                        if (time != DateTime.MinValue)
+                        if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
-                            if (_AutoOCRTimeOfLastRead != time)
+                            if (_AutoOCRTimeOfLastRead != ocrDisplayTime)
                             {
-                                _AutoOCRTimeOfLastRead = time;
-                                StartUIStopwatch(time);
+                                _AutoOCRTimeOfLastRead = ocrDisplayTime;
+                                StartUIStopwatch(ocrDisplayTime, MainOCR.AutoOCRDelaySeconds);
                             }
                             //else the same, the time of this read is a repeat read, the data is not fresh
                         }
@@ -317,7 +336,7 @@ namespace SkyStopwatch
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.buttonClear_Click(sender, e);
+            this.OnClearOCR();
         }
     }
 }

@@ -34,13 +34,12 @@
             this.buttonTopMost = new System.Windows.Forms.Button();
             this.labelTimer = new System.Windows.Forms.Label();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
-            this.buttonClear = new System.Windows.Forms.Button();
             this.timerAutoRefresh = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // buttonOCR
             // 
-            this.buttonOCR.Location = new System.Drawing.Point(177, 17);
+            this.buttonOCR.Location = new System.Drawing.Point(171, 17);
             this.buttonOCR.Margin = new System.Windows.Forms.Padding(4);
             this.buttonOCR.Name = "buttonOCR";
             this.buttonOCR.Size = new System.Drawing.Size(70, 30);
@@ -51,10 +50,10 @@
             // 
             // buttonTopMost
             // 
-            this.buttonTopMost.Location = new System.Drawing.Point(313, 17);
+            this.buttonTopMost.Location = new System.Drawing.Point(248, 17);
             this.buttonTopMost.Margin = new System.Windows.Forms.Padding(4);
             this.buttonTopMost.Name = "buttonTopMost";
-            this.buttonTopMost.Size = new System.Drawing.Size(50, 30);
+            this.buttonTopMost.Size = new System.Drawing.Size(30, 30);
             this.buttonTopMost.TabIndex = 1;
             this.buttonTopMost.Text = "-P";
             this.buttonTopMost.UseVisualStyleBackColor = true;
@@ -75,16 +74,6 @@
             // 
             this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
             // 
-            // buttonClear
-            // 
-            this.buttonClear.Location = new System.Drawing.Point(260, 17);
-            this.buttonClear.Name = "buttonClear";
-            this.buttonClear.Size = new System.Drawing.Size(40, 30);
-            this.buttonClear.TabIndex = 4;
-            this.buttonClear.Text = "X";
-            this.buttonClear.UseVisualStyleBackColor = true;
-            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
-            // 
             // timerAutoRefresh
             // 
             this.timerAutoRefresh.Tick += new System.EventHandler(this.timerAutoRefresh_Tick);
@@ -93,8 +82,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(372, 56);
-            this.Controls.Add(this.buttonClear);
+            this.ClientSize = new System.Drawing.Size(290, 56);
             this.Controls.Add(this.labelTimer);
             this.Controls.Add(this.buttonTopMost);
             this.Controls.Add(this.buttonOCR);
@@ -117,7 +105,6 @@
         private System.Windows.Forms.Button buttonTopMost;
         private System.Windows.Forms.Label labelTimer;
         private System.Windows.Forms.Timer timerMain;
-        private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Timer timerAutoRefresh;
     }
 }

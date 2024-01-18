@@ -19,6 +19,9 @@ namespace SkyStopwatch
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
         public const int NewGameDelaySeconds = 10;
+        public const int NoDelay = 0;
+        public const int IncrementSeconds = 10;
+        public const string TimeFormat = @"hh\:mm\:ss";
 
 
         public static void PrintScreenAsFile(string path)
@@ -177,20 +180,20 @@ namespace SkyStopwatch
             return engine;
         }
 
-        public static DateTime FindTime(string data, int kickOffDelaySeconds)
+        public static string FindTime(string data)
         {
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             //hh:mm:ss
             string regexPattern = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
 
-            string[] zeroAlikeArray = new [] {"o", "O" };
+            string[] zeroAlikeArray = new[] { "o", "O" };
 
             foreach (string line in lines)
             {
-                if(line.IndexOf(':') > 0)
+                if (line.IndexOf(':') > 0)
                 {
-                    string timePart = line.Substring(line.IndexOf(":") + 1).Trim();
-                    string timePartAdjust = timePart;
+                    string timePart = line.Substring(line.IndexOf(":") + 1);
+                    string timePartAdjust = timePart.Replace(" ", string.Empty);
 
                     foreach (string item in zeroAlikeArray)
                     {
@@ -199,26 +202,24 @@ namespace SkyStopwatch
 
                     if (Regex.IsMatch(timePartAdjust, regexPattern))
                     {
-                        //timePartAdjust = timePartAdjust.Replace("00", "12"); //got bug 00:00:123 -> 12:12:23
-                        if (timePartAdjust.StartsWith("00"))
-                        {
-                            timePartAdjust = "12" + timePartAdjust.Substring(2);
-                        }
+                        //timePartAdjust = timePartAdjust.Replace("00", "12"); 
+                        //got bug when parse as datetime 00:00:123 -> 12:12:23 - no need to do this since we parse as timespan now
+                        //if (timePartAdjust.StartsWith("00"))
+                        //{
+                        //    timePartAdjust = "12" + timePartAdjust.Substring(2);
+                        //}
 
                         System.Diagnostics.Debug.WriteLine("-----------------------------");
                         System.Diagnostics.Debug.WriteLine(line);
                         System.Diagnostics.Debug.WriteLine(timePart);
                         System.Diagnostics.Debug.WriteLine(timePartAdjust);
 
-                        DateTime textTime = DateTime.ParseExact(timePartAdjust, "hh:mm:ss", CultureInfo.InvariantCulture);
-
-                        return textTime.AddSeconds(kickOffDelaySeconds);
+                        return timePartAdjust;
                     }
-
                 }
             }
 
-            return DateTime.MinValue;
+            return string.Empty;
         }
 
     }

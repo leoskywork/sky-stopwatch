@@ -15,6 +15,9 @@ namespace SkyStopwatch
     {
         private Action _NewGameClick;
         private Action _TopMostClick;
+        private Action _ClearClick;
+        private Action<int> _AddSecondsClick;
+
 
         public ToolBox()
         {
@@ -33,16 +36,24 @@ namespace SkyStopwatch
             this.timerAutoClose.Start();
         }
 
-        public ToolBox(Bitmap image, string message, Action onNewGame = null, Action topMost = null) : this()
+        public ToolBox(Bitmap image, string message,
+            Action onNewGame = null,
+            Action topMost = null,
+            Action clear = null,
+            Action<int> addSeconds = null
+            ) : this()
         {
 
             this.pictureBoxOne.Image = image;
             this.labelMessage.Text = message;
             this._NewGameClick = onNewGame;
             _TopMostClick = topMost;
+            _ClearClick = clear;
+            _AddSecondsClick = addSeconds;
         }
 
-        public ToolBox(string imagePath, string message, Action onNewGame = null) : this(new Bitmap(imagePath), message, onNewGame)
+        public ToolBox(string imagePath, string message, 
+            Action onNewGame = null) : this(new Bitmap(imagePath), message, onNewGame)
         {
         }
 
@@ -67,6 +78,21 @@ namespace SkyStopwatch
         {
             _NewGameClick = null;
             _TopMostClick = null;
+            _ClearClick = null;
+            _AddSecondsClick = null;
+        }
+
+        private void buttonClear_Click(object sender, EventArgs e)
+        {
+            _ClearClick?.Invoke();
+            this.Close();
+        }
+
+        private void buttonAddSeconds_Click(object sender, EventArgs e)
+        {
+            buttonClear.Enabled = false;
+            _AddSecondsClick?.Invoke(MainOCR.IncrementSeconds);
+            buttonClear.Enabled = true;
         }
     }
 }

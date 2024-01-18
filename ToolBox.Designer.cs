@@ -35,6 +35,8 @@
             this.buttonNewGame = new System.Windows.Forms.Button();
             this.timerAutoClose = new System.Windows.Forms.Timer(this.components);
             this.buttonTopMost = new System.Windows.Forms.Button();
+            this.buttonClear = new System.Windows.Forms.Button();
+            this.buttonAddSeconds = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.SuspendLayout();
             // 
@@ -81,7 +83,7 @@
             // 
             // buttonTopMost
             // 
-            this.buttonTopMost.Location = new System.Drawing.Point(733, 142);
+            this.buttonTopMost.Location = new System.Drawing.Point(733, 217);
             this.buttonTopMost.Name = "buttonTopMost";
             this.buttonTopMost.Size = new System.Drawing.Size(120, 30);
             this.buttonTopMost.TabIndex = 4;
@@ -89,11 +91,33 @@
             this.buttonTopMost.UseVisualStyleBackColor = true;
             this.buttonTopMost.Click += new System.EventHandler(this.buttonTopMost_Click);
             // 
+            // buttonClear
+            // 
+            this.buttonClear.Location = new System.Drawing.Point(733, 288);
+            this.buttonClear.Name = "buttonClear";
+            this.buttonClear.Size = new System.Drawing.Size(120, 30);
+            this.buttonClear.TabIndex = 5;
+            this.buttonClear.Text = "Clear";
+            this.buttonClear.UseVisualStyleBackColor = true;
+            this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+            // 
+            // buttonAddSeconds
+            // 
+            this.buttonAddSeconds.Location = new System.Drawing.Point(733, 146);
+            this.buttonAddSeconds.Name = "buttonAddSeconds";
+            this.buttonAddSeconds.Size = new System.Drawing.Size(120, 30);
+            this.buttonAddSeconds.TabIndex = 6;
+            this.buttonAddSeconds.Text = "Add 10s";
+            this.buttonAddSeconds.UseVisualStyleBackColor = true;
+            this.buttonAddSeconds.Click += new System.EventHandler(this.buttonAddSeconds_Click);
+            // 
             // ToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(918, 454);
+            this.Controls.Add(this.buttonAddSeconds);
+            this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.buttonTopMost);
             this.Controls.Add(this.buttonNewGame);
             this.Controls.Add(this.labelMessage);
@@ -116,5 +140,7 @@
         private System.Windows.Forms.Button buttonNewGame;
         private System.Windows.Forms.Timer timerAutoClose;
         private System.Windows.Forms.Button buttonTopMost;
+        private System.Windows.Forms.Button buttonClear;
+        private System.Windows.Forms.Button buttonAddSeconds;
     }
 }
