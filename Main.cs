@@ -19,11 +19,11 @@ namespace SkyStopwatch
         private bool _TopMost = true;//false;
         private bool _IsUpdatingPassedTime = false;
         private DateTime _TimeAroundGameStart = DateTime.MinValue;
+
         /// <summary>
         /// only the first time matter, the time does not auto update on the game label
         /// </summary>
         private bool _IsAutoRefreshing = false;
-      //  private bool _IsAutoRefreshDuplicate;
         private DateTime _AutoOCRTimeOfLastRead = DateTime.MinValue;
         private Tesseract.TesseractEngine _AutoOCREngine;
 
@@ -56,7 +56,7 @@ namespace SkyStopwatch
         private void SyncTopMost()
         {
             this.TopMost = _TopMost;
-            this.buttonTopMost.Text = this._TopMost ? "P" : "-P";
+            this.buttonTopMost.Text = this._TopMost ? "Pin" : "-P";
         }
 
         private void buttonOCR_Click(object sender, EventArgs e)
@@ -85,10 +85,10 @@ namespace SkyStopwatch
 
                     string screenShotPath = t.Result;
                     //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-1.bmp";
-                    screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
+                    //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
 
                     string data = MainOCR.ReadImageFromFile(screenShotPath);
-                    //System.Diagnostics.Debug.Write(data);
+                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");
 
                     this.BeginInvoke((Action)(() =>
                     {
@@ -157,28 +157,34 @@ namespace SkyStopwatch
                 string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
 
 
-                
-                Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-
-                //Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height);
-                Bitmap bitPic = new Bitmap(screenShotPath);
+                // test part of the full screen - fixed pic
                 {
-                    //Graphics gra = Graphics.FromImage(bitPic);
-                    {
-                        //gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                        //gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+                    Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+                    int x = screenRect.Width * 25 / 100;
+                    int y = screenRect.Height * 60 / 100;
 
-                        int x = screenRect.Width * 25 / 100;
-                        int y = screenRect.Height * 60 / 100;
-
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 600, 300), bitPic.PixelFormat);
-                        (new TestBox(cloneBitmap)).Show();
-                    }
-
-                    //(new TestBox(bitPic)).Show();
-
+                    Bitmap bitPic = new Bitmap(screenShotPath);
+                    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 600, 300), bitPic.PixelFormat);
+                    (new TestBox(cloneBitmap, "fixed pic")).Show();
                 }
 
+
+                // curren screen shot
+                {
+                    Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+                    int x = screenRect.Width * 30 / 100;
+                    int y = screenRect.Height * 65 / 100;
+
+                    Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height);
+                    Graphics gra = Graphics.FromImage(bitPic);
+                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
+                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+
+                    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 400, 150), bitPic.PixelFormat);
+                    (new TestBox(cloneBitmap, "current screen")).Show();
+
+                    //(new TestBox(bitPic)).Show();
+                }
 
 
 
@@ -285,7 +291,7 @@ namespace SkyStopwatch
                         //else auto refresh failed, just use last result
 
                         _IsAutoRefreshing = false;
-                        buttonOCR.Enabled = true;
+                        //buttonOCR.Enabled = true; //makes ui blink, so disable it
                         System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - end -----");
                     }));
                 });

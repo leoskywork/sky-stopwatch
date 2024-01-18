@@ -69,10 +69,10 @@ namespace SkyStopwatch
 
                     if (onlyReturnPartOfImage) //for speed up
                     {
-                        int x = screenRect.Width * 25 / 100;
-                        int y = screenRect.Height * 50 / 100;
+                        int x = screenRect.Width * 30 / 100;
+                        int y = screenRect.Height * 65 / 100;
 
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 600, 300), bitPic.PixelFormat);
+                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 400, 160), bitPic.PixelFormat);
                         return BitmapToBytes(cloneBitmap);
                     }
 

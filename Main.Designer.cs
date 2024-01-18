@@ -39,7 +39,7 @@
             // 
             // buttonOCR
             // 
-            this.buttonOCR.Location = new System.Drawing.Point(177, 22);
+            this.buttonOCR.Location = new System.Drawing.Point(177, 17);
             this.buttonOCR.Margin = new System.Windows.Forms.Padding(4);
             this.buttonOCR.Name = "buttonOCR";
             this.buttonOCR.Size = new System.Drawing.Size(70, 30);
@@ -50,7 +50,7 @@
             // 
             // buttonTopMost
             // 
-            this.buttonTopMost.Location = new System.Drawing.Point(313, 22);
+            this.buttonTopMost.Location = new System.Drawing.Point(313, 17);
             this.buttonTopMost.Margin = new System.Windows.Forms.Padding(4);
             this.buttonTopMost.Name = "buttonTopMost";
             this.buttonTopMost.Size = new System.Drawing.Size(50, 30);
@@ -63,7 +63,7 @@
             // 
             this.labelTimer.AutoSize = true;
             this.labelTimer.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelTimer.Location = new System.Drawing.Point(13, 9);
+            this.labelTimer.Location = new System.Drawing.Point(13, 6);
             this.labelTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTimer.Name = "labelTimer";
             this.labelTimer.Size = new System.Drawing.Size(134, 44);
@@ -76,7 +76,7 @@
             // 
             // buttonClear
             // 
-            this.buttonClear.Location = new System.Drawing.Point(260, 22);
+            this.buttonClear.Location = new System.Drawing.Point(260, 17);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(40, 30);
             this.buttonClear.TabIndex = 4;
@@ -92,7 +92,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(372, 64);
+            this.ClientSize = new System.Drawing.Size(372, 56);
             this.Controls.Add(this.buttonClear);
             this.Controls.Add(this.labelTimer);
             this.Controls.Add(this.buttonTopMost);

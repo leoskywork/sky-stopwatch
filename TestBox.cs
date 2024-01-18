@@ -17,16 +17,18 @@ namespace SkyStopwatch
             InitializeComponent();
         }
 
-        public TestBox(Bitmap image) : this()
+        public TestBox(Bitmap image, string message) : this()
         {
 
             this.pictureBoxOne.Image = image;
+            this.labelMessage.Text = message;
         }
 
-        public TestBox(string imagePath) : this()
+        public TestBox(string imagePath, string message) : this()
         {
             var image = new Bitmap(imagePath);
             this.pictureBoxOne.Image = image;
+            this.labelMessage.Text = message;
         }
     }
 }

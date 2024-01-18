@@ -34,6 +34,8 @@ namespace SkyStopwatch
      
     ### support multi screens ?
 
+    ### button ocr not working when top most(pin) is off
+
     
     
     ## fixed issues
