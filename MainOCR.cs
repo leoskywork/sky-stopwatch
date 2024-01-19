@@ -14,7 +14,7 @@ namespace SkyStopwatch
         public const int XPercent = 30;
         public const int YPercent = 65;
         public const int BlockWidth = 400;
-        public const int BlockHeigh = 150;
+        public const int BlockHeight = 150;
 
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
@@ -95,7 +95,7 @@ namespace SkyStopwatch
                     int x = screenRect.Width * XPercent / 100;
                     int y = screenRect.Height * YPercent / 100;
 
-                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitPic.PixelFormat))
+                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, BlockWidth, BlockHeight), bitPic.PixelFormat))
                     {
                         return BitmapToBytes(cloneBitmap);
                     }
@@ -146,7 +146,7 @@ namespace SkyStopwatch
                 int y = screenRect.Height * YPercent / 100;
 
                 using (Bitmap bitmap = new Bitmap(imgPath))
-                using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitmap.PixelFormat))
+                using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, BlockWidth, BlockHeight), bitmap.PixelFormat))
                 {
 
                     byte[] bytes = BitmapToBytes(cloneBitmap);

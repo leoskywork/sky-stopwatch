@@ -38,6 +38,7 @@
             this.buttonClear = new System.Windows.Forms.Button();
             this.buttonAddSeconds = new System.Windows.Forms.Button();
             this.buttonOCR = new System.Windows.Forms.Button();
+            this.buttonImageView = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.SuspendLayout();
             // 
@@ -129,11 +130,23 @@
             this.buttonOCR.UseVisualStyleBackColor = false;
             this.buttonOCR.Click += new System.EventHandler(this.buttonOCR_Click);
             // 
-            // ToolBox
+            // buttonImageView
+            // 
+            this.buttonImageView.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonImageView.Location = new System.Drawing.Point(733, 356);
+            this.buttonImageView.Name = "buttonImageView";
+            this.buttonImageView.Size = new System.Drawing.Size(120, 30);
+            this.buttonImageView.TabIndex = 401;
+            this.buttonImageView.Text = "Image...";
+            this.buttonImageView.UseVisualStyleBackColor = true;
+            this.buttonImageView.Click += new System.EventHandler(this.buttonImageView_Click);
+            // 
+            // FormToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(918, 454);
+            this.Controls.Add(this.buttonImageView);
             this.Controls.Add(this.buttonOCR);
             this.Controls.Add(this.buttonAddSeconds);
             this.Controls.Add(this.buttonClear);
@@ -144,7 +157,7 @@
             this.Controls.Add(this.pictureBoxOne);
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.MaximizeBox = false;
-            this.Name = "ToolBox";
+            this.Name = "FormToolBox";
             this.Text = "TestBox - auto close in  60 sec";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
@@ -164,5 +177,6 @@
         private System.Windows.Forms.Button buttonClear;
         private System.Windows.Forms.Button buttonAddSeconds;
         private System.Windows.Forms.Button buttonOCR;
+        private System.Windows.Forms.Button buttonImageView;
     }
 }

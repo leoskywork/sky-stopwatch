@@ -13,98 +13,118 @@ namespace SkyStopwatch
 {
     public partial class FormImageView : Form
     {
-        private Action _RunOCR;
-        private Action _NewGameClick;
-        private Action _TopMostClick;
-        private Action _ClearClick;
-        private Action<int> _AddSecondsClick;
-      
-
+        private bool _IsUsingImageView = false;
 
         public FormImageView()
         {
             InitializeComponent();
 
-            //got error when call this.close(), cross threads issue, thus use ui control timer instead
-            //Task.Factory.StartNew(() =>
-            //{
-            //    Thread.Sleep(60 * 1000);
-            //    if (!this.Disposing || !this.IsDisposed)
-            //    {
-            //        this.BeginInvoke(new Action(() => { this.Close(); }));
-            //    }
-            //});
+
             this.timerAutoClose.Interval = 60 * 1000;
             this.timerAutoClose.Start();
-        }
 
-        public FormImageView(Bitmap image, 
-            string message,
-            Action<Button> onInit = null,
-            Action runOCR = null,
-            Action onNewGame = null,
-            Action topMost = null,
-            Action clear = null,
-            Action<int> addSeconds = null
-            ) : this()
-        {
-
-            this.pictureBoxOne.Image = image;
-            this.labelMessage.Text = message;
-
-            onInit?.Invoke(this.buttonOCR);
-            _RunOCR = runOCR;
-            _NewGameClick = onNewGame;
-            _TopMostClick = topMost;
-            _ClearClick = clear;
-            _AddSecondsClick = addSeconds;
-        }
-
-
-        private void buttonNewGame_Click(object sender, EventArgs e)
-        {
-            _NewGameClick?.Invoke();
-            this.Close();
+            this.buttonStart.Enabled = true;
+            this.buttonStop.Enabled = false;
+            this.labelSize.Text = $"box size: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
         }
 
         private void timerAutoClose_Tick(object sender, EventArgs e)
         {
+            if (_IsUsingImageView) return;
+
             this.Close();
         }
 
-        private void buttonTopMost_Click(object sender, EventArgs e)
+        private void buttonStart_Click(object sender, EventArgs e)
         {
-            _TopMostClick?.Invoke();
-            this.Close();
+            try
+            {
+                this.buttonStart.Enabled = false;
+                this.buttonStop.Enabled = true;
+                this.TrySetImage();
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
         }
 
-        private void ToolBox_FormClosing(object sender, FormClosingEventArgs e)
+        private void TrySetImage()
         {
-            _RunOCR = null;
-            _NewGameClick = null;
-            _TopMostClick = null;
-            _ClearClick = null;
-            _AddSecondsClick = null;
-            this.pictureBoxOne.Image = null;
+            try
+            {
+                _IsUsingImageView = true;
+
+                var screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+
+                using (var screenShot = new Bitmap(screenRect.Width, screenRect.Height))
+                using (var gra = Graphics.FromImage(screenShot))
+                {
+                    gra.CopyFromScreen(0, 0, 0, 0, screenShot.Size);
+                    gra.DrawImage(screenShot, 0, 0, screenRect, GraphicsUnit.Pixel);
+
+                    int x = (int)this.numericUpDownX.Value;
+                    int y = (int)this.numericUpDownY.Value;
+                    int width = (int)this.numericUpDownWidth.Value;
+                    int height = (int)this.numericUpDownHeight.Value;
+
+                    //can not use using block here, since we pass the bitmap into a view and show it
+                    var bitmapBlock = screenShot.Clone(new Rectangle(x, y, width, height), screenShot.PixelFormat);
+
+                    if(this.pictureBoxOne.Image!= null)
+                    {
+                        this.pictureBoxOne.Image.Dispose();
+                    }
+
+                    this.pictureBoxOne.Image = bitmapBlock;
+
+                    labelX.Text = $"X: {(int)((decimal)x / (decimal)screenRect.Width * 10000) * 0.01}%";
+                    labelY.Text = $"Y: {(int)((decimal)y / (decimal)screenRect.Height * 10000)* 0.01}%";
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
         }
 
-        private void buttonClear_Click(object sender, EventArgs e)
+        private void buttonStop_Click(object sender, EventArgs e)
         {
-            _ClearClick?.Invoke();
-            this.Close();
+            try
+            {
+                this.buttonStart.Enabled = true;
+                this.buttonStop.Enabled = false;
+                _IsUsingImageView = false;
+
+            }
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.ToString());
+            }
         }
 
-        private void buttonAddSeconds_Click(object sender, EventArgs e)
+        private void numericUpDownX_ValueChanged(object sender, EventArgs e)
         {
-            buttonClear.Enabled = false;
-            _AddSecondsClick?.Invoke(MainOCR.IncrementSeconds);
-            buttonClear.Enabled = true;
+            this.TrySetImage();
         }
 
-        private void buttonOCR_Click(object sender, EventArgs e)
+        private void numericUpDownY_ValueChanged(object sender, EventArgs e)
         {
-            _RunOCR?.Invoke();
-            this.Close();
+            this.TrySetImage();
+        }
+
+        private void numericUpDownWidth_ValueChanged(object sender, EventArgs e)
+        {
+            this.TrySetImage();
+        }
+
+        private void numericUpDownHeight_ValueChanged(object sender, EventArgs e)
+        {
+            this.TrySetImage();
         }
     }
 }

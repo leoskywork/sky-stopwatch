@@ -10,7 +10,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace SkyStopwatch
 {
@@ -154,7 +153,7 @@ namespace SkyStopwatch
                         gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
                         //can not use using block here, since we pass the bitmap into a form and show it
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeigh), bitPic.PixelFormat);
+                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
                         {
                             FormToolBox tool = new FormToolBox(cloneBitmap,
                                 "current screen",

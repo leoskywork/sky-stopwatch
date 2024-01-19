@@ -106,5 +106,11 @@ namespace SkyStopwatch
             _RunOCR?.Invoke();
             this.Close();
         }
+
+        private void buttonImageView_Click(object sender, EventArgs e)
+        {
+            var imageView = new FormImageView();
+            imageView.Show();
+        }
     }
 }
