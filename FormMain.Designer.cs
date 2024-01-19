@@ -66,12 +66,11 @@
             // labelTimer
             // 
             this.labelTimer.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.labelTimer.AutoSize = true;
-            this.labelTimer.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelTimer.Font = new System.Drawing.Font("SimSun", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelTimer.Location = new System.Drawing.Point(6, 38);
             this.labelTimer.Margin = new System.Windows.Forms.Padding(0);
             this.labelTimer.Name = "labelTimer";
-            this.labelTimer.Size = new System.Drawing.Size(134, 44);
+            this.labelTimer.Size = new System.Drawing.Size(129, 40);
             this.labelTimer.TabIndex = 3;
             this.labelTimer.Text = "39:48";
             this.labelTimer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.labelTimer_MouseDown);
@@ -98,7 +97,6 @@
             // 
             // labelTitle
             // 
-            this.labelTitle.AutoSize = true;
             this.labelTitle.Font = new System.Drawing.Font("SimSun", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelTitle.Location = new System.Drawing.Point(10, 6);
             this.labelTitle.Name = "labelTitle";
@@ -138,7 +136,6 @@
             this.Load += new System.EventHandler(this.Main_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

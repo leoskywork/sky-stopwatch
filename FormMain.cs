@@ -47,10 +47,15 @@ namespace SkyStopwatch
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
             this.Controls.Remove(this.buttonOCR);
-            const int distance = 70;// 30;// 24;
-            this.Size = new System.Drawing.Size(this.Size.Width - distance, this.Size.Height - 10);
-            this.buttonToolBox.Size = new System.Drawing.Size(20, 24);
-            this.buttonToolBox.Location = new System.Drawing.Point(this.Size.Width + distance - 100, 28);
+            this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
+            this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
+
+            //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
+            this.Size = new System.Drawing.Size(140, 50);
+            //display time now
+            //this.labelTitle.BackColor = System.Drawing.Color.LightGray;
+            this.labelTitle.Size = new System.Drawing.Size(60, 16);
+            this.labelTitle.Location = new System.Drawing.Point(8, 4);
             //the x out button
             const int closeSize = 22;
             this.buttonCloseOverlay.Text = "x";
@@ -58,12 +63,17 @@ namespace SkyStopwatch
             this.buttonCloseOverlay.Location = new System.Drawing.Point(this.Size.Width - closeSize, 0);
             this.buttonCloseOverlay.FlatStyle = FlatStyle.Flat;
             this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
-            this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
+            //time since game start
+            //this.labelTimer.BackColor = Color.LightGray;
+            this.labelTimer.Size = new System.Drawing.Size(80, 30);
+            this.labelTimer.Location = new System.Drawing.Point(6, 20);
+            //button tool box
+            this.buttonToolBox.Size = new System.Drawing.Size(20, 20);
+            this.buttonToolBox.Location = new System.Drawing.Point(100, 24);
 
-
-            this.timerMain.Start();
 
             //pre warm up
+            this.timerMain.Start();
             Task.Factory.StartNew(() =>
             {
                 _AutoOCREngine = MainOCR.GetDefaultOCREngine();

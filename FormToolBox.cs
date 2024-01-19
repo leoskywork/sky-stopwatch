@@ -113,6 +113,7 @@ namespace SkyStopwatch
         {
             var imageView = new FormImageView();
             imageView.Show();
+            this.Close();
         }
     }
 }
