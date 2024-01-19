@@ -22,6 +22,7 @@ namespace SkyStopwatch
         public const int NoDelay = 0;
         public const int IncrementSeconds = 10;
         public const string TimeFormat = @"hh\:mm\:ss";
+        public const string TimeFormatNoSecond = @"h\:mm";
 
 
         public static void PrintScreenAsFile(string path)
@@ -193,7 +194,7 @@ namespace SkyStopwatch
                 if (line.IndexOf(':') > 0)
                 {
                     string timePart = line.Substring(line.IndexOf(":") + 1);
-                    string timePartAdjust = timePart.Replace(" ", string.Empty);
+                    string timePartAdjust = timePart.Trim().Replace(": ", ":").Replace(" :", ":");
 
                     foreach (string item in zeroAlikeArray)
                     {

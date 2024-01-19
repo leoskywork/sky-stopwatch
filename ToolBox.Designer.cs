@@ -118,7 +118,7 @@
             // 
             // buttonOCR
             // 
-            this.buttonOCR.BackColor = System.Drawing.Color.MediumSlateBlue;
+            this.buttonOCR.BackColor = System.Drawing.Color.SlateBlue;
             this.buttonOCR.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonOCR.ForeColor = System.Drawing.Color.White;
             this.buttonOCR.Location = new System.Drawing.Point(536, 34);
@@ -143,6 +143,7 @@
             this.Controls.Add(this.labelSize);
             this.Controls.Add(this.pictureBoxOne);
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.MaximizeBox = false;
             this.Name = "ToolBox";
             this.Text = "TestBox - auto close in  60 sec";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);

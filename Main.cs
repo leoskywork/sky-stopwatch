@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -46,19 +48,27 @@ namespace SkyStopwatch
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
             this.Controls.Remove(this.buttonOCR);
-            const int distance = 24;
+            const int distance = 70;// 30;// 24;
             this.Size = new System.Drawing.Size(this.Size.Width - distance, this.Size.Height);
-            this.buttonToolBox.Size = new System.Drawing.Size(this.buttonToolBox.Size.Width + distance, this.buttonToolBox.Size.Height);
-            this.buttonToolBox.Location = new System.Drawing.Point(buttonToolBox.Location.X - distance, buttonToolBox.Location.Y);
+            this.buttonToolBox.Size = new System.Drawing.Size(20, 24);
+            this.buttonToolBox.Location = new System.Drawing.Point(this.Size.Width + distance - 100, buttonToolBox.Location.Y);
+            //the x out button
+            const int closeSize = 22;
+            this.buttonCloseOverlay.Text = "x";
+            this.buttonCloseOverlay.Size = new System.Drawing.Size(closeSize, closeSize);
+            this.buttonCloseOverlay.Location = new System.Drawing.Point(this.Size.Width - closeSize, 0);
+            this.buttonCloseOverlay.FlatStyle = FlatStyle.Flat;
+            this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
+            this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
 
-            if (_AutoOCREngine == null)
+
+            this.timerMain.Start();
+
+            //pre warm up
+            Task.Factory.StartNew(() =>
             {
-                //pre warm up
-                Task.Factory.StartNew(() =>
-                {
-                    _AutoOCREngine = MainOCR.GetDefaultOCREngine();
-                });
-            }
+                _AutoOCREngine = MainOCR.GetDefaultOCREngine();
+            });
         }
 
         private void SyncTopMost()
@@ -94,12 +104,20 @@ namespace SkyStopwatch
             {
                 this.timerMain.Start();
             }
-            
 
-            TimeSpan ocrTimeSpan = TimeSpan.ParseExact(ocrDisplayTime, MainOCR.TimeFormat, System.Globalization.CultureInfo.InvariantCulture);
-            int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
-            _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
-            this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(UITimeFormat);
+
+            TimeSpan ocrTimeSpan;
+
+            if(TimeSpan.TryParseExact(ocrDisplayTime, MainOCR.TimeFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
+            {
+                int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
+                _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
+                this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(UITimeFormat);
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("failed to parse time：" + ocrDisplayTime);
+            }
         }
 
         private void buttonToolBox_Click(object sender, EventArgs e)
@@ -154,9 +172,20 @@ namespace SkyStopwatch
             }
         }
 
-        private void OnInitToolBox(Button buttonOCR)
+        private void OnInitToolBox(Button toolBoxButtonOCR)
         {
-            buttonOCR.Enabled = !_IsUpdatingPassedTime;
+            toolBoxButtonOCR.Enabled = !_IsUpdatingPassedTime;
+
+            if (toolBoxButtonOCR.Enabled)
+            {
+                toolBoxButtonOCR.BackColor = Color.SlateBlue;
+                toolBoxButtonOCR.ForeColor = Color.White;
+            }
+            else
+            {
+                toolBoxButtonOCR.BackColor = Color.LightGray;
+                toolBoxButtonOCR.ForeColor = Color.Gray;
+            }
         }
 
         private void OnRunOCR(Action afterDone = null)
@@ -237,11 +266,13 @@ namespace SkyStopwatch
         {
             try
             {
+                this.labelTitle.Text = "LEO - " + DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
+
+
                 if (!_IsUpdatingPassedTime) return;
 
                 var passed = DateTime.Now - _TimeAroundGameStart;
                 this.labelTimer.Text = passed.ToString(UITimeFormat);
-
             }
             catch (Exception ex)
             {
@@ -347,6 +378,105 @@ namespace SkyStopwatch
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.OnClearOCR();
+        }
+
+       
+
+        private void buttonCloseOverlay_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+
+
+
+
+
+
+
+        ////圆角
+        //[DllImport("kernel32.dll")]
+        //public static extern int SetProcessWorkingSetSize(IntPtr process, int minSize, int maxSize);
+        //[DllImport("Gdi32.dll", EntryPoint = "CreateRoundRectRgn")]
+        //private static extern IntPtr CreateRoundRectRgn
+        // (int nLeftRect, int nTopRect, int nRightRect, int nBottomRect, int nWidthEllipse, int nHeightEllipse);
+        ////阴影
+        //private const int CS_DropSHADOW = 0x20000;
+        //private const int GCL_STYLE = (-26);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        //public static extern int SetClassLong(IntPtr hwnd, int nIndex, int dwNewLong);
+        //[DllImport("user32.dll", CharSet = CharSet.Auto)]
+        //public static extern int GetClassLong(IntPtr hwnd, int nIndex);
+
+        private void Main_Load(object sender, EventArgs e)
+        {
+
+            //const int roundRadius = 2;
+            //圆角
+            //  Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, roundRadius, roundRadius));
+            //阴影
+            // SetClassLong(this.Handle, GCL_STYLE, GetClassLong(this.Handle, GCL_STYLE) | CS_DropSHADOW);
+        }
+
+        //窗体移动
+        [DllImport("user32.dll")]
+        public static extern bool ReleaseCapture();
+        [DllImport("user32.dll")]
+        public static extern bool SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
+        public const int WM_SYSCOMMAND = 0x0112;
+        public const int SC_MOVE = 0xF010;
+        public const int HTCAPTION = 0x0002;
+        //窗体移动
+        private void Main_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
+        }
+
+        private void labelTimer_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
+        }
+
+        private void labelTitle_MouseDown(object sender, MouseEventArgs e)
+        {
+            ReleaseCapture();
+            SendMessage(this.Handle, WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
+        }
+
+
+        private static GraphicsPath GetRoundedRectPath(Rectangle rect, int radius)
+        {
+            int diameter = radius;
+            Rectangle arcRect = new Rectangle(rect.Location, new Size(diameter, diameter));
+            GraphicsPath path = new GraphicsPath();
+            //   左上角   
+            path.AddArc(arcRect, 180, 90);
+            //   右上角   
+            arcRect.X = rect.Right - diameter;
+            path.AddArc(arcRect, 270, 90);
+            //   右下角   
+            arcRect.Y = rect.Bottom - diameter;
+            path.AddArc(arcRect, 0, 90);
+            //   左下角   
+            arcRect.X = rect.Left;
+            path.AddArc(arcRect, 90, 90);
+            path.CloseFigure();
+
+            return path;
+        }
+
+        protected override void OnResize(System.EventArgs e)
+        {
+            const int roundRadius = 8;
+
+            //SetWindowRegion
+            System.Drawing.Drawing2D.GraphicsPath formPath = new System.Drawing.Drawing2D.GraphicsPath();
+            //Rectangle rect = new Rectangle(0, 22, this.Width, this.Height - 22); //this.Left-10, this.Top-10, this.Width-10, this.Height-10);
+            Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
+            formPath = GetRoundedRectPath(rect, roundRadius);
+            this.Region = new Region(formPath);
         }
     }
 }
