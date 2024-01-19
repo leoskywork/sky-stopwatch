@@ -21,6 +21,8 @@ namespace SkyStopwatch
         public const int NewGameDelaySeconds = 10;
         public const int NoDelay = 0;
         public const int IncrementSeconds = 10;
+        public const int TmpFileMaxCount = 5;
+
         public const string TimeFormat = @"hh\:mm\:ss";
         public const string TimeFormatNoSecond = @"h\:mm";
 
@@ -54,7 +56,7 @@ namespace SkyStopwatch
                 Directory.CreateDirectory(subFolder);
             }
 
-            if (Directory.GetFiles(subFolder).Length > 100)
+            if (Directory.GetFiles(subFolder).Length > TmpFileMaxCount)
             {
                 try
                 {
@@ -83,23 +85,23 @@ namespace SkyStopwatch
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
             using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
+            using (Graphics gra = Graphics.FromImage(bitPic))
             {
-                using (Graphics gra = Graphics.FromImage(bitPic))
+                gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
+                gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+
+                if (onlyReturnPartOfImage) //for speed up
                 {
-                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+                    int x = screenRect.Width * XPercent / 100;
+                    int y = screenRect.Height * YPercent / 100;
 
-                    if (onlyReturnPartOfImage) //for speed up
+                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitPic.PixelFormat))
                     {
-                        int x = screenRect.Width * XPercent / 100;
-                        int y = screenRect.Height * YPercent / 100;
-
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitPic.PixelFormat);
                         return BitmapToBytes(cloneBitmap);
                     }
-
-                    return BitmapToBytes(bitPic);
                 }
+
+                return BitmapToBytes(bitPic);
             }
         }
 
@@ -142,15 +144,19 @@ namespace SkyStopwatch
                 Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
                 int x = screenRect.Width * XPercent / 100;
                 int y = screenRect.Height * YPercent / 100;
-                Bitmap bitmap = new Bitmap(imgPath);
-                Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitmap.PixelFormat);
-                byte[] bytes = BitmapToBytes(cloneBitmap);
 
-                using (var img = Tesseract.Pix.LoadFromMemory(bytes))
+                using (Bitmap bitmap = new Bitmap(imgPath))
+                using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, BlockWidth, BlockHeigh), bitmap.PixelFormat))
                 {
-                    using (var page = engine.Process(img))
+
+                    byte[] bytes = BitmapToBytes(cloneBitmap);
+
+                    using (var img = Tesseract.Pix.LoadFromMemory(bytes))
                     {
-                        return page.GetText();
+                        using (var page = engine.Process(img))
+                        {
+                            return page.GetText();
+                        }
                     }
                 }
             }

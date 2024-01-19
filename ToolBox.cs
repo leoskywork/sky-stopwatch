@@ -85,6 +85,7 @@ namespace SkyStopwatch
             _TopMostClick = null;
             _ClearClick = null;
             _AddSecondsClick = null;
+            this.pictureBoxOne.Image = null;
         }
 
         private void buttonClear_Click(object sender, EventArgs e)

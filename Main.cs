@@ -146,23 +146,28 @@ namespace SkyStopwatch
                     int x = screenRect.Width * MainOCR.XPercent / 100;
                     int y = screenRect.Height * MainOCR.YPercent / 100;
 
-                    Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height);
-                    Graphics gra = Graphics.FromImage(bitPic);
-                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+                    using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
+                    using (Graphics gra = Graphics.FromImage(bitPic))
+                    {
 
-                    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeigh), bitPic.PixelFormat);
-                    ToolBox tool = new ToolBox(cloneBitmap,
-                        "current screen",
-                        (b) => { this.OnInitToolBox(b); },
-                        () => { this.OnRunOCR(); },
-                        () => { this.OnNewGameStart(); },
-                        () => { this.OnSwitchTopMost(); },
-                        () => { this.OnClearOCR(); },
-                        (s) => { this.OnAddSeconds(s); });
-                    tool.Show();
+                        gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
+                        gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+
+                        //can not use using block here, since we pass the bitmap into a form and show it
+                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeigh), bitPic.PixelFormat);
+                        {
+                            ToolBox tool = new ToolBox(cloneBitmap,
+                                "current screen",
+                                (b) => { this.OnInitToolBox(b); },
+                                () => { this.OnRunOCR(); },
+                                () => { this.OnNewGameStart(); },
+                                () => { this.OnSwitchTopMost(); },
+                                () => { this.OnClearOCR(); },
+                                (s) => { this.OnAddSeconds(s); });
+                            tool.Show();
+                        }
+                    }
                 }
-
 
                 buttonToolBox.Enabled = true;
             }
@@ -180,11 +185,14 @@ namespace SkyStopwatch
             {
                 toolBoxButtonOCR.BackColor = Color.SlateBlue;
                 toolBoxButtonOCR.ForeColor = Color.White;
+                toolBoxButtonOCR.Cursor = Cursors.Default;
             }
             else
             {
+                //leotodo not working?
                 toolBoxButtonOCR.BackColor = Color.LightGray;
                 toolBoxButtonOCR.ForeColor = Color.Gray;
+                toolBoxButtonOCR.Cursor = Cursors.No;
             }
         }
 
