@@ -50,7 +50,7 @@ namespace SkyStopwatch
             const int distance = 70;// 30;// 24;
             this.Size = new System.Drawing.Size(this.Size.Width - distance, this.Size.Height - 10);
             this.buttonToolBox.Size = new System.Drawing.Size(20, 24);
-            this.buttonToolBox.Location = new System.Drawing.Point(this.Size.Width + distance - 100, 30);
+            this.buttonToolBox.Location = new System.Drawing.Point(this.Size.Width + distance - 100, 28);
             //the x out button
             const int closeSize = 22;
             this.buttonCloseOverlay.Text = "x";
@@ -131,8 +131,8 @@ namespace SkyStopwatch
                 //    int x = screenRect.Width * 30 / 100;
                 //    int y = screenRect.Height * 65 / 100;
 
-                //    //string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-1.bmp";
-                //    string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
+                //    //string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-1.bmp";
+                //    string screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-2-min-zero.bmp";
                 //    Bitmap bitPic = new Bitmap(screenShotPath);
                 //    Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, 600, 300), bitPic.PixelFormat);
                 //    (new TestBox(cloneBitmap, "fixed pic")).Show();
@@ -208,8 +208,8 @@ namespace SkyStopwatch
             {
                 this.BeginInvoke((Action)(() => { labelTimer.Text = "ocr"; }));
                 string screenShotPath = t.Result;
-                //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-1.bmp";
-                //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
+                //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-1.bmp";
+                //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-2-min-zero.bmp";
 
                 string data = MainOCR.ReadImageFromFile(screenShotPath);
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");

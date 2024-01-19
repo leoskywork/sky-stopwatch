@@ -11,7 +11,7 @@ namespace SkyStopwatch
 
     /*
      
-    ## features
+    ## notes
         - 2 kinds of samples to OCR image
             - from disk, manually triggered by button clcik, will save a pic into tmp folder, slow
             - from memory, auto trigger, fast, does not save file
@@ -21,14 +21,17 @@ namespace SkyStopwatch
 
     ## todo
 
-    ### new game start - no timestamp
+    [done] ### new game start - no timestamp
 
     [done-half] ### auto run ocr - so no need to manual click button every time into a new game
-        - can not go full auto, to complicated
+        - can not go full auto, to complicated - done now, directly read from memory, not disk, so it's worth to always run on background
 
     ### configurable fields
-        - save pin/unpin status - thus no need to click it every time program restart
-        - time adjusted
+        - ocr block args (x,y, width, height)
+            - set default value
+            - user can update them
+        - save pin/unpin status - thus no need to click it every time program restart - low prority
+        - time adjusted - low prority
 
     [done] ### read img(sreen shot) from memory instead of disk
 

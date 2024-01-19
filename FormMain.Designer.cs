@@ -69,7 +69,7 @@
             this.labelTimer.AutoSize = true;
             this.labelTimer.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelTimer.Location = new System.Drawing.Point(6, 38);
-            this.labelTimer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelTimer.Margin = new System.Windows.Forms.Padding(0);
             this.labelTimer.Name = "labelTimer";
             this.labelTimer.Size = new System.Drawing.Size(134, 44);
             this.labelTimer.TabIndex = 3;
@@ -116,7 +116,7 @@
             this.buttonDummyAcceptHighLight.Text = "d";
             this.buttonDummyAcceptHighLight.UseVisualStyleBackColor = true;
             // 
-            // Main
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -131,7 +131,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.Name = "Main";
+            this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LEO";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
