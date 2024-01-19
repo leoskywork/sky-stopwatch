@@ -36,6 +36,8 @@ namespace SkyStopwatch
             //});
             this.timerAutoClose.Interval = 60 * 1000;
             this.timerAutoClose.Start();
+
+            this.labelSize.Text = $"box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
         }
 
         public FormToolBox(Bitmap image, 

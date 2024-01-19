@@ -25,7 +25,7 @@ namespace SkyStopwatch
 
             this.buttonStart.Enabled = true;
             this.buttonStop.Enabled = false;
-            this.labelSize.Text = $"box size: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
+            this.labelSize.Text = $"box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
         }
 
         private void timerAutoClose_Tick(object sender, EventArgs e)
