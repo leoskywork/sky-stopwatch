@@ -44,6 +44,19 @@ namespace SkyStopwatch
             this.timerMain.Interval = 900;
             this.timerAutoRefresh.Interval = 1000;
 
+
+            InitGUILayoutV1();
+
+            //pre warm up
+            this.timerMain.Start();
+            Task.Factory.StartNew(() =>
+            {
+                _AutoOCREngine = MainOCR.GetDefaultOCREngine();
+            });
+        }
+
+        private void InitGUILayoutV1()
+        {
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
             this.Controls.Remove(this.buttonOCR);
@@ -70,14 +83,10 @@ namespace SkyStopwatch
             //button tool box
             this.buttonToolBox.Size = new System.Drawing.Size(20, 20);
             this.buttonToolBox.Location = new System.Drawing.Point(100, 24);
-
-
-            //pre warm up
-            this.timerMain.Start();
-            Task.Factory.StartNew(() =>
-            {
-                _AutoOCREngine = MainOCR.GetDefaultOCREngine();
-            });
+        }
+        private void InitGUILayoutV2()
+        {
+        
         }
 
         private void SyncTopMost()
