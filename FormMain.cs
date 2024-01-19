@@ -15,7 +15,6 @@ namespace SkyStopwatch
 {
     public partial class FormMain : Form
     {
-        public const string UITimeFormat = @"mm\:ss";
 
         //leotodo, some fileds need thread safe?
         private bool _TopMost = true;//false;
@@ -45,7 +44,8 @@ namespace SkyStopwatch
             this.timerAutoRefresh.Interval = 1000;
 
 
-            InitGUILayoutV1();
+            //InitGUILayoutV1();
+            InitGUILayoutV2();
 
             //pre warm up
             this.timerMain.Start();
@@ -62,9 +62,9 @@ namespace SkyStopwatch
             this.Controls.Remove(this.buttonOCR);
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
-
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
             this.Size = new System.Drawing.Size(140, 50);
+
             //display time now
             //this.labelTitle.BackColor = System.Drawing.Color.LightGray;
             this.labelTitle.Size = new System.Drawing.Size(60, 16);
@@ -86,7 +86,41 @@ namespace SkyStopwatch
         }
         private void InitGUILayoutV2()
         {
+            //shrink width when hide ocr button
+            //this.buttonOCR.Hide();
+            this.Controls.Remove(this.buttonOCR);
+            this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
+            this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
+            //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
+            this.Size = new System.Drawing.Size(170, 30);
+
+            //time since game start
+            //this.labelTimer.BackColor = Color.LightGray;
+            this.labelTimer.Size = new System.Drawing.Size(80, 34);
+            this.labelTimer.Location = new System.Drawing.Point(2, -2);
+
+            //button tool box
+            this.buttonToolBox.Size = new System.Drawing.Size(18, 18);
+            this.buttonToolBox.Location = new System.Drawing.Point(108, -6);
+
+            //display time now
+            //this.labelTitle.BackColor = System.Drawing.Color.LightGray;
+            //this.labelTitle.BackColor = System.Drawing.Color.Transparent;
+            this.labelTitle.Size = new System.Drawing.Size(50, 16);
+            this.labelTitle.Location = new System.Drawing.Point(this.buttonToolBox.Location.X - 30, 20);
+            this.labelTitle.TextAlign = ContentAlignment.MiddleRight;
+          
         
+
+            //the x out button
+            const int closeSize = 40;
+            this.buttonCloseOverlay.Text = "X";
+            this.buttonCloseOverlay.Size = new System.Drawing.Size(closeSize, closeSize);
+            this.buttonCloseOverlay.Location = new System.Drawing.Point(this.Size.Width - closeSize, 0);
+            this.buttonCloseOverlay.FlatStyle = FlatStyle.Flat;
+            this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
+            this.buttonCloseOverlay.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
+            this.buttonCloseOverlay.ForeColor = System.Drawing.Color.White;
         }
 
         private void SyncTopMost()
@@ -130,7 +164,7 @@ namespace SkyStopwatch
             {
                 int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
                 _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
-                this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(UITimeFormat);
+                this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(MainOCR.UIElapsedTimeFormat);
             }
             else
             {
@@ -292,13 +326,14 @@ namespace SkyStopwatch
         {
             try
             {
-                this.labelTitle.Text = "" + DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
+                this.labelTitle.Text = DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
+                //this.labelTitle.Text = "23:59";
 
 
                 if (!_IsUpdatingPassedTime) return;
 
                 var passed = DateTime.Now - _TimeAroundGameStart;
-                this.labelTimer.Text = passed.ToString(UITimeFormat);
+                this.labelTimer.Text = passed.ToString(MainOCR.UIElapsedTimeFormat);
             }
             catch (Exception ex)
             {

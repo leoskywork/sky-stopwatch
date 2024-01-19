@@ -25,6 +25,8 @@ namespace SkyStopwatch
 
         public const string TimeSpanFormat = @"hh\:mm\:ss";
         public const string TimeFormatNoSecond = @"H\:mm";
+        public const string UIElapsedTimeFormat = @"m\:ss";
+
 
 
         public static void PrintScreenAsFile(string path)
