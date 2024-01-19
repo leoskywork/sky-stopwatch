@@ -14,7 +14,7 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace SkyStopwatch
 {
-    public partial class Main : Form
+    public partial class FormMain : Form
     {
         public const string UITimeFormat = @"mm\:ss";
 
@@ -30,7 +30,7 @@ namespace SkyStopwatch
         private string _AutoOCRTimeOfLastRead;
         private Tesseract.TesseractEngine _AutoOCREngine;
 
-        public Main()
+        public FormMain()
         {
             InitializeComponent();
             InitStopwatch();
@@ -156,7 +156,7 @@ namespace SkyStopwatch
                         //can not use using block here, since we pass the bitmap into a form and show it
                         Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeigh), bitPic.PixelFormat);
                         {
-                            ToolBox tool = new ToolBox(cloneBitmap,
+                            FormToolBox tool = new FormToolBox(cloneBitmap,
                                 "current screen",
                                 (b) => { this.OnInitToolBox(b); },
                                 () => { this.OnRunOCR(); },

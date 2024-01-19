@@ -1,6 +1,6 @@
 ﻿namespace SkyStopwatch
 {
-    partial class Main
+    partial class FormMain
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonToolBox = new System.Windows.Forms.Button();
             this.labelTimer = new System.Windows.Forms.Label();

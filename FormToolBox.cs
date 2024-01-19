@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class ToolBox : Form
+    public partial class FormToolBox : Form
     {
         private Action _RunOCR;
         private Action _NewGameClick;
@@ -21,7 +21,7 @@ namespace SkyStopwatch
       
 
 
-        public ToolBox()
+        public FormToolBox()
         {
             InitializeComponent();
 
@@ -38,7 +38,7 @@ namespace SkyStopwatch
             this.timerAutoClose.Start();
         }
 
-        public ToolBox(Bitmap image, 
+        public FormToolBox(Bitmap image, 
             string message,
             Action<Button> onInit = null,
             Action runOCR = null,

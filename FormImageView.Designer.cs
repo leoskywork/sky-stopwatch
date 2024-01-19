@@ -1,6 +1,6 @@
 ﻿namespace SkyStopwatch
 {
-    partial class ToolBox
+    partial class FormImageView
     {
         /// <summary>
         /// Required designer variable.
