@@ -49,9 +49,9 @@ namespace SkyStopwatch
             //this.buttonOCR.Hide();
             this.Controls.Remove(this.buttonOCR);
             const int distance = 70;// 30;// 24;
-            this.Size = new System.Drawing.Size(this.Size.Width - distance, this.Size.Height);
+            this.Size = new System.Drawing.Size(this.Size.Width - distance, this.Size.Height - 10);
             this.buttonToolBox.Size = new System.Drawing.Size(20, 24);
-            this.buttonToolBox.Location = new System.Drawing.Point(this.Size.Width + distance - 100, buttonToolBox.Location.Y);
+            this.buttonToolBox.Location = new System.Drawing.Point(this.Size.Width + distance - 100, 30);
             //the x out button
             const int closeSize = 22;
             this.buttonCloseOverlay.Text = "x";
@@ -266,7 +266,7 @@ namespace SkyStopwatch
         {
             try
             {
-                this.labelTitle.Text = "LEO - " + DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
+                this.labelTitle.Text = "" + DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
 
 
                 if (!_IsUpdatingPassedTime) return;
