@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.buttonOCR = new System.Windows.Forms.Button();
-            this.buttonTopMost = new System.Windows.Forms.Button();
+            this.buttonToolBox = new System.Windows.Forms.Button();
             this.labelTimer = new System.Windows.Forms.Label();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.timerAutoRefresh = new System.Windows.Forms.Timer(this.components);
@@ -48,16 +48,17 @@
             this.buttonOCR.UseVisualStyleBackColor = true;
             this.buttonOCR.Click += new System.EventHandler(this.buttonOCR_Click);
             // 
-            // buttonTopMost
+            // buttonToolBox
             // 
-            this.buttonTopMost.Location = new System.Drawing.Point(248, 17);
-            this.buttonTopMost.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonTopMost.Name = "buttonTopMost";
-            this.buttonTopMost.Size = new System.Drawing.Size(30, 30);
-            this.buttonTopMost.TabIndex = 1;
-            this.buttonTopMost.Text = "-P";
-            this.buttonTopMost.UseVisualStyleBackColor = true;
-            this.buttonTopMost.Click += new System.EventHandler(this.buttonTopMost_Click);
+            this.buttonToolBox.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.buttonToolBox.Location = new System.Drawing.Point(248, 17);
+            this.buttonToolBox.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonToolBox.Name = "buttonToolBox";
+            this.buttonToolBox.Size = new System.Drawing.Size(30, 30);
+            this.buttonToolBox.TabIndex = 1;
+            this.buttonToolBox.Text = "P";
+            this.buttonToolBox.UseVisualStyleBackColor = true;
+            this.buttonToolBox.Click += new System.EventHandler(this.buttonToolBox_Click);
             // 
             // labelTimer
             // 
@@ -84,7 +85,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(290, 56);
             this.Controls.Add(this.labelTimer);
-            this.Controls.Add(this.buttonTopMost);
+            this.Controls.Add(this.buttonToolBox);
             this.Controls.Add(this.buttonOCR);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -102,7 +103,7 @@
         #endregion
 
         private System.Windows.Forms.Button buttonOCR;
-        private System.Windows.Forms.Button buttonTopMost;
+        private System.Windows.Forms.Button buttonToolBox;
         private System.Windows.Forms.Label labelTimer;
         private System.Windows.Forms.Timer timerMain;
         private System.Windows.Forms.Timer timerAutoRefresh;

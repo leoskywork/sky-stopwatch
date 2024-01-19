@@ -38,13 +38,20 @@ namespace SkyStopwatch
 
         private void InitStopwatch()
         {
-            //this.labelTimerPrefix.Hide();
             this.labelTimer.Text = "unset";
 
             this.timerMain.Interval = 900;
             this.timerAutoRefresh.Interval = 1000;
 
-            if(_AutoOCREngine == null)
+            //shrink width when hide ocr button
+            //this.buttonOCR.Hide();
+            this.Controls.Remove(this.buttonOCR);
+            const int distance = 24;
+            this.Size = new System.Drawing.Size(this.Size.Width - distance, this.Size.Height);
+            this.buttonToolBox.Size = new System.Drawing.Size(this.buttonToolBox.Size.Width + distance, this.buttonToolBox.Size.Height);
+            this.buttonToolBox.Location = new System.Drawing.Point(buttonToolBox.Location.X - distance, buttonToolBox.Location.Y);
+
+            if (_AutoOCREngine == null)
             {
                 //pre warm up
                 Task.Factory.StartNew(() =>
@@ -57,65 +64,18 @@ namespace SkyStopwatch
         private void SyncTopMost()
         {
             this.TopMost = _TopMost;
-            this.buttonTopMost.Text = this._TopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+            this.buttonToolBox.Text = this._TopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void buttonOCR_Click(object sender, EventArgs e)
         {
             try
             {
-                _IsUpdatingPassedTime = false;
                 buttonOCR.Enabled = false;
-                labelTimer.Text = "shot";
 
-                Task.Factory.StartNew(() =>
+                OnRunOCR(() =>
                 {
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot");
-                    string screenShotPath = MainOCR.PrintScreenAsTempFile();
-                    return screenShotPath;
-
-                }).ContinueWith(t =>
-                {
-                    this.BeginInvoke((Action)(() =>
-                    {
-                        labelTimer.Text = "ocr";
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} xxx");
-                    }));
-
-                    string screenShotPath = t.Result;
-                    //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-1.bmp";
-                    //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
-
-                    string data = MainOCR.ReadImageFromFile(screenShotPath);
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");
-
-                    this.BeginInvoke((Action)(() =>
-                    {
-                        labelTimer.Text = "read";
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} xxx");
-                    }));
-
-                    string ocrDisplayTime = MainOCR.FindTime(data);
-
-                    this.BeginInvoke((Action)(() =>
-                    {
-                        if (!string.IsNullOrEmpty(ocrDisplayTime))
-                        {
-                            _IsUpdatingPassedTime = true;
-                            StartUIStopwatch(ocrDisplayTime, MainOCR.ManualOCRDelaySeconds);
-                        }
-                        else
-                        {
-                            labelTimer.Text = "none";
-                        }
-
-                        if(!this.timerAutoRefresh.Enabled)
-                        {
-                            this.timerAutoRefresh.Start();
-                        }
-
-                        buttonOCR.Enabled = true;
-                    }));
+                    buttonOCR.Enabled = true;
                 });
             }
             catch (Exception ex)
@@ -142,11 +102,11 @@ namespace SkyStopwatch
             this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(UITimeFormat);
         }
 
-        private void buttonTopMost_Click(object sender, EventArgs e)
+        private void buttonToolBox_Click(object sender, EventArgs e)
         {
             try
             {
-                buttonTopMost.Enabled = false;
+                buttonToolBox.Enabled = false;
 
                 // test part of the full screen - fixed pic
                 //{
@@ -176,6 +136,8 @@ namespace SkyStopwatch
                     Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeigh), bitPic.PixelFormat);
                     ToolBox tool = new ToolBox(cloneBitmap,
                         "current screen",
+                        (b) => { this.OnInitToolBox(b); },
+                        () => { this.OnRunOCR(); },
                         () => { this.OnNewGameStart(); },
                         () => { this.OnSwitchTopMost(); },
                         () => { this.OnClearOCR(); },
@@ -184,12 +146,60 @@ namespace SkyStopwatch
                 }
 
 
-                buttonTopMost.Enabled = true;
+                buttonToolBox.Enabled = true;
             }
             catch (Exception ex)
             {
                 OnError(ex);
             }
+        }
+
+        private void OnInitToolBox(Button buttonOCR)
+        {
+            buttonOCR.Enabled = !_IsUpdatingPassedTime;
+        }
+
+        private void OnRunOCR(Action afterDone = null)
+        {
+            _IsUpdatingPassedTime = false;
+            labelTimer.Text = "shot";
+
+            Task.Factory.StartNew(() =>
+            {
+                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot");
+                return MainOCR.PrintScreenAsTempFile();
+            }).ContinueWith(t =>
+            {
+                this.BeginInvoke((Action)(() => { labelTimer.Text = "ocr"; }));
+                string screenShotPath = t.Result;
+                //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-1.bmp";
+                //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\bin\Debug\tmp-test\test-2-min-zero.bmp";
+
+                string data = MainOCR.ReadImageFromFile(screenShotPath);
+                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");
+                this.BeginInvoke((Action)(() => { labelTimer.Text = "read"; }));
+                string ocrDisplayTime = MainOCR.FindTime(data);
+
+                this.BeginInvoke((Action)(() =>
+                {
+                    if (!string.IsNullOrEmpty(ocrDisplayTime))
+                    {
+                        _IsUpdatingPassedTime = true;
+                        StartUIStopwatch(ocrDisplayTime, MainOCR.ManualOCRDelaySeconds);
+                    }
+                    else
+                    {
+                        labelTimer.Text = "none";
+                    }
+
+                    if (!this.timerAutoRefresh.Enabled)
+                    {
+                        this.timerAutoRefresh.Start();
+                    }
+
+                    afterDone?.Invoke();
+                }));
+            });
         }
 
         private void OnNewGameStart()

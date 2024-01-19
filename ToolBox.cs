@@ -13,10 +13,12 @@ namespace SkyStopwatch
 {
     public partial class ToolBox : Form
     {
+        private Action _RunOCR;
         private Action _NewGameClick;
         private Action _TopMostClick;
         private Action _ClearClick;
         private Action<int> _AddSecondsClick;
+      
 
 
         public ToolBox()
@@ -36,7 +38,10 @@ namespace SkyStopwatch
             this.timerAutoClose.Start();
         }
 
-        public ToolBox(Bitmap image, string message,
+        public ToolBox(Bitmap image, 
+            string message,
+            Action<Button> onInit = null,
+            Action runOCR = null,
             Action onNewGame = null,
             Action topMost = null,
             Action clear = null,
@@ -46,16 +51,15 @@ namespace SkyStopwatch
 
             this.pictureBoxOne.Image = image;
             this.labelMessage.Text = message;
-            this._NewGameClick = onNewGame;
+
+            onInit?.Invoke(this.buttonOCR);
+            _RunOCR = runOCR;
+            _NewGameClick = onNewGame;
             _TopMostClick = topMost;
             _ClearClick = clear;
             _AddSecondsClick = addSeconds;
         }
 
-        public ToolBox(string imagePath, string message, 
-            Action onNewGame = null) : this(new Bitmap(imagePath), message, onNewGame)
-        {
-        }
 
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
@@ -76,6 +80,7 @@ namespace SkyStopwatch
 
         private void ToolBox_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _RunOCR = null;
             _NewGameClick = null;
             _TopMostClick = null;
             _ClearClick = null;
@@ -93,6 +98,12 @@ namespace SkyStopwatch
             buttonClear.Enabled = false;
             _AddSecondsClick?.Invoke(MainOCR.IncrementSeconds);
             buttonClear.Enabled = true;
+        }
+
+        private void buttonOCR_Click(object sender, EventArgs e)
+        {
+            _RunOCR?.Invoke();
+            this.Close();
         }
     }
 }
