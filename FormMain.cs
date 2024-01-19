@@ -117,7 +117,7 @@ namespace SkyStopwatch
 
             TimeSpan ocrTimeSpan;
 
-            if(TimeSpan.TryParseExact(ocrDisplayTime, MainOCR.TimeFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
+            if(TimeSpan.TryParseExact(ocrDisplayTime, MainOCR.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
             {
                 int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
                 _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
@@ -253,7 +253,7 @@ namespace SkyStopwatch
             _IsUpdatingPassedTime = true;
             this.buttonOCR.Enabled = false;
 
-            StartUIStopwatch(TimeSpan.Zero.ToString(MainOCR.TimeFormat), MainOCR.NewGameDelaySeconds);
+            StartUIStopwatch(TimeSpan.Zero.ToString(MainOCR.TimeSpanFormat), MainOCR.NewGameDelaySeconds);
 
             if (!this.timerAutoRefresh.Enabled)
             {
@@ -269,7 +269,7 @@ namespace SkyStopwatch
             this.buttonOCR.Enabled = false;
 
             TimeSpan passedTimeWithIncrease = DateTime.Now.AddSeconds(seconds) - _TimeAroundGameStart;
-            StartUIStopwatch(passedTimeWithIncrease.ToString(MainOCR.TimeFormat), MainOCR.NoDelay);
+            StartUIStopwatch(passedTimeWithIncrease.ToString(MainOCR.TimeSpanFormat), MainOCR.NoDelay);
         }
 
         private void OnSwitchTopMost()

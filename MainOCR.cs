@@ -23,8 +23,8 @@ namespace SkyStopwatch
         public const int IncrementSeconds = 10;
         public const int TmpFileMaxCount = 5;
 
-        public const string TimeFormat = @"hh\:mm\:ss";
-        public const string TimeFormatNoSecond = @"h\:mm";
+        public const string TimeSpanFormat = @"hh\:mm\:ss";
+        public const string TimeFormatNoSecond = @"H\:mm";
 
 
         public static void PrintScreenAsFile(string path)
