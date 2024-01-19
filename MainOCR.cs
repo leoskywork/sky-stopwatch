@@ -11,10 +11,10 @@ namespace SkyStopwatch
 {
     class MainOCR
     {
-        public const int XPercent = 30;
-        public const int YPercent = 65;
-        public const int BlockWidth = 400;
-        public const int BlockHeight = 150;
+        public const int XPercent = 32;
+        public const int YPercent = 68;
+        public const int BlockWidth = 300;
+        public const int BlockHeight = 100;
 
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;

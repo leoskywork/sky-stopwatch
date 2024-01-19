@@ -26,6 +26,12 @@ namespace SkyStopwatch
             this.buttonStart.Enabled = true;
             this.buttonStop.Enabled = false;
             this.labelSize.Text = $"box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
+
+            var screen = Screen.PrimaryScreen.Bounds;
+            this.numericUpDownX.Value = (int)(screen.Width * MainOCR.XPercent * 0.01);
+            this.numericUpDownY.Value = (int)(screen.Height * MainOCR.YPercent * 0.01);
+            this.numericUpDownWidth.Value = MainOCR.BlockWidth;
+            this.numericUpDownHeight.Value = MainOCR.BlockHeight;
         }
 
         private void timerAutoClose_Tick(object sender, EventArgs e)
