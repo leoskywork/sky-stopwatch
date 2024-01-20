@@ -123,5 +123,10 @@ namespace SkyStopwatch
             imageView.Show();
             this.Close();
         }
+
+        private void checkBoxPopWarning_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

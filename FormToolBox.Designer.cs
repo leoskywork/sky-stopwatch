@@ -43,6 +43,11 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
+            this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
+            this.buttonSaveTimeNode = new System.Windows.Forms.Button();
+            this.buttonResetTimeNode = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -79,7 +84,7 @@
             // buttonNewGame
             // 
             this.buttonNewGame.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonNewGame.Location = new System.Drawing.Point(40, 140);
+            this.buttonNewGame.Location = new System.Drawing.Point(21, 148);
             this.buttonNewGame.Name = "buttonNewGame";
             this.buttonNewGame.Size = new System.Drawing.Size(120, 30);
             this.buttonNewGame.TabIndex = 200;
@@ -94,7 +99,7 @@
             // buttonTopMost
             // 
             this.buttonTopMost.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonTopMost.Location = new System.Drawing.Point(42, 24);
+            this.buttonTopMost.Location = new System.Drawing.Point(29, 32);
             this.buttonTopMost.Name = "buttonTopMost";
             this.buttonTopMost.Size = new System.Drawing.Size(120, 30);
             this.buttonTopMost.TabIndex = 400;
@@ -105,7 +110,7 @@
             // buttonClear
             // 
             this.buttonClear.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonClear.Location = new System.Drawing.Point(40, 82);
+            this.buttonClear.Location = new System.Drawing.Point(21, 90);
             this.buttonClear.Name = "buttonClear";
             this.buttonClear.Size = new System.Drawing.Size(120, 30);
             this.buttonClear.TabIndex = 100;
@@ -116,9 +121,9 @@
             // buttonAddSeconds
             // 
             this.buttonAddSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonAddSeconds.Location = new System.Drawing.Point(40, 198);
+            this.buttonAddSeconds.Location = new System.Drawing.Point(21, 206);
             this.buttonAddSeconds.Name = "buttonAddSeconds";
-            this.buttonAddSeconds.Size = new System.Drawing.Size(50, 30);
+            this.buttonAddSeconds.Size = new System.Drawing.Size(54, 30);
             this.buttonAddSeconds.TabIndex = 300;
             this.buttonAddSeconds.Text = "+10s";
             this.buttonAddSeconds.UseVisualStyleBackColor = true;
@@ -129,7 +134,7 @@
             this.buttonOCR.BackColor = System.Drawing.Color.SlateBlue;
             this.buttonOCR.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonOCR.ForeColor = System.Drawing.Color.White;
-            this.buttonOCR.Location = new System.Drawing.Point(40, 24);
+            this.buttonOCR.Location = new System.Drawing.Point(21, 32);
             this.buttonOCR.Name = "buttonOCR";
             this.buttonOCR.Size = new System.Drawing.Size(120, 30);
             this.buttonOCR.TabIndex = 7;
@@ -157,7 +162,7 @@
             this.groupBox1.Controls.Add(this.buttonNewGame);
             this.groupBox1.Location = new System.Drawing.Point(686, 34);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(200, 435);
+            this.groupBox1.Size = new System.Drawing.Size(168, 435);
             this.groupBox1.TabIndex = 402;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OCR";
@@ -174,10 +179,15 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.buttonResetTimeNode);
+            this.groupBox3.Controls.Add(this.buttonSaveTimeNode);
+            this.groupBox3.Controls.Add(this.textBoxTimeSpanNodes);
+            this.groupBox3.Controls.Add(this.label1);
+            this.groupBox3.Controls.Add(this.checkBoxPopWarning);
             this.groupBox3.Controls.Add(this.buttonTopMost);
-            this.groupBox3.Location = new System.Drawing.Point(916, 34);
+            this.groupBox3.Location = new System.Drawing.Point(875, 34);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 435);
+            this.groupBox3.Size = new System.Drawing.Size(249, 435);
             this.groupBox3.TabIndex = 404;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setting";
@@ -185,13 +195,66 @@
             // buttonReduceSeconds
             // 
             this.buttonReduceSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonReduceSeconds.Location = new System.Drawing.Point(110, 198);
+            this.buttonReduceSeconds.Location = new System.Drawing.Point(87, 206);
             this.buttonReduceSeconds.Name = "buttonReduceSeconds";
-            this.buttonReduceSeconds.Size = new System.Drawing.Size(50, 30);
+            this.buttonReduceSeconds.Size = new System.Drawing.Size(54, 30);
             this.buttonReduceSeconds.TabIndex = 301;
             this.buttonReduceSeconds.Text = "-10s";
             this.buttonReduceSeconds.UseVisualStyleBackColor = true;
             this.buttonReduceSeconds.Click += new System.EventHandler(this.buttonReduceSeconds_Click);
+            // 
+            // checkBoxPopWarning
+            // 
+            this.checkBoxPopWarning.AutoSize = true;
+            this.checkBoxPopWarning.Checked = true;
+            this.checkBoxPopWarning.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxPopWarning.Location = new System.Drawing.Point(29, 92);
+            this.checkBoxPopWarning.Name = "checkBoxPopWarning";
+            this.checkBoxPopWarning.Size = new System.Drawing.Size(173, 19);
+            this.checkBoxPopWarning.TabIndex = 401;
+            this.checkBoxPopWarning.Text = "Monitor time nodes";
+            this.checkBoxPopWarning.UseVisualStyleBackColor = true;
+            this.checkBoxPopWarning.CheckedChanged += new System.EventHandler(this.checkBoxPopWarning_CheckedChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(41, 117);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(191, 15);
+            this.label1.TabIndex = 402;
+            this.label1.Text = " Nodes since game start";
+            // 
+            // textBoxTimeSpanNodes
+            // 
+            this.textBoxTimeSpanNodes.Location = new System.Drawing.Point(52, 148);
+            this.textBoxTimeSpanNodes.Multiline = true;
+            this.textBoxTimeSpanNodes.Name = "textBoxTimeSpanNodes";
+            this.textBoxTimeSpanNodes.Size = new System.Drawing.Size(180, 80);
+            this.textBoxTimeSpanNodes.TabIndex = 403;
+            this.textBoxTimeSpanNodes.Text = "10:00\r\n20:00\r\n";
+            // 
+            // buttonSaveTimeNode
+            // 
+            this.buttonSaveTimeNode.Enabled = false;
+            this.buttonSaveTimeNode.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonSaveTimeNode.Location = new System.Drawing.Point(101, 246);
+            this.buttonSaveTimeNode.Name = "buttonSaveTimeNode";
+            this.buttonSaveTimeNode.Size = new System.Drawing.Size(60, 30);
+            this.buttonSaveTimeNode.TabIndex = 404;
+            this.buttonSaveTimeNode.Text = "Save";
+            this.buttonSaveTimeNode.UseVisualStyleBackColor = true;
+            // 
+            // buttonResetTimeNode
+            // 
+            this.buttonResetTimeNode.Enabled = false;
+            this.buttonResetTimeNode.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonResetTimeNode.Location = new System.Drawing.Point(172, 246);
+            this.buttonResetTimeNode.Name = "buttonResetTimeNode";
+            this.buttonResetTimeNode.Size = new System.Drawing.Size(60, 30);
+            this.buttonResetTimeNode.TabIndex = 405;
+            this.buttonResetTimeNode.Text = "Reset";
+            this.buttonResetTimeNode.UseVisualStyleBackColor = true;
             // 
             // FormToolBox
             // 
@@ -213,6 +276,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -234,5 +298,10 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button buttonReduceSeconds;
+        private System.Windows.Forms.CheckBox checkBoxPopWarning;
+        private System.Windows.Forms.TextBox textBoxTimeSpanNodes;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button buttonSaveTimeNode;
+        private System.Windows.Forms.Button buttonResetTimeNode;
     }
 }
