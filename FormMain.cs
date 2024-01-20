@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -52,6 +53,17 @@ namespace SkyStopwatch
             Task.Factory.StartNew(() =>
             {
                 _AutoOCREngine = MainOCR.GetDefaultOCREngine();
+
+                Thread.Sleep(500);
+                this.BeginInvoke(new Action(() =>
+                {
+                    this.labelTimer.Text = "run";
+                }));
+                Thread.Sleep(1000);
+                this.BeginInvoke(new Action(() =>
+                {
+                    this.OnNewGameStart();
+                }));
             });
         }
 
@@ -453,7 +465,7 @@ namespace SkyStopwatch
 
 
 
-
+        //do this in another way
         ////圆角
         //[DllImport("kernel32.dll")]
         //public static extern int SetProcessWorkingSetSize(IntPtr process, int minSize, int maxSize);
