@@ -490,10 +490,9 @@ namespace SkyStopwatch
                         System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
 
-                        Guid guid = Guid.NewGuid();
-                        System.Diagnostics.Debug.WriteLine($"temp file key: {guid}");
-                        MainOCR.SaveTmpFile(guid.ToString(), screenShotBytes);
-
+                        string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
+                        
+                        System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
                         System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
 

@@ -32,7 +32,7 @@ namespace SkyStopwatch
         public const string TimeFormatNoSecond = @"H\:mm";
         public const string UIElapsedTimeFormat = @"m\:ss";
 
-
+        //leotodo - multi threads issue
         public static bool IsDebugging { get; set; } = false;
 
         public static void PrintScreenAsFile(string path)
@@ -239,25 +239,26 @@ namespace SkyStopwatch
 
         public static string FindTime(string data)
         {
-            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             //hh:mm:ss
-            string regexPattern = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
+            const string regexPattern = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
+            const int colonCount = 2;
 
+            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             string[] zeroAlikeArray = new[] { "o", "O" };
 
             foreach (string line in lines)
             {
                 if (line.IndexOf(':') > 0)
                 {
-                    string timePart = line.Substring(line.IndexOf(":") + 1);
-                    string timePartAdjust = timePart.Trim().Replace(": ", ":").Replace(" :", ":");
+                    string charsAfterFirstColon = line.Substring(line.IndexOf(":") + 1);
+                    string charsAfterFirstColonAdjust = charsAfterFirstColon.Replace(" ", string.Empty); //Trim().Replace(": ", ":").Replace(" :", ":");
 
                     foreach (string item in zeroAlikeArray)
                     {
-                        timePartAdjust = timePartAdjust.Replace(item, "0");
+                        charsAfterFirstColonAdjust = charsAfterFirstColonAdjust.Replace(item, "0");
                     }
 
-                    if (Regex.IsMatch(timePartAdjust, regexPattern))
+                    if (Regex.IsMatch(charsAfterFirstColonAdjust, regexPattern))
                     {
                         //timePartAdjust = timePartAdjust.Replace("00", "12"); 
                         //got bug when parse as datetime 00:00:123 -> 12:12:23 - no need to do this since we parse as timespan now
@@ -266,12 +267,24 @@ namespace SkyStopwatch
                         //    timePartAdjust = "12" + timePartAdjust.Substring(2);
                         //}
 
-                        System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        System.Diagnostics.Debug.WriteLine("-----------------------------regex line");
                         System.Diagnostics.Debug.WriteLine(line);
-                        System.Diagnostics.Debug.WriteLine(timePart);
-                        System.Diagnostics.Debug.WriteLine(timePartAdjust);
+                        System.Diagnostics.Debug.WriteLine(charsAfterFirstColon);
+                        System.Diagnostics.Debug.WriteLine(charsAfterFirstColonAdjust);
 
-                        return timePartAdjust;
+                        return charsAfterFirstColonAdjust;
+                    }
+
+                    //handle case "1353:1131: 00:01:26", split it then take the last 3 parts
+                    string[] parts = charsAfterFirstColonAdjust.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length > colonCount)
+                    {
+                        string last3Parts = $"{parts[parts.Length - 3]}:{parts[parts.Length - 2]}:{parts[parts.Length - 1]}";
+                        if (Regex.IsMatch(last3Parts, regexPattern))
+                        {
+                            System.Diagnostics.Debug.WriteLine($"regex - get last 3 parts [{last3Parts}] from line [{line}]");
+                            return last3Parts;
+                        }
                     }
                 }
             }
