@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.labelSize = new System.Windows.Forms.Label();
             this.labelMessage = new System.Windows.Forms.Label();
             this.buttonNewGame = new System.Windows.Forms.Button();
@@ -49,21 +48,13 @@
             this.buttonSaveTimeNode = new System.Windows.Forms.Button();
             this.buttonResetTimeNode = new System.Windows.Forms.Button();
             this.groupBoxTimeNode = new System.Windows.Forms.GroupBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
+            this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBoxTimeNode.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pictureBoxOne
-            // 
-            this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
-            this.pictureBoxOne.Location = new System.Drawing.Point(56, 75);
-            this.pictureBoxOne.Name = "pictureBoxOne";
-            this.pictureBoxOne.Size = new System.Drawing.Size(600, 300);
-            this.pictureBoxOne.TabIndex = 0;
-            this.pictureBoxOne.TabStop = false;
             // 
             // labelSize
             // 
@@ -271,11 +262,20 @@
             this.groupBoxTimeNode.TabStop = false;
             this.groupBoxTimeNode.Text = " Nodes since game start";
             // 
+            // pictureBoxOne
+            // 
+            this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
+            this.pictureBoxOne.Location = new System.Drawing.Point(56, 75);
+            this.pictureBoxOne.Name = "pictureBoxOne";
+            this.pictureBoxOne.Size = new System.Drawing.Size(600, 300);
+            this.pictureBoxOne.TabIndex = 0;
+            this.pictureBoxOne.TabStop = false;
+            // 
             // FormToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1203, 491);
+            this.ClientSize = new System.Drawing.Size(1191, 491);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -287,13 +287,13 @@
             this.Name = "FormToolBox";
             this.Text = "Tool Box - auto close in  60 sec";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBoxTimeNode.ResumeLayout(false);
             this.groupBoxTimeNode.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

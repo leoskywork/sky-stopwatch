@@ -24,8 +24,11 @@ namespace SkyStopwatch
         public const int IncrementSeconds = 10;
         public const int DecrementSeconds = 10;
         public const int TmpFileMaxCount = 5;
+        public const int TimeNodeEarlyWarningSeconds = 30;
+        public const int TimeNodeWarningDurationSeconds = 60;//40;//90;
 
         public const string TimeSpanFormat = @"hh\:mm\:ss";
+        public const string TImeSpanFormatNoHour = @"mm\:ss";
         public const string TimeFormatNoSecond = @"H\:mm";
         public const string UIElapsedTimeFormat = @"m\:ss";
 
@@ -233,7 +236,7 @@ namespace SkyStopwatch
             return string.Empty;
         }
 
-        public static List<string> SpliteTimeSpanLines(string data)
+        public static List<string> ValidateTimeSpanLines(string data)
         {
             if (data == null) return null;
 

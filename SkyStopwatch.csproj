@@ -77,6 +77,12 @@
     <Compile Include="FormImageView.Designer.cs">
       <DependentUpon>FormImageView.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormNodeWarning.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormNodeWarning.Designer.cs">
+      <DependentUpon>FormNodeWarning.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainOCR.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -98,6 +104,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FormImageView.resx">
       <DependentUpon>FormImageView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormNodeWarning.resx">
+      <DependentUpon>FormNodeWarning.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

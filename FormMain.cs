@@ -18,7 +18,7 @@ namespace SkyStopwatch
     {
 
         //leotodo, some fileds need thread safe?
-        private bool _TopMost = true;//false;
+        private bool _IsTopMost = true;//false;
         private bool _IsUpdatingPassedTime = false;
         private DateTime _TimeAroundGameStart = DateTime.MinValue;
 
@@ -31,6 +31,7 @@ namespace SkyStopwatch
 
         //leotodo - pentional cross threads issue for this variable
         private string _TimeNodeCheckingList;
+        private bool _HasTimeNodeWarningPopped = false;
 
         public FormMain()
         {
@@ -66,6 +67,22 @@ namespace SkyStopwatch
                 this.BeginInvoke(new Action(() =>
                 {
                     this.OnNewGameStart();
+
+                    FormToolBox tool = new FormToolBox(
+                               null,
+                               "warm up",
+                               (_, __) => { this.OnInitToolBox(_, __); },
+                               () => { this.OnRunOCR(); },
+                               () => { this.OnNewGameStart(); },
+                               () => { this.OnSwitchTopMost(); },
+                               () => { this.OnClearOCR(); },
+                               (_) => { this.OnAddSeconds(_); },
+                               (_) => { this.OnChangeTimeNodes(_); }
+                               );
+                    tool.StartPosition = FormStartPosition.Manual;
+                    tool.Location = new Point(-10000, -10000);
+                    tool.Show();
+                    tool.Close();
                 }));
             });
         }
@@ -124,8 +141,8 @@ namespace SkyStopwatch
             this.labelTitle.Size = new System.Drawing.Size(50, 16);
             this.labelTitle.Location = new System.Drawing.Point(this.buttonToolBox.Location.X - 30, 20);
             this.labelTitle.TextAlign = ContentAlignment.MiddleRight;
-          
-        
+
+
 
             //the x out button
             const int closeSize = 40;
@@ -139,8 +156,8 @@ namespace SkyStopwatch
 
         private void SyncTopMost()
         {
-            this.TopMost = _TopMost;
-            this.buttonToolBox.Text = this._TopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+            this.TopMost = _IsTopMost;
+            this.buttonToolBox.Text = this._IsTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void buttonOCR_Click(object sender, EventArgs e)
@@ -174,7 +191,7 @@ namespace SkyStopwatch
 
             TimeSpan ocrTimeSpan;
 
-            if(TimeSpan.TryParseExact(ocrDisplayTime, MainOCR.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
+            if (TimeSpan.TryParseExact(ocrDisplayTime, MainOCR.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
             {
                 int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
                 _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
@@ -341,10 +358,10 @@ namespace SkyStopwatch
 
         private void OnSwitchTopMost()
         {
-            _TopMost = !_TopMost;
+            _IsTopMost = !_IsTopMost;
             SyncTopMost();
         }
-        
+
 
         private void timerMain_Tick(object sender, EventArgs e)
         {
@@ -362,21 +379,38 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-               OnError(ex);
+                OnError(ex);
             }
         }
 
         private void CheckTimeNodes()
         {
             if (string.IsNullOrWhiteSpace(this._TimeNodeCheckingList)) return;
+            if (_TimeAroundGameStart == DateTime.MinValue) return;
+            if (_HasTimeNodeWarningPopped) return;
 
-            var timeNodes = MainOCR.SpliteTimeSpanLines(this._TimeNodeCheckingList);
+            var timeNodes = MainOCR.ValidateTimeSpanLines(this._TimeNodeCheckingList);
 
-            if(timeNodes == null || timeNodes.Count == 0) return;
+            if (timeNodes == null || timeNodes.Count == 0) return;
 
+            var elapsedSeconds = (DateTime.Now - _TimeAroundGameStart).TotalSeconds;
 
+            timeNodes.ForEach(node =>
+            {
+                string fixedLengthNode = node.PadLeft(MainOCR.TImeSpanFormatNoHour.Length - 1, '0');
+                TimeSpan parsedNode = TimeSpan.ParseExact(fixedLengthNode, MainOCR.TImeSpanFormatNoHour, System.Globalization.CultureInfo.InvariantCulture);
+                double remainingSeconds = parsedNode.TotalSeconds - elapsedSeconds;
 
-
+                if (remainingSeconds > 0 && remainingSeconds < MainOCR.TimeNodeEarlyWarningSeconds)
+                {
+                    var warningBox = new FormNodeWarning(() => _HasTimeNodeWarningPopped = false);
+                    _HasTimeNodeWarningPopped = true;
+                    warningBox.StartPosition = FormStartPosition.Manual;
+                    warningBox.Location = new Point(this.Location.X, this.Location.Y + this.Size.Height + 10);
+                    warningBox.Show();
+                    return;
+                }
+            });
         }
 
         private void OnClearOCR()
@@ -479,7 +513,7 @@ namespace SkyStopwatch
             this.OnClearOCR();
         }
 
-       
+
 
         private void buttonCloseOverlay_Click(object sender, EventArgs e)
         {

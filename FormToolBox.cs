@@ -22,7 +22,7 @@ namespace SkyStopwatch
 
         private string _OriginalTimeNodes;
 
-        public FormToolBox()
+        private FormToolBox()
         {
             InitializeComponent();
 
@@ -41,7 +41,7 @@ namespace SkyStopwatch
             this.labelSize.Text = $"box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
         }
 
-        public FormToolBox(Bitmap image, 
+        public FormToolBox(Bitmap image,
             string message,
             Action<Button, string> onInit = null,
             Action runOCR = null,
@@ -159,13 +159,25 @@ namespace SkyStopwatch
             }
             else
             {
-               return string.Empty;
+                return string.Empty;
             }
         }
 
         private void textBoxTimeSpanNodes_TextChanged(object sender, EventArgs e)
         {
-            if(this.textBoxTimeSpanNodes.Text != this._OriginalTimeNodes)
+            bool hasActuralChanged = false;
+            string newValue = this.textBoxTimeSpanNodes.Text;
+
+            if (newValue != this._OriginalTimeNodes)
+            {
+                hasActuralChanged = true;
+
+                //leotodo, ignore changes when just new line or white spaces
+                //if(newValue != null && newValue.Replace("\r\n"))
+            }
+
+
+            if (hasActuralChanged)
             {
                 this.buttonSaveTimeNode.Enabled = true;
                 this.buttonResetTimeNode.Enabled = true;
@@ -175,7 +187,6 @@ namespace SkyStopwatch
                 this.buttonSaveTimeNode.Enabled = false;
                 this.buttonResetTimeNode.Enabled = false;
             }
-
         }
 
         private void buttonSaveTimeNode_Click(object sender, EventArgs e)
