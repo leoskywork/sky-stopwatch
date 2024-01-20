@@ -18,8 +18,9 @@ namespace SkyStopwatch
         private Action _TopMostClick;
         private Action _ClearClick;
         private Action<int> _AddSecondsClick;
-      
+        private Action<string> _ChangeTimeNodes;
 
+        private string _OriginalTimeNodes;
 
         public FormToolBox()
         {
@@ -42,24 +43,30 @@ namespace SkyStopwatch
 
         public FormToolBox(Bitmap image, 
             string message,
-            Action<Button> onInit = null,
+            Action<Button, string> onInit = null,
             Action runOCR = null,
             Action onNewGame = null,
             Action topMost = null,
             Action clear = null,
-            Action<int> addSeconds = null
+            Action<int> addSeconds = null,
+            Action<string> changeTimeNodes = null
             ) : this()
         {
 
             this.pictureBoxOne.Image = image;
             this.labelMessage.Text = message;
 
-            onInit?.Invoke(this.buttonOCR);
             _RunOCR = runOCR;
             _NewGameClick = onNewGame;
             _TopMostClick = topMost;
             _ClearClick = clear;
             _AddSecondsClick = addSeconds;
+            _ChangeTimeNodes = changeTimeNodes;
+
+            //do this at last
+            this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
+            string initialTimeNodes = GetBasicCheckedTimeNodes();
+            onInit?.Invoke(this.buttonOCR, initialTimeNodes);
         }
 
 
@@ -88,6 +95,7 @@ namespace SkyStopwatch
             _ClearClick = null;
             _AddSecondsClick = null;
             this.pictureBoxOne.Image = null;
+            _ChangeTimeNodes = null;
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
@@ -124,8 +132,64 @@ namespace SkyStopwatch
             this.Close();
         }
 
+
+
+
         private void checkBoxPopWarning_CheckedChanged(object sender, EventArgs e)
         {
+            if (this.checkBoxPopWarning.Checked)
+            {
+                this.groupBoxTimeNode.Enabled = true;
+            }
+            else
+            {
+                this.groupBoxTimeNode.Enabled = false;
+            }
+
+            string nodes = GetBasicCheckedTimeNodes();
+            _ChangeTimeNodes?.Invoke(nodes);
+        }
+
+        private string GetBasicCheckedTimeNodes()
+        {
+            if (this.checkBoxPopWarning.Checked)
+            {
+
+                return this.textBoxTimeSpanNodes.Text;
+            }
+            else
+            {
+               return string.Empty;
+            }
+        }
+
+        private void textBoxTimeSpanNodes_TextChanged(object sender, EventArgs e)
+        {
+            if(this.textBoxTimeSpanNodes.Text != this._OriginalTimeNodes)
+            {
+                this.buttonSaveTimeNode.Enabled = true;
+                this.buttonResetTimeNode.Enabled = true;
+            }
+            else
+            {
+                this.buttonSaveTimeNode.Enabled = false;
+                this.buttonResetTimeNode.Enabled = false;
+            }
+
+        }
+
+        private void buttonSaveTimeNode_Click(object sender, EventArgs e)
+        {
+            this.buttonSaveTimeNode.Enabled = false;
+
+            _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
+        }
+
+        private void buttonResetTimeNode_Click(object sender, EventArgs e)
+        {
+            this.buttonResetTimeNode.Enabled = false;
+
+            this.textBoxTimeSpanNodes.Text = this._OriginalTimeNodes;
 
         }
     }

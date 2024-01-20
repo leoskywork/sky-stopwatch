@@ -29,6 +29,9 @@ namespace SkyStopwatch
         private string _AutoOCRTimeOfLastRead;
         private Tesseract.TesseractEngine _AutoOCREngine;
 
+        //leotodo - pentional cross threads issue for this variable
+        private string _TimeNodeCheckingList;
+
         public FormMain()
         {
             InitializeComponent();
@@ -219,14 +222,17 @@ namespace SkyStopwatch
                         //can not use using block here, since we pass the bitmap into a form and show it
                         Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
                         {
-                            FormToolBox tool = new FormToolBox(cloneBitmap,
+                            FormToolBox tool = new FormToolBox(
+                                cloneBitmap,
                                 "current screen",
-                                (b) => { this.OnInitToolBox(b); },
+                                (_, __) => { this.OnInitToolBox(_, __); },
                                 () => { this.OnRunOCR(); },
                                 () => { this.OnNewGameStart(); },
                                 () => { this.OnSwitchTopMost(); },
                                 () => { this.OnClearOCR(); },
-                                (s) => { this.OnAddSeconds(s); });
+                                (_) => { this.OnAddSeconds(_); },
+                                (_) => { this.OnChangeTimeNodes(_); }
+                                );
                             tool.Show();
                         }
                     }
@@ -240,7 +246,12 @@ namespace SkyStopwatch
             }
         }
 
-        private void OnInitToolBox(Button toolBoxButtonOCR)
+        private void OnChangeTimeNodes(string newTimeNodes)
+        {
+            this._TimeNodeCheckingList = newTimeNodes;
+        }
+
+        private void OnInitToolBox(Button toolBoxButtonOCR, string initialTimeNodes)
         {
             toolBoxButtonOCR.Enabled = !_IsUpdatingPassedTime;
 
@@ -257,6 +268,8 @@ namespace SkyStopwatch
                 toolBoxButtonOCR.ForeColor = Color.Gray;
                 toolBoxButtonOCR.Cursor = Cursors.No;
             }
+
+            this._TimeNodeCheckingList = initialTimeNodes;
         }
 
         private void OnRunOCR(Action afterDone = null)
@@ -340,6 +353,7 @@ namespace SkyStopwatch
                 this.labelTitle.Text = DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
                 //this.labelTitle.Text = "23:59";
 
+                this.CheckTimeNodes();
 
                 if (!_IsUpdatingPassedTime) return;
 
@@ -350,6 +364,19 @@ namespace SkyStopwatch
             {
                OnError(ex);
             }
+        }
+
+        private void CheckTimeNodes()
+        {
+            if (string.IsNullOrWhiteSpace(this._TimeNodeCheckingList)) return;
+
+            var timeNodes = MainOCR.SpliteTimeSpanLines(this._TimeNodeCheckingList);
+
+            if(timeNodes == null || timeNodes.Count == 0) return;
+
+
+
+
         }
 
         private void OnClearOCR()

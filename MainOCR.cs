@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using Tesseract;
+using System.Collections.Generic;
 
 namespace SkyStopwatch
 {
@@ -230,6 +231,35 @@ namespace SkyStopwatch
             }
 
             return string.Empty;
+        }
+
+        public static List<string> SpliteTimeSpanLines(string data)
+        {
+            if (data == null) return null;
+
+            //mm:ss
+            string regexPattern = @"^([0-5]?\d:[0-5]?\d)$";
+            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> result = new List<string>();
+
+            foreach (string line in lines)
+            {
+                if (line.IndexOf(':') > 0)
+                {
+                    string timePartAdjust = line.Trim().Replace(": ", ":").Replace(" :", ":");
+
+                    if (Regex.IsMatch(timePartAdjust, regexPattern))
+                    {
+                        System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        System.Diagnostics.Debug.WriteLine(line);
+                        System.Diagnostics.Debug.WriteLine(timePartAdjust);
+
+                         result.Add(timePartAdjust);
+                    }
+                }
+            }
+
+            return result;
         }
 
     }
