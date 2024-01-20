@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.labelSize = new System.Windows.Forms.Label();
             this.labelMessage = new System.Windows.Forms.Label();
             this.buttonStart = new System.Windows.Forms.Button();
@@ -43,22 +42,13 @@
             this.labelY = new System.Windows.Forms.Label();
             this.labelWidth = new System.Windows.Forms.Label();
             this.labelHeight = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
+            this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pictureBoxOne
-            // 
-            this.pictureBoxOne.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
-            this.pictureBoxOne.Location = new System.Drawing.Point(34, 75);
-            this.pictureBoxOne.Name = "pictureBoxOne";
-            this.pictureBoxOne.Size = new System.Drawing.Size(901, 549);
-            this.pictureBoxOne.TabIndex = 0;
-            this.pictureBoxOne.TabStop = false;
             // 
             // labelSize
             // 
@@ -232,6 +222,16 @@
             this.labelHeight.TabIndex = 108;
             this.labelHeight.Text = "Height:";
             // 
+            // pictureBoxOne
+            // 
+            this.pictureBoxOne.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
+            this.pictureBoxOne.Location = new System.Drawing.Point(34, 75);
+            this.pictureBoxOne.Name = "pictureBoxOne";
+            this.pictureBoxOne.Size = new System.Drawing.Size(901, 549);
+            this.pictureBoxOne.TabIndex = 0;
+            this.pictureBoxOne.TabStop = false;
+            // 
             // FormImageView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -253,12 +253,12 @@
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.MaximizeBox = false;
             this.Name = "FormImageView";
-            this.Text = "Image view - auto close in  60 sec";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
+            this.Text = "Image view";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -103,6 +103,14 @@ namespace SkyStopwatch
             buttonClear.Enabled = true;
         }
 
+        private void buttonReduceSeconds_Click(object sender, EventArgs e)
+        {
+            buttonClear.Enabled = false;
+            _AddSecondsClick?.Invoke(MainOCR.DecrementSeconds * -1);
+            buttonClear.Enabled = true;
+        }
+
+
         private void buttonOCR_Click(object sender, EventArgs e)
         {
             _RunOCR?.Invoke();

@@ -21,6 +21,7 @@ namespace SkyStopwatch
         public const int NewGameDelaySeconds = 10;
         public const int NoDelay = 0;
         public const int IncrementSeconds = 10;
+        public const int DecrementSeconds = 10;
         public const int TmpFileMaxCount = 5;
 
         public const string TimeSpanFormat = @"hh\:mm\:ss";
