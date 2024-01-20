@@ -41,6 +41,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxShowSystemClock = new System.Windows.Forms.CheckBox();
             this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBoxTimeNode = new System.Windows.Forms.GroupBox();
@@ -80,7 +81,7 @@
             this.buttonNewGame.Name = "buttonNewGame";
             this.buttonNewGame.Size = new System.Drawing.Size(120, 30);
             this.buttonNewGame.TabIndex = 200;
-            this.buttonNewGame.Text = "New Game";
+            this.buttonNewGame.Text = "Restart";
             this.buttonNewGame.UseVisualStyleBackColor = true;
             this.buttonNewGame.Click += new System.EventHandler(this.buttonNewGame_Click);
             // 
@@ -137,7 +138,7 @@
             // buttonImageView
             // 
             this.buttonImageView.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonImageView.Location = new System.Drawing.Point(26, 24);
+            this.buttonImageView.Location = new System.Drawing.Point(26, 25);
             this.buttonImageView.Name = "buttonImageView";
             this.buttonImageView.Size = new System.Drawing.Size(120, 30);
             this.buttonImageView.TabIndex = 401;
@@ -172,6 +173,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxShowSystemClock);
             this.groupBox2.Controls.Add(this.checkBoxDebugging);
             this.groupBox2.Controls.Add(this.buttonImageView);
             this.groupBox2.Location = new System.Drawing.Point(57, 396);
@@ -181,14 +183,25 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tools";
             // 
+            // checkBoxShowSystemClock
+            // 
+            this.checkBoxShowSystemClock.AutoSize = true;
+            this.checkBoxShowSystemClock.Location = new System.Drawing.Point(323, 31);
+            this.checkBoxShowSystemClock.Name = "checkBoxShowSystemClock";
+            this.checkBoxShowSystemClock.Size = new System.Drawing.Size(125, 19);
+            this.checkBoxShowSystemClock.TabIndex = 403;
+            this.checkBoxShowSystemClock.Text = "System clock";
+            this.checkBoxShowSystemClock.UseVisualStyleBackColor = true;
+            this.checkBoxShowSystemClock.CheckedChanged += new System.EventHandler(this.checkBoxShowSystemNow_CheckedChanged);
+            // 
             // checkBoxDebugging
             // 
             this.checkBoxDebugging.AutoSize = true;
-            this.checkBoxDebugging.Location = new System.Drawing.Point(173, 31);
+            this.checkBoxDebugging.Location = new System.Drawing.Point(180, 31);
             this.checkBoxDebugging.Name = "checkBoxDebugging";
-            this.checkBoxDebugging.Size = new System.Drawing.Size(149, 19);
+            this.checkBoxDebugging.Size = new System.Drawing.Size(109, 19);
             this.checkBoxDebugging.TabIndex = 402;
-            this.checkBoxDebugging.Text = "Show debug info";
+            this.checkBoxDebugging.Text = "Debug info";
             this.checkBoxDebugging.UseVisualStyleBackColor = true;
             this.checkBoxDebugging.CheckedChanged += new System.EventHandler(this.checkBoxDebugging_CheckedChanged);
             // 
@@ -311,5 +324,6 @@
         private System.Windows.Forms.Button buttonSaveTimeNode;
         private System.Windows.Forms.GroupBox groupBoxTimeNode;
         private System.Windows.Forms.CheckBox checkBoxDebugging;
+        private System.Windows.Forms.CheckBox checkBoxShowSystemClock;
     }
 }

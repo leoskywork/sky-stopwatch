@@ -144,6 +144,36 @@ namespace SkyStopwatch
             this.buttonCloseOverlay.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
         }
 
+        private void InitGUILayoutV3()
+        {
+            //shrink width when hide ocr button
+            //this.buttonOCR.Hide();
+            this.Controls.Remove(this.buttonOCR);
+            this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
+            this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
+            //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
+            this.Size = new System.Drawing.Size(160, 39);
+
+            //time since game start
+            //this.labelTimer.BackColor = Color.LightGray;
+            this.labelTimer.Size = new System.Drawing.Size(80, 34);
+            this.labelTimer.Location = new System.Drawing.Point(2, 6);
+
+            //button tool box
+            this.buttonToolBox.Size = new System.Drawing.Size(26, 26);
+            this.buttonToolBox.Location = new System.Drawing.Point(86, 6);
+            //this.buttonToolBox.Text
+
+            //the x out button
+            const int closeSize = 40;
+            this.buttonCloseOverlay.Text = null;
+            this.buttonCloseOverlay.Size = new System.Drawing.Size(closeSize, closeSize);
+            this.buttonCloseOverlay.Location = new System.Drawing.Point(this.Size.Width - closeSize, 0);
+            this.buttonCloseOverlay.FlatStyle = FlatStyle.Flat;
+            this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
+            this.buttonCloseOverlay.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
+        }
+
         private void SyncTopMost()
         {
             this.TopMost = _IsTopMost;
@@ -350,6 +380,11 @@ namespace SkyStopwatch
             _IsUpdatingPassedTime = true;
             this.buttonOCR.Enabled = false;
 
+            //reset flags/history values
+            //flag 1
+            this._AutoOCRTimeOfLastRead = null;
+
+            //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
             StartUIStopwatch(TimeSpan.Zero.ToString(MainOCR.TimeSpanFormat), MainOCR.NewGameDelaySeconds);
 
             if (!this.timerAutoRefresh.Enabled)
@@ -380,8 +415,29 @@ namespace SkyStopwatch
         {
             try
             {
-                this.labelTitle.Text = DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
-                //this.labelTitle.Text = "23:59";
+                if (MainOCR.ShowSystemClock)
+                {
+                    if (!this.labelTitle.Visible)
+                    {
+                        this.labelTitle.Visible = true;
+
+                        InitGUILayoutV2();
+
+                        throw new NotImplementedException("can not change back yet");
+                    }
+
+                    this.labelTitle.Text = DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
+                    //this.labelTitle.Text = "23:59";
+                }
+                else
+                {
+                    if (this.labelTitle.Visible)
+                    {
+                        this.labelTitle.Visible = false;
+
+                        InitGUILayoutV3();
+                    }
+                }
 
                 this.CheckTimeNodes();
 
@@ -486,14 +542,14 @@ namespace SkyStopwatch
 
                     if (MainOCR.IsDebugging)
                     {
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
-                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
+                        //System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
+                        //System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
 
-                        string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
+                        //string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
                         
-                        System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
+                        //System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
 
                     return timeString;
@@ -530,7 +586,13 @@ namespace SkyStopwatch
 
         private void OnError(Exception ex)
         {
+            System.Diagnostics.Debug.WriteLine(ex.ToString());
             MessageBox.Show(ex.ToString());
+
+            if (!MainOCR.IsDebugging)
+            {
+                this.Close();
+            }
         }
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)

@@ -73,7 +73,7 @@ namespace SkyStopwatch
             }
 
             this.checkBoxDebugging.Checked = MainOCR.IsDebugging;
-
+            this.checkBoxShowSystemClock.Checked = MainOCR.ShowSystemClock;
 
 
             //do this at last
@@ -95,6 +95,8 @@ namespace SkyStopwatch
 
         private void timerAutoClose_Tick(object sender, EventArgs e)
         {
+            if (this.checkBoxDebugging.Checked) return;
+
             this.Close();
         }
 
@@ -216,6 +218,11 @@ namespace SkyStopwatch
         private void checkBoxDebugging_CheckedChanged(object sender, EventArgs e)
         {
             MainOCR.IsDebugging = this.checkBoxDebugging.Checked;
+        }
+
+        private void checkBoxShowSystemNow_CheckedChanged(object sender, EventArgs e)
+        {
+            MainOCR.ShowSystemClock = this.checkBoxShowSystemClock.Checked;
         }
 
         //private void buttonResetTimeNode_Click(object sender, EventArgs e)

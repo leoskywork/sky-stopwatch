@@ -19,7 +19,7 @@ namespace SkyStopwatch
 
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
-        public const int NewGameDelaySeconds = 10;
+        public const int NewGameDelaySeconds = 1;//10;
         public const int NoDelay = 0;
         public const int IncrementSeconds = 10;
         public const int DecrementSeconds = 10;
@@ -34,6 +34,7 @@ namespace SkyStopwatch
 
         //leotodo - multi threads issue
         public static bool IsDebugging { get; set; } = false;
+        public static bool ShowSystemClock { get; set; } = true;
 
         public static void PrintScreenAsFile(string path)
         {
@@ -149,7 +150,7 @@ namespace SkyStopwatch
                     Directory.CreateDirectory(subFolder);
                 }
 
-                if (Directory.GetFiles(subFolder).Length > 1000)
+                if (Directory.GetFiles(subFolder).Length > 600)
                 {
                     try
                     {
