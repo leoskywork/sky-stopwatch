@@ -63,12 +63,26 @@ namespace SkyStopwatch
             _AddSecondsClick = addSeconds;
             _ChangeTimeNodes = changeTimeNodes;
 
+
+            //for test
+            //if (string.IsNullOrEmpty(this.textBoxTimeSpanNodes.Text))
+            {
+                //this.textBoxTimeSpanNodes.Text = "1:00";
+                //this.textBoxTimeSpanNodes.Text = "01:00";
+                this.textBoxTimeSpanNodes.Text = "10:30\r\n20:30\r\n35:00";
+            }
+
+
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
-            string initialTimeNodes = GetBasicCheckedTimeNodes();
-            onInit?.Invoke(this.buttonOCR, initialTimeNodes);
+            string basicCheckedNodes = GetBasicCheckedTimeNodes();
+            onInit?.Invoke(this.buttonOCR, basicCheckedNodes);
         }
 
+        public void SetTimeNodes(string nodes)
+        {
+            this.textBoxTimeSpanNodes.Text = nodes;
+        }
 
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
@@ -159,7 +173,7 @@ namespace SkyStopwatch
             }
             else
             {
-                return string.Empty;
+                return null; //does not return empty here
             }
         }
 
@@ -180,12 +194,12 @@ namespace SkyStopwatch
             if (hasActuralChanged)
             {
                 this.buttonSaveTimeNode.Enabled = true;
-                this.buttonResetTimeNode.Enabled = true;
+                //this.buttonResetTimeNode.Enabled = true;
             }
             else
             {
                 this.buttonSaveTimeNode.Enabled = false;
-                this.buttonResetTimeNode.Enabled = false;
+                //this.buttonResetTimeNode.Enabled = false;
             }
         }
 
@@ -196,12 +210,13 @@ namespace SkyStopwatch
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 
-        private void buttonResetTimeNode_Click(object sender, EventArgs e)
-        {
-            this.buttonResetTimeNode.Enabled = false;
+        //private void buttonResetTimeNode_Click(object sender, EventArgs e)
+        //{
+        //    this.buttonResetTimeNode.Enabled = false;
 
-            this.textBoxTimeSpanNodes.Text = this._OriginalTimeNodes;
+        //    this.textBoxTimeSpanNodes.Text = this._OriginalTimeNodes;
+        //    this._OriginalTimeNodes = null;
 
-        }
+        //}
     }
 }

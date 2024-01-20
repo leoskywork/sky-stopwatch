@@ -30,7 +30,7 @@ namespace SkyStopwatch
         private Tesseract.TesseractEngine _AutoOCREngine;
 
         //leotodo - pentional cross threads issue for this variable
-        private string _TimeNodeCheckingList;
+        private string _TimeNodeCheckingList = null; //does not default this to Empty, since user may clear up the list
         private bool _HasTimeNodeWarningPopped = false;
 
         public FormMain()
@@ -68,17 +68,7 @@ namespace SkyStopwatch
                 {
                     this.OnNewGameStart();
 
-                    FormToolBox tool = new FormToolBox(
-                               null,
-                               "warm up",
-                               (_, __) => { this.OnInitToolBox(_, __); },
-                               () => { this.OnRunOCR(); },
-                               () => { this.OnNewGameStart(); },
-                               () => { this.OnSwitchTopMost(); },
-                               () => { this.OnClearOCR(); },
-                               (_) => { this.OnAddSeconds(_); },
-                               (_) => { this.OnChangeTimeNodes(_); }
-                               );
+                    FormToolBox tool = CreateToolBox(null, "warm up");
                     tool.StartPosition = FormStartPosition.Manual;
                     tool.Location = new Point(-10000, -10000);
                     tool.Show();
@@ -239,17 +229,7 @@ namespace SkyStopwatch
                         //can not use using block here, since we pass the bitmap into a form and show it
                         Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
                         {
-                            FormToolBox tool = new FormToolBox(
-                                cloneBitmap,
-                                "current screen",
-                                (_, __) => { this.OnInitToolBox(_, __); },
-                                () => { this.OnRunOCR(); },
-                                () => { this.OnNewGameStart(); },
-                                () => { this.OnSwitchTopMost(); },
-                                () => { this.OnClearOCR(); },
-                                (_) => { this.OnAddSeconds(_); },
-                                (_) => { this.OnChangeTimeNodes(_); }
-                                );
+                            FormToolBox tool = CreateToolBox(cloneBitmap, "current screen");
                             tool.Show();
                         }
                     }
@@ -263,8 +243,37 @@ namespace SkyStopwatch
             }
         }
 
+        private FormToolBox CreateToolBox(Bitmap bitmap, string source)
+        {
+            FormToolBox tool = new FormToolBox(
+                               bitmap,
+                                source,
+                               (_, __) => { this.OnInitToolBox(_, __); },
+                               () => { this.OnRunOCR(); },
+                               () => { this.OnNewGameStart(); },
+                               () => { this.OnSwitchTopMost(); },
+                               () => { this.OnClearOCR(); },
+                               (_) => { this.OnAddSeconds(_); },
+                               (_) => { this.OnChangeTimeNodes(_); }
+                               );
+
+            if (this._TimeNodeCheckingList != null)
+            {
+                System.Diagnostics.Debug.WriteLine($"----- SetTimeNodes");
+                System.Diagnostics.Debug.WriteLine($"pass in: {this._TimeNodeCheckingList}");
+
+                tool.SetTimeNodes(this._TimeNodeCheckingList);
+            }
+
+            return tool;
+        }
+
         private void OnChangeTimeNodes(string newTimeNodes)
         {
+            System.Diagnostics.Debug.WriteLine($"----- OnChangeTimeNodes");
+            System.Diagnostics.Debug.WriteLine($"old: {this._TimeNodeCheckingList}");
+            System.Diagnostics.Debug.WriteLine($"new: {newTimeNodes}");
+
             this._TimeNodeCheckingList = newTimeNodes;
         }
 
@@ -286,7 +295,11 @@ namespace SkyStopwatch
                 toolBoxButtonOCR.Cursor = Cursors.No;
             }
 
-            this._TimeNodeCheckingList = initialTimeNodes;
+            //System.Diagnostics.Debug.WriteLine($"----- OnInitToolBox");
+            //System.Diagnostics.Debug.WriteLine($"old: {this._TimeNodeCheckingList}");
+            //System.Diagnostics.Debug.WriteLine($"new: {initialTimeNodes}");
+            //do not do this, causing bug
+            //this._TimeNodeCheckingList = initialTimeNodes;
         }
 
         private void OnRunOCR(Action afterDone = null)
@@ -454,7 +467,7 @@ namespace SkyStopwatch
 
                 Task.Factory.StartNew(() =>
                 {
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
+                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
 
                     byte[] screenShotBytes = MainOCR.PrintScreenAsBytes(true);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
@@ -492,7 +505,7 @@ namespace SkyStopwatch
 
                         _IsAutoRefreshing = false;
                         //buttonOCR.Enabled = true; //makes ui blink, so disable it
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - end -----");
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - end -----");
                     }));
                 });
             }

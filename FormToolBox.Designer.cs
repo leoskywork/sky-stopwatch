@@ -43,10 +43,8 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.buttonSaveTimeNode = new System.Windows.Forms.Button();
-            this.buttonResetTimeNode = new System.Windows.Forms.Button();
             this.groupBoxTimeNode = new System.Windows.Forms.GroupBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
@@ -206,21 +204,14 @@
             this.checkBoxPopWarning.UseVisualStyleBackColor = true;
             this.checkBoxPopWarning.CheckedChanged += new System.EventHandler(this.checkBoxPopWarning_CheckedChanged);
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(18, 28);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(183, 15);
-            this.label1.TabIndex = 402;
-            this.label1.Text = "One time node one line";
-            // 
             // textBoxTimeSpanNodes
             // 
-            this.textBoxTimeSpanNodes.Location = new System.Drawing.Point(21, 52);
+            this.textBoxTimeSpanNodes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxTimeSpanNodes.Location = new System.Drawing.Point(21, 24);
             this.textBoxTimeSpanNodes.Multiline = true;
             this.textBoxTimeSpanNodes.Name = "textBoxTimeSpanNodes";
-            this.textBoxTimeSpanNodes.Size = new System.Drawing.Size(180, 80);
+            this.textBoxTimeSpanNodes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxTimeSpanNodes.Size = new System.Drawing.Size(176, 80);
             this.textBoxTimeSpanNodes.TabIndex = 403;
             this.textBoxTimeSpanNodes.Text = "10:00\r\n20:00\r\n35:00";
             this.textBoxTimeSpanNodes.TextChanged += new System.EventHandler(this.textBoxTimeSpanNodes_TextChanged);
@@ -229,7 +220,7 @@
             // 
             this.buttonSaveTimeNode.Enabled = false;
             this.buttonSaveTimeNode.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonSaveTimeNode.Location = new System.Drawing.Point(75, 144);
+            this.buttonSaveTimeNode.Location = new System.Drawing.Point(115, 112);
             this.buttonSaveTimeNode.Name = "buttonSaveTimeNode";
             this.buttonSaveTimeNode.Size = new System.Drawing.Size(60, 30);
             this.buttonSaveTimeNode.TabIndex = 404;
@@ -237,30 +228,16 @@
             this.buttonSaveTimeNode.UseVisualStyleBackColor = true;
             this.buttonSaveTimeNode.Click += new System.EventHandler(this.buttonSaveTimeNode_Click);
             // 
-            // buttonResetTimeNode
-            // 
-            this.buttonResetTimeNode.Enabled = false;
-            this.buttonResetTimeNode.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonResetTimeNode.Location = new System.Drawing.Point(141, 144);
-            this.buttonResetTimeNode.Name = "buttonResetTimeNode";
-            this.buttonResetTimeNode.Size = new System.Drawing.Size(60, 30);
-            this.buttonResetTimeNode.TabIndex = 405;
-            this.buttonResetTimeNode.Text = "Reset";
-            this.buttonResetTimeNode.UseVisualStyleBackColor = true;
-            this.buttonResetTimeNode.Click += new System.EventHandler(this.buttonResetTimeNode_Click);
-            // 
             // groupBoxTimeNode
             // 
             this.groupBoxTimeNode.Controls.Add(this.buttonSaveTimeNode);
-            this.groupBoxTimeNode.Controls.Add(this.buttonResetTimeNode);
-            this.groupBoxTimeNode.Controls.Add(this.label1);
             this.groupBoxTimeNode.Controls.Add(this.textBoxTimeSpanNodes);
             this.groupBoxTimeNode.Location = new System.Drawing.Point(29, 117);
             this.groupBoxTimeNode.Name = "groupBoxTimeNode";
-            this.groupBoxTimeNode.Size = new System.Drawing.Size(226, 183);
+            this.groupBoxTimeNode.Size = new System.Drawing.Size(226, 158);
             this.groupBoxTimeNode.TabIndex = 406;
             this.groupBoxTimeNode.TabStop = false;
-            this.groupBoxTimeNode.Text = " Nodes since game start";
+            this.groupBoxTimeNode.Text = "time since game start";
             // 
             // pictureBoxOne
             // 
@@ -317,9 +294,7 @@
         private System.Windows.Forms.Button buttonReduceSeconds;
         private System.Windows.Forms.CheckBox checkBoxPopWarning;
         private System.Windows.Forms.TextBox textBoxTimeSpanNodes;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button buttonSaveTimeNode;
-        private System.Windows.Forms.Button buttonResetTimeNode;
         private System.Windows.Forms.GroupBox groupBoxTimeNode;
     }
 }

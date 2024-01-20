@@ -57,8 +57,8 @@ namespace SkyStopwatch
 
             string fileName = "ocr-screen-shot-" + DateTime.Now.ToString("yyyy-MMdd-HHmmss-fff") + ".bmp";
             string path = Path.Combine(subFolder, fileName);
-            
-            if(!Directory.Exists(subFolder))
+
+            if (!Directory.Exists(subFolder))
             {
                 Directory.CreateDirectory(subFolder);
             }
@@ -126,7 +126,7 @@ namespace SkyStopwatch
 
         public Bitmap BytesToBitmap(byte[] imageByte)
         {
-            Bitmap bitmap = null; 
+            Bitmap bitmap = null;
             using (MemoryStream stream = new MemoryStream(imageByte))
             {
                 bitmap = new Bitmap((Image)new Bitmap(stream));
@@ -174,7 +174,7 @@ namespace SkyStopwatch
             //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 1");
             using (var img = Tesseract.Pix.LoadFromMemory(imgData))
             {
-               // System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 2");
+                // System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 2");
                 using (var page = engine.Process(img))
                 {
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 3");
@@ -190,6 +190,10 @@ namespace SkyStopwatch
 
             var engine = new Tesseract.TesseractEngine(tessdataFolder, language, Tesseract.EngineMode.Default);
             engine.SetVariable("tessedit_char_whitelist", "0123456789:oO"); //only look for pre-set chars for speed up
+
+            //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
+            //_tesseractEngine.SetVariable("debug_file", "NUL");
+            engine.DefaultPageSegMode = PageSegMode.SingleBlock;
 
             return engine;
         }
@@ -253,11 +257,11 @@ namespace SkyStopwatch
 
                     if (Regex.IsMatch(timePartAdjust, regexPattern))
                     {
-                        System.Diagnostics.Debug.WriteLine("-----------------------------");
-                        System.Diagnostics.Debug.WriteLine(line);
-                        System.Diagnostics.Debug.WriteLine(timePartAdjust);
+                        //System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        //System.Diagnostics.Debug.WriteLine(line);
+                        //System.Diagnostics.Debug.WriteLine(timePartAdjust);
 
-                         result.Add(timePartAdjust);
+                        result.Add(timePartAdjust);
                     }
                 }
             }
