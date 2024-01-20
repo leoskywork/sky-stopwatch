@@ -33,6 +33,7 @@ namespace SkyStopwatch
         public const string UIElapsedTimeFormat = @"m\:ss";
 
 
+        public static bool IsDebugging { get; set; } = false;
 
         public static void PrintScreenAsFile(string path)
         {
@@ -43,7 +44,6 @@ namespace SkyStopwatch
                 using (Graphics gra = Graphics.FromImage(bitPic))
                 {
                     gra.CopyFromScreen(new Point(0, 0), new Point(0, 0), bitPic.Size);
-                    //bitPic.Save("D:\\screen.bmp");
                     bitPic.Save(path);
                 }
             }
@@ -124,14 +124,53 @@ namespace SkyStopwatch
             return bytes;
         }
 
-        public Bitmap BytesToBitmap(byte[] imageByte)
+        public static Bitmap BytesToBitmap(byte[] imageByte)
         {
-            Bitmap bitmap = null;
             using (MemoryStream stream = new MemoryStream(imageByte))
             {
-                bitmap = new Bitmap((Image)new Bitmap(stream));
+                var bitmap = new Bitmap(new Bitmap(stream)); //need nest this, or get error when saving file to disk
+                return bitmap;
             }
-            return bitmap;
+        }
+
+        public static string SaveTmpFile(string fileNameSuffix, byte[] data)
+        {
+            using (var bitmap = BytesToBitmap(data))
+            {
+                string exePath = Assembly.GetExecutingAssembly().Location;
+                string exeDirectory = Path.GetDirectoryName(exePath);
+                string subFolder = Path.Combine(exeDirectory, "tmp-debug");
+
+                string fileName = "ocr-bytes-" + DateTime.Now.ToString("yyyy-MMdd-HHmmss-fff") + "-" + fileNameSuffix + ".bmp";
+                string path = Path.Combine(subFolder, fileName);
+
+                if (!Directory.Exists(subFolder))
+                {
+                    Directory.CreateDirectory(subFolder);
+                }
+
+                if (Directory.GetFiles(subFolder).Length > 1000)
+                {
+                    try
+                    {
+                        Directory.Delete(subFolder, true);
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine(ex.ToString());
+                    }
+
+                    Directory.CreateDirectory(subFolder);
+                }
+
+                if (File.Exists(path))
+                {
+                    File.Delete(path);
+                }
+
+                bitmap.Save(path);
+                return path;
+            }
         }
 
 

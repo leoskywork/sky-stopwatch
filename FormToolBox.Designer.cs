@@ -39,13 +39,14 @@
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonImageView = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
-            this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
-            this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
-            this.buttonSaveTimeNode = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBoxTimeNode = new System.Windows.Forms.GroupBox();
+            this.buttonSaveTimeNode = new System.Windows.Forms.Button();
+            this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
+            this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -158,8 +159,20 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OCR";
             // 
+            // buttonReduceSeconds
+            // 
+            this.buttonReduceSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonReduceSeconds.Location = new System.Drawing.Point(87, 206);
+            this.buttonReduceSeconds.Name = "buttonReduceSeconds";
+            this.buttonReduceSeconds.Size = new System.Drawing.Size(54, 30);
+            this.buttonReduceSeconds.TabIndex = 301;
+            this.buttonReduceSeconds.Text = "-10s";
+            this.buttonReduceSeconds.UseVisualStyleBackColor = true;
+            this.buttonReduceSeconds.Click += new System.EventHandler(this.buttonReduceSeconds_Click);
+            // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.checkBoxDebugging);
             this.groupBox2.Controls.Add(this.buttonImageView);
             this.groupBox2.Location = new System.Drawing.Point(57, 396);
             this.groupBox2.Name = "groupBox2";
@@ -167,6 +180,17 @@
             this.groupBox2.TabIndex = 403;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tools";
+            // 
+            // checkBoxDebugging
+            // 
+            this.checkBoxDebugging.AutoSize = true;
+            this.checkBoxDebugging.Location = new System.Drawing.Point(173, 31);
+            this.checkBoxDebugging.Name = "checkBoxDebugging";
+            this.checkBoxDebugging.Size = new System.Drawing.Size(149, 19);
+            this.checkBoxDebugging.TabIndex = 402;
+            this.checkBoxDebugging.Text = "Show debug info";
+            this.checkBoxDebugging.UseVisualStyleBackColor = true;
+            this.checkBoxDebugging.CheckedChanged += new System.EventHandler(this.checkBoxDebugging_CheckedChanged);
             // 
             // groupBox3
             // 
@@ -180,41 +204,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setting";
             // 
-            // buttonReduceSeconds
+            // groupBoxTimeNode
             // 
-            this.buttonReduceSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonReduceSeconds.Location = new System.Drawing.Point(87, 206);
-            this.buttonReduceSeconds.Name = "buttonReduceSeconds";
-            this.buttonReduceSeconds.Size = new System.Drawing.Size(54, 30);
-            this.buttonReduceSeconds.TabIndex = 301;
-            this.buttonReduceSeconds.Text = "-10s";
-            this.buttonReduceSeconds.UseVisualStyleBackColor = true;
-            this.buttonReduceSeconds.Click += new System.EventHandler(this.buttonReduceSeconds_Click);
-            // 
-            // checkBoxPopWarning
-            // 
-            this.checkBoxPopWarning.AutoSize = true;
-            this.checkBoxPopWarning.Checked = true;
-            this.checkBoxPopWarning.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxPopWarning.Location = new System.Drawing.Point(29, 92);
-            this.checkBoxPopWarning.Name = "checkBoxPopWarning";
-            this.checkBoxPopWarning.Size = new System.Drawing.Size(173, 19);
-            this.checkBoxPopWarning.TabIndex = 401;
-            this.checkBoxPopWarning.Text = "Monitor time nodes";
-            this.checkBoxPopWarning.UseVisualStyleBackColor = true;
-            this.checkBoxPopWarning.CheckedChanged += new System.EventHandler(this.checkBoxPopWarning_CheckedChanged);
-            // 
-            // textBoxTimeSpanNodes
-            // 
-            this.textBoxTimeSpanNodes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBoxTimeSpanNodes.Location = new System.Drawing.Point(21, 24);
-            this.textBoxTimeSpanNodes.Multiline = true;
-            this.textBoxTimeSpanNodes.Name = "textBoxTimeSpanNodes";
-            this.textBoxTimeSpanNodes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxTimeSpanNodes.Size = new System.Drawing.Size(176, 80);
-            this.textBoxTimeSpanNodes.TabIndex = 403;
-            this.textBoxTimeSpanNodes.Text = "10:00\r\n20:00\r\n35:00";
-            this.textBoxTimeSpanNodes.TextChanged += new System.EventHandler(this.textBoxTimeSpanNodes_TextChanged);
+            this.groupBoxTimeNode.Controls.Add(this.buttonSaveTimeNode);
+            this.groupBoxTimeNode.Controls.Add(this.textBoxTimeSpanNodes);
+            this.groupBoxTimeNode.Location = new System.Drawing.Point(29, 117);
+            this.groupBoxTimeNode.Name = "groupBoxTimeNode";
+            this.groupBoxTimeNode.Size = new System.Drawing.Size(226, 158);
+            this.groupBoxTimeNode.TabIndex = 406;
+            this.groupBoxTimeNode.TabStop = false;
+            this.groupBoxTimeNode.Text = "time since game start";
             // 
             // buttonSaveTimeNode
             // 
@@ -228,16 +227,30 @@
             this.buttonSaveTimeNode.UseVisualStyleBackColor = true;
             this.buttonSaveTimeNode.Click += new System.EventHandler(this.buttonSaveTimeNode_Click);
             // 
-            // groupBoxTimeNode
+            // textBoxTimeSpanNodes
             // 
-            this.groupBoxTimeNode.Controls.Add(this.buttonSaveTimeNode);
-            this.groupBoxTimeNode.Controls.Add(this.textBoxTimeSpanNodes);
-            this.groupBoxTimeNode.Location = new System.Drawing.Point(29, 117);
-            this.groupBoxTimeNode.Name = "groupBoxTimeNode";
-            this.groupBoxTimeNode.Size = new System.Drawing.Size(226, 158);
-            this.groupBoxTimeNode.TabIndex = 406;
-            this.groupBoxTimeNode.TabStop = false;
-            this.groupBoxTimeNode.Text = "time since game start";
+            this.textBoxTimeSpanNodes.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.textBoxTimeSpanNodes.Location = new System.Drawing.Point(21, 24);
+            this.textBoxTimeSpanNodes.Multiline = true;
+            this.textBoxTimeSpanNodes.Name = "textBoxTimeSpanNodes";
+            this.textBoxTimeSpanNodes.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxTimeSpanNodes.Size = new System.Drawing.Size(176, 80);
+            this.textBoxTimeSpanNodes.TabIndex = 403;
+            this.textBoxTimeSpanNodes.Text = "10:00\r\n20:00\r\n35:00";
+            this.textBoxTimeSpanNodes.TextChanged += new System.EventHandler(this.textBoxTimeSpanNodes_TextChanged);
+            // 
+            // checkBoxPopWarning
+            // 
+            this.checkBoxPopWarning.AutoSize = true;
+            this.checkBoxPopWarning.Checked = true;
+            this.checkBoxPopWarning.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxPopWarning.Location = new System.Drawing.Point(29, 92);
+            this.checkBoxPopWarning.Name = "checkBoxPopWarning";
+            this.checkBoxPopWarning.Size = new System.Drawing.Size(173, 19);
+            this.checkBoxPopWarning.TabIndex = 401;
+            this.checkBoxPopWarning.Text = "Monitor time nodes";
+            this.checkBoxPopWarning.UseVisualStyleBackColor = true;
+            this.checkBoxPopWarning.CheckedChanged += new System.EventHandler(this.checkBoxPopWarning_CheckedChanged);
             // 
             // pictureBoxOne
             // 
@@ -266,6 +279,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             this.groupBoxTimeNode.ResumeLayout(false);
@@ -296,5 +310,6 @@
         private System.Windows.Forms.TextBox textBoxTimeSpanNodes;
         private System.Windows.Forms.Button buttonSaveTimeNode;
         private System.Windows.Forms.GroupBox groupBoxTimeNode;
+        private System.Windows.Forms.CheckBox checkBoxDebugging;
     }
 }

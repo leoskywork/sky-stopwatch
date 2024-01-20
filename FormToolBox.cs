@@ -25,20 +25,6 @@ namespace SkyStopwatch
         private FormToolBox()
         {
             InitializeComponent();
-
-            //got error when call this.close(), cross threads issue, thus use ui control timer instead
-            //Task.Factory.StartNew(() =>
-            //{
-            //    Thread.Sleep(60 * 1000);
-            //    if (!this.Disposing || !this.IsDisposed)
-            //    {
-            //        this.BeginInvoke(new Action(() => { this.Close(); }));
-            //    }
-            //});
-            this.timerAutoClose.Interval = 60 * 1000;
-            this.timerAutoClose.Start();
-
-            this.labelSize.Text = $"box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
         }
 
         public FormToolBox(Bitmap image,
@@ -63,6 +49,20 @@ namespace SkyStopwatch
             _AddSecondsClick = addSeconds;
             _ChangeTimeNodes = changeTimeNodes;
 
+            //got error when call this.close(), cross threads issue, thus use ui control timer instead
+            //Task.Factory.StartNew(() =>
+            //{
+            //    Thread.Sleep(60 * 1000);
+            //    if (!this.Disposing || !this.IsDisposed)
+            //    {
+            //        this.BeginInvoke(new Action(() => { this.Close(); }));
+            //    }
+            //});
+            this.timerAutoClose.Interval = 60 * 1000;
+            this.timerAutoClose.Start();
+
+            this.labelSize.Text = $"box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
+
 
             //for test
             //if (string.IsNullOrEmpty(this.textBoxTimeSpanNodes.Text))
@@ -71,6 +71,9 @@ namespace SkyStopwatch
                 //this.textBoxTimeSpanNodes.Text = "01:00";
                 this.textBoxTimeSpanNodes.Text = "10:30\r\n20:30\r\n35:00";
             }
+
+            this.checkBoxDebugging.Checked = MainOCR.IsDebugging;
+
 
 
             //do this at last
@@ -208,6 +211,11 @@ namespace SkyStopwatch
             this.buttonSaveTimeNode.Enabled = false;
 
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
+        }
+
+        private void checkBoxDebugging_CheckedChanged(object sender, EventArgs e)
+        {
+            MainOCR.IsDebugging = this.checkBoxDebugging.Checked;
         }
 
         //private void buttonResetTimeNode_Click(object sender, EventArgs e)

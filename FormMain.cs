@@ -481,10 +481,23 @@ namespace SkyStopwatch
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
-                    string time = MainOCR.FindTime(data);
+                    string timeString = MainOCR.FindTime(data);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
-                    return time;
+                    if (MainOCR.IsDebugging)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
+                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
+                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
+
+                        Guid guid = Guid.NewGuid();
+                        System.Diagnostics.Debug.WriteLine($"temp file key: {guid}");
+                        MainOCR.SaveTmpFile(guid.ToString(), screenShotBytes);
+
+                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
+                    }
+
+                    return timeString;
 
                 }).ContinueWith(t =>
                 {
@@ -591,7 +604,7 @@ namespace SkyStopwatch
             SendMessage(this.Handle, WM_SYSCOMMAND, SC_MOVE + HTCAPTION, 0);
         }
 
-
+        //圆角
         private static GraphicsPath GetRoundedRectPath(Rectangle rect, int radius)
         {
             int diameter = radius;
@@ -618,10 +631,10 @@ namespace SkyStopwatch
             const int roundRadius = 8;
 
             //SetWindowRegion
-            System.Drawing.Drawing2D.GraphicsPath formPath = new System.Drawing.Drawing2D.GraphicsPath();
-            //Rectangle rect = new Rectangle(0, 22, this.Width, this.Height - 22); //this.Left-10, this.Top-10, this.Width-10, this.Height-10);
+            //this.Left-10, this.Top-10, this.Width-10, this.Height-10);
+            //Rectangle rect = new Rectangle(0, 22, this.Width, this.Height - 22); 
             Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
-            formPath = GetRoundedRectPath(rect, roundRadius);
+            System.Drawing.Drawing2D.GraphicsPath formPath = GetRoundedRectPath(rect, roundRadius);
             this.Region = new Region(formPath);
         }
     }
