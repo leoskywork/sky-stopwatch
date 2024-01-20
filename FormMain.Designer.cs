@@ -35,9 +35,9 @@
             this.labelTimer = new System.Windows.Forms.Label();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
             this.timerAutoRefresh = new System.Windows.Forms.Timer(this.components);
-            this.buttonCloseOverlay = new System.Windows.Forms.Button();
             this.labelTitle = new System.Windows.Forms.Label();
             this.buttonDummyAcceptHighLight = new System.Windows.Forms.Button();
+            this.buttonCloseOverlay = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // buttonOCR
@@ -83,18 +83,6 @@
             // 
             this.timerAutoRefresh.Tick += new System.EventHandler(this.timerAutoRefresh_Tick);
             // 
-            // buttonCloseOverlay
-            // 
-            this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
-            this.buttonCloseOverlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonCloseOverlay.Location = new System.Drawing.Point(244, -4);
-            this.buttonCloseOverlay.Name = "buttonCloseOverlay";
-            this.buttonCloseOverlay.Size = new System.Drawing.Size(30, 30);
-            this.buttonCloseOverlay.TabIndex = 2000;
-            this.buttonCloseOverlay.Text = "x";
-            this.buttonCloseOverlay.UseVisualStyleBackColor = true;
-            this.buttonCloseOverlay.Click += new System.EventHandler(this.buttonCloseOverlay_Click);
-            // 
             // labelTitle
             // 
             this.labelTitle.Font = new System.Drawing.Font("SimSun", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -113,6 +101,20 @@
             this.buttonDummyAcceptHighLight.TabIndex = 1000;
             this.buttonDummyAcceptHighLight.Text = "d";
             this.buttonDummyAcceptHighLight.UseVisualStyleBackColor = true;
+            // 
+            // buttonCloseOverlay
+            // 
+            this.buttonCloseOverlay.BackgroundImage = global::SkyStopwatch.Properties.Resources.power_off_512_w;
+            this.buttonCloseOverlay.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
+            this.buttonCloseOverlay.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonCloseOverlay.Location = new System.Drawing.Point(244, -4);
+            this.buttonCloseOverlay.Name = "buttonCloseOverlay";
+            this.buttonCloseOverlay.Size = new System.Drawing.Size(30, 30);
+            this.buttonCloseOverlay.TabIndex = 2000;
+            this.buttonCloseOverlay.Text = "x";
+            this.buttonCloseOverlay.UseVisualStyleBackColor = true;
+            this.buttonCloseOverlay.Click += new System.EventHandler(this.buttonCloseOverlay_Click);
             // 
             // FormMain
             // 

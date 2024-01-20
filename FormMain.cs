@@ -114,13 +114,12 @@ namespace SkyStopwatch
 
             //the x out button
             const int closeSize = 40;
-            this.buttonCloseOverlay.Text = "X";
+            this.buttonCloseOverlay.Text = null;
             this.buttonCloseOverlay.Size = new System.Drawing.Size(closeSize, closeSize);
             this.buttonCloseOverlay.Location = new System.Drawing.Point(this.Size.Width - closeSize, 0);
             this.buttonCloseOverlay.FlatStyle = FlatStyle.Flat;
             this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
             this.buttonCloseOverlay.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
-            this.buttonCloseOverlay.ForeColor = System.Drawing.Color.White;
         }
 
         private void SyncTopMost()

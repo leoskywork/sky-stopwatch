@@ -162,6 +162,7 @@
     <None Include="Tesseract-OCR\tessdata\tessconfigs\segdemo" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\power-off-512-w.png" />
     <Content Include="Tesseract-OCR\ambiguous_words.exe" />
     <Content Include="Tesseract-OCR\classifier_tester.exe" />
     <Content Include="Tesseract-OCR\cntraining.exe" />
