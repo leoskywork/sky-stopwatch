@@ -16,10 +16,10 @@ namespace SkyStopwatch
         //public const int YPercent = 68;
         //public const int BlockWidth = 300;
         //public const int BlockHeight = 100;
-        public const int XPercent = 39;
-        public const int YPercent = 71;
-        public const int BlockWidth = 140;
-        public const int BlockHeight = 30;
+        public static int XPercent = 39;
+        public static int YPercent = 71;
+        public static int BlockWidth = 140;
+        public static int BlockHeight = 30;
 
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
@@ -30,8 +30,8 @@ namespace SkyStopwatch
         public const int IncrementMinutes = 1;
         public const int DecrementMinutes = 1;
         public const int TmpFileMaxCount = 5;
-        public const int TimeNodeEarlyWarningSeconds = 30;
-        public const int TimeNodeWarningDurationSeconds = 60;//40;//90;
+        public const int TimeNodeEarlyWarningSeconds = 20;//30;
+        public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
 
         public const string TimeSpanFormat = @"hh\:mm\:ss";
         public const string TImeSpanFormatNoHour = @"mm\:ss";

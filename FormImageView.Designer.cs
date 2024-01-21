@@ -28,12 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.labelSize = new System.Windows.Forms.Label();
             this.labelMessage = new System.Windows.Forms.Label();
-            this.buttonStart = new System.Windows.Forms.Button();
-            this.timerAutoClose = new System.Windows.Forms.Timer(this.components);
-            this.buttonStop = new System.Windows.Forms.Button();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.numericUpDownX = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownY = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownWidth = new System.Windows.Forms.NumericUpDown();
@@ -64,35 +61,21 @@
             this.labelMessage.AutoSize = true;
             this.labelMessage.Location = new System.Drawing.Point(249, 34);
             this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(31, 15);
+            this.labelMessage.Size = new System.Drawing.Size(167, 15);
             this.labelMessage.TabIndex = 2;
-            this.labelMessage.Text = "msg";
+            this.labelMessage.Text = "set image blcok args";
             // 
-            // buttonStart
+            // buttonSave
             // 
-            this.buttonStart.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonStart.Location = new System.Drawing.Point(481, 26);
-            this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(80, 30);
-            this.buttonStart.TabIndex = 20;
-            this.buttonStart.Text = "Start";
-            this.buttonStart.UseVisualStyleBackColor = true;
-            this.buttonStart.Click += new System.EventHandler(this.buttonStart_Click);
-            // 
-            // timerAutoClose
-            // 
-            this.timerAutoClose.Tick += new System.EventHandler(this.timerAutoClose_Tick);
-            // 
-            // buttonStop
-            // 
-            this.buttonStop.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonStop.Location = new System.Drawing.Point(576, 26);
-            this.buttonStop.Name = "buttonStop";
-            this.buttonStop.Size = new System.Drawing.Size(80, 30);
-            this.buttonStop.TabIndex = 100;
-            this.buttonStop.Text = "Stop";
-            this.buttonStop.UseVisualStyleBackColor = true;
-            this.buttonStop.Click += new System.EventHandler(this.buttonStop_Click);
+            this.buttonSave.Enabled = false;
+            this.buttonSave.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonSave.Location = new System.Drawing.Point(682, 696);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(80, 30);
+            this.buttonSave.TabIndex = 20;
+            this.buttonSave.Text = "Save";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
             // numericUpDownX
             // 
@@ -144,7 +127,7 @@
             0,
             0});
             this.numericUpDownWidth.Minimum = new decimal(new int[] {
-            1,
+            10,
             0,
             0,
             0});
@@ -172,7 +155,7 @@
             0,
             0});
             this.numericUpDownHeight.Minimum = new decimal(new int[] {
-            1,
+            10,
             0,
             0,
             0});
@@ -245,8 +228,7 @@
             this.Controls.Add(this.numericUpDownWidth);
             this.Controls.Add(this.numericUpDownY);
             this.Controls.Add(this.numericUpDownX);
-            this.Controls.Add(this.buttonStop);
-            this.Controls.Add(this.buttonStart);
+            this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.labelMessage);
             this.Controls.Add(this.labelSize);
             this.Controls.Add(this.pictureBoxOne);
@@ -254,6 +236,7 @@
             this.MaximizeBox = false;
             this.Name = "FormImageView";
             this.Text = "Image view";
+            this.Load += new System.EventHandler(this.FormImageView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
@@ -269,9 +252,7 @@
         private System.Windows.Forms.PictureBox pictureBoxOne;
         private System.Windows.Forms.Label labelSize;
         private System.Windows.Forms.Label labelMessage;
-        private System.Windows.Forms.Button buttonStart;
-        private System.Windows.Forms.Timer timerAutoClose;
-        private System.Windows.Forms.Button buttonStop;
+        private System.Windows.Forms.Button buttonSave;
         private System.Windows.Forms.NumericUpDown numericUpDownX;
         private System.Windows.Forms.NumericUpDown numericUpDownY;
         private System.Windows.Forms.NumericUpDown numericUpDownWidth;

@@ -78,12 +78,12 @@ namespace SkyStopwatch
             {
                 _AutoOCREngine = MainOCR.GetDefaultOCREngine();
 
-                Thread.Sleep(500);
+                Thread.Sleep(300);
                 this.BeginInvoke(new Action(() =>
                 {
                     this.labelTimer.Text = "run";
                 }));
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
 
                 if (this.Disposing || this.IsDisposed) return;
                 this.BeginInvoke(new Action(() =>
