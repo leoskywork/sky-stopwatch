@@ -25,7 +25,8 @@ namespace SkyStopwatch
                 MainOCR.TimeNodeCheckingList = "10:30\r\n20:30\r\n35:00";
             }
 
-            Application.Run(new FormMain());
+            //Application.Run(new FormMain());
+            Application.Run(new FormBoot());
         }
     }
 }

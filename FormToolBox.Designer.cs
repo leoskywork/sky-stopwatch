@@ -41,7 +41,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBoxShowSystemClock = new System.Windows.Forms.CheckBox();
             this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.groupBoxTimeNode = new System.Windows.Forms.GroupBox();
@@ -49,6 +48,7 @@
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
+            this.buttonChangeTheme = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -140,7 +140,7 @@
             this.buttonImageView.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonImageView.Location = new System.Drawing.Point(26, 25);
             this.buttonImageView.Name = "buttonImageView";
-            this.buttonImageView.Size = new System.Drawing.Size(120, 30);
+            this.buttonImageView.Size = new System.Drawing.Size(95, 30);
             this.buttonImageView.TabIndex = 401;
             this.buttonImageView.Text = "Image...";
             this.buttonImageView.UseVisualStyleBackColor = true;
@@ -173,7 +173,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkBoxShowSystemClock);
+            this.groupBox2.Controls.Add(this.buttonChangeTheme);
             this.groupBox2.Controls.Add(this.checkBoxDebugging);
             this.groupBox2.Controls.Add(this.buttonImageView);
             this.groupBox2.Location = new System.Drawing.Point(57, 396);
@@ -183,21 +183,10 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tools";
             // 
-            // checkBoxShowSystemClock
-            // 
-            this.checkBoxShowSystemClock.AutoSize = true;
-            this.checkBoxShowSystemClock.Location = new System.Drawing.Point(323, 31);
-            this.checkBoxShowSystemClock.Name = "checkBoxShowSystemClock";
-            this.checkBoxShowSystemClock.Size = new System.Drawing.Size(125, 19);
-            this.checkBoxShowSystemClock.TabIndex = 403;
-            this.checkBoxShowSystemClock.Text = "System clock";
-            this.checkBoxShowSystemClock.UseVisualStyleBackColor = true;
-            this.checkBoxShowSystemClock.CheckedChanged += new System.EventHandler(this.checkBoxShowSystemNow_CheckedChanged);
-            // 
             // checkBoxDebugging
             // 
             this.checkBoxDebugging.AutoSize = true;
-            this.checkBoxDebugging.Location = new System.Drawing.Point(180, 31);
+            this.checkBoxDebugging.Location = new System.Drawing.Point(140, 32);
             this.checkBoxDebugging.Name = "checkBoxDebugging";
             this.checkBoxDebugging.Size = new System.Drawing.Size(101, 19);
             this.checkBoxDebugging.TabIndex = 402;
@@ -274,6 +263,16 @@
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
             // 
+            // buttonChangeTheme
+            // 
+            this.buttonChangeTheme.Location = new System.Drawing.Point(257, 26);
+            this.buttonChangeTheme.Name = "buttonChangeTheme";
+            this.buttonChangeTheme.Size = new System.Drawing.Size(75, 30);
+            this.buttonChangeTheme.TabIndex = 404;
+            this.buttonChangeTheme.Text = "Theme 0";
+            this.buttonChangeTheme.UseVisualStyleBackColor = true;
+            this.buttonChangeTheme.Click += new System.EventHandler(this.buttonChangeTheme_Click);
+            // 
             // FormToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -325,6 +324,6 @@
         private System.Windows.Forms.Button buttonSaveTimeNode;
         private System.Windows.Forms.GroupBox groupBoxTimeNode;
         private System.Windows.Forms.CheckBox checkBoxDebugging;
-        private System.Windows.Forms.CheckBox checkBoxShowSystemClock;
+        private System.Windows.Forms.Button buttonChangeTheme;
     }
 }

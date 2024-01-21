@@ -71,6 +71,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormBoot.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBoot.Designer.cs">
+      <DependentUpon>FormBoot.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormImageView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +105,9 @@
       <DependentUpon>FormToolBox.cs</DependentUpon>
     </Compile>
     <Compile Include="ToDo.cs" />
+    <EmbeddedResource Include="FormBoot.resx">
+      <DependentUpon>FormBoot.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>

@@ -21,6 +21,7 @@ namespace SkyStopwatch
         private Action<string> _ChangeTimeNodes;
 
         private string _OriginalTimeNodes;
+        private int _BootingArgs = 0; //0 = default theme
 
         private FormToolBox()
         {
@@ -67,7 +68,6 @@ namespace SkyStopwatch
            
 
             this.checkBoxDebugging.Checked = MainOCR.IsDebugging;
-            this.checkBoxShowSystemClock.Checked = MainOCR.ShowSystemClock;
             this.checkBoxPopWarning.Checked = MainOCR.EnableTimeNodeChecking;
             this.textBoxTimeSpanNodes.Text = MainOCR.TimeNodeCheckingList;
 
@@ -80,6 +80,8 @@ namespace SkyStopwatch
                 //this.textBoxTimeSpanNodes.Text = "1:00\r\n2:30\r\n10:00";
             }
 
+            this._BootingArgs = MainOCR.BootingArgs;
+            this.buttonChangeTheme.Text = $"Theme {_BootingArgs}";
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
@@ -208,17 +210,24 @@ namespace SkyStopwatch
             MainOCR.IsDebugging = this.checkBoxDebugging.Checked;
         }
 
-        private void checkBoxShowSystemNow_CheckedChanged(object sender, EventArgs e)
-        {
-            MainOCR.ShowSystemClock = this.checkBoxShowSystemClock.Checked;
 
-
-
-        }
 
         private void FormToolBox_Load(object sender, EventArgs e)
         {
             UpdateSaveButtonState();
+        }
+
+        private void buttonChangeTheme_Click(object sender, EventArgs e)
+        {
+            this.buttonChangeTheme.Enabled = false;
+            this._BootingArgs++;
+            MainOCR.BootingArgs = this._BootingArgs % 4;
+            this.buttonChangeTheme.Text = $"Theme {MainOCR.BootingArgs}";
+
+            MainOCR.FireChangeTheme();
+            
+            
+            this.buttonChangeTheme.Enabled = true;
         }
     }
 }

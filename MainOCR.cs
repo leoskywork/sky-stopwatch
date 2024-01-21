@@ -34,12 +34,15 @@ namespace SkyStopwatch
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
         public static bool IsDebugging { get; set; } = true;
-        public static bool ShowSystemClock { get; set; } = true;
+        //public static bool ShowSystemClock { get; set; } = true;
         //does not default this to Empty, since user may clear up the list
         public static string TimeNodeCheckingList { get; set; } = null;
         public static bool EnableTimeNodeChecking { get; set; } = true;
 
+        public static int BootingArgs { get; set; } = 0;
 
+        public static event EventHandler ChangeTheme;
+        public static event EventHandler CloseApp;
 
         public static void PrintScreenAsFile(string path)
         {
@@ -329,6 +332,15 @@ namespace SkyStopwatch
             return result;
         }
 
+        public static void FireChangeTheme()
+        {
+           ChangeTheme?.Invoke(null, null);
+        }
+
+        public static void FireCloseApp()
+        {
+            CloseApp?.Invoke(null, null);
+        }
     }
 
     public static class FormLeoExt

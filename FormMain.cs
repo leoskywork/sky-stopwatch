@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -31,9 +32,14 @@ namespace SkyStopwatch
 
         private bool _HasTimeNodeWarningPopped = false;
 
-        public FormMain()
+        private int _BootingArgs = 0;
+
+        public FormMain(int args)
         {
             InitializeComponent();
+
+            this._BootingArgs = args;
+
             InitStopwatch();
             SyncTopMost();
 
@@ -42,13 +48,29 @@ namespace SkyStopwatch
         private void InitStopwatch()
         {
             this.labelTimer.Text = "unset";
-
             this.timerMain.Interval = 900;
             this.timerAutoRefresh.Interval = 1000;
 
-
+          
             //InitGUILayoutV1();
-            InitGUILayoutV2();
+            //InitGUILayoutV2();
+
+            switch (this._BootingArgs)
+            {
+                case 1:
+                    InitGUILayoutV1(); 
+                    break;
+                case 2:
+                    InitGUILayoutV2(); 
+                    break;
+                case 3:
+
+                    InitGUILayoutV3(); 
+                    break;
+                default:
+                    InitGUILayoutV3(); 
+                    break;
+            }
 
             //pre warm up
             this.timerMain.Start();
@@ -62,15 +84,11 @@ namespace SkyStopwatch
                     this.labelTimer.Text = "run";
                 }));
                 Thread.Sleep(1000);
+
+                if (this.Disposing || this.IsDisposed) return;
                 this.BeginInvoke(new Action(() =>
                 {
                     this.OnNewGameStart();
-
-                    //FormToolBox tool = CreateToolBox(null, "warm up");
-                    //tool.StartPosition = FormStartPosition.Manual;
-                    //tool.Location = new Point(-10000, -10000);
-                    //tool.Show();
-                    //tool.Close();
                 }));
             });
         }
@@ -151,6 +169,9 @@ namespace SkyStopwatch
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
             this.Size = new System.Drawing.Size(160, 39);
+
+            
+            this.labelTitle.Visible = false;
 
             //time since game start
             //this.labelTimer.BackColor = Color.LightGray;
@@ -402,28 +423,10 @@ namespace SkyStopwatch
         {
             try
             {
-                if (MainOCR.ShowSystemClock)
+                if (this.labelTitle.Visible)
                 {
-                    if (!this.labelTitle.Visible)
-                    {
-                        this.labelTitle.Visible = true;
-
-                        InitGUILayoutV2();
-
-                        throw new NotImplementedException("can not change back yet");
-                    }
-
                     this.labelTitle.Text = DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
                     //this.labelTitle.Text = "23:59";
-                }
-                else
-                {
-                    if (this.labelTitle.Visible)
-                    {
-                        this.labelTitle.Visible = false;
-
-                        InitGUILayoutV3();
-                    }
                 }
 
                 this.CheckTimeNodes();
@@ -544,6 +547,8 @@ namespace SkyStopwatch
 
                 }).ContinueWith(t =>
                 {
+                    if(this.Disposing || this.IsDisposed) return;
+
                     this.BeginInvoke((Action)(() =>
                     {
                         string ocrDisplayTime = t.Result;
@@ -584,6 +589,7 @@ namespace SkyStopwatch
         private void buttonCloseOverlay_Click(object sender, EventArgs e)
         {
             this.Close();
+            MainOCR.FireCloseApp();
         }
 
 
