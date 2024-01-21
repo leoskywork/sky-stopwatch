@@ -15,6 +15,16 @@ namespace SkyStopwatch
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+
+            //leotodo - read from config file here?
+            if (MainOCR.IsDebugging)
+            {
+                //MainOCR.TimeNodeCheckingList = "1:00";
+                //MainOCR.TimeNodeCheckingList = "1:00\r\n02:30\r\n10:00";
+                MainOCR.TimeNodeCheckingList = "10:30\r\n20:30\r\n35:00";
+            }
+
             Application.Run(new FormMain());
         }
     }

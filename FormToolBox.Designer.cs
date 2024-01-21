@@ -199,9 +199,9 @@
             this.checkBoxDebugging.AutoSize = true;
             this.checkBoxDebugging.Location = new System.Drawing.Point(180, 31);
             this.checkBoxDebugging.Name = "checkBoxDebugging";
-            this.checkBoxDebugging.Size = new System.Drawing.Size(109, 19);
+            this.checkBoxDebugging.Size = new System.Drawing.Size(101, 19);
             this.checkBoxDebugging.TabIndex = 402;
-            this.checkBoxDebugging.Text = "Debug info";
+            this.checkBoxDebugging.Text = "Debugging";
             this.checkBoxDebugging.UseVisualStyleBackColor = true;
             this.checkBoxDebugging.CheckedChanged += new System.EventHandler(this.checkBoxDebugging_CheckedChanged);
             // 
@@ -290,6 +290,7 @@
             this.Name = "FormToolBox";
             this.Text = "Tool Box - auto close in  60 sec";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
+            this.Load += new System.EventHandler(this.FormToolBox_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

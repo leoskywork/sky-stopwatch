@@ -29,8 +29,6 @@ namespace SkyStopwatch
         private string _AutoOCRTimeOfLastRead;
         private Tesseract.TesseractEngine _AutoOCREngine;
 
-        //leotodo - pentional cross threads issue for this variable
-        private string _TimeNodeCheckingList = null; //does not default this to Empty, since user may clear up the list
         private bool _HasTimeNodeWarningPopped = false;
 
         public FormMain()
@@ -68,11 +66,11 @@ namespace SkyStopwatch
                 {
                     this.OnNewGameStart();
 
-                    FormToolBox tool = CreateToolBox(null, "warm up");
-                    tool.StartPosition = FormStartPosition.Manual;
-                    tool.Location = new Point(-10000, -10000);
-                    tool.Show();
-                    tool.Close();
+                    //FormToolBox tool = CreateToolBox(null, "warm up");
+                    //tool.StartPosition = FormStartPosition.Manual;
+                    //tool.Location = new Point(-10000, -10000);
+                    //tool.Show();
+                    //tool.Close();
                 }));
             });
         }
@@ -287,24 +285,14 @@ namespace SkyStopwatch
                                (_) => { this.OnChangeTimeNodes(_); }
                                );
 
-            if (this._TimeNodeCheckingList != null)
-            {
-                System.Diagnostics.Debug.WriteLine($"----- SetTimeNodes");
-                System.Diagnostics.Debug.WriteLine($"pass in: {this._TimeNodeCheckingList}");
 
-                tool.SetTimeNodes(this._TimeNodeCheckingList);
-            }
 
             return tool;
         }
 
         private void OnChangeTimeNodes(string newTimeNodes)
         {
-            System.Diagnostics.Debug.WriteLine($"----- OnChangeTimeNodes");
-            System.Diagnostics.Debug.WriteLine($"old: {this._TimeNodeCheckingList}");
-            System.Diagnostics.Debug.WriteLine($"new: {newTimeNodes}");
-
-            this._TimeNodeCheckingList = newTimeNodes;
+            this.CheckTimeNodes();
         }
 
         private void OnInitToolBox(Button toolBoxButtonOCR, string initialTimeNodes)
@@ -325,9 +313,8 @@ namespace SkyStopwatch
                 toolBoxButtonOCR.Cursor = Cursors.No;
             }
 
-            //System.Diagnostics.Debug.WriteLine($"----- OnInitToolBox");
+            System.Diagnostics.Debug.WriteLine($"----- OnInitToolBox, {nameof(initialTimeNodes)}: {initialTimeNodes}");
             //System.Diagnostics.Debug.WriteLine($"old: {this._TimeNodeCheckingList}");
-            //System.Diagnostics.Debug.WriteLine($"new: {initialTimeNodes}");
             //do not do this, causing bug
             //this._TimeNodeCheckingList = initialTimeNodes;
         }
@@ -454,11 +441,12 @@ namespace SkyStopwatch
 
         private void CheckTimeNodes()
         {
-            if (string.IsNullOrWhiteSpace(this._TimeNodeCheckingList)) return;
+            if (!MainOCR.EnableTimeNodeChecking) return;
+            if (string.IsNullOrWhiteSpace(MainOCR.TimeNodeCheckingList)) return;
             if (_TimeAroundGameStart == DateTime.MinValue) return;
             if (_HasTimeNodeWarningPopped) return;
 
-            var timeNodes = MainOCR.ValidateTimeSpanLines(this._TimeNodeCheckingList);
+            var timeNodes = MainOCR.ValidateTimeSpanLines(MainOCR.TimeNodeCheckingList);
 
             if (timeNodes == null || timeNodes.Count == 0) return;
 

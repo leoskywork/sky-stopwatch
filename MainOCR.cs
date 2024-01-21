@@ -32,9 +32,14 @@ namespace SkyStopwatch
         public const string TimeFormatNoSecond = @"H\:mm";
         public const string UIElapsedTimeFormat = @"m\:ss";
 
-        //leotodo - multi threads issue
+        //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
         public static bool IsDebugging { get; set; } = true;
         public static bool ShowSystemClock { get; set; } = true;
+        //does not default this to Empty, since user may clear up the list
+        public static string TimeNodeCheckingList { get; set; } = null;
+        public static bool EnableTimeNodeChecking { get; set; } = true;
+
+
 
         public static void PrintScreenAsFile(string path)
         {
@@ -277,7 +282,9 @@ namespace SkyStopwatch
                     }
 
                     //handle case "1353:1131: 00:01:26", split it then take the last 3 parts
-                    string[] parts = charsAfterFirstColonAdjust.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    //do not remove empty entry here, do not want to parse invalid line part, e.g. [4  1  :: 7: 5     :: : 5  :   :: 1 ]
+                    //string[] parts = charsAfterFirstColonAdjust.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = charsAfterFirstColonAdjust.Split(new[] { ':' }, StringSplitOptions.None);
                     if (parts.Length > colonCount)
                     {
                         string last3Parts = $"{parts[parts.Length - 3]}:{parts[parts.Length - 2]}:{parts[parts.Length - 1]}";

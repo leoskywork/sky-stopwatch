@@ -64,28 +64,29 @@ namespace SkyStopwatch
             this.labelSize.Text = $"box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
 
 
-            //for test
-            //if (string.IsNullOrEmpty(this.textBoxTimeSpanNodes.Text))
-            {
-                //this.textBoxTimeSpanNodes.Text = "1:00";
-                //this.textBoxTimeSpanNodes.Text = "01:00";
-                this.textBoxTimeSpanNodes.Text = "10:30\r\n20:30\r\n35:00";
-            }
+           
 
             this.checkBoxDebugging.Checked = MainOCR.IsDebugging;
             this.checkBoxShowSystemClock.Checked = MainOCR.ShowSystemClock;
+            this.checkBoxPopWarning.Checked = MainOCR.EnableTimeNodeChecking;
+            this.textBoxTimeSpanNodes.Text = MainOCR.TimeNodeCheckingList;
+
+
+            if (MainOCR.IsDebugging)
+            {
+                //this.textBoxTimeSpanNodes.Text = "1:00";
+                //this.textBoxTimeSpanNodes.Text = "01:00";
+                //this.textBoxTimeSpanNodes.Text = "10:30\r\n20:30\r\n35:00";
+                //this.textBoxTimeSpanNodes.Text = "1:00\r\n2:30\r\n10:00";
+            }
 
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
-            string basicCheckedNodes = GetBasicCheckedTimeNodes();
-            onInit?.Invoke(this.buttonOCR, basicCheckedNodes);
+            onInit?.Invoke(this.buttonOCR, _OriginalTimeNodes);
         }
 
-        public void SetTimeNodes(string nodes)
-        {
-            this.textBoxTimeSpanNodes.Text = nodes;
-        }
+  
 
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
@@ -156,62 +157,49 @@ namespace SkyStopwatch
 
         private void checkBoxPopWarning_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.checkBoxPopWarning.Checked)
-            {
-                this.groupBoxTimeNode.Enabled = true;
-            }
-            else
-            {
-                this.groupBoxTimeNode.Enabled = false;
-            }
+            this.groupBoxTimeNode.Enabled = this.checkBoxPopWarning.Checked;
 
-            string nodes = GetBasicCheckedTimeNodes();
-            _ChangeTimeNodes?.Invoke(nodes);
-        }
-
-        private string GetBasicCheckedTimeNodes()
-        {
-            if (this.checkBoxPopWarning.Checked)
-            {
-
-                return this.textBoxTimeSpanNodes.Text;
-            }
-            else
-            {
-                return null; //does not return empty here
-            }
+            MainOCR.EnableTimeNodeChecking = this.checkBoxPopWarning.Checked;
+            _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 
         private void textBoxTimeSpanNodes_TextChanged(object sender, EventArgs e)
         {
+            UpdateSaveButtonState();
+        }
+
+        private void UpdateSaveButtonState()
+        {
             bool hasActuralChanged = false;
             string newValue = this.textBoxTimeSpanNodes.Text;
 
-            if (newValue != this._OriginalTimeNodes)
+            if (this._OriginalTimeNodes != newValue)
             {
                 hasActuralChanged = true;
 
-                //leotodo, ignore changes when just new line or white spaces
-                //if(newValue != null && newValue.Replace("\r\n"))
+                //ignore changes when just new line or white spaces
+                if (_OriginalTimeNodes != null && newValue != null)
+                {
+                    if (_OriginalTimeNodes.Replace(Environment.NewLine, string.Empty) == newValue.Replace(Environment.NewLine, string.Empty))
+                    {
+                        hasActuralChanged = false;
+                    }
+                }
             }
 
 
-            if (hasActuralChanged)
-            {
-                this.buttonSaveTimeNode.Enabled = true;
-                //this.buttonResetTimeNode.Enabled = true;
-            }
-            else
-            {
-                this.buttonSaveTimeNode.Enabled = false;
-                //this.buttonResetTimeNode.Enabled = false;
-            }
+            this.buttonSaveTimeNode.Enabled = hasActuralChanged;
         }
 
         private void buttonSaveTimeNode_Click(object sender, EventArgs e)
         {
             this.buttonSaveTimeNode.Enabled = false;
 
+            System.Diagnostics.Debug.WriteLine($"----- buttonSaveTimeNode_Click");
+            System.Diagnostics.Debug.WriteLine($"old: {MainOCR.TimeNodeCheckingList}");
+            System.Diagnostics.Debug.WriteLine($"new: {this.textBoxTimeSpanNodes.Text}");
+
+            MainOCR.TimeNodeCheckingList = this.textBoxTimeSpanNodes.Text;
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 
@@ -223,15 +211,14 @@ namespace SkyStopwatch
         private void checkBoxShowSystemNow_CheckedChanged(object sender, EventArgs e)
         {
             MainOCR.ShowSystemClock = this.checkBoxShowSystemClock.Checked;
+
+
+
         }
 
-        //private void buttonResetTimeNode_Click(object sender, EventArgs e)
-        //{
-        //    this.buttonResetTimeNode.Enabled = false;
-
-        //    this.textBoxTimeSpanNodes.Text = this._OriginalTimeNodes;
-        //    this._OriginalTimeNodes = null;
-
-        //}
+        private void FormToolBox_Load(object sender, EventArgs e)
+        {
+            UpdateSaveButtonState();
+        }
     }
 }
