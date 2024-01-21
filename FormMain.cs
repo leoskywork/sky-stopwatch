@@ -409,6 +409,12 @@ namespace SkyStopwatch
             this.buttonOCR.Enabled = false;
 
             TimeSpan passedTimeWithIncrease = DateTime.Now.AddSeconds(seconds) - _TimeAroundGameStart;
+
+            if (passedTimeWithIncrease < TimeSpan.Zero)
+            {
+                passedTimeWithIncrease = TimeSpan.Zero;
+            }
+
             StartUIStopwatch(passedTimeWithIncrease.ToString(MainOCR.TimeSpanFormat), MainOCR.NoDelay);
         }
 
@@ -538,7 +544,7 @@ namespace SkyStopwatch
                         //System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
 
                         //string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
-                        
+
                         //System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }

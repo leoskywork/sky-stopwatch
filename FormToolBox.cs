@@ -229,5 +229,20 @@ namespace SkyStopwatch
             
             this.buttonChangeTheme.Enabled = true;
         }
+
+        private void buttonAddMinute_Click(object sender, EventArgs e)
+        {
+            this.buttonAddMinute.Enabled = false;
+            _AddSecondsClick?.Invoke(MainOCR.IncrementMinutes * 60);
+            this.buttonAddMinute.Enabled = true;
+        }
+
+        private void buttonReduceMinute_Click(object sender, EventArgs e)
+        {
+            this.buttonReduceMinute.Enabled = false;
+
+            _AddSecondsClick?.Invoke(MainOCR.DecrementMinutes * -60);
+            this.buttonReduceMinute.Enabled = true;
+        }
     }
 }

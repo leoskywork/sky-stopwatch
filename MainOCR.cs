@@ -12,10 +12,14 @@ namespace SkyStopwatch
 {
     class MainOCR
     {
-        public const int XPercent = 32;
-        public const int YPercent = 68;
-        public const int BlockWidth = 300;
-        public const int BlockHeight = 100;
+        //public const int XPercent = 32;
+        //public const int YPercent = 68;
+        //public const int BlockWidth = 300;
+        //public const int BlockHeight = 100;
+        public const int XPercent = 39;
+        public const int YPercent = 71;
+        public const int BlockWidth = 140;
+        public const int BlockHeight = 30;
 
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
@@ -23,6 +27,8 @@ namespace SkyStopwatch
         public const int NoDelay = 0;
         public const int IncrementSeconds = 10;
         public const int DecrementSeconds = 10;
+        public const int IncrementMinutes = 1;
+        public const int DecrementMinutes = 1;
         public const int TmpFileMaxCount = 5;
         public const int TimeNodeEarlyWarningSeconds = 30;
         public const int TimeNodeWarningDurationSeconds = 60;//40;//90;
@@ -257,7 +263,7 @@ namespace SkyStopwatch
 
             foreach (string line in lines)
             {
-                if (line.IndexOf(':') > 0)
+                if (line.IndexOf(':') >= 0)
                 {
                     string charsAfterFirstColon = line.Substring(line.IndexOf(":") + 1);
                     string charsAfterFirstColonAdjust = charsAfterFirstColon.Replace(" ", string.Empty); //Trim().Replace(": ", ":").Replace(" :", ":");
@@ -297,6 +303,14 @@ namespace SkyStopwatch
                             return last3Parts;
                         }
                     }
+
+                    /*
+                    //leotodo - ignore the following case 
+
+                     5:11:33 :5 5
+                     11:33 :5 5
+                     11:33:55
+                     */
                 }
             }
 

@@ -49,6 +49,8 @@
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.buttonChangeTheme = new System.Windows.Forms.Button();
+            this.buttonAddMinute = new System.Windows.Forms.Button();
+            this.buttonReduceMinute = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -148,6 +150,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.buttonReduceMinute);
+            this.groupBox1.Controls.Add(this.buttonAddMinute);
             this.groupBox1.Controls.Add(this.buttonReduceSeconds);
             this.groupBox1.Controls.Add(this.buttonOCR);
             this.groupBox1.Controls.Add(this.buttonClear);
@@ -273,6 +277,28 @@
             this.buttonChangeTheme.UseVisualStyleBackColor = true;
             this.buttonChangeTheme.Click += new System.EventHandler(this.buttonChangeTheme_Click);
             // 
+            // buttonAddMinute
+            // 
+            this.buttonAddMinute.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonAddMinute.Location = new System.Drawing.Point(21, 245);
+            this.buttonAddMinute.Name = "buttonAddMinute";
+            this.buttonAddMinute.Size = new System.Drawing.Size(54, 30);
+            this.buttonAddMinute.TabIndex = 302;
+            this.buttonAddMinute.Text = "+1m";
+            this.buttonAddMinute.UseVisualStyleBackColor = true;
+            this.buttonAddMinute.Click += new System.EventHandler(this.buttonAddMinute_Click);
+            // 
+            // buttonReduceMinute
+            // 
+            this.buttonReduceMinute.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonReduceMinute.Location = new System.Drawing.Point(87, 245);
+            this.buttonReduceMinute.Name = "buttonReduceMinute";
+            this.buttonReduceMinute.Size = new System.Drawing.Size(54, 30);
+            this.buttonReduceMinute.TabIndex = 303;
+            this.buttonReduceMinute.Text = "-1m";
+            this.buttonReduceMinute.UseVisualStyleBackColor = true;
+            this.buttonReduceMinute.Click += new System.EventHandler(this.buttonReduceMinute_Click);
+            // 
             // FormToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -325,5 +351,7 @@
         private System.Windows.Forms.GroupBox groupBoxTimeNode;
         private System.Windows.Forms.CheckBox checkBoxDebugging;
         private System.Windows.Forms.Button buttonChangeTheme;
+        private System.Windows.Forms.Button buttonAddMinute;
+        private System.Windows.Forms.Button buttonReduceMinute;
     }
 }
