@@ -51,8 +51,7 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show(ex.ToString());
+                this.OnError(ex);
             }
         }
 
@@ -92,8 +91,7 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show(ex.ToString());
+               this.OnError(ex);
             }
         }
 
@@ -108,8 +106,7 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-
-                MessageBox.Show(ex.ToString());
+                this.OnError(ex);
             }
         }
 

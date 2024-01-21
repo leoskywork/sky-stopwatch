@@ -193,7 +193,7 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-                OnError(ex);
+                this.OnError(ex);
                 buttonOCR.Enabled = true;
             }
         }
@@ -269,7 +269,7 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-                OnError(ex);
+                this.OnError(ex);
             }
         }
 
@@ -448,7 +448,7 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-                OnError(ex);
+                this.OnError(ex);
             }
         }
 
@@ -509,7 +509,7 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-                OnError(ex);
+                this.OnError(ex);
             }
         }
 
@@ -579,21 +579,12 @@ namespace SkyStopwatch
             }
             catch (Exception ex)
             {
-                OnError(ex);
+                this.OnError(ex);
                 buttonOCR.Enabled = true;
             }
         }
 
-        private void OnError(Exception ex)
-        {
-            System.Diagnostics.Debug.WriteLine(ex.ToString());
-            MessageBox.Show(ex.ToString());
-
-            if (!MainOCR.IsDebugging)
-            {
-                this.Close();
-            }
-        }
+     
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {

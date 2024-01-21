@@ -33,7 +33,7 @@ namespace SkyStopwatch
         public const string UIElapsedTimeFormat = @"m\:ss";
 
         //leotodo - multi threads issue
-        public static bool IsDebugging { get; set; } = false;
+        public static bool IsDebugging { get; set; } = true;
         public static bool ShowSystemClock { get; set; } = true;
 
         public static void PrintScreenAsFile(string path)
@@ -322,5 +322,23 @@ namespace SkyStopwatch
             return result;
         }
 
+    }
+
+    public static class FormLeoExt
+    {
+        public static void OnError(this Form form, Exception e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.ToString());
+
+            if (MainOCR.IsDebugging)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            else
+            {
+                MessageBox.Show(e.Message);
+                form.Close();
+            }
+        }
     }
 }
