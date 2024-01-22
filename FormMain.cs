@@ -556,17 +556,17 @@ namespace SkyStopwatch
                     string timeString = MainOCR.FindTime(data);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
+                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
+                    System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
+                    System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
+
                     if (MainOCR.IsDebugging)
                     {
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
-                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
-
-                        //string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
-
-                        //System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
+                        string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
+                        System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
                     }
+                    
+                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
 
                     return timeString;
 

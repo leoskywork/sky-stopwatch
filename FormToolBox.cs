@@ -59,7 +59,7 @@ namespace SkyStopwatch
             //        this.BeginInvoke(new Action(() => { this.Close(); }));
             //    }
             //});
-            this.timerAutoClose.Interval = 10 * 1000;
+            this.timerAutoClose.Interval = 60 * 1000;
             this.timerAutoClose.Start();
 
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";

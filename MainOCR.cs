@@ -39,7 +39,7 @@ namespace SkyStopwatch
         public const string UIElapsedTimeFormat = @"m\:ss";
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
-        public static bool IsDebugging { get; set; } = true;
+        public static bool IsDebugging { get; set; } = false;
         //public static bool ShowSystemClock { get; set; } = true;
         //does not default this to Empty, since user may clear up the list
         public static string TimeNodeCheckingList { get; set; } = null;
