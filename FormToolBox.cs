@@ -59,7 +59,7 @@ namespace SkyStopwatch
             //        this.BeginInvoke(new Action(() => { this.Close(); }));
             //    }
             //});
-            this.timerAutoClose.Interval = 60 * 1000;
+            this.timerAutoClose.Interval = 10 * 1000;
             this.timerAutoClose.Start();
 
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
@@ -209,6 +209,7 @@ namespace SkyStopwatch
         private void checkBoxDebugging_CheckedChanged(object sender, EventArgs e)
         {
             MainOCR.IsDebugging = this.checkBoxDebugging.Checked;
+            this.Text = MainOCR.IsDebugging ? "debugging" : "dialog will auto close";
         }
 
 

@@ -98,7 +98,7 @@
             this.buttonDummyAcceptHighLight.Location = new System.Drawing.Point(136, 1);
             this.buttonDummyAcceptHighLight.Name = "buttonDummyAcceptHighLight";
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(30, 30);
-            this.buttonDummyAcceptHighLight.TabIndex = 1000;
+            this.buttonDummyAcceptHighLight.TabIndex = 10;
             this.buttonDummyAcceptHighLight.Text = "d";
             this.buttonDummyAcceptHighLight.UseVisualStyleBackColor = true;
             // 
