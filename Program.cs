@@ -18,7 +18,7 @@ namespace SkyStopwatch
 
 
             //leotodo - read from config file here?
-            if (MainOCR.IsDebugging)
+            //if (MainOCR.IsDebugging)
             {
                 //MainOCR.TimeNodeCheckingList = "1:00";
                 //MainOCR.TimeNodeCheckingList = "1:00\r\n02:30\r\n10:00";
