@@ -301,7 +301,7 @@
             this.buttonCloseApp.Name = "buttonCloseApp";
             this.buttonCloseApp.Size = new System.Drawing.Size(100, 30);
             this.buttonCloseApp.TabIndex = 407;
-            this.buttonCloseApp.Text = "EXIT";
+            this.buttonCloseApp.Text = "KILL";
             this.buttonCloseApp.UseVisualStyleBackColor = false;
             this.buttonCloseApp.Click += new System.EventHandler(this.buttonCloseApp_Click);
             // 
