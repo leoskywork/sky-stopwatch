@@ -181,6 +181,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\power-off-512-w.png" />
+    <None Include="Resources\setting-128-b.png" />
+    <None Include="Resources\setting-lines-128-b.png" />
+    <None Include="Resources\more-128-b.png" />
+    <None Include="Resources\more-arrow-128-b.png" />
+    <None Include="Resources\more-arrow-128-small-b.png" />
     <Content Include="Tesseract-OCR\ambiguous_words.exe" />
     <Content Include="Tesseract-OCR\classifier_tester.exe" />
     <Content Include="Tesseract-OCR\cntraining.exe" />

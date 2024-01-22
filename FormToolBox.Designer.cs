@@ -47,10 +47,11 @@
             this.buttonSaveTimeNode = new System.Windows.Forms.Button();
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
-            this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.buttonChangeTheme = new System.Windows.Forms.Button();
             this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonReduceMinute = new System.Windows.Forms.Button();
+            this.buttonCloseApp = new System.Windows.Forms.Button();
+            this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -61,7 +62,7 @@
             // labelSize
             // 
             this.labelSize.AutoSize = true;
-            this.labelSize.Location = new System.Drawing.Point(54, 34);
+            this.labelSize.Location = new System.Drawing.Point(20, 18);
             this.labelSize.Name = "labelSize";
             this.labelSize.Size = new System.Drawing.Size(79, 15);
             this.labelSize.TabIndex = 1;
@@ -70,7 +71,7 @@
             // labelMessage
             // 
             this.labelMessage.AutoSize = true;
-            this.labelMessage.Location = new System.Drawing.Point(217, 34);
+            this.labelMessage.Location = new System.Drawing.Point(183, 18);
             this.labelMessage.Name = "labelMessage";
             this.labelMessage.Size = new System.Drawing.Size(31, 15);
             this.labelMessage.TabIndex = 2;
@@ -96,9 +97,9 @@
             this.buttonTopMost.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonTopMost.Location = new System.Drawing.Point(29, 32);
             this.buttonTopMost.Name = "buttonTopMost";
-            this.buttonTopMost.Size = new System.Drawing.Size(160, 30);
+            this.buttonTopMost.Size = new System.Drawing.Size(100, 30);
             this.buttonTopMost.TabIndex = 400;
-            this.buttonTopMost.Text = "Toggle top most";
+            this.buttonTopMost.Text = "Top most";
             this.buttonTopMost.UseVisualStyleBackColor = true;
             this.buttonTopMost.Click += new System.EventHandler(this.buttonTopMost_Click);
             // 
@@ -157,9 +158,9 @@
             this.groupBox1.Controls.Add(this.buttonClear);
             this.groupBox1.Controls.Add(this.buttonAddSeconds);
             this.groupBox1.Controls.Add(this.buttonNewGame);
-            this.groupBox1.Location = new System.Drawing.Point(686, 34);
+            this.groupBox1.Location = new System.Drawing.Point(480, 34);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(168, 435);
+            this.groupBox1.Size = new System.Drawing.Size(168, 419);
             this.groupBox1.TabIndex = 402;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OCR";
@@ -180,9 +181,9 @@
             this.groupBox2.Controls.Add(this.buttonChangeTheme);
             this.groupBox2.Controls.Add(this.checkBoxDebugging);
             this.groupBox2.Controls.Add(this.buttonImageView);
-            this.groupBox2.Location = new System.Drawing.Point(57, 396);
+            this.groupBox2.Location = new System.Drawing.Point(23, 380);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(599, 73);
+            this.groupBox2.Size = new System.Drawing.Size(430, 73);
             this.groupBox2.TabIndex = 403;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tools";
@@ -200,12 +201,13 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.buttonCloseApp);
             this.groupBox3.Controls.Add(this.groupBoxTimeNode);
             this.groupBox3.Controls.Add(this.checkBoxPopWarning);
             this.groupBox3.Controls.Add(this.buttonTopMost);
-            this.groupBox3.Location = new System.Drawing.Point(875, 34);
+            this.groupBox3.Location = new System.Drawing.Point(669, 34);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(284, 435);
+            this.groupBox3.Size = new System.Drawing.Size(284, 419);
             this.groupBox3.TabIndex = 404;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setting";
@@ -258,15 +260,6 @@
             this.checkBoxPopWarning.UseVisualStyleBackColor = true;
             this.checkBoxPopWarning.CheckedChanged += new System.EventHandler(this.checkBoxPopWarning_CheckedChanged);
             // 
-            // pictureBoxOne
-            // 
-            this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
-            this.pictureBoxOne.Location = new System.Drawing.Point(56, 75);
-            this.pictureBoxOne.Name = "pictureBoxOne";
-            this.pictureBoxOne.Size = new System.Drawing.Size(600, 300);
-            this.pictureBoxOne.TabIndex = 0;
-            this.pictureBoxOne.TabStop = false;
-            // 
             // buttonChangeTheme
             // 
             this.buttonChangeTheme.Location = new System.Drawing.Point(257, 26);
@@ -299,11 +292,33 @@
             this.buttonReduceMinute.UseVisualStyleBackColor = true;
             this.buttonReduceMinute.Click += new System.EventHandler(this.buttonReduceMinute_Click);
             // 
+            // buttonCloseApp
+            // 
+            this.buttonCloseApp.BackColor = System.Drawing.Color.OrangeRed;
+            this.buttonCloseApp.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonCloseApp.ForeColor = System.Drawing.Color.White;
+            this.buttonCloseApp.Location = new System.Drawing.Point(155, 32);
+            this.buttonCloseApp.Name = "buttonCloseApp";
+            this.buttonCloseApp.Size = new System.Drawing.Size(100, 30);
+            this.buttonCloseApp.TabIndex = 407;
+            this.buttonCloseApp.Text = "EXIT";
+            this.buttonCloseApp.UseVisualStyleBackColor = false;
+            this.buttonCloseApp.Click += new System.EventHandler(this.buttonCloseApp_Click);
+            // 
+            // pictureBoxOne
+            // 
+            this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
+            this.pictureBoxOne.Location = new System.Drawing.Point(22, 59);
+            this.pictureBoxOne.Name = "pictureBoxOne";
+            this.pictureBoxOne.Size = new System.Drawing.Size(400, 300);
+            this.pictureBoxOne.TabIndex = 0;
+            this.pictureBoxOne.TabStop = false;
+            // 
             // FormToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1191, 491);
+            this.ClientSize = new System.Drawing.Size(977, 476);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -353,5 +368,6 @@
         private System.Windows.Forms.Button buttonChangeTheme;
         private System.Windows.Forms.Button buttonAddMinute;
         private System.Windows.Forms.Button buttonReduceMinute;
+        private System.Windows.Forms.Button buttonCloseApp;
     }
 }

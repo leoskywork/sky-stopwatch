@@ -54,7 +54,7 @@ namespace SkyStopwatch
             //Task.Factory.StartNew(() =>
             //{
             //    Thread.Sleep(60 * 1000);
-            //    if (!this.Disposing || !this.IsDisposed)
+            //    if (this.IsDead()) return;
             //    {
             //        this.BeginInvoke(new Action(() => { this.Close(); }));
             //    }
@@ -63,7 +63,6 @@ namespace SkyStopwatch
             this.timerAutoClose.Start();
 
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
-
 
            
 
@@ -74,6 +73,8 @@ namespace SkyStopwatch
 
             if (MainOCR.IsDebugging)
             {
+                this.Text = "debugging";
+
                 //this.textBoxTimeSpanNodes.Text = "1:00";
                 //this.textBoxTimeSpanNodes.Text = "01:00";
                 //this.textBoxTimeSpanNodes.Text = "10:30\r\n20:30\r\n35:00";
@@ -243,6 +244,12 @@ namespace SkyStopwatch
 
             _AddSecondsClick?.Invoke(MainOCR.DecrementMinutes * -60);
             this.buttonReduceMinute.Enabled = true;
+        }
+
+        private void buttonCloseApp_Click(object sender, EventArgs e)
+        {
+            this.Close();
+            MainOCR.FireCloseApp();
         }
     }
 }

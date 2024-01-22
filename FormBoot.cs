@@ -30,7 +30,7 @@ namespace SkyStopwatch
                 Task.Run(() =>
                 {
                     Thread.Sleep(300);
-
+                    if (this.IsDead()) return;
                     this.BeginInvoke(new Action(() =>
                     {
                         this.Hide();

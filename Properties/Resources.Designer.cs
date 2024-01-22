@@ -63,9 +63,59 @@ namespace SkyStopwatch.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap more_128_b {
+            get {
+                object obj = ResourceManager.GetObject("more-128-b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap more_arrow_128_b {
+            get {
+                object obj = ResourceManager.GetObject("more-arrow-128-b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap more_arrow_128_small_b {
+            get {
+                object obj = ResourceManager.GetObject("more-arrow-128-small-b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap power_off_512_w {
             get {
                 object obj = ResourceManager.GetObject("power-off-512-w", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap setting_128_b {
+            get {
+                object obj = ResourceManager.GetObject("setting-128-b", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap setting_lines_128_b {
+            get {
+                object obj = ResourceManager.GetObject("setting-lines-128-b", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

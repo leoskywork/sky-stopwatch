@@ -51,26 +51,10 @@ namespace SkyStopwatch
             this.timerMain.Interval = 900;
             this.timerAutoRefresh.Interval = 1000;
 
-          
+            //do the following in form_loaded
             //InitGUILayoutV1();
             //InitGUILayoutV2();
 
-            switch (this._BootingArgs)
-            {
-                case 1:
-                    InitGUILayoutV1(); 
-                    break;
-                case 2:
-                    InitGUILayoutV2(); 
-                    break;
-                case 3:
-
-                    InitGUILayoutV3(); 
-                    break;
-                default:
-                    InitGUILayoutV3(); 
-                    break;
-            }
 
             //pre warm up
             this.timerMain.Start();
@@ -79,13 +63,14 @@ namespace SkyStopwatch
                 _AutoOCREngine = MainOCR.GetDefaultOCREngine();
 
                 Thread.Sleep(300);
+                if (this.IsDead()) return;
                 this.BeginInvoke(new Action(() =>
                 {
                     this.labelTimer.Text = "run";
                 }));
                 Thread.Sleep(500);
 
-                if (this.Disposing || this.IsDisposed) return;
+                if (this.IsDead()) return;
                 this.BeginInvoke(new Action(() =>
                 {
                     this.OnNewGameStart();
@@ -129,17 +114,17 @@ namespace SkyStopwatch
             this.Controls.Remove(this.buttonOCR);
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
-            //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
-            this.Size = new System.Drawing.Size(170, 30);
+            //seems not working if width < 140 //turns out it's caused by lable.auto-resize ?? //should do this in load() not the ctor
+            this.Size = new System.Drawing.Size(170, 40);
 
             //time since game start
             //this.labelTimer.BackColor = Color.LightGray;
             this.labelTimer.Size = new System.Drawing.Size(80, 34);
-            this.labelTimer.Location = new System.Drawing.Point(2, -2);
+            this.labelTimer.Location = new System.Drawing.Point(2, 10);
 
             //button tool box
             this.buttonToolBox.Size = new System.Drawing.Size(18, 18);
-            this.buttonToolBox.Location = new System.Drawing.Point(108, -6);
+            this.buttonToolBox.Location = new System.Drawing.Point(108, 2);
 
             //display time now
             //this.labelTitle.BackColor = System.Drawing.Color.LightGray;
@@ -181,7 +166,6 @@ namespace SkyStopwatch
             //button tool box
             this.buttonToolBox.Size = new System.Drawing.Size(26, 26);
             this.buttonToolBox.Location = new System.Drawing.Point(86, 6);
-            //this.buttonToolBox.Text
 
             //the x out button
             const int closeSize = 40;
@@ -191,6 +175,38 @@ namespace SkyStopwatch
             this.buttonCloseOverlay.FlatStyle = FlatStyle.Flat;
             this.buttonCloseOverlay.FlatAppearance.BorderSize = 0;
             this.buttonCloseOverlay.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
+        }
+
+
+        private void InitGUILayoutV4()
+        {
+            //shrink width when hide ocr button
+            //this.buttonOCR.Hide();
+            this.Controls.Remove(this.buttonOCR);
+            this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
+            this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
+            //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
+            this.Size = new System.Drawing.Size(110, 32);
+
+
+            this.labelTitle.Visible = false;
+
+            //time since game start
+            //this.labelTimer.BackColor = Color.LightGray;
+            this.labelTimer.Size = new System.Drawing.Size(76, 32);
+            this.labelTimer.Location = new System.Drawing.Point(2, 3);
+
+            //button tool box
+            this.buttonToolBox.Text = null;
+            this.buttonToolBox.Size = new System.Drawing.Size(24, 24);
+            this.buttonToolBox.Location = new System.Drawing.Point(80, 4);
+            this.buttonToolBox.FlatStyle = FlatStyle.Flat;
+            this.buttonToolBox.FlatAppearance.BorderSize = 0;
+            this.buttonToolBox.BackgroundImage = global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
+            this.buttonToolBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+
+            //the x out button
+            this.buttonCloseOverlay.Visible = false;
         }
 
         private void SyncTopMost()
@@ -279,6 +295,8 @@ namespace SkyStopwatch
                         Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
                         {
                             FormToolBox tool = CreateToolBox(cloneBitmap, "current screen");
+                            tool.StartPosition = FormStartPosition.Manual;
+                            tool.Location = new Point(this.Location.X - tool.Width + this.Width + 10, this.Location.Y + this.Size.Height + 24);
                             tool.Show();
                         }
                     }
@@ -351,6 +369,8 @@ namespace SkyStopwatch
                 return MainOCR.PrintScreenAsTempFile();
             }).ContinueWith(t =>
             {
+                if (this.IsDead()) return;
+
                 this.BeginInvoke((Action)(() => { labelTimer.Text = "ocr"; }));
                 string screenShotPath = t.Result;
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-1.bmp";
@@ -553,7 +573,7 @@ namespace SkyStopwatch
 
                 }).ContinueWith(t =>
                 {
-                    if(this.Disposing || this.IsDisposed) return;
+                    if (this.IsDead()) return;
 
                     this.BeginInvoke((Action)(() =>
                     {
@@ -627,6 +647,23 @@ namespace SkyStopwatch
             //  Region = System.Drawing.Region.FromHrgn(CreateRoundRectRgn(0, 0, Width, Height, roundRadius, roundRadius));
             //阴影
             // SetClassLong(this.Handle, GCL_STYLE, GetClassLong(this.Handle, GCL_STYLE) | CS_DropSHADOW);
+
+
+            switch (this._BootingArgs)
+            {
+                case 1:
+                    InitGUILayoutV1();
+                    break;
+                case 2:
+                    InitGUILayoutV2();
+                    break;
+                case 3:
+                    InitGUILayoutV3();
+                    break;
+                default:
+                    InitGUILayoutV4();
+                    break;
+            }
         }
 
         //窗体移动

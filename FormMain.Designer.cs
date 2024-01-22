@@ -59,7 +59,7 @@
             this.buttonToolBox.Name = "buttonToolBox";
             this.buttonToolBox.Size = new System.Drawing.Size(30, 30);
             this.buttonToolBox.TabIndex = 100;
-            this.buttonToolBox.Text = "P";
+            this.buttonToolBox.Text = "T";
             this.buttonToolBox.UseVisualStyleBackColor = true;
             this.buttonToolBox.Click += new System.EventHandler(this.buttonToolBox_Click);
             // 

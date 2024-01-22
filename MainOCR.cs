@@ -373,5 +373,10 @@ namespace SkyStopwatch
                 form.Close();
             }
         }
+
+        public static bool IsDead(this Form form)
+        {
+            return form.Disposing || form.IsDisposed;
+        }
     }
 }
