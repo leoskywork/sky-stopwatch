@@ -120,7 +120,7 @@ namespace SkyStopwatch
             //time since game start
             //this.labelTimer.BackColor = Color.LightGray;
             this.labelTimer.Size = new System.Drawing.Size(80, 34);
-            this.labelTimer.Location = new System.Drawing.Point(2, 10);
+            this.labelTimer.Location = new System.Drawing.Point(2, 8);
 
             //button tool box
             this.buttonToolBox.Size = new System.Drawing.Size(18, 18);
