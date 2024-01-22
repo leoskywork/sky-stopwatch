@@ -59,7 +59,7 @@
             this.buttonToolBox.Name = "buttonToolBox";
             this.buttonToolBox.Size = new System.Drawing.Size(30, 30);
             this.buttonToolBox.TabIndex = 100;
-            this.buttonToolBox.Text = "T";
+            this.buttonToolBox.Text = "+";
             this.buttonToolBox.UseVisualStyleBackColor = true;
             this.buttonToolBox.Click += new System.EventHandler(this.buttonToolBox_Click);
             // 
@@ -111,7 +111,7 @@
             this.buttonCloseOverlay.Location = new System.Drawing.Point(244, -4);
             this.buttonCloseOverlay.Name = "buttonCloseOverlay";
             this.buttonCloseOverlay.Size = new System.Drawing.Size(30, 30);
-            this.buttonCloseOverlay.TabIndex = 2000;
+            this.buttonCloseOverlay.TabIndex = 20;
             this.buttonCloseOverlay.Text = "x";
             this.buttonCloseOverlay.UseVisualStyleBackColor = true;
             this.buttonCloseOverlay.Click += new System.EventHandler(this.buttonCloseOverlay_Click);
