@@ -156,7 +156,7 @@ namespace SkyStopwatch
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
-            this.Size = new System.Drawing.Size(160, 39);
+            this.Size = new System.Drawing.Size(160, 40);
 
 
             this.labelTitle.Visible = false;

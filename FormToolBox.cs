@@ -82,7 +82,7 @@ namespace SkyStopwatch
             }
 
             this._BootingArgs = MainOCR.BootingArgs;
-            this.buttonChangeTheme.Text = $"Change theme {_BootingArgs + 1}";
+            this.buttonChangeTheme.Text = $"Change theme {_BootingArgs}";
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
@@ -226,7 +226,7 @@ namespace SkyStopwatch
             MainOCR.BootingArgs = this._BootingArgs % 4;
             //lazy way to do it, error when theme count >= 10
             string prefix = this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
-            this.buttonChangeTheme.Text = $"{prefix} {MainOCR.BootingArgs + 1}";
+            this.buttonChangeTheme.Text = $"{prefix} {MainOCR.BootingArgs}";
 
             MainOCR.FireChangeTheme();
 
