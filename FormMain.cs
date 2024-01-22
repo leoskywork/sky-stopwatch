@@ -58,22 +58,25 @@ namespace SkyStopwatch
 
             //pre warm up
             this.timerMain.Start();
+            this.labelTimer.Text = "run";
             Task.Factory.StartNew(() =>
             {
                 _AutoOCREngine = MainOCR.GetDefaultOCREngine();
 
-                Thread.Sleep(300);
-                if (this.IsDead()) return;
-                this.BeginInvoke(new Action(() =>
-                {
-                    this.labelTimer.Text = "run";
-                }));
                 Thread.Sleep(500);
 
                 if (this.IsDead()) return;
                 this.BeginInvoke(new Action(() =>
                 {
-                    this.OnNewGameStart();
+                    //this.OnNewGameStart();
+                    this.OnRunOCR(() =>
+                    {
+                        _IsUpdatingPassedTime = true;
+                        if (!this.timerAutoRefresh.Enabled)
+                        {
+                            this.timerAutoRefresh.Start();
+                        }
+                    });
                 }));
             });
         }
@@ -155,7 +158,7 @@ namespace SkyStopwatch
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
             this.Size = new System.Drawing.Size(160, 39);
 
-            
+
             this.labelTitle.Visible = false;
 
             //time since game start
@@ -361,7 +364,7 @@ namespace SkyStopwatch
         private void OnRunOCR(Action afterDone = null)
         {
             _IsUpdatingPassedTime = false;
-            labelTimer.Text = "shot";
+            //labelTimer.Text = "ocr";
 
             Task.Factory.StartNew(() =>
             {
@@ -371,14 +374,14 @@ namespace SkyStopwatch
             {
                 if (this.IsDead()) return;
 
-                this.BeginInvoke((Action)(() => { labelTimer.Text = "ocr"; }));
+                //this.BeginInvoke((Action)(() => { labelTimer.Text = "ocr"; }));
                 string screenShotPath = t.Result;
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-1.bmp";
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-2-min-zero.bmp";
 
                 string data = MainOCR.ReadImageFromFile(screenShotPath);
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");
-                this.BeginInvoke((Action)(() => { labelTimer.Text = "read"; }));
+                //this.BeginInvoke((Action)(() => { labelTimer.Text = "read"; }));
                 string ocrDisplayTime = MainOCR.FindTime(data);
 
                 this.BeginInvoke((Action)(() =>
@@ -391,11 +394,6 @@ namespace SkyStopwatch
                     else
                     {
                         labelTimer.Text = "none";
-                    }
-
-                    if (!this.timerAutoRefresh.Enabled)
-                    {
-                        this.timerAutoRefresh.Start();
                     }
 
                     afterDone?.Invoke();
@@ -457,10 +455,11 @@ namespace SkyStopwatch
 
                 this.CheckTimeNodes();
 
-                if (!_IsUpdatingPassedTime) return;
-
-                var passed = DateTime.Now - _TimeAroundGameStart;
-                this.labelTimer.Text = passed.ToString(MainOCR.UIElapsedTimeFormat);
+                if (_IsUpdatingPassedTime && _TimeAroundGameStart != DateTime.MinValue)
+                {
+                    var passed = DateTime.Now - _TimeAroundGameStart;
+                    this.labelTimer.Text = passed.ToString(MainOCR.UIElapsedTimeFormat);
+                }
             }
             catch (Exception ex)
             {
@@ -559,9 +558,9 @@ namespace SkyStopwatch
 
                     if (MainOCR.IsDebugging)
                     {
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                        //System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
-                        //System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
+                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
+                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
+                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
 
                         //string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
 
@@ -603,7 +602,7 @@ namespace SkyStopwatch
             }
         }
 
-     
+
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
