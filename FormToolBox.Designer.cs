@@ -178,7 +178,6 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.buttonChangeTheme);
             this.groupBox2.Controls.Add(this.checkBoxDebugging);
             this.groupBox2.Controls.Add(this.buttonImageView);
             this.groupBox2.Location = new System.Drawing.Point(23, 380);
@@ -201,6 +200,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.buttonChangeTheme);
             this.groupBox3.Controls.Add(this.buttonCloseApp);
             this.groupBox3.Controls.Add(this.groupBoxTimeNode);
             this.groupBox3.Controls.Add(this.checkBoxPopWarning);
@@ -216,7 +216,7 @@
             // 
             this.groupBoxTimeNode.Controls.Add(this.buttonSaveTimeNode);
             this.groupBoxTimeNode.Controls.Add(this.textBoxTimeSpanNodes);
-            this.groupBoxTimeNode.Location = new System.Drawing.Point(29, 117);
+            this.groupBoxTimeNode.Location = new System.Drawing.Point(29, 175);
             this.groupBoxTimeNode.Name = "groupBoxTimeNode";
             this.groupBoxTimeNode.Size = new System.Drawing.Size(226, 158);
             this.groupBoxTimeNode.TabIndex = 406;
@@ -252,7 +252,7 @@
             this.checkBoxPopWarning.AutoSize = true;
             this.checkBoxPopWarning.Checked = true;
             this.checkBoxPopWarning.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxPopWarning.Location = new System.Drawing.Point(29, 92);
+            this.checkBoxPopWarning.Location = new System.Drawing.Point(29, 150);
             this.checkBoxPopWarning.Name = "checkBoxPopWarning";
             this.checkBoxPopWarning.Size = new System.Drawing.Size(173, 19);
             this.checkBoxPopWarning.TabIndex = 401;
@@ -262,11 +262,11 @@
             // 
             // buttonChangeTheme
             // 
-            this.buttonChangeTheme.Location = new System.Drawing.Point(257, 26);
+            this.buttonChangeTheme.Location = new System.Drawing.Point(29, 90);
             this.buttonChangeTheme.Name = "buttonChangeTheme";
-            this.buttonChangeTheme.Size = new System.Drawing.Size(75, 30);
+            this.buttonChangeTheme.Size = new System.Drawing.Size(142, 30);
             this.buttonChangeTheme.TabIndex = 404;
-            this.buttonChangeTheme.Text = "Theme 0";
+            this.buttonChangeTheme.Text = "Change theme 0";
             this.buttonChangeTheme.UseVisualStyleBackColor = true;
             this.buttonChangeTheme.Click += new System.EventHandler(this.buttonChangeTheme_Click);
             // 

@@ -82,7 +82,7 @@ namespace SkyStopwatch
             }
 
             this._BootingArgs = MainOCR.BootingArgs;
-            this.buttonChangeTheme.Text = $"Theme {_BootingArgs}";
+            this.buttonChangeTheme.Text = $"Change theme {_BootingArgs + 1}";
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
@@ -224,12 +224,20 @@ namespace SkyStopwatch
             this.buttonChangeTheme.Enabled = false;
             this._BootingArgs++;
             MainOCR.BootingArgs = this._BootingArgs % 4;
-            this.buttonChangeTheme.Text = $"Theme {MainOCR.BootingArgs}";
+            //lazy way to do it, error when theme count >= 10
+            string prefix = this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
+            this.buttonChangeTheme.Text = $"{prefix} {MainOCR.BootingArgs + 1}";
 
             MainOCR.FireChangeTheme();
-            
-            
-            this.buttonChangeTheme.Enabled = true;
+
+            Task.Delay(300).ContinueWith((_) =>
+            {
+                if (this.IsDead()) return;
+                this.BeginInvoke((Action)(() =>
+                {
+                    this.buttonChangeTheme.Enabled = true;
+                }));
+            });
         }
 
         private void buttonAddMinute_Click(object sender, EventArgs e)
