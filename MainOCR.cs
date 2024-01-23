@@ -106,6 +106,11 @@ namespace SkyStopwatch
         {
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
+            if (MainOCR.IsDebugging)
+            {
+                System.Diagnostics.Debug.WriteLine($"screen: {screenRect}");
+            }
+
             using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
             using (Graphics gra = Graphics.FromImage(bitPic))
             {

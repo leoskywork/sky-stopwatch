@@ -85,7 +85,7 @@ namespace SkyStopwatch
         {
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
-            this.Controls.Remove(this.buttonOCR);
+            //this.Controls.Remove(this.buttonOCR);
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
@@ -114,7 +114,7 @@ namespace SkyStopwatch
         {
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
-            this.Controls.Remove(this.buttonOCR);
+            //this.Controls.Remove(this.buttonOCR);
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ?? //should do this in load() not the ctor
@@ -152,7 +152,7 @@ namespace SkyStopwatch
         {
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
-            this.Controls.Remove(this.buttonOCR);
+            //this.Controls.Remove(this.buttonOCR);
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
@@ -185,7 +185,7 @@ namespace SkyStopwatch
         {
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
-            this.Controls.Remove(this.buttonOCR);
+            //this.Controls.Remove(this.buttonOCR);
             this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
             this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
             //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
@@ -222,17 +222,17 @@ namespace SkyStopwatch
         {
             try
             {
-                buttonOCR.Enabled = false;
+                //buttonOCR.Enabled = false;
 
                 OnRunOCR(() =>
                 {
-                    buttonOCR.Enabled = true;
+                    //buttonOCR.Enabled = true;
                 });
             }
             catch (Exception ex)
             {
                 this.OnError(ex);
-                buttonOCR.Enabled = true;
+                //buttonOCR.Enabled = true;
             }
         }
 
@@ -374,6 +374,13 @@ namespace SkyStopwatch
             {
                 if (this.IsDead()) return;
 
+                if (t.IsFaulted)
+                {
+                    this.OnError(t.Exception);
+                    this.BeginInvoke(new Action(() => { labelTimer.Text = "err"; }));
+                    return;
+                }
+
                 //this.BeginInvoke((Action)(() => { labelTimer.Text = "ocr"; }));
                 string screenShotPath = t.Result;
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-1.bmp";
@@ -404,7 +411,7 @@ namespace SkyStopwatch
         private void OnNewGameStart()
         {
             _IsUpdatingPassedTime = true;
-            this.buttonOCR.Enabled = false;
+            //this.buttonOCR.Enabled = false;
 
             //reset flags/history values
             //flag 1
@@ -424,7 +431,7 @@ namespace SkyStopwatch
             if (_TimeAroundGameStart == DateTime.MinValue) return;
 
             _IsUpdatingPassedTime = true;
-            this.buttonOCR.Enabled = false;
+            //this.buttonOCR.Enabled = false;
 
             TimeSpan passedTimeWithIncrease = DateTime.Now.AddSeconds(seconds) - _TimeAroundGameStart;
 
@@ -511,7 +518,7 @@ namespace SkyStopwatch
 
 
                 this.labelTimer.Text = "--";
-                this.buttonOCR.Enabled = true;
+                //this.buttonOCR.Enabled = true;
                 this.timerMain.Stop();
                 this.timerAutoRefresh.Stop();
 
@@ -535,7 +542,7 @@ namespace SkyStopwatch
             {
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
-                buttonOCR.Enabled = false;
+                //buttonOCR.Enabled = false;
 
                 Task.Factory.StartNew(() =>
                 {
@@ -556,17 +563,18 @@ namespace SkyStopwatch
                     string timeString = MainOCR.FindTime(data);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                    System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
-                    System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
 
                     if (MainOCR.IsDebugging)
                     {
+
+                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
+                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
+                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
                         string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
                         System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
                     
-                    System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
 
                     return timeString;
 
@@ -574,10 +582,22 @@ namespace SkyStopwatch
                 {
                     if (this.IsDead()) return;
 
+                    string ocrDisplayTime;
+
+                    if (t.IsFaulted)
+                    {
+                        ocrDisplayTime = null;
+                        this.OnError(t.Exception);
+                        //buttonOCR.Enabled = true;
+                    }
+                    else
+                    {
+                        ocrDisplayTime = t.Result;
+                    }
+
+
                     this.BeginInvoke((Action)(() =>
                     {
-                        string ocrDisplayTime = t.Result;
-
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
                             if (_AutoOCRTimeOfLastRead != ocrDisplayTime)
@@ -598,7 +618,7 @@ namespace SkyStopwatch
             catch (Exception ex)
             {
                 this.OnError(ex);
-                buttonOCR.Enabled = true;
+                //buttonOCR.Enabled = true;
             }
         }
 
@@ -647,6 +667,8 @@ namespace SkyStopwatch
             //阴影
             // SetClassLong(this.Handle, GCL_STYLE, GetClassLong(this.Handle, GCL_STYLE) | CS_DropSHADOW);
 
+
+            this.Controls.Remove(this.buttonOCR);
 
             switch (this._BootingArgs)
             {
