@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 using Tesseract;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace SkyStopwatch
 {
@@ -375,13 +376,29 @@ namespace SkyStopwatch
             else
             {
                 MessageBox.Show(e.Message);
-                form.Close();
+
+                form.RunOnMainThread(() => form.Close());
             }
         }
 
         public static bool IsDead(this Form form)
         {
             return form.Disposing || form.IsDisposed;
+        }
+
+        public static void RunOnMainThread(this Form form, Action action)
+        {
+            if(action == null) return;
+            if(form.IsDead()) return;
+
+            if (form.InvokeRequired)
+            {
+                form.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
         }
     }
 }
