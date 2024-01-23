@@ -17,6 +17,11 @@ namespace SkyStopwatch
             Application.SetCompatibleTextRenderingDefault(false);
 
 
+            if(Environment.MachineName == "LEO-PC-PRO")
+            {
+                MainOCR.BootingArgs = 2;
+            }
+
             //leotodo - read from config file here?
             //if (MainOCR.IsDebugging)
             {
