@@ -377,7 +377,7 @@ namespace SkyStopwatch
             {
                 MessageBox.Show(e.Message);
 
-                form.RunOnMainThread(() => form.Close());
+                form.RunOnMain(() => form.Close());
             }
         }
 
@@ -386,7 +386,7 @@ namespace SkyStopwatch
             return form.Disposing || form.IsDisposed;
         }
 
-        public static void RunOnMainThread(this Form form, Action action)
+        public static void RunOnMain(this Form form, Action action)
         {
             if(action == null) return;
             if(form.IsDead()) return;
@@ -394,6 +394,21 @@ namespace SkyStopwatch
             if (form.InvokeRequired)
             {
                 form.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        public static void RunOnMainAsync(this Form form, Action action)
+        {
+            if (action == null) return;
+            if (form.IsDead()) return;
+
+            if (form.InvokeRequired)
+            {
+                form.BeginInvoke(action);
             }
             else
             {
