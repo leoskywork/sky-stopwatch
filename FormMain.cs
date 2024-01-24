@@ -582,22 +582,16 @@ namespace SkyStopwatch
                 {
                     if (this.IsDead()) return;
 
-                    string ocrDisplayTime;
-
                     if (t.IsFaulted)
                     {
-                        ocrDisplayTime = null;
                         this.OnError(t.Exception);
-                        //buttonOCR.Enabled = true;
-                    }
-                    else
-                    {
-                        ocrDisplayTime = t.Result;
+                        return;
                     }
 
-
-                    this.BeginInvoke((Action)(() =>
+                    this.RunOnMain(() =>
                     {
+                        string ocrDisplayTime = t.Result;
+
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
                             if (_AutoOCRTimeOfLastRead != ocrDisplayTime)
@@ -612,7 +606,7 @@ namespace SkyStopwatch
                         _IsAutoRefreshing = false;
                         //buttonOCR.Enabled = true; //makes ui blink, so disable it
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - end -----");
-                    }));
+                    });
                 });
             }
             catch (Exception ex)
