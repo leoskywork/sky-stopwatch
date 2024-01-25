@@ -551,6 +551,12 @@ namespace SkyStopwatch
                     byte[] screenShotBytes = MainOCR.PrintScreenAsBytes(true);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
 
+                    if(screenShotBytes == null)
+                    {
+                        System.Diagnostics.Debug.WriteLine("screenShotBytes is null");
+                        return null;
+                    }
+
                     if (_AutoOCREngine == null)
                     {
                         _AutoOCREngine = MainOCR.GetDefaultOCREngine();

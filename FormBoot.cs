@@ -31,24 +31,23 @@ namespace SkyStopwatch
                 {
                     Thread.Sleep(300);
                     if (this.IsDead()) return;
-                    this.BeginInvoke(new Action(() =>
+
+                    this.RunOnMain(() =>
                     {
                         this.Hide();
-
-                        OnChangeTheme();
-
-                    }));
+                        this.OnChangeTheme();
+                    });
                 });
 
                 MainOCR.ChangeTheme += (_, __) =>
                 {
-                    this.OnChangeTheme();
+                    this.RunOnMain(this.OnChangeTheme);
                 };
 
                 MainOCR.CloseApp += (_, __) =>
                 {
                     _LastTheme = null;
-                    this.Close();
+                    this.RunOnMain(this.Close);
                 };
             }
             catch (Exception ex)

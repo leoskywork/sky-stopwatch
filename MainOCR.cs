@@ -8,6 +8,7 @@ using System.Globalization;
 using Tesseract;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.ComponentModel;
 
 namespace SkyStopwatch
 {
@@ -115,8 +116,18 @@ namespace SkyStopwatch
             using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
             using (Graphics gra = Graphics.FromImage(bitPic))
             {
-                gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+                //leotodo - improve this, CopyFromScreen(...) throws Win32Exception sometimes, not sure why? happened when press ctrl + tab ?
+                //just ignore for now
+                try
+                {
+                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
+                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+                }
+                catch(Win32Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"win32 error: {ex}");
+                    return null;
+                }
 
                 if (onlyReturnPartOfImage) //for speed up
                 {
@@ -231,6 +242,8 @@ namespace SkyStopwatch
 
         public static string ReadImageFromMemory(Tesseract.TesseractEngine engine, byte[] imgData)
         {
+            if(imgData == null) throw new ArgumentNullException(nameof(imgData));   
+
             //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 1");
             using (var img = Tesseract.Pix.LoadFromMemory(imgData))
             {
@@ -377,7 +390,7 @@ namespace SkyStopwatch
             {
                 MessageBox.Show(e.Message);
 
-                form.RunOnMain(() => form.Close());
+                form.RunOnMain(() => MainOCR.FireCloseApp());
             }
         }
 
