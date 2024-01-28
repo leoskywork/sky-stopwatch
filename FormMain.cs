@@ -519,7 +519,7 @@ namespace SkyStopwatch
 
                 this.labelTimer.Text = "--";
                 //this.buttonOCR.Enabled = true;
-                this.timerMain.Stop();
+                //this.timerMain.Stop(); //still want to update the clock
                 this.timerAutoRefresh.Stop();
 
                 if (_AutoOCREngine != null)
