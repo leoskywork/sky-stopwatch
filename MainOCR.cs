@@ -34,6 +34,7 @@ namespace SkyStopwatch
         public const int TmpFileMaxCount = 5;
         public const int TimeNodeEarlyWarningSeconds = 20;//30;
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
+        public const int PreRoundGameMinutes = 30;
 
         public const string TimeSpanFormat = @"hh\:mm\:ss";
         public const string TImeSpanFormatNoHour = @"mm\:ss";

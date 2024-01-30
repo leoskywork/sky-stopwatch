@@ -252,6 +252,12 @@ namespace SkyStopwatch
             if (TimeSpan.TryParseExact(ocrDisplayTime, MainOCR.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
             {
                 int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
+
+                if (ocrTimeSpan.TotalMinutes > MainOCR.PreRoundGameMinutes)
+                {
+                    passedSeconds = 0;
+                }
+
                 _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
                 this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(MainOCR.UIElapsedTimeFormat);
             }
