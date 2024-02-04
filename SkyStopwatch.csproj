@@ -77,6 +77,12 @@
     <Compile Include="FormBoot.Designer.cs">
       <DependentUpon>FormBoot.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormImageViewPrice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormImageViewPrice.Designer.cs">
+      <DependentUpon>FormImageViewPrice.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormImageView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -96,6 +102,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainOCRPrice.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FormToolBox.cs">
@@ -107,6 +114,9 @@
     <Compile Include="ToDo.cs" />
     <EmbeddedResource Include="FormBoot.resx">
       <DependentUpon>FormBoot.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormImageViewPrice.resx">
+      <DependentUpon>FormImageViewPrice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>

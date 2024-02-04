@@ -260,5 +260,14 @@ namespace SkyStopwatch
             this.Close();
             MainOCR.FireCloseApp();
         }
+
+        private void buttonPriceList_Click(object sender, EventArgs e)
+        {
+            var view = new FormImageViewPrice();
+            view.Show();
+
+
+            this.Close();
+        }
     }
 }

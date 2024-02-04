@@ -39,19 +39,20 @@
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonImageView = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonReduceMinute = new System.Windows.Forms.Button();
+            this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.buttonChangeTheme = new System.Windows.Forms.Button();
+            this.buttonCloseApp = new System.Windows.Forms.Button();
             this.groupBoxTimeNode = new System.Windows.Forms.GroupBox();
             this.buttonSaveTimeNode = new System.Windows.Forms.Button();
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
-            this.buttonChangeTheme = new System.Windows.Forms.Button();
-            this.buttonAddMinute = new System.Windows.Forms.Button();
-            this.buttonReduceMinute = new System.Windows.Forms.Button();
-            this.buttonCloseApp = new System.Windows.Forms.Button();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
+            this.buttonPriceList = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -165,6 +166,28 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OCR";
             // 
+            // buttonReduceMinute
+            // 
+            this.buttonReduceMinute.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonReduceMinute.Location = new System.Drawing.Point(87, 245);
+            this.buttonReduceMinute.Name = "buttonReduceMinute";
+            this.buttonReduceMinute.Size = new System.Drawing.Size(54, 30);
+            this.buttonReduceMinute.TabIndex = 303;
+            this.buttonReduceMinute.Text = "-1m";
+            this.buttonReduceMinute.UseVisualStyleBackColor = true;
+            this.buttonReduceMinute.Click += new System.EventHandler(this.buttonReduceMinute_Click);
+            // 
+            // buttonAddMinute
+            // 
+            this.buttonAddMinute.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonAddMinute.Location = new System.Drawing.Point(21, 245);
+            this.buttonAddMinute.Name = "buttonAddMinute";
+            this.buttonAddMinute.Size = new System.Drawing.Size(54, 30);
+            this.buttonAddMinute.TabIndex = 302;
+            this.buttonAddMinute.Text = "+1m";
+            this.buttonAddMinute.UseVisualStyleBackColor = true;
+            this.buttonAddMinute.Click += new System.EventHandler(this.buttonAddMinute_Click);
+            // 
             // buttonReduceSeconds
             // 
             this.buttonReduceSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
@@ -178,6 +201,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonPriceList);
             this.groupBox2.Controls.Add(this.checkBoxDebugging);
             this.groupBox2.Controls.Add(this.buttonImageView);
             this.groupBox2.Location = new System.Drawing.Point(23, 380);
@@ -211,6 +235,29 @@
             this.groupBox3.TabIndex = 404;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setting";
+            // 
+            // buttonChangeTheme
+            // 
+            this.buttonChangeTheme.Location = new System.Drawing.Point(29, 90);
+            this.buttonChangeTheme.Name = "buttonChangeTheme";
+            this.buttonChangeTheme.Size = new System.Drawing.Size(142, 30);
+            this.buttonChangeTheme.TabIndex = 404;
+            this.buttonChangeTheme.Text = "Change theme 0";
+            this.buttonChangeTheme.UseVisualStyleBackColor = true;
+            this.buttonChangeTheme.Click += new System.EventHandler(this.buttonChangeTheme_Click);
+            // 
+            // buttonCloseApp
+            // 
+            this.buttonCloseApp.BackColor = System.Drawing.Color.OrangeRed;
+            this.buttonCloseApp.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonCloseApp.ForeColor = System.Drawing.Color.White;
+            this.buttonCloseApp.Location = new System.Drawing.Point(155, 32);
+            this.buttonCloseApp.Name = "buttonCloseApp";
+            this.buttonCloseApp.Size = new System.Drawing.Size(100, 30);
+            this.buttonCloseApp.TabIndex = 407;
+            this.buttonCloseApp.Text = "KILL";
+            this.buttonCloseApp.UseVisualStyleBackColor = false;
+            this.buttonCloseApp.Click += new System.EventHandler(this.buttonCloseApp_Click);
             // 
             // groupBoxTimeNode
             // 
@@ -260,51 +307,6 @@
             this.checkBoxPopWarning.UseVisualStyleBackColor = true;
             this.checkBoxPopWarning.CheckedChanged += new System.EventHandler(this.checkBoxPopWarning_CheckedChanged);
             // 
-            // buttonChangeTheme
-            // 
-            this.buttonChangeTheme.Location = new System.Drawing.Point(29, 90);
-            this.buttonChangeTheme.Name = "buttonChangeTheme";
-            this.buttonChangeTheme.Size = new System.Drawing.Size(142, 30);
-            this.buttonChangeTheme.TabIndex = 404;
-            this.buttonChangeTheme.Text = "Change theme 0";
-            this.buttonChangeTheme.UseVisualStyleBackColor = true;
-            this.buttonChangeTheme.Click += new System.EventHandler(this.buttonChangeTheme_Click);
-            // 
-            // buttonAddMinute
-            // 
-            this.buttonAddMinute.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonAddMinute.Location = new System.Drawing.Point(21, 245);
-            this.buttonAddMinute.Name = "buttonAddMinute";
-            this.buttonAddMinute.Size = new System.Drawing.Size(54, 30);
-            this.buttonAddMinute.TabIndex = 302;
-            this.buttonAddMinute.Text = "+1m";
-            this.buttonAddMinute.UseVisualStyleBackColor = true;
-            this.buttonAddMinute.Click += new System.EventHandler(this.buttonAddMinute_Click);
-            // 
-            // buttonReduceMinute
-            // 
-            this.buttonReduceMinute.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonReduceMinute.Location = new System.Drawing.Point(87, 245);
-            this.buttonReduceMinute.Name = "buttonReduceMinute";
-            this.buttonReduceMinute.Size = new System.Drawing.Size(54, 30);
-            this.buttonReduceMinute.TabIndex = 303;
-            this.buttonReduceMinute.Text = "-1m";
-            this.buttonReduceMinute.UseVisualStyleBackColor = true;
-            this.buttonReduceMinute.Click += new System.EventHandler(this.buttonReduceMinute_Click);
-            // 
-            // buttonCloseApp
-            // 
-            this.buttonCloseApp.BackColor = System.Drawing.Color.OrangeRed;
-            this.buttonCloseApp.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonCloseApp.ForeColor = System.Drawing.Color.White;
-            this.buttonCloseApp.Location = new System.Drawing.Point(155, 32);
-            this.buttonCloseApp.Name = "buttonCloseApp";
-            this.buttonCloseApp.Size = new System.Drawing.Size(100, 30);
-            this.buttonCloseApp.TabIndex = 407;
-            this.buttonCloseApp.Text = "KILL";
-            this.buttonCloseApp.UseVisualStyleBackColor = false;
-            this.buttonCloseApp.Click += new System.EventHandler(this.buttonCloseApp_Click);
-            // 
             // pictureBoxOne
             // 
             this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
@@ -313,6 +315,17 @@
             this.pictureBoxOne.Size = new System.Drawing.Size(400, 300);
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
+            // 
+            // buttonPriceList
+            // 
+            this.buttonPriceList.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonPriceList.Location = new System.Drawing.Point(260, 25);
+            this.buttonPriceList.Name = "buttonPriceList";
+            this.buttonPriceList.Size = new System.Drawing.Size(95, 30);
+            this.buttonPriceList.TabIndex = 403;
+            this.buttonPriceList.Text = "Price...";
+            this.buttonPriceList.UseVisualStyleBackColor = true;
+            this.buttonPriceList.Click += new System.EventHandler(this.buttonPriceList_Click);
             // 
             // FormToolBox
             // 
@@ -369,5 +382,6 @@
         private System.Windows.Forms.Button buttonAddMinute;
         private System.Windows.Forms.Button buttonReduceMinute;
         private System.Windows.Forms.Button buttonCloseApp;
+        private System.Windows.Forms.Button buttonPriceList;
     }
 }
