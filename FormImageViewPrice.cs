@@ -319,5 +319,15 @@ namespace SkyStopwatch
                 this.OnError(ex);
             }
         }
+
+        private void checkBoxAux1_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void checkBoxAux2_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

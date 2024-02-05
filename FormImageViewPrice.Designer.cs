@@ -49,6 +49,10 @@
             this.timerCompare = new System.Windows.Forms.Timer(this.components);
             this.panelImage = new System.Windows.Forms.Panel();
             this.numericUpDownTargetPrice = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxAux1 = new System.Windows.Forms.CheckBox();
+            this.checkBoxAux2 = new System.Windows.Forms.CheckBox();
+            this.numericUpDownAux1 = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownAux2 = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -56,6 +60,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.panelImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetPrice)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAux1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAux2)).BeginInit();
             this.SuspendLayout();
             // 
             // labelSize
@@ -301,17 +307,89 @@
             this.numericUpDownTargetPrice.Size = new System.Drawing.Size(90, 25);
             this.numericUpDownTargetPrice.TabIndex = 114;
             this.numericUpDownTargetPrice.Value = new decimal(new int[] {
-            1000,
+            100,
             0,
             0,
             0});
             this.numericUpDownTargetPrice.ValueChanged += new System.EventHandler(this.numericUpDownTargetPrice_ValueChanged);
+            // 
+            // checkBoxAux1
+            // 
+            this.checkBoxAux1.AutoSize = true;
+            this.checkBoxAux1.Location = new System.Drawing.Point(323, 702);
+            this.checkBoxAux1.Name = "checkBoxAux1";
+            this.checkBoxAux1.Size = new System.Drawing.Size(69, 19);
+            this.checkBoxAux1.TabIndex = 115;
+            this.checkBoxAux1.Text = "aux 1";
+            this.checkBoxAux1.UseVisualStyleBackColor = true;
+            this.checkBoxAux1.CheckedChanged += new System.EventHandler(this.checkBoxAux1_CheckedChanged);
+            // 
+            // checkBoxAux2
+            // 
+            this.checkBoxAux2.AutoSize = true;
+            this.checkBoxAux2.Location = new System.Drawing.Point(323, 742);
+            this.checkBoxAux2.Name = "checkBoxAux2";
+            this.checkBoxAux2.Size = new System.Drawing.Size(69, 19);
+            this.checkBoxAux2.TabIndex = 116;
+            this.checkBoxAux2.Text = "aux 2";
+            this.checkBoxAux2.UseVisualStyleBackColor = true;
+            this.checkBoxAux2.CheckedChanged += new System.EventHandler(this.checkBoxAux2_CheckedChanged);
+            // 
+            // numericUpDownAux1
+            // 
+            this.numericUpDownAux1.Enabled = false;
+            this.numericUpDownAux1.Location = new System.Drawing.Point(412, 699);
+            this.numericUpDownAux1.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.numericUpDownAux1.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownAux1.Name = "numericUpDownAux1";
+            this.numericUpDownAux1.Size = new System.Drawing.Size(90, 25);
+            this.numericUpDownAux1.TabIndex = 118;
+            this.numericUpDownAux1.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // numericUpDownAux2
+            // 
+            this.numericUpDownAux2.Enabled = false;
+            this.numericUpDownAux2.Location = new System.Drawing.Point(412, 739);
+            this.numericUpDownAux2.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.numericUpDownAux2.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownAux2.Name = "numericUpDownAux2";
+            this.numericUpDownAux2.Size = new System.Drawing.Size(90, 25);
+            this.numericUpDownAux2.TabIndex = 119;
+            this.numericUpDownAux2.Value = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             // 
             // FormImageViewPrice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(528, 872);
+            this.Controls.Add(this.numericUpDownAux2);
+            this.Controls.Add(this.numericUpDownAux1);
+            this.Controls.Add(this.checkBoxAux2);
+            this.Controls.Add(this.checkBoxAux1);
             this.Controls.Add(this.numericUpDownTargetPrice);
             this.Controls.Add(this.panelImage);
             this.Controls.Add(this.labelPriceMessage);
@@ -343,6 +421,8 @@
             this.panelImage.ResumeLayout(false);
             this.panelImage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetPrice)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAux1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAux2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -370,5 +450,9 @@
         private System.Windows.Forms.Timer timerCompare;
         private System.Windows.Forms.Panel panelImage;
         private System.Windows.Forms.NumericUpDown numericUpDownTargetPrice;
+        private System.Windows.Forms.CheckBox checkBoxAux1;
+        private System.Windows.Forms.CheckBox checkBoxAux2;
+        private System.Windows.Forms.NumericUpDown numericUpDownAux1;
+        private System.Windows.Forms.NumericUpDown numericUpDownAux2;
     }
 }
