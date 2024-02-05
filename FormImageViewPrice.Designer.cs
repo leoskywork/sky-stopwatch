@@ -47,11 +47,15 @@
             this.labelPriceMessage = new System.Windows.Forms.Label();
             this.timerScan = new System.Windows.Forms.Timer(this.components);
             this.timerCompare = new System.Windows.Forms.Timer(this.components);
+            this.panelImage = new System.Windows.Forms.Panel();
+            this.numericUpDownTargetPrice = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
+            this.panelImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetPrice)).BeginInit();
             this.SuspendLayout();
             // 
             // labelSize
@@ -66,17 +70,17 @@
             // labelMessage
             // 
             this.labelMessage.AutoSize = true;
-            this.labelMessage.Location = new System.Drawing.Point(249, 34);
+            this.labelMessage.Location = new System.Drawing.Point(31, 604);
             this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(167, 15);
+            this.labelMessage.Size = new System.Drawing.Size(207, 15);
             this.labelMessage.TabIndex = 2;
-            this.labelMessage.Text = "set image blcok args";
+            this.labelMessage.Text = "click start button to run";
             // 
             // buttonSave
             // 
             this.buttonSave.Enabled = false;
             this.buttonSave.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonSave.Location = new System.Drawing.Point(492, 527);
+            this.buttonSave.Location = new System.Drawing.Point(422, 530);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(80, 30);
             this.buttonSave.TabIndex = 20;
@@ -91,7 +95,7 @@
             0,
             0,
             0});
-            this.numericUpDownX.Location = new System.Drawing.Point(492, 113);
+            this.numericUpDownX.Location = new System.Drawing.Point(422, 106);
             this.numericUpDownX.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -109,7 +113,7 @@
             0,
             0,
             0});
-            this.numericUpDownY.Location = new System.Drawing.Point(492, 205);
+            this.numericUpDownY.Location = new System.Drawing.Point(422, 179);
             this.numericUpDownY.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -127,7 +131,7 @@
             0,
             0,
             0});
-            this.numericUpDownWidth.Location = new System.Drawing.Point(492, 358);
+            this.numericUpDownWidth.Location = new System.Drawing.Point(422, 273);
             this.numericUpDownWidth.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -155,7 +159,7 @@
             0,
             0,
             0});
-            this.numericUpDownHeight.Location = new System.Drawing.Point(492, 442);
+            this.numericUpDownHeight.Location = new System.Drawing.Point(422, 343);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -179,7 +183,7 @@
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(489, 76);
+            this.labelX.Location = new System.Drawing.Point(419, 79);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(23, 15);
             this.labelX.TabIndex = 105;
@@ -188,7 +192,7 @@
             // labelY
             // 
             this.labelY.AutoSize = true;
-            this.labelY.Location = new System.Drawing.Point(489, 168);
+            this.labelY.Location = new System.Drawing.Point(419, 152);
             this.labelY.Name = "labelY";
             this.labelY.Size = new System.Drawing.Size(23, 15);
             this.labelY.TabIndex = 106;
@@ -197,7 +201,7 @@
             // labelWidth
             // 
             this.labelWidth.AutoSize = true;
-            this.labelWidth.Location = new System.Drawing.Point(489, 321);
+            this.labelWidth.Location = new System.Drawing.Point(419, 246);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(55, 15);
             this.labelWidth.TabIndex = 107;
@@ -206,7 +210,7 @@
             // labelHeight
             // 
             this.labelHeight.AutoSize = true;
-            this.labelHeight.Location = new System.Drawing.Point(489, 405);
+            this.labelHeight.Location = new System.Drawing.Point(419, 316);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(63, 15);
             this.labelHeight.TabIndex = 108;
@@ -215,15 +219,16 @@
             // pictureBoxOne
             // 
             this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
-            this.pictureBoxOne.Location = new System.Drawing.Point(22, 79);
+            this.pictureBoxOne.Location = new System.Drawing.Point(74, 115);
             this.pictureBoxOne.Name = "pictureBoxOne";
-            this.pictureBoxOne.Size = new System.Drawing.Size(454, 481);
+            this.pictureBoxOne.Size = new System.Drawing.Size(226, 268);
+            this.pictureBoxOne.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(22, 599);
+            this.buttonStart.Location = new System.Drawing.Point(323, 826);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(80, 30);
             this.buttonStart.TabIndex = 109;
@@ -233,7 +238,8 @@
             // 
             // buttonStop
             // 
-            this.buttonStop.Location = new System.Drawing.Point(131, 599);
+            this.buttonStop.Enabled = false;
+            this.buttonStop.Location = new System.Drawing.Point(422, 826);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(80, 30);
             this.buttonStop.TabIndex = 110;
@@ -243,35 +249,71 @@
             // 
             // textBoxPriceList
             // 
-            this.textBoxPriceList.Location = new System.Drawing.Point(34, 642);
+            this.textBoxPriceList.Location = new System.Drawing.Point(34, 654);
             this.textBoxPriceList.Multiline = true;
             this.textBoxPriceList.Name = "textBoxPriceList";
             this.textBoxPriceList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxPriceList.Size = new System.Drawing.Size(530, 281);
+            this.textBoxPriceList.Size = new System.Drawing.Size(237, 202);
             this.textBoxPriceList.TabIndex = 111;
             // 
             // labelPriceMessage
             // 
             this.labelPriceMessage.AutoSize = true;
-            this.labelPriceMessage.Location = new System.Drawing.Point(249, 607);
+            this.labelPriceMessage.Location = new System.Drawing.Point(320, 604);
             this.labelPriceMessage.Name = "labelPriceMessage";
-            this.labelPriceMessage.Size = new System.Drawing.Size(47, 15);
+            this.labelPriceMessage.Padding = new System.Windows.Forms.Padding(4);
+            this.labelPriceMessage.Size = new System.Drawing.Size(55, 23);
             this.labelPriceMessage.TabIndex = 112;
             this.labelPriceMessage.Text = "ready";
             // 
             // timerScan
             // 
+            this.timerScan.Interval = 200;
             this.timerScan.Tick += new System.EventHandler(this.timerScan_Tick);
             // 
             // timerCompare
             // 
             this.timerCompare.Tick += new System.EventHandler(this.timerCompare_Tick);
             // 
+            // panelImage
+            // 
+            this.panelImage.AutoScroll = true;
+            this.panelImage.Controls.Add(this.pictureBoxOne);
+            this.panelImage.Location = new System.Drawing.Point(22, 76);
+            this.panelImage.Name = "panelImage";
+            this.panelImage.Size = new System.Drawing.Size(370, 481);
+            this.panelImage.TabIndex = 113;
+            // 
+            // numericUpDownTargetPrice
+            // 
+            this.numericUpDownTargetPrice.Location = new System.Drawing.Point(323, 654);
+            this.numericUpDownTargetPrice.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetPrice.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetPrice.Name = "numericUpDownTargetPrice";
+            this.numericUpDownTargetPrice.Size = new System.Drawing.Size(90, 25);
+            this.numericUpDownTargetPrice.TabIndex = 114;
+            this.numericUpDownTargetPrice.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericUpDownTargetPrice.ValueChanged += new System.EventHandler(this.numericUpDownTargetPrice_ValueChanged);
+            // 
             // FormImageViewPrice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(597, 935);
+            this.ClientSize = new System.Drawing.Size(528, 872);
+            this.Controls.Add(this.numericUpDownTargetPrice);
+            this.Controls.Add(this.panelImage);
             this.Controls.Add(this.labelPriceMessage);
             this.Controls.Add(this.textBoxPriceList);
             this.Controls.Add(this.buttonStop);
@@ -287,17 +329,20 @@
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.labelMessage);
             this.Controls.Add(this.labelSize);
-            this.Controls.Add(this.pictureBoxOne);
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.MaximizeBox = false;
             this.Name = "FormImageViewPrice";
             this.Text = "Image view";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.FormImageViewPrice_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
+            this.panelImage.ResumeLayout(false);
+            this.panelImage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTargetPrice)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -323,5 +368,7 @@
         private System.Windows.Forms.Label labelPriceMessage;
         private System.Windows.Forms.Timer timerScan;
         private System.Windows.Forms.Timer timerCompare;
+        private System.Windows.Forms.Panel panelImage;
+        private System.Windows.Forms.NumericUpDown numericUpDownTargetPrice;
     }
 }
