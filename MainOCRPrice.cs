@@ -21,6 +21,8 @@ namespace SkyStopwatch
         public static int BlockHeight = 740;
 
         public static int TargetPrice = 1000;
+        public static int Aux1Price = 1001;
+        public static int Aux2Price = 1002;
 
 
         public static byte[] GetPriceImageData()
@@ -76,23 +78,32 @@ namespace SkyStopwatch
         }
 
 
-        public static bool FindPrice(string data)
+        public static bool FindPrice(string data, bool enableAux1, bool enableAux2)
         {
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             string[] zeroAlikeArray = new[] { "o", "O" };
+           
             string targetPriceString = TargetPrice.ToString();
+            string aux1String = enableAux1 ? MainOCRPrice.Aux1Price.ToString() : "-1";
+            string aux2String = enableAux2 ? MainOCRPrice.Aux2Price.ToString() : "-1";
+            //the coin icon at the last position, sometimes treat as 9, sometimes 5, 1, 0
+            //just remove the last char
+            //bool allEndWithZero = true;
+            //bool allEndWithNine = true;
+            List<string> linesWithoutLastChars = new List<string>();
 
             foreach (string line in lines)
             {
-
-                string lineAdjust = line.Trim(); //line.Replace(" ", string.Empty);
+                string lineAdjust = line.Trim();
 
                 foreach (string item in zeroAlikeArray)
                 {
                     lineAdjust = lineAdjust.Replace(item, "0");
                 }
 
-                if (lineAdjust.Split(' ').Any(word => word == targetPriceString))
+                string[] parts = lineAdjust.Split(' ');
+
+                if (parts.Any(p => p == targetPriceString || p == aux1String || p == aux2String))
                 {
                     System.Diagnostics.Debug.WriteLine($"-----------------------------FindPrice line {targetPriceString}");
                     System.Diagnostics.Debug.WriteLine(line);
@@ -100,11 +111,30 @@ namespace SkyStopwatch
 
                     return true;
                 }
+
+                //case: 1000
+                //      1154 0
+                //sometimes, there is a space, so entire line, not first part
+                string lineToAdd = lineAdjust.Replace(" ", string.Empty);
+                //if (!lineToAdd.EndsWith("0"))
+                //{
+                //    allEndWithZero = false;
+                //}
+                //if (!lineToAdd.EndsWith("9"))
+                //{
+                //    allEndWithNine = false;
+                //}
+
+                linesWithoutLastChars.Add(lineToAdd.Substring(0, lineToAdd.Length - 1));
             }
 
-            return false;
-        }
+            //if (allEndWithZero || allEndWithNine)
+            {
+                return linesWithoutLastChars.Any(p => p == targetPriceString || p == aux1String || p == aux2String);
+            }
 
+            //return false;
+        }
 
 
     }

@@ -34,6 +34,10 @@ namespace SkyStopwatch
 
             this.timerScan.Interval = 300;
             this.timerCompare.Interval = 100;
+
+            this.numericUpDownTargetPrice.Value = MainOCRPrice.TargetPrice;
+            this.numericUpDownAux1.Value = MainOCRPrice.Aux1Price;
+            this.numericUpDownAux2.Value = MainOCRPrice.Aux2Price;
         }
 
 
@@ -220,6 +224,8 @@ namespace SkyStopwatch
 
                 _IsComparing = true;
                 this._CompareCount++;
+                bool enableAux1 = this.checkBoxAux1.Checked;
+                bool enableAux2 = this.checkBoxAux2.Checked;
 
                 Task.Factory.StartNew(() =>
                 {
@@ -235,7 +241,7 @@ namespace SkyStopwatch
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, priceData);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
-                    bool found = MainOCRPrice.FindPrice(data);
+                    bool found = MainOCRPrice.FindPrice(data, enableAux1, enableAux2);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
                     if (MainOCR.IsDebugging)
@@ -268,7 +274,9 @@ namespace SkyStopwatch
 
                         if (_FoundTargetPrice)
                         {
-                            this.labelPriceMessage.Text = $"FOUND: {MainOCRPrice.TargetPrice}";
+                            string aux1Message = enableAux1 ? "|" + MainOCRPrice.Aux1Price : string.Empty;
+                            string aux2Message = enableAux2 ? "|" + MainOCRPrice.Aux2Price : string.Empty;
+                            this.labelPriceMessage.Text = $"FOUND: {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}";
                             this.labelPriceMessage.BackColor = Color.Red;
                             this.labelPriceMessage.ForeColor = Color.White;
 
@@ -282,7 +290,7 @@ namespace SkyStopwatch
                         }
                         else
                         {
-                            this.labelPriceMessage.Text = $"looking for {MainOCRPrice.TargetPrice}...";
+                            this.labelPriceMessage.Text = $"checking {MainOCRPrice.TargetPrice}...";
                             this.labelPriceMessage.BackColor = Color.Transparent;
                             this.labelPriceMessage.ForeColor = Color.Black;
 
@@ -322,12 +330,50 @@ namespace SkyStopwatch
 
         private void checkBoxAux1_CheckedChanged(object sender, EventArgs e)
         {
-
+            try
+            {
+              this.numericUpDownAux1.Enabled = this.checkBoxAux1.Checked;
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
         }
 
         private void checkBoxAux2_CheckedChanged(object sender, EventArgs e)
         {
+            try
+            {
+                this.numericUpDownAux2.Enabled = this.checkBoxAux2.Checked;
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
+        }
 
+        private void numericUpDownAux1_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                MainOCRPrice.Aux1Price = (int) this.numericUpDownAux1.Value;
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
+        }
+
+        private void numericUpDownAux2_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                MainOCRPrice.Aux2Price = (int) this.numericUpDownAux2.Value;
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
         }
     }
 }

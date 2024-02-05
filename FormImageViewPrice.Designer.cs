@@ -357,6 +357,7 @@
             0,
             0,
             0});
+            this.numericUpDownAux1.ValueChanged += new System.EventHandler(this.numericUpDownAux1_ValueChanged);
             // 
             // numericUpDownAux2
             // 
@@ -380,6 +381,7 @@
             0,
             0,
             0});
+            this.numericUpDownAux2.ValueChanged += new System.EventHandler(this.numericUpDownAux2_ValueChanged);
             // 
             // FormImageViewPrice
             // 
