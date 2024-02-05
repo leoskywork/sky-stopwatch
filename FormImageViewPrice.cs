@@ -193,7 +193,8 @@ namespace SkyStopwatch
                     this.timerCompare.Stop();
                 }
 
-              
+                this.labelMessage.Text = "stop";
+                this.labelPriceMessage.Text = null;
             }
             catch (Exception ex)
             {
@@ -241,20 +242,20 @@ namespace SkyStopwatch
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, priceData);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
-                    bool found = MainOCRPrice.FindPrice(data, enableAux1, enableAux2);
+                    var found = MainOCRPrice.FindPrice(data, enableAux1, enableAux2);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
                     if (MainOCR.IsDebugging)
                     {
                         System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                        System.Diagnostics.Debug.WriteLine($"OCR compare: {found}");
+                        System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}");
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
                         string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), priceData);
                         System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
 
-                    return Tuple.Create(found, data, priceData);
+                    return Tuple.Create(found.Item1, data, priceData, found.Item2);
 
                 }).ContinueWith(t =>
                 {
@@ -276,7 +277,7 @@ namespace SkyStopwatch
                         {
                             string aux1Message = enableAux1 ? "|" + MainOCRPrice.Aux1Price : string.Empty;
                             string aux2Message = enableAux2 ? "|" + MainOCRPrice.Aux2Price : string.Empty;
-                            this.labelPriceMessage.Text = $"FOUND: {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}";
+                            this.labelPriceMessage.Text = $"FOUND: {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}, no.{t.Result.Item4 + 1}";
                             this.labelPriceMessage.BackColor = Color.Red;
                             this.labelPriceMessage.ForeColor = Color.White;
 

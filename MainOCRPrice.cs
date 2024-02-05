@@ -78,7 +78,7 @@ namespace SkyStopwatch
         }
 
 
-        public static bool FindPrice(string data, bool enableAux1, bool enableAux2)
+        public static Tuple<bool, int> FindPrice(string data, bool enableAux1, bool enableAux2)
         {
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             string[] zeroAlikeArray = new[] { "o", "O" };
@@ -91,9 +91,11 @@ namespace SkyStopwatch
             //bool allEndWithZero = true;
             //bool allEndWithNine = true;
             List<string> linesWithoutLastChars = new List<string>();
+            int lineIndex = -1;
 
             foreach (string line in lines)
             {
+                lineIndex++;
                 string lineAdjust = line.Trim();
 
                 foreach (string item in zeroAlikeArray)
@@ -109,7 +111,7 @@ namespace SkyStopwatch
                     System.Diagnostics.Debug.WriteLine(line);
                     System.Diagnostics.Debug.WriteLine(lineAdjust);
 
-                    return true;
+                    return Tuple.Create( true, lineIndex);
                 }
 
                 //case: 1000
@@ -130,7 +132,9 @@ namespace SkyStopwatch
 
             //if (allEndWithZero || allEndWithNine)
             {
-                return linesWithoutLastChars.Any(p => p == targetPriceString || p == aux1String || p == aux2String);
+                bool found = linesWithoutLastChars.Any(p => p == targetPriceString || p == aux1String || p == aux2String);
+                lineIndex = -100;
+                return Tuple.Create(found, lineIndex);
             }
 
             //return false;

@@ -412,7 +412,7 @@
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.MaximizeBox = false;
             this.Name = "FormImageViewPrice";
-            this.Text = "Image view";
+            this.Text = "Price view";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.FormImageViewPrice_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
