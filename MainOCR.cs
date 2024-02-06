@@ -41,6 +41,10 @@ namespace SkyStopwatch
         public const string TimeFormatNoSecond = @"H\:mm";
         public const string UIElapsedTimeFormat = @"m\:ss";
 
+        public const string OCRLanguage = "eng"; //chi_sim;
+        //public const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
+        public const string OCRTessdataFolder = @"C:\Dev\OCR\";
+
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
         public static bool IsDebugging { get; set; } = false;
         //public static bool ShowSystemClock { get; set; } = true;
@@ -259,11 +263,7 @@ namespace SkyStopwatch
 
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            const string language = "eng"; //chi_sim;
-            //const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
-            const string tessdataFolder = @"C:\Dev\OCR\";
-
-            var engine = new Tesseract.TesseractEngine(tessdataFolder, language, Tesseract.EngineMode.Default);
+            var engine = new Tesseract.TesseractEngine(OCRTessdataFolder, OCRLanguage, Tesseract.EngineMode.Default);
             engine.SetVariable("tessedit_char_whitelist", "0123456789:oO"); //only look for pre-set chars for speed up
 
             //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly

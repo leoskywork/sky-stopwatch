@@ -76,7 +76,7 @@
             // labelMessage
             // 
             this.labelMessage.AutoSize = true;
-            this.labelMessage.Location = new System.Drawing.Point(31, 604);
+            this.labelMessage.Location = new System.Drawing.Point(34, 604);
             this.labelMessage.Name = "labelMessage";
             this.labelMessage.Size = new System.Drawing.Size(207, 15);
             this.labelMessage.TabIndex = 2;
@@ -234,7 +234,7 @@
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(323, 826);
+            this.buttonStart.Location = new System.Drawing.Point(296, 805);
             this.buttonStart.Name = "buttonStart";
             this.buttonStart.Size = new System.Drawing.Size(80, 30);
             this.buttonStart.TabIndex = 109;
@@ -245,7 +245,7 @@
             // buttonStop
             // 
             this.buttonStop.Enabled = false;
-            this.buttonStop.Location = new System.Drawing.Point(422, 826);
+            this.buttonStop.Location = new System.Drawing.Point(396, 805);
             this.buttonStop.Name = "buttonStop";
             this.buttonStop.Size = new System.Drawing.Size(80, 30);
             this.buttonStop.TabIndex = 110;
@@ -255,7 +255,7 @@
             // 
             // textBoxPriceList
             // 
-            this.textBoxPriceList.Location = new System.Drawing.Point(34, 654);
+            this.textBoxPriceList.Location = new System.Drawing.Point(34, 641);
             this.textBoxPriceList.Multiline = true;
             this.textBoxPriceList.Name = "textBoxPriceList";
             this.textBoxPriceList.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
@@ -265,7 +265,7 @@
             // labelPriceMessage
             // 
             this.labelPriceMessage.AutoSize = true;
-            this.labelPriceMessage.Location = new System.Drawing.Point(320, 604);
+            this.labelPriceMessage.Location = new System.Drawing.Point(299, 763);
             this.labelPriceMessage.Name = "labelPriceMessage";
             this.labelPriceMessage.Padding = new System.Windows.Forms.Padding(4);
             this.labelPriceMessage.Size = new System.Drawing.Size(55, 23);
@@ -292,7 +292,7 @@
             // 
             // numericUpDownTargetPrice
             // 
-            this.numericUpDownTargetPrice.Location = new System.Drawing.Point(323, 654);
+            this.numericUpDownTargetPrice.Location = new System.Drawing.Point(303, 621);
             this.numericUpDownTargetPrice.Maximum = new decimal(new int[] {
             100000000,
             0,
@@ -316,7 +316,7 @@
             // checkBoxAux1
             // 
             this.checkBoxAux1.AutoSize = true;
-            this.checkBoxAux1.Location = new System.Drawing.Point(323, 702);
+            this.checkBoxAux1.Location = new System.Drawing.Point(304, 672);
             this.checkBoxAux1.Name = "checkBoxAux1";
             this.checkBoxAux1.Size = new System.Drawing.Size(69, 19);
             this.checkBoxAux1.TabIndex = 115;
@@ -327,7 +327,7 @@
             // checkBoxAux2
             // 
             this.checkBoxAux2.AutoSize = true;
-            this.checkBoxAux2.Location = new System.Drawing.Point(323, 742);
+            this.checkBoxAux2.Location = new System.Drawing.Point(304, 712);
             this.checkBoxAux2.Name = "checkBoxAux2";
             this.checkBoxAux2.Size = new System.Drawing.Size(69, 19);
             this.checkBoxAux2.TabIndex = 116;
@@ -338,7 +338,7 @@
             // numericUpDownAux1
             // 
             this.numericUpDownAux1.Enabled = false;
-            this.numericUpDownAux1.Location = new System.Drawing.Point(412, 699);
+            this.numericUpDownAux1.Location = new System.Drawing.Point(396, 669);
             this.numericUpDownAux1.Maximum = new decimal(new int[] {
             100000000,
             0,
@@ -362,7 +362,7 @@
             // numericUpDownAux2
             // 
             this.numericUpDownAux2.Enabled = false;
-            this.numericUpDownAux2.Location = new System.Drawing.Point(412, 739);
+            this.numericUpDownAux2.Location = new System.Drawing.Point(396, 709);
             this.numericUpDownAux2.Maximum = new decimal(new int[] {
             100000000,
             0,
@@ -387,7 +387,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(528, 872);
+            this.ClientSize = new System.Drawing.Size(528, 860);
             this.Controls.Add(this.numericUpDownAux2);
             this.Controls.Add(this.numericUpDownAux1);
             this.Controls.Add(this.checkBoxAux2);

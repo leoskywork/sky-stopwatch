@@ -17,7 +17,7 @@ namespace SkyStopwatch
         //big screen (pc-pro) ----- 1470, 240, 160, 740
         public static int XPoint = 1470;
         public static int YPoint = 240;
-        public static int BlockWidth = 160;
+        public static int BlockWidth = 140;
         public static int BlockHeight = 740;
 
         public static int TargetPrice = 1000;
@@ -64,10 +64,7 @@ namespace SkyStopwatch
 
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            const string language = "eng"; //chi_sim;
-            const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
-
-            var engine = new Tesseract.TesseractEngine(tessdataFolder, language, Tesseract.EngineMode.Default);
+            var engine = new Tesseract.TesseractEngine(MainOCR.OCRTessdataFolder, MainOCR.OCRLanguage, Tesseract.EngineMode.Default);
             engine.SetVariable("tessedit_char_whitelist", "0123456789oO"); //only look for pre-set chars for speed up
 
             //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly

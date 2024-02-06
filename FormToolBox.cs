@@ -73,13 +73,14 @@ namespace SkyStopwatch
 
             if (MainOCR.IsDebugging)
             {
-                this.Text = "debugging";
 
                 //this.textBoxTimeSpanNodes.Text = "1:00";
                 //this.textBoxTimeSpanNodes.Text = "01:00";
                 //this.textBoxTimeSpanNodes.Text = "10:30\r\n20:30\r\n35:00";
                 //this.textBoxTimeSpanNodes.Text = "1:00\r\n2:30\r\n10:00";
             }
+
+            SetDialogTitle();
 
             this._BootingArgs = MainOCR.BootingArgs;
             this.buttonChangeTheme.Text = $"Change theme {_BootingArgs}";
@@ -209,9 +210,13 @@ namespace SkyStopwatch
         private void checkBoxDebugging_CheckedChanged(object sender, EventArgs e)
         {
             MainOCR.IsDebugging = this.checkBoxDebugging.Checked;
-            this.Text = MainOCR.IsDebugging ? "debugging" : "dialog will auto close";
+            SetDialogTitle();
         }
 
+        private void SetDialogTitle()
+        {
+            this.Text = MainOCR.IsDebugging ? $"debugging - OCR data {MainOCR.OCRTessdataFolder}" : "Tool box - dialog will auto close";
+        }
 
 
         private void FormToolBox_Load(object sender, EventArgs e)

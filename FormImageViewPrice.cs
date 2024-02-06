@@ -291,7 +291,9 @@ namespace SkyStopwatch
                         }
                         else
                         {
-                            this.labelPriceMessage.Text = $"checking {MainOCRPrice.TargetPrice}...";
+                            string aux1Message = enableAux1 ? "," + MainOCRPrice.Aux1Price : string.Empty;
+                            string aux2Message = enableAux2 ? "," + MainOCRPrice.Aux2Price : string.Empty;
+                            this.labelPriceMessage.Text = $"checking {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}...";
                             this.labelPriceMessage.BackColor = Color.Transparent;
                             this.labelPriceMessage.ForeColor = Color.Black;
 
