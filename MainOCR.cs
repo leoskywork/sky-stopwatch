@@ -260,7 +260,8 @@ namespace SkyStopwatch
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
             const string language = "eng"; //chi_sim;
-            const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
+            //const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
+            const string tessdataFolder = @"C:\Dev\OCR\";
 
             var engine = new Tesseract.TesseractEngine(tessdataFolder, language, Tesseract.EngineMode.Default);
             engine.SetVariable("tessedit_char_whitelist", "0123456789:oO"); //only look for pre-set chars for speed up
