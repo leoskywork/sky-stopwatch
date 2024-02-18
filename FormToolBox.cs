@@ -241,6 +241,8 @@ namespace SkyStopwatch
                 this.BeginInvoke((Action)(() =>
                 {
                     this.buttonChangeTheme.Enabled = true;
+                    //Task.Delay(500).ContinueWith((__) => { this.Close(); });
+                    this.Close();
                 }));
             });
         }

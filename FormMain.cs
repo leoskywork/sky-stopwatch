@@ -397,6 +397,7 @@ namespace SkyStopwatch
                 //this.BeginInvoke((Action)(() => { labelTimer.Text = "read"; }));
                 string ocrDisplayTime = MainOCR.FindTime(data);
 
+                if (this.IsDead()) return;
                 this.BeginInvoke((Action)(() =>
                 {
                     if (!string.IsNullOrEmpty(ocrDisplayTime))

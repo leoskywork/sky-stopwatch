@@ -46,6 +46,11 @@ namespace SkyStopwatch
 
                 MainOCR.CloseApp += (_, __) =>
                 {
+                    if (this._LastTheme != null && !_LastTheme.IsDead())
+                    {
+                        _LastTheme.Close();
+                    }
+
                     _LastTheme = null;
                     this.RunOnMain(this.Close);
                 };
@@ -60,7 +65,7 @@ namespace SkyStopwatch
 
         private void OnChangeTheme()
         {
-            if (this._LastTheme != null && !_LastTheme.Disposing && !_LastTheme.IsDisposed)
+            if (this._LastTheme != null && !_LastTheme.IsDead())
             {
                 _LastTheme.Close();
             }
