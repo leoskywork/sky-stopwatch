@@ -212,6 +212,39 @@ namespace SkyStopwatch
             this.buttonCloseOverlay.Visible = false;
         }
 
+        private void InitGUILayoutV5()
+        {
+            //shrink width when hide ocr button
+            //this.buttonOCR.Hide();
+            //this.Controls.Remove(this.buttonOCR);
+            this.buttonDummyAcceptHighLight.Size = new System.Drawing.Size(1, 1);
+            this.buttonDummyAcceptHighLight.Location = new Point(0, 0);
+            //seems not working if width < 140 //turns out it's caused by lable.auto-resize ??
+            this.Size = new System.Drawing.Size(110, 32);
+
+            //time only
+            //this.labelTitle.BackColor = System.Drawing.Color.Gray;
+            this.labelTitle.Text = "LEO";
+            this.labelTitle.Size = new System.Drawing.Size(80, 32);
+            this.labelTitle.Location = new System.Drawing.Point(2, 3);
+            this.labelTitle.Font = new System.Drawing.Font("SimSun", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+
+            //time since game start
+            this.labelTimer.Visible = false;
+
+            //button tool box
+            this.buttonToolBox.Text = null;
+            this.buttonToolBox.Size = new System.Drawing.Size(24, 24);
+            this.buttonToolBox.Location = new System.Drawing.Point(80, 4);
+            this.buttonToolBox.FlatStyle = FlatStyle.Flat;
+            this.buttonToolBox.FlatAppearance.BorderSize = 0;
+            this.buttonToolBox.BackgroundImage = global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
+            this.buttonToolBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+
+            //the x out button
+            this.buttonCloseOverlay.Visible = false;
+        }
+
         private void SyncTopMost()
         {
             this.TopMost = _IsTopMost;
@@ -629,24 +662,16 @@ namespace SkyStopwatch
             }
         }
 
-
-
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
             this.OnClearOCR();
         }
-
-
 
         private void buttonCloseOverlay_Click(object sender, EventArgs e)
         {
             this.Close();
             MainOCR.FireCloseApp();
         }
-
-
-
-
 
 
 
@@ -674,19 +699,25 @@ namespace SkyStopwatch
             //阴影
             // SetClassLong(this.Handle, GCL_STYLE, GetClassLong(this.Handle, GCL_STYLE) | CS_DropSHADOW);
 
-
             this.Controls.Remove(this.buttonOCR);
 
-            switch (this._BootingArgs)
+            MainTheme theme = (MainTheme)this._BootingArgs;
+            switch (theme)
             {
-                case 1:
+                case MainTheme.OCR2Line:
                     InitGUILayoutV1();
                     break;
-                case 2:
+                case MainTheme.OCR1LineLong:
                     InitGUILayoutV2();
                     break;
-                case 3:
+                case MainTheme.OCR1LineNoTime:
                     InitGUILayoutV3();
+                    break;
+                case MainTheme.ThinOCR:
+                    InitGUILayoutV4();
+                    break;
+                case MainTheme.ThinTime:
+                    InitGUILayoutV5();
                     break;
                 default:
                     InitGUILayoutV4();

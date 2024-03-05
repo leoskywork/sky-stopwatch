@@ -43,6 +43,7 @@
             this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonPriceList = new System.Windows.Forms.Button();
             this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonChangeTheme = new System.Windows.Forms.Button();
@@ -52,7 +53,6 @@
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
-            this.buttonPriceList = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -211,6 +211,17 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tools";
             // 
+            // buttonPriceList
+            // 
+            this.buttonPriceList.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonPriceList.Location = new System.Drawing.Point(260, 25);
+            this.buttonPriceList.Name = "buttonPriceList";
+            this.buttonPriceList.Size = new System.Drawing.Size(95, 30);
+            this.buttonPriceList.TabIndex = 403;
+            this.buttonPriceList.Text = "Price...";
+            this.buttonPriceList.UseVisualStyleBackColor = true;
+            this.buttonPriceList.Click += new System.EventHandler(this.buttonPriceList_Click);
+            // 
             // checkBoxDebugging
             // 
             this.checkBoxDebugging.AutoSize = true;
@@ -240,7 +251,7 @@
             // 
             this.buttonChangeTheme.Location = new System.Drawing.Point(29, 90);
             this.buttonChangeTheme.Name = "buttonChangeTheme";
-            this.buttonChangeTheme.Size = new System.Drawing.Size(142, 30);
+            this.buttonChangeTheme.Size = new System.Drawing.Size(226, 30);
             this.buttonChangeTheme.TabIndex = 404;
             this.buttonChangeTheme.Text = "Change theme 0";
             this.buttonChangeTheme.UseVisualStyleBackColor = true;
@@ -315,17 +326,6 @@
             this.pictureBoxOne.Size = new System.Drawing.Size(400, 300);
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
-            // 
-            // buttonPriceList
-            // 
-            this.buttonPriceList.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonPriceList.Location = new System.Drawing.Point(260, 25);
-            this.buttonPriceList.Name = "buttonPriceList";
-            this.buttonPriceList.Size = new System.Drawing.Size(95, 30);
-            this.buttonPriceList.TabIndex = 403;
-            this.buttonPriceList.Text = "Price...";
-            this.buttonPriceList.UseVisualStyleBackColor = true;
-            this.buttonPriceList.Click += new System.EventHandler(this.buttonPriceList_Click);
             // 
             // FormToolBox
             // 

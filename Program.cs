@@ -19,7 +19,7 @@ namespace SkyStopwatch
 
             if(Environment.MachineName == "LEO-PC-PRO")
             {
-                MainOCR.BootingArgs = 2;
+                MainOCR.BootingArgs = 5;// 0;// 2;
             }
 
             //leotodo - read from config file here?

@@ -5,9 +5,7 @@ using System.Text;
 
 namespace SkyStopwatch
 {
-    internal class ToDo
-    {
-    }
+  
 
     /*
      

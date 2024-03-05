@@ -83,7 +83,8 @@ namespace SkyStopwatch
             SetDialogTitle();
 
             this._BootingArgs = MainOCR.BootingArgs;
-            this.buttonChangeTheme.Text = $"Change theme {_BootingArgs}";
+            //this.buttonChangeTheme.Text = $"Change theme {_BootingArgs}";
+            SetMainOCRBootingArgsAndButtonText();
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
@@ -228,10 +229,9 @@ namespace SkyStopwatch
         {
             this.buttonChangeTheme.Enabled = false;
             this._BootingArgs++;
-            MainOCR.BootingArgs = this._BootingArgs % 4;
-            //lazy way to do it, error when theme count >= 10
-            string prefix = this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
-            this.buttonChangeTheme.Text = $"{prefix} {MainOCR.BootingArgs}";
+            SetMainOCRBootingArgsAndButtonText();
+
+          
 
             MainOCR.FireChangeTheme();
 
@@ -245,6 +245,16 @@ namespace SkyStopwatch
                     this.Close();
                 }));
             });
+        }
+
+        private void SetMainOCRBootingArgsAndButtonText()
+        {
+            int themeCount = Enum.GetNames(typeof(MainTheme)).Length - 1;
+            MainOCR.BootingArgs = this._BootingArgs % themeCount;
+
+            //lazy way to do it, error when theme count >= 10
+            string prefix = "Theme"; //this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
+            this.buttonChangeTheme.Text = $"{prefix} {MainOCR.BootingArgs} - {(MainTheme)MainOCR.BootingArgs}";
         }
 
         private void buttonAddMinute_Click(object sender, EventArgs e)
