@@ -22,5 +22,89 @@ namespace SkyStopwatch.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1084, 1068")]
+        public global::System.Drawing.Point TimeViewPoint {
+            get {
+                return ((global::System.Drawing.Point)(this["TimeViewPoint"]));
+            }
+            set {
+                this["TimeViewPoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("140, 30")]
+        public global::System.Drawing.Size TimeViewSize {
+            get {
+                return ((global::System.Drawing.Size)(this["TimeViewSize"]));
+            }
+            set {
+                this["TimeViewSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1470, 240")]
+        public global::System.Drawing.Point PriceViewPoint {
+            get {
+                return ((global::System.Drawing.Point)(this["PriceViewPoint"]));
+            }
+            set {
+                this["PriceViewPoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("140, 740")]
+        public global::System.Drawing.Size PriceViewSize {
+            get {
+                return ((global::System.Drawing.Size)(this["PriceViewSize"]));
+            }
+            set {
+                this["PriceViewSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int BootingArgs {
+            get {
+                return ((int)(this["BootingArgs"]));
+            }
+            set {
+                this["BootingArgs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10:30\\r\\n20:30\\r\\n35:00")]
+        public string TimeNodeCheckingList {
+            get {
+                return ((string)(this["TimeNodeCheckingList"]));
+            }
+            set {
+                this["TimeNodeCheckingList"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool TopMost {
+            get {
+                return ((bool)(this["TopMost"]));
+            }
+            set {
+                this["TopMost"] = value;
+            }
+        }
     }
 }

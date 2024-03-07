@@ -18,8 +18,6 @@ namespace SkyStopwatch
     public partial class FormMain : Form
     {
 
-        //leotodo, some fileds need thread safe?
-        private bool _IsTopMost = true;//false;
         private bool _IsUpdatingPassedTime = false;
         private DateTime _TimeAroundGameStart = DateTime.MinValue;
 
@@ -247,8 +245,8 @@ namespace SkyStopwatch
 
         private void SyncTopMost()
         {
-            this.TopMost = _IsTopMost;
-            this.buttonToolBox.Text = this._IsTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+            this.TopMost = MainOCR.TopMost;
+            this.buttonToolBox.Text = MainOCR.TopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void buttonOCR_Click(object sender, EventArgs e)
@@ -483,7 +481,7 @@ namespace SkyStopwatch
 
         private void OnSwitchTopMost()
         {
-            _IsTopMost = !_IsTopMost;
+            MainOCR.TopMost = !MainOCR.TopMost;
             SyncTopMost();
         }
 

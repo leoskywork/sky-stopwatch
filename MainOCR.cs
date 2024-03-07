@@ -57,6 +57,8 @@ namespace SkyStopwatch
         public static bool EnableTimeNodeChecking { get; set; } = true;
 
         public static int BootingArgs { get; set; } = 0;
+        public static bool TopMost = true;//false;
+
 
         public static event EventHandler ChangeTheme;
         public static event EventHandler CloseApp;

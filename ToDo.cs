@@ -24,7 +24,7 @@ namespace SkyStopwatch
     [done-half] ### auto run ocr - so no need to manual click button every time into a new game
         - can not go full auto, to complicated - done now, directly read from memory, not disk, so it's worth to always run on background
 
-    ### configurable fields
+    [done-most]### configurable fields
         - ocr block args (x,y, width, height)
             - set default value
             - user can update them

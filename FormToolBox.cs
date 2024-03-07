@@ -86,6 +86,9 @@ namespace SkyStopwatch
             //this.buttonChangeTheme.Text = $"Change theme {_BootingArgs}";
             SetMainOCRBootingArgsAndButtonText();
 
+            this.buttonTopMost.Visible = false;
+            this.checkBoxTopMost.Checked = MainOCR.TopMost;
+
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
             onInit?.Invoke(this.buttonOCR, _OriginalTimeNodes);
@@ -285,6 +288,12 @@ namespace SkyStopwatch
 
 
             this.Close();
+        }
+
+        private void checkBoxTopMost_CheckedChanged(object sender, EventArgs e)
+        {
+            System.Diagnostics.Debug.WriteLine($"----- checkBoxTopMost_CheckedChanged, checked: {this.checkBoxTopMost.Checked}");
+            _TopMostClick?.Invoke();
         }
     }
 }

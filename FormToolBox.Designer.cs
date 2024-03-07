@@ -53,6 +53,7 @@
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
+            this.checkBoxTopMost = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -96,11 +97,11 @@
             // buttonTopMost
             // 
             this.buttonTopMost.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonTopMost.Location = new System.Drawing.Point(29, 32);
+            this.buttonTopMost.Location = new System.Drawing.Point(80, 367);
             this.buttonTopMost.Name = "buttonTopMost";
             this.buttonTopMost.Size = new System.Drawing.Size(100, 30);
             this.buttonTopMost.TabIndex = 400;
-            this.buttonTopMost.Text = "Top most";
+            this.buttonTopMost.Text = "x Top most";
             this.buttonTopMost.UseVisualStyleBackColor = true;
             this.buttonTopMost.Click += new System.EventHandler(this.buttonTopMost_Click);
             // 
@@ -235,6 +236,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.checkBoxTopMost);
             this.groupBox3.Controls.Add(this.buttonChangeTheme);
             this.groupBox3.Controls.Add(this.buttonCloseApp);
             this.groupBox3.Controls.Add(this.groupBoxTimeNode);
@@ -253,7 +255,7 @@
             this.buttonChangeTheme.Name = "buttonChangeTheme";
             this.buttonChangeTheme.Size = new System.Drawing.Size(226, 30);
             this.buttonChangeTheme.TabIndex = 404;
-            this.buttonChangeTheme.Text = "Change theme 0";
+            this.buttonChangeTheme.Text = "Change theme - 0";
             this.buttonChangeTheme.UseVisualStyleBackColor = true;
             this.buttonChangeTheme.Click += new System.EventHandler(this.buttonChangeTheme_Click);
             // 
@@ -327,6 +329,19 @@
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
             // 
+            // checkBoxTopMost
+            // 
+            this.checkBoxTopMost.AutoSize = true;
+            this.checkBoxTopMost.Checked = true;
+            this.checkBoxTopMost.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxTopMost.Location = new System.Drawing.Point(29, 39);
+            this.checkBoxTopMost.Name = "checkBoxTopMost";
+            this.checkBoxTopMost.Size = new System.Drawing.Size(93, 19);
+            this.checkBoxTopMost.TabIndex = 408;
+            this.checkBoxTopMost.Text = "Top most";
+            this.checkBoxTopMost.UseVisualStyleBackColor = true;
+            this.checkBoxTopMost.CheckedChanged += new System.EventHandler(this.checkBoxTopMost_CheckedChanged);
+            // 
             // FormToolBox
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -383,5 +398,6 @@
         private System.Windows.Forms.Button buttonReduceMinute;
         private System.Windows.Forms.Button buttonCloseApp;
         private System.Windows.Forms.Button buttonPriceList;
+        private System.Windows.Forms.CheckBox checkBoxTopMost;
     }
 }
