@@ -20,8 +20,8 @@ namespace SkyStopwatch
 
 
             var screen = Screen.PrimaryScreen.Bounds;
-            this.numericUpDownX.Value = (int)(screen.Width * MainOCR.XPercent * 0.01);
-            this.numericUpDownY.Value = (int)(screen.Height * MainOCR.YPercent * 0.01);
+            this.numericUpDownX.Value = (int)(screen.Width * MainOCR.XPercent);
+            this.numericUpDownY.Value = (int)(screen.Height * MainOCR.YPercent);
             this.numericUpDownWidth.Value = MainOCR.BlockWidth;
             this.numericUpDownHeight.Value = MainOCR.BlockHeight;
         }
@@ -43,11 +43,10 @@ namespace SkyStopwatch
                 int safeWidth = Math.Min(width, screenRect.Width - x);
                 int safeHeight = Math.Min(height, screenRect.Height - y);
 
-                MainOCR.XPercent = (int)((decimal)x / (decimal)screenRect.Width * 100);
-                MainOCR.YPercent = (int)((decimal)y / (decimal)screenRect.Height * 100);
+                MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
+                MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
                 MainOCR.BlockWidth = safeWidth;
                 MainOCR.BlockHeight = safeHeight;
-
 
                 this.Close();
             }
@@ -57,7 +56,7 @@ namespace SkyStopwatch
             }
         }
 
-        private void TryUpdateImage()
+        private void TryUpdateImage(string source)
         {
             try
             {
@@ -83,16 +82,16 @@ namespace SkyStopwatch
                     //can not use using block here, since we pass the bitmap into a view and show it
                     var bitmapBlock = screenShot.Clone(new Rectangle(x, y, safeWidth, safeHeight), screenShot.PixelFormat);
 
-                    if(this.pictureBoxOne.Image!= null)
+                    if (this.pictureBoxOne.Image != null)
                     {
                         this.pictureBoxOne.Image.Dispose();
                     }
 
                     this.pictureBoxOne.Image = bitmapBlock;
 
-                    labelX.Text = $"X: {(int)((decimal)x / (decimal)screenRect.Width * 10000) * 0.01}%";
-                    labelY.Text = $"Y: {(int)((decimal)y / (decimal)screenRect.Height * 10000)* 0.01}%";
-
+                    labelX.Text = $"X: {decimal.Round(x / (decimal)screenRect.Width * 100, MainOCR.XYPercentDecimalSize)}%";
+                    labelY.Text = $"Y: {decimal.Round(y / (decimal)screenRect.Height * 100, MainOCR.XYPercentDecimalSize)}%";
+                    labelMessage.Text = $"change by {source}";
                 }
             }
             catch (Exception ex)
@@ -105,22 +104,22 @@ namespace SkyStopwatch
 
         private void numericUpDownX_ValueChanged(object sender, EventArgs e)
         {
-            this.TryUpdateImage();
+            this.TryUpdateImage(nameof(numericUpDownX_ValueChanged));
         }
 
         private void numericUpDownY_ValueChanged(object sender, EventArgs e)
         {
-            this.TryUpdateImage();
+            this.TryUpdateImage(nameof(numericUpDownY_ValueChanged));
         }
 
         private void numericUpDownWidth_ValueChanged(object sender, EventArgs e)
         {
-            this.TryUpdateImage();
+            this.TryUpdateImage(nameof(numericUpDownWidth_ValueChanged));
         }
 
         private void numericUpDownHeight_ValueChanged(object sender, EventArgs e)
         {
-            this.TryUpdateImage();
+            this.TryUpdateImage(nameof(numericUpDownHeight_ValueChanged));
         }
 
         private void FormImageView_Load(object sender, EventArgs e)

@@ -9,6 +9,7 @@ using Tesseract;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
+using System.Linq;
 
 namespace SkyStopwatch
 {
@@ -18,8 +19,9 @@ namespace SkyStopwatch
         //public const int YPercent = 68;
         //public const int BlockWidth = 300;
         //public const int BlockHeight = 100;
-        public static int XPercent = 39;
-        public static int YPercent = 71;
+        public const int XYPercentDecimalSize = 4;
+        public static decimal XPercent = 0.3922m;
+        public static decimal YPercent = 0.7093m;
         public static int BlockWidth = 140;
         public static int BlockHeight = 30;
 
@@ -136,8 +138,8 @@ namespace SkyStopwatch
 
                 if (onlyReturnPartOfImage) //for speed up
                 {
-                    int x = screenRect.Width * XPercent / 100;
-                    int y = screenRect.Height * YPercent / 100;
+                    int x = (int)(screenRect.Width * XPercent);
+                    int y = (int)(screenRect.Height * YPercent);
 
                     using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, BlockWidth, BlockHeight), bitPic.PixelFormat))
                     {
@@ -225,8 +227,8 @@ namespace SkyStopwatch
 
                 //for speed up - only read part of the file
                 Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                int x = screenRect.Width * XPercent / 100;
-                int y = screenRect.Height * YPercent / 100;
+                int x = (int)(screenRect.Width * XPercent);
+                int y = (int)(screenRect.Height * YPercent);
 
                 using (Bitmap bitmap = new Bitmap(imgPath))
                 using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, BlockWidth, BlockHeight), bitmap.PixelFormat))
@@ -276,7 +278,7 @@ namespace SkyStopwatch
         public static string FindTime(string data)
         {
             //hh:mm:ss
-            const string regexPattern = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
+            const string regexPattern6Digits = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
             const int colonCount = 2;
 
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
@@ -286,15 +288,19 @@ namespace SkyStopwatch
             {
                 if (line.IndexOf(':') >= 0)
                 {
-                    string charsAfterFirstColon = line.Substring(line.IndexOf(":") + 1);
-                    string charsAfterFirstColonAdjust = charsAfterFirstColon.Replace(" ", string.Empty); //Trim().Replace(": ", ":").Replace(" :", ":");
+                    //case 1 - xx: 00:01:26
+                    //case 2 - 00:01:26
+                    string line6TimeParts = line.Count(c => c == ':') > 2 ? line.Substring(line.IndexOf(":") + 1) : line;
+
+                    //remove empty space
+                    string line6TimePartsAdjust = line6TimeParts.Replace(" ", string.Empty);
 
                     foreach (string item in zeroAlikeArray)
                     {
-                        charsAfterFirstColonAdjust = charsAfterFirstColonAdjust.Replace(item, "0");
+                        line6TimePartsAdjust = line6TimePartsAdjust.Replace(item, "0");
                     }
 
-                    if (Regex.IsMatch(charsAfterFirstColonAdjust, regexPattern))
+                    if (Regex.IsMatch(line6TimePartsAdjust, regexPattern6Digits))
                     {
                         //timePartAdjust = timePartAdjust.Replace("00", "12"); 
                         //got bug when parse as datetime 00:00:123 -> 12:12:23 - no need to do this since we parse as timespan now
@@ -305,20 +311,20 @@ namespace SkyStopwatch
 
                         System.Diagnostics.Debug.WriteLine("-----------------------------regex line");
                         System.Diagnostics.Debug.WriteLine(line);
-                        System.Diagnostics.Debug.WriteLine(charsAfterFirstColon);
-                        System.Diagnostics.Debug.WriteLine(charsAfterFirstColonAdjust);
+                        System.Diagnostics.Debug.WriteLine(line6TimeParts);
+                        System.Diagnostics.Debug.WriteLine(line6TimePartsAdjust);
 
-                        return charsAfterFirstColonAdjust;
+                        return line6TimePartsAdjust;
                     }
 
                     //handle case "1353:1131: 00:01:26", split it then take the last 3 parts
                     //do not remove empty entry here, do not want to parse invalid line part, e.g. [4  1  :: 7: 5     :: : 5  :   :: 1 ]
                     //string[] parts = charsAfterFirstColonAdjust.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    string[] parts = charsAfterFirstColonAdjust.Split(new[] { ':' }, StringSplitOptions.None);
+                    string[] parts = line6TimePartsAdjust.Split(new[] { ':' }, StringSplitOptions.None);
                     if (parts.Length > colonCount)
                     {
                         string last3Parts = $"{parts[parts.Length - 3]}:{parts[parts.Length - 2]}:{parts[parts.Length - 1]}";
-                        if (Regex.IsMatch(last3Parts, regexPattern))
+                        if (Regex.IsMatch(last3Parts, regexPattern6Digits))
                         {
                             System.Diagnostics.Debug.WriteLine($"regex - get last 3 parts [{last3Parts}] from line [{line}]");
                             return last3Parts;

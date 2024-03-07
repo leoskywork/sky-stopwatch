@@ -251,7 +251,7 @@ namespace SkyStopwatch
                         System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}");
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
                         string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), priceData);
-                        System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
+                        System.Diagnostics.Debug.WriteLine($"tmp path: {tmpPath}");
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
 

@@ -323,8 +323,8 @@ namespace SkyStopwatch
                 // curren screen shot
                 {
                     Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                    int x = screenRect.Width * MainOCR.XPercent / 100;
-                    int y = screenRect.Height * MainOCR.YPercent / 100;
+                    int x = (int)(screenRect.Width * MainOCR.XPercent);
+                    int y = (int)(screenRect.Height * MainOCR.YPercent);
 
                     using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
                     using (Graphics gra = Graphics.FromImage(bitPic))
@@ -612,12 +612,11 @@ namespace SkyStopwatch
 
                     if (MainOCR.IsDebugging)
                     {
-
                         System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
+                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
                         string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
-                        System.Diagnostics.Debug.WriteLine($"temp file path: {tmpPath}");
+                        System.Diagnostics.Debug.WriteLine($"tmp file: {tmpPath}");
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
                     
