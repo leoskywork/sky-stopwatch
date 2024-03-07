@@ -323,8 +323,6 @@ namespace SkyStopwatch
                 // curren screen shot
                 {
                     Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                    int x = (int)(screenRect.Width * MainOCR.XPercent);
-                    int y = (int)(screenRect.Height * MainOCR.YPercent);
 
                     using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
                     using (Graphics gra = Graphics.FromImage(bitPic))
@@ -334,7 +332,7 @@ namespace SkyStopwatch
                         gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
                         //can not use using block here, since we pass the bitmap into a form and show it
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
+                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(MainOCR.XPoint, MainOCR.YPoint, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
                         {
                             FormToolBox tool = CreateToolBox(cloneBitmap, "current screen");
                             tool.StartPosition = FormStartPosition.Manual;

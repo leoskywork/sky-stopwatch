@@ -20,8 +20,8 @@ namespace SkyStopwatch
 
 
             var screen = Screen.PrimaryScreen.Bounds;
-            this.numericUpDownX.Value = (int)(screen.Width * MainOCR.XPercent);
-            this.numericUpDownY.Value = (int)(screen.Height * MainOCR.YPercent);
+            this.numericUpDownX.Value = MainOCR.XPoint;
+            this.numericUpDownY.Value = MainOCR.YPoint;
             this.numericUpDownWidth.Value = MainOCR.BlockWidth;
             this.numericUpDownHeight.Value = MainOCR.BlockHeight;
         }
@@ -43,8 +43,10 @@ namespace SkyStopwatch
                 int safeWidth = Math.Min(width, screenRect.Width - x);
                 int safeHeight = Math.Min(height, screenRect.Height - y);
 
-                MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
-                MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
+                //MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
+                //MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
+                MainOCR.XPoint = x; 
+                MainOCR.YPoint = y;
                 MainOCR.BlockWidth = safeWidth;
                 MainOCR.BlockHeight = safeHeight;
 
@@ -89,8 +91,11 @@ namespace SkyStopwatch
 
                     this.pictureBoxOne.Image = bitmapBlock;
 
-                    labelX.Text = $"X: {decimal.Round(x / (decimal)screenRect.Width * 100, MainOCR.XYPercentDecimalSize)}%";
-                    labelY.Text = $"Y: {decimal.Round(y / (decimal)screenRect.Height * 100, MainOCR.XYPercentDecimalSize)}%";
+                    //labelX.Text = $"X: {decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize)}";
+                    //labelY.Text = $"Y: {decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize)}";
+
+                    labelX.Text = $"X: {(int)((decimal)x / (decimal)screenRect.Width * 10000) * 0.01}%";
+                    labelY.Text = $"Y: {(int)((decimal)y / (decimal)screenRect.Height * 10000) * 0.01}%";
                     labelMessage.Text = $"change by {source}";
                 }
             }

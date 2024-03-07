@@ -13,15 +13,17 @@ using System.Linq;
 
 namespace SkyStopwatch
 {
-    class MainOCR
+    public class MainOCR
     {
         //public const int XPercent = 32;
         //public const int YPercent = 68;
         //public const int BlockWidth = 300;
         //public const int BlockHeight = 100;
-        public const int XYPercentDecimalSize = 4;
-        public static decimal XPercent = 0.3922m;
-        public static decimal YPercent = 0.7093m;
+        //public const int XYPercentDecimalSize = 4;
+        //public static decimal XPercent = 0.3922m;
+        //public static decimal YPercent = 0.7093m;
+        public static int XPoint = 1084;
+        public static int YPoint = 1068;
         public static int BlockWidth = 140;
         public static int BlockHeight = 30;
 
@@ -138,10 +140,7 @@ namespace SkyStopwatch
 
                 if (onlyReturnPartOfImage) //for speed up
                 {
-                    int x = (int)(screenRect.Width * XPercent);
-                    int y = (int)(screenRect.Height * YPercent);
-
-                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(x, y, BlockWidth, BlockHeight), bitPic.PixelFormat))
+                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitPic.PixelFormat))
                     {
                         return BitmapToBytes(cloneBitmap);
                     }
@@ -227,11 +226,9 @@ namespace SkyStopwatch
 
                 //for speed up - only read part of the file
                 Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-                int x = (int)(screenRect.Width * XPercent);
-                int y = (int)(screenRect.Height * YPercent);
 
                 using (Bitmap bitmap = new Bitmap(imgPath))
-                using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(x, y, BlockWidth, BlockHeight), bitmap.PixelFormat))
+                using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitmap.PixelFormat))
                 {
 
                     byte[] bytes = BitmapToBytes(cloneBitmap);
