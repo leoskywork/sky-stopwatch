@@ -22,6 +22,7 @@ namespace SkyStopwatch
             if (Environment.MachineName == "LEO-PC-PRO")
             {
                 //MainOCR.BootingArgs = 5;// 0;// 2;
+                //PowerTool.Test();
             }
 
             //if (MainOCR.IsDebugging)
@@ -74,6 +75,12 @@ namespace SkyStopwatch
             MainOCR.YPoint = Math.Min(MainOCR.YPoint, screenRect.Height - MainOCR.BlockHeight);
             MainOCRPrice.XPoint = Math.Min(MainOCRPrice.XPoint, screenRect.Width - MainOCRPrice.BlockWidth);
             MainOCRPrice.YPoint = Math.Min(MainOCRPrice.YPoint, screenRect.Height - MainOCRPrice.BlockHeight);
+
+            if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ProcessListCSV))
+            {
+                var processes = Properties.Settings.Default.ProcessListCSV.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                MainOCR.ProcessList.AddRange(processes);
+            }
         }
 
         private static void SaveAppConfig()
@@ -89,6 +96,8 @@ namespace SkyStopwatch
 
                 Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(MainOCRPrice.XPoint, MainOCRPrice.YPoint);
                 Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(MainOCRPrice.BlockWidth, MainOCRPrice.BlockHeight);
+
+                Properties.Settings.Default.ProcessListCSV = MainOCR.ProcessList.Count > 0 ? string.Join(",", MainOCR.ProcessList) : string.Empty;
 
                 Properties.Settings.Default.Save();
             }

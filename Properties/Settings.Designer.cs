@@ -106,5 +106,17 @@ namespace SkyStopwatch.Properties {
                 this["TimeNodeCheckingList"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("crossfire,overwatch2,csgo")]
+        public string ProcessListCSV {
+            get {
+                return ((string)(this["ProcessListCSV"]));
+            }
+            set {
+                this["ProcessListCSV"] = value;
+            }
+        }
     }
 }

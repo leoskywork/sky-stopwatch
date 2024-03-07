@@ -60,7 +60,8 @@ namespace SkyStopwatch
         public static bool EnableTimeNodeChecking { get; set; } = true;
 
         public static int BootingArgs { get; set; } = 0;
-        public static bool TopMost = true;//false;
+        public static bool TopMost { get; set; } = true;//false;
+        public static List<string> ProcessList { get; set; } = new List<string>();
 
         //lazy way to do it, should be singleton
         public static event EventHandler ChangeTheme;

@@ -496,12 +496,15 @@ namespace SkyStopwatch
                     //this.labelTitle.Text = "23:59";
                 }
 
-                this.CheckTimeNodes();
-
-                if (_IsUpdatingPassedTime && _TimeAroundGameStart != DateTime.MinValue)
+                if (this.labelTimer.Visible)
                 {
-                    var passed = DateTime.Now - _TimeAroundGameStart;
-                    this.labelTimer.Text = passed.ToString(MainOCR.UIElapsedTimeFormat);
+                    this.CheckTimeNodes();
+
+                    if (_IsUpdatingPassedTime && _TimeAroundGameStart != DateTime.MinValue)
+                    {
+                        var passed = DateTime.Now - _TimeAroundGameStart;
+                        this.labelTimer.Text = passed.ToString(MainOCR.UIElapsedTimeFormat);
+                    }
                 }
             }
             catch (Exception ex)
@@ -576,14 +579,21 @@ namespace SkyStopwatch
         {
             try
             {
+                if (!labelTimer.Visible) return;
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
                 //buttonOCR.Enabled = false;
 
                 Task.Factory.StartNew(() =>
                 {
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
+                    //skip if no target process found
+                    if (!PowerTool.AnyAppConfigProcessRunning())
+                    {
+                        System.Diagnostics.Debug.WriteLine($"AnyAppConfigProcessRunning is false, return null, process list: {string.Join(",", MainOCR.ProcessList)}");
+                        return "-1";
+                    }
 
+                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
                     byte[] screenShotBytes = MainOCR.PrintScreenAsBytes(true);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
 
@@ -635,12 +645,23 @@ namespace SkyStopwatch
 
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
-                            if (_AutoOCRTimeOfLastRead != ocrDisplayTime)
+                            if (ocrDisplayTime == "-1")
+                            {
+                                this.labelTimer.Text = "--";
+                                _TimeAroundGameStart = DateTime.MinValue;
+                            }
+                            else if (ocrDisplayTime != _AutoOCRTimeOfLastRead)
                             {
                                 _AutoOCRTimeOfLastRead = ocrDisplayTime;
                                 StartUIStopwatch(ocrDisplayTime, MainOCR.AutoOCRDelaySeconds);
                             }
                             //else the same, the time of this read is a repeat read, the data is not fresh
+                        }
+                        else if (_TimeAroundGameStart == DateTime.MinValue)
+                        {
+                            int second = DateTime.Now.Second;
+                            this.labelTimer.Text = second % 2 == 0 ? null : ".";
+                            //this.labelTimer.Text = second % 3 == 0 ? "." : (second % 3 == 1 ? ".." : "...");
                         }
                         //else auto refresh failed, just use last result
 
