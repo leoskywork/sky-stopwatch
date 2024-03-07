@@ -85,18 +85,6 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10:30\\r\\n20:30\\r\\n35:00")]
-        public string TimeNodeCheckingList {
-            get {
-                return ((string)(this["TimeNodeCheckingList"]));
-            }
-            set {
-                this["TimeNodeCheckingList"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool TopMost {
             get {
@@ -104,6 +92,18 @@ namespace SkyStopwatch.Properties {
             }
             set {
                 this["TopMost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10:30\\r\\n20:30\\r\\n35:00")]
+        public string TimeNodeCheckingList {
+            get {
+                return ((string)(this["TimeNodeCheckingList"]));
+            }
+            set {
+                this["TimeNodeCheckingList"] = value;
             }
         }
     }

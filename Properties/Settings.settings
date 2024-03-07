@@ -17,11 +17,11 @@
     <Setting Name="BootingArgs" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="TimeNodeCheckingList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">10:30\r\n20:30\r\n35:00</Value>
-    </Setting>
     <Setting Name="TopMost" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TimeNodeCheckingList" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10:30\r\n20:30\r\n35:00</Value>
     </Setting>
   </Settings>
 </SettingsFile>

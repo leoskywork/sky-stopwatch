@@ -621,13 +621,13 @@ namespace SkyStopwatch
 
                 }).ContinueWith(t =>
                 {
-                    if (this.IsDead()) return;
-
                     if (t.IsFaulted)
                     {
                         this.OnError(t.Exception);
                         return;
                     }
+
+                    if (this.IsDead()) return;
 
                     this.RunOnMain(() =>
                     {

@@ -41,6 +41,7 @@ namespace SkyStopwatch
         {
             MainOCR.BootingArgs = Properties.Settings.Default.BootingArgs;
             MainOCR.TimeNodeCheckingList = Properties.Settings.Default.TimeNodeCheckingList;
+            MainOCR.TimeNodeCheckingList = LeotodoHackNewLine(MainOCR.TimeNodeCheckingList);
             MainOCR.TopMost = Properties.Settings.Default.TopMost;
 
             MainOCR.XPoint = Properties.Settings.Default.TimeViewPoint.X;
@@ -74,6 +75,11 @@ namespace SkyStopwatch
             {
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
+        }
+
+        private static string LeotodoHackNewLine(string appConfigValue)
+        {
+            return appConfigValue.Replace("\\r\\n", "\r\n");
         }
     }
 }
