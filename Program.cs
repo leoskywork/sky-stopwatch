@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -30,6 +31,17 @@ namespace SkyStopwatch
                 //MainOCR.TimeNodeCheckingList = "10:30\r\n20:30\r\n35:00";
             }
 
+
+            MainOCR.ChangeAppConfig += (_, e) =>
+            {
+                if (e.SaveRightNow)
+                {
+                    SaveAppConfig();
+                    System.Diagnostics.Debug.WriteLine($"saved app.config for {e.Source}");
+                }
+            };
+
+
             //Application.Run(new FormMain());
             //Application.Run(new FormBoot());
             var boot = new FormBoot();
@@ -44,6 +56,8 @@ namespace SkyStopwatch
             MainOCR.TimeNodeCheckingList = LeotodoHackNewLine(MainOCR.TimeNodeCheckingList);
             MainOCR.TopMost = Properties.Settings.Default.TopMost;
 
+
+
             MainOCR.XPoint = Properties.Settings.Default.TimeViewPoint.X;
             MainOCR.YPoint = Properties.Settings.Default.TimeViewPoint.Y;
             MainOCR.BlockWidth = Properties.Settings.Default.TimeViewSize.Width;
@@ -53,6 +67,13 @@ namespace SkyStopwatch
             MainOCRPrice.YPoint = Properties.Settings.Default.PriceViewPoint.Y;
             MainOCRPrice.BlockWidth = Properties.Settings.Default.PriceViewSize.Width;
             MainOCRPrice.BlockHeight = Properties.Settings.Default.PriceViewSize.Height;
+
+            //safe check
+            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+            MainOCR.XPoint = Math.Min(MainOCR.XPoint, screenRect.Width - MainOCR.BlockWidth);
+            MainOCR.YPoint = Math.Min(MainOCR.YPoint, screenRect.Height - MainOCR.BlockHeight);
+            MainOCRPrice.XPoint = Math.Min(MainOCRPrice.XPoint, screenRect.Width - MainOCRPrice.BlockWidth);
+            MainOCRPrice.YPoint = Math.Min(MainOCRPrice.YPoint, screenRect.Height - MainOCRPrice.BlockHeight);
         }
 
         private static void SaveAppConfig()
@@ -67,7 +88,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(MainOCR.BlockWidth, MainOCR.BlockHeight);
 
                 Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(MainOCRPrice.XPoint, MainOCRPrice.YPoint);
-                Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(MainOCRPrice.BlockHeight, MainOCRPrice.BlockWidth);
+                Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(MainOCRPrice.BlockWidth, MainOCRPrice.BlockHeight);
 
                 Properties.Settings.Default.Save();
             }

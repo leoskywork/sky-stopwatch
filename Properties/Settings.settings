@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="TimeViewPoint" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">1084, 1068</Value>
+      <Value Profile="(Default)">754, 770</Value>
     </Setting>
     <Setting Name="TimeViewSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">140, 30</Value>
     </Setting>
     <Setting Name="PriceViewPoint" Type="System.Drawing.Point" Scope="User">
-      <Value Profile="(Default)">1470, 240</Value>
+      <Value Profile="(Default)">1460, 240</Value>
     </Setting>
     <Setting Name="PriceViewSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">140, 740</Value>

@@ -51,18 +51,15 @@ namespace SkyStopwatch
                 int y = (int)this.numericUpDownY.Value;
                 int width = (int)this.numericUpDownWidth.Value;
                 int height = (int)this.numericUpDownHeight.Value;
-                var screenRect = Screen.PrimaryScreen.Bounds;
 
-                //in case the block is out of screen area
-                int safeWidth = Math.Min(width, screenRect.Width - x);
-                int safeHeight = Math.Min(height, screenRect.Height - y);
+                MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
                 MainOCRPrice.XPoint = x;
                 MainOCRPrice.YPoint = y;
-                MainOCRPrice.BlockWidth = safeWidth;
-                MainOCRPrice.BlockHeight = safeHeight;
+                MainOCRPrice.BlockWidth = width;
+                MainOCRPrice.BlockHeight = height;
 
-               
+                MainOCR.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
             }
             catch (Exception ex)
             {
@@ -89,12 +86,10 @@ namespace SkyStopwatch
                     int width = (int)this.numericUpDownWidth.Value;
                     int height = (int)this.numericUpDownHeight.Value;
 
-                    //in case the block is out of screen area
-                    int safeWidth = Math.Min(width, screenRect.Width - x);
-                    int safeHeight = Math.Min(height, screenRect.Height - y);
+                    MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
                     //can not use using block here, since we pass the bitmap into a view and show it
-                    var bitmapBlock = screenShot.Clone(new Rectangle(x, y, safeWidth, safeHeight), screenShot.PixelFormat);
+                    var bitmapBlock = screenShot.Clone(new Rectangle(x, y, width, height), screenShot.PixelFormat);
 
                     if(this.pictureBoxOne.Image!= null)
                     {

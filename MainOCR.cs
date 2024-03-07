@@ -27,6 +27,9 @@ namespace SkyStopwatch
         public static int BlockWidth = 140;
         public static int BlockHeight = 30;
 
+        public const int MinBlockWidth = 40;
+        public const int MinBlockHeight = 10;
+
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
         public const int NewGameDelaySeconds = 1;//10;
@@ -59,9 +62,10 @@ namespace SkyStopwatch
         public static int BootingArgs { get; set; } = 0;
         public static bool TopMost = true;//false;
 
-
+        //lazy way to do it, should be singleton
         public static event EventHandler ChangeTheme;
         public static event EventHandler CloseApp;
+        public static event EventHandler<ChangeAppConfigEventArgs> ChangeAppConfig;
 
         public static void PrintScreenAsFile(string path)
         {
@@ -372,6 +376,30 @@ namespace SkyStopwatch
             return result;
         }
 
+        public static void SafeCheckImageBlock(ref int x, ref int y, ref int width, ref int height)
+        {
+            var screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+
+            //in case the block is out of screen area
+            int safeWidth = Math.Min(width, screenRect.Width - x);
+            int safeHeight = Math.Min(height, screenRect.Height - y);
+
+            if (safeWidth < MainOCR.MinBlockWidth)
+            {
+                safeWidth = MainOCR.MinBlockWidth;
+                x = screenRect.Width - MainOCR.MinBlockWidth;
+            }
+
+            if (safeHeight < MainOCR.MinBlockHeight)
+            {
+                safeHeight = MainOCR.MinBlockHeight;
+                y = screenRect.Height - MainOCR.MinBlockHeight;
+            }
+
+            width = safeWidth; 
+            height = safeHeight;
+        }
+
         public static void FireChangeTheme()
         {
            ChangeTheme?.Invoke(null, null);
@@ -380,6 +408,23 @@ namespace SkyStopwatch
         public static void FireCloseApp()
         {
             CloseApp?.Invoke(null, null);
+        }
+
+        public static void FireChangeAppConfig(ChangeAppConfigEventArgs e)
+        {
+            ChangeAppConfig?.Invoke(null, e);
+        }
+    }
+
+    public class ChangeAppConfigEventArgs : EventArgs
+    {
+        public string Source { get; set; }
+        public bool SaveRightNow { get; set; }
+
+        public ChangeAppConfigEventArgs(string source, bool saveRightNow)
+        {
+            this.Source = source;
+            this.SaveRightNow = saveRightNow;
         }
     }
 
@@ -435,5 +480,7 @@ namespace SkyStopwatch
                 action();
             }
         }
+
+        
     }
 }

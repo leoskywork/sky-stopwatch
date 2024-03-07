@@ -25,7 +25,7 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1084, 1068")]
+        [global::System.Configuration.DefaultSettingValueAttribute("754, 770")]
         public global::System.Drawing.Point TimeViewPoint {
             get {
                 return ((global::System.Drawing.Point)(this["TimeViewPoint"]));
@@ -49,7 +49,7 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("1470, 240")]
+        [global::System.Configuration.DefaultSettingValueAttribute("1460, 240")]
         public global::System.Drawing.Point PriceViewPoint {
             get {
                 return ((global::System.Drawing.Point)(this["PriceViewPoint"]));
