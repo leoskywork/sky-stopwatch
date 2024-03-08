@@ -222,7 +222,7 @@ namespace SkyStopwatch
 
             //time only
             //this.labelTitle.BackColor = System.Drawing.Color.Gray;
-            this.labelTitle.Text = "LEO";
+            this.labelTitle.Text = "time";
             this.labelTitle.Size = new System.Drawing.Size(80, 32);
             this.labelTitle.Location = new System.Drawing.Point(2, 3);
             this.labelTitle.Font = new System.Drawing.Font("SimSun", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
