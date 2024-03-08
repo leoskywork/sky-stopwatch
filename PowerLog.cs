@@ -71,7 +71,7 @@ namespace SkyStopwatch
                 return;
             }
 
-            if(_PathDate != DateTime.Today)
+            if (_PathDate != DateTime.Today)
             {
                 _PathDate = DateTime.Today;
                 _Path = GetDefaultPath();
@@ -79,7 +79,7 @@ namespace SkyStopwatch
                 System.Diagnostics.Debug.WriteLine($"log file path: {_Path}");
             }
 
-            string detail = $"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}{Environment.NewLine}";
+            string detail = $"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}{(saveScreen ? ", screen shot saved" : null)}";
             Bitmap screenShot = null;
             Graphics graphics = null;
             DateTime createTime = DateTime.Now;
@@ -102,7 +102,7 @@ namespace SkyStopwatch
                     screenShot.Dispose();
                 }
 
-                File.AppendAllText(_Path, detail);
+                File.AppendAllText(_Path, detail + Environment.NewLine);
             });
         }
     }
