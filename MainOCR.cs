@@ -39,7 +39,7 @@ namespace SkyStopwatch
         public const int IncrementMinutes = 1;
         public const int DecrementMinutes = 1;
         public const int TmpFileMaxCount = 5;
-        public const int TmpLogFileMaxCount = 100;
+        public const int TmpLogFileMaxCount = 200;
         public const int TimeNodeEarlyWarningSeconds = 15;//20;//30;
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
         public const int PreRoundGameMinutes = 30;

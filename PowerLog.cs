@@ -61,7 +61,7 @@ namespace SkyStopwatch
             System.Diagnostics.Debug.WriteLine($"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}");
         }
 
-        public void Async(string message, string source = null, bool saveScreen = false)
+        public void SaveAsync(string message, string source = null, bool saveScreen = false)
         {
             Console(message, source);
 

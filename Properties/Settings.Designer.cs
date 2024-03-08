@@ -109,18 +109,6 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool LogToFile {
-            get {
-                return ((bool)(this["LogToFile"]));
-            }
-            set {
-                this["LogToFile"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("crossfire,overwatch2,csgo,devenv")]
         public string ProcessListCSV {
             get {
@@ -128,6 +116,18 @@ namespace SkyStopwatch.Properties {
             }
             set {
                 this["ProcessListCSV"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LogToFile {
+            get {
+                return ((bool)(this["LogToFile"]));
+            }
+            set {
+                this["LogToFile"] = value;
             }
         }
     }
