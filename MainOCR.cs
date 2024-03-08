@@ -15,6 +15,7 @@ namespace SkyStopwatch
 {
     public class MainOCR
     {
+        public const string Version = "4.0.0309";
         //public const int XPercent = 32;
         //public const int YPercent = 68;
         //public const int BlockWidth = 300;
