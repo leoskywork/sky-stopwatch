@@ -25,15 +25,13 @@ namespace SkyStopwatch
             {
                 //MainOCR.BootingArgs = 5;// 0;// 2;
                 //PowerTool.Test();
-            }
+                //MainOCR.ProcessList.Add("devenv");
+                //MainOCR.ProcessList.Remove("devenv");
 
-            //if (MainOCR.IsDebugging)
-            {
                 //MainOCR.TimeNodeCheckingList = "1:00";
                 //MainOCR.TimeNodeCheckingList = "1:00\r\n02:30\r\n10:00";
                 //MainOCR.TimeNodeCheckingList = "10:30\r\n20:30\r\n35:00";
             }
-
 
             MainOCR.ChangeAppConfig += (_, e) =>
             {
@@ -44,11 +42,10 @@ namespace SkyStopwatch
                 }
             };
 
-
             //Application.Run(new FormMain());
             //Application.Run(new FormBoot());
             var boot = new FormBoot();
-            boot.FormClosed += (_, __) => { SaveAppConfig(); };
+            boot.FormClosed += (_, __) => SaveAppConfig();
             Application.Run(boot);
         }
 
