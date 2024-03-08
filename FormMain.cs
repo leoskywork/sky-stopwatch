@@ -256,7 +256,8 @@ namespace SkyStopwatch
 
             if (oldTime != newTime)
             {
-                this.Log().Async($"set game start: {newTime.ToString(MainOCR.TimeFormat6Digits)}", source);
+                bool saveScreen = newTime != DateTime.MinValue;
+                this.Log().Async($"set game start: {newTime.ToString(MainOCR.TimeFormat6Digits)}", source, saveScreen);
             }
         }
 
