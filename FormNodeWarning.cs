@@ -27,6 +27,12 @@ namespace SkyStopwatch
             //do this at last
             this.timerClose.Interval = 1000;
             this.timerClose.Start();
+            MainOCR.ChangeGameStartTime += MainOCR_ChangeGameStartTime;
+        }
+
+        private void MainOCR_ChangeGameStartTime(object sender, ChangeGameStartTimeEventArgs e)
+        {
+            this.Close();
         }
 
         private void timerClose_Tick(object sender, EventArgs e)
@@ -47,6 +53,7 @@ namespace SkyStopwatch
         {
             _BeforeClose?.Invoke();
             _BeforeClose = null;
+            MainOCR.ChangeGameStartTime -= MainOCR_ChangeGameStartTime;
         }
 
 

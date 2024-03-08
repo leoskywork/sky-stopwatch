@@ -71,6 +71,7 @@ namespace SkyStopwatch
         public static event EventHandler ChangeTheme;
         public static event EventHandler CloseApp;
         public static event EventHandler<ChangeAppConfigEventArgs> ChangeAppConfig;
+        public static event EventHandler<ChangeGameStartTimeEventArgs> ChangeGameStartTime;
 
         public static void PrintScreenAsFile(string path)
         {
@@ -419,6 +420,11 @@ namespace SkyStopwatch
         {
             ChangeAppConfig?.Invoke(null, e);
         }
+
+        public static void FireChangeGameStartTime(ChangeGameStartTimeEventArgs e)
+        {
+            ChangeGameStartTime?.Invoke(null, e);
+        }
     }
 
     public class ChangeAppConfigEventArgs : EventArgs
@@ -430,6 +436,16 @@ namespace SkyStopwatch
         {
             this.Source = source;
             this.SaveRightNow = saveRightNow;
+        }
+    }
+
+    public class ChangeGameStartTimeEventArgs: EventArgs
+    {
+        public DateTime NewTime{ get; set; }
+
+        public ChangeGameStartTimeEventArgs(DateTime time)
+        {
+                NewTime = time;
         }
     }
 
