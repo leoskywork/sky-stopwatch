@@ -56,7 +56,7 @@ namespace SkyStopwatch
             MainOCR.TimeNodeCheckingList = Properties.Settings.Default.TimeNodeCheckingList;
             MainOCR.TimeNodeCheckingList = LeotodoHackNewLine(MainOCR.TimeNodeCheckingList);
             MainOCR.TopMost = Properties.Settings.Default.TopMost;
-
+            MainOCR.LogToFile = Properties.Settings.Default.LogToFile;
 
 
             MainOCR.XPoint = Properties.Settings.Default.TimeViewPoint.X;
@@ -90,6 +90,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.BootingArgs = MainOCR.BootingArgs;
                 Properties.Settings.Default.TimeNodeCheckingList = MainOCR.TimeNodeCheckingList;
                 Properties.Settings.Default.TopMost = MainOCR.TopMost;
+                Properties.Settings.Default.LogToFile = MainOCR.LogToFile;
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(MainOCR.XPoint, MainOCR.YPoint);
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(MainOCR.BlockWidth, MainOCR.BlockHeight);

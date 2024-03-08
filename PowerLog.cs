@@ -1,0 +1,85 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SkyStopwatch
+{
+    public class PowerLog
+    {
+        public static PowerLog One { get; } = new PowerLog();
+
+
+        private string _Path;
+        private DateTime _PathDate = DateTime.MinValue;
+
+        public PowerLog()
+        {
+            //_PathDate = DateTime.Today;
+            //_Path = GetDefaultPath();
+        }
+
+        private static string GetDefaultPath()
+        {
+            string exePath = Assembly.GetExecutingAssembly().Location;
+            string exeDirectory = Path.GetDirectoryName(exePath);
+            string subFolder = Path.Combine(exeDirectory, "tmp-log");
+
+            string fileName = "ocr-log-" + DateTime.Now.ToString("yyyy-MMdd") + ".log";
+            string path = Path.Combine(subFolder, fileName);
+
+            if (!Directory.Exists(subFolder))
+            {
+                Directory.CreateDirectory(subFolder);
+            }
+
+            if (Directory.GetFiles(subFolder).Length > MainOCR.TmpLogFileMaxCount)
+            {
+                try
+                {
+                    Directory.Delete(subFolder, true);
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine(ex.ToString());
+                }
+
+                Directory.CreateDirectory(subFolder);
+            }
+
+            return path;
+        }
+
+        public void Console(string message, string source = null)
+        {
+            System.Diagnostics.Debug.WriteLine($"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}");
+        }
+
+        public void Async(string message, string source = null)
+        {
+            Console(message, source);
+
+            if (!MainOCR.LogToFile)
+            {
+                System.Diagnostics.Debug.WriteLine($"not going to log to file, switch is off");
+                return;
+            }
+
+            if(_PathDate != DateTime.Today)
+            {
+                _PathDate = DateTime.Today;
+                _Path = GetDefaultPath();
+                System.Diagnostics.Debug.WriteLine($"log file path: {_Path}");
+            }
+
+            string detail = $"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}{Environment.NewLine}";
+            Task.Run(() =>
+            {
+                File.AppendAllText(_Path, detail);
+            });
+        }
+    }
+}

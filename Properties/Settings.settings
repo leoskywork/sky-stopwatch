@@ -23,8 +23,11 @@
     <Setting Name="TimeNodeCheckingList" Type="System.String" Scope="User">
       <Value Profile="(Default)">10:30\r\n20:30\r\n35:00</Value>
     </Setting>
+    <Setting Name="LogToFile" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
     <Setting Name="ProcessListCSV" Type="System.String" Scope="User">
-      <Value Profile="(Default)">crossfire,overwatch2,csgo</Value>
+      <Value Profile="(Default)">crossfire,overwatch2,csgo,devenv</Value>
     </Setting>
   </Settings>
 </SettingsFile>

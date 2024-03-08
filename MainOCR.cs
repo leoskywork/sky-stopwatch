@@ -39,6 +39,7 @@ namespace SkyStopwatch
         public const int IncrementMinutes = 1;
         public const int DecrementMinutes = 1;
         public const int TmpFileMaxCount = 5;
+        public const int TmpLogFileMaxCount = 10;
         public const int TimeNodeEarlyWarningSeconds = 15;//20;//30;
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
         public const int PreRoundGameMinutes = 30;
@@ -46,6 +47,7 @@ namespace SkyStopwatch
         public const string TimeSpanFormat = @"hh\:mm\:ss";
         public const string TImeSpanFormatNoHour = @"mm\:ss";
         public const string TimeFormatNoSecond = @"H\:mm";
+        public const string TimeFormat6Digits = @"H\:mm\:ss";
         public const string UIElapsedTimeFormat = @"m\:ss";
 
         public const string OCRLanguage = "eng"; //chi_sim;
@@ -62,6 +64,8 @@ namespace SkyStopwatch
         public static int BootingArgs { get; set; } = 0;
         public static bool TopMost { get; set; } = true;//false;
         public static List<string> ProcessList { get; set; } = new List<string>();
+
+        public static bool LogToFile { get; set; } = false;
 
         //lazy way to do it, should be singleton
         public static event EventHandler ChangeTheme;
@@ -459,6 +463,7 @@ namespace SkyStopwatch
 
             if (form.InvokeRequired)
             {
+                if (form.IsDead()) return; //not sure why, the is dead check above not working sometimes, do it again here
                 form.Invoke(action);
             }
             else
@@ -482,6 +487,10 @@ namespace SkyStopwatch
             }
         }
 
+        public static PowerLog Log(this Form form)
+        {
+            return PowerLog.One;
+        }
         
     }
 }

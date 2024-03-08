@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="MainOCRPrice.cs" />
     <Compile Include="MainTheme.cs" />
+    <Compile Include="PowerLog.cs" />
     <Compile Include="PowerTool.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

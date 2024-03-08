@@ -249,6 +249,17 @@ namespace SkyStopwatch
             this.buttonToolBox.Text = MainOCR.TopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
+        private void SetGameStartTime(DateTime newTime, string source)
+        {
+            DateTime oldTime = _TimeAroundGameStart;
+            _TimeAroundGameStart = newTime;
+
+            if (oldTime != newTime)
+            {
+                this.Log().Async($"set game start: {newTime.ToString(MainOCR.TimeFormat6Digits)}", source);
+            }
+        }
+
         private void buttonOCR_Click(object sender, EventArgs e)
         {
             try
@@ -289,7 +300,7 @@ namespace SkyStopwatch
                     passedSeconds = 0;
                 }
 
-                _TimeAroundGameStart = DateTime.Now.AddSeconds(passedSeconds * -1);
+                SetGameStartTime(DateTime.Now.AddSeconds(passedSeconds * -1), $"{nameof(StartUIStopwatch)}, ocr: {ocrDisplayTime}");
                 this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(MainOCR.UIElapsedTimeFormat);
             }
             else
@@ -551,7 +562,7 @@ namespace SkyStopwatch
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} clear");
 
                 _IsUpdatingPassedTime = false;
-                _TimeAroundGameStart = DateTime.MinValue;
+                SetGameStartTime(DateTime.MinValue, nameof(OnClearOCR));
                 _IsAutoRefreshing = false;
                 _AutoOCRTimeOfLastRead = string.Empty;
 
@@ -589,7 +600,7 @@ namespace SkyStopwatch
                     //skip if no target process found
                     if (!PowerTool.AnyAppConfigProcessRunning())
                     {
-                        System.Diagnostics.Debug.WriteLine($"AnyAppConfigProcessRunning is false, return null, process list: {string.Join(",", MainOCR.ProcessList)}");
+                        //System.Diagnostics.Debug.WriteLine($"AnyAppConfigProcessRunning is false, return null, process list: {string.Join(",", MainOCR.ProcessList)}");
                         return "-1";
                     }
 
@@ -648,7 +659,7 @@ namespace SkyStopwatch
                             if (ocrDisplayTime == "-1")
                             {
                                 this.labelTimer.Text = "--";
-                                _TimeAroundGameStart = DateTime.MinValue;
+                                SetGameStartTime(DateTime.MinValue, "ocrDisplayTime is -1");
                             }
                             else if (ocrDisplayTime != _AutoOCRTimeOfLastRead)
                             {
