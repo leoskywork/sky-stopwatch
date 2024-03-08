@@ -637,7 +637,12 @@ namespace SkyStopwatch
                         System.Diagnostics.Debug.WriteLine($"tmp file: {tmpPath}");
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
-                    
+
+                    //bug: 21:06:04.969 [StartUIStopwatch, ocr: 22:44:34]: set game start: 21:06:04, screen shot saved
+                    if (timeString != null && timeString.Length > 2 && int.TryParse(timeString.Substring(0, 2), out int hour) && hour != 0)
+                    {
+                        this.Log().SaveAsync($"hour not 0, ocr: [{data}], parsed: [{timeString}]", "timerAutoRefresh_Tick", screenShotBytes);
+                    }
 
                     return timeString;
 

@@ -71,13 +71,7 @@ namespace SkyStopwatch
                 return;
             }
 
-            if (_PathDate != DateTime.Today)
-            {
-                _PathDate = DateTime.Today;
-                _Path = GetDefaultPath();
-                _Folder = Path.GetDirectoryName(_Path);
-                System.Diagnostics.Debug.WriteLine($"log file path: {_Path}");
-            }
+            CheckDayRollover();
 
             string detail = $"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}{(saveScreen ? ", screen shot saved" : null)}";
             Bitmap screenShot = null;
@@ -96,8 +90,8 @@ namespace SkyStopwatch
             {
                 if (saveScreen)
                 {
-                    string fileName = $"{Path.GetFileNameWithoutExtension(_Path)}-screen-{createTime.ToString("HHmmss")}.bmp";
-                    screenShot.Save(Path.Combine(_Folder, fileName));
+                    string imageName = $"{Path.GetFileNameWithoutExtension(_Path)}-screen-{createTime.ToString("HHmmss")}.bmp";
+                    screenShot.Save(Path.Combine(_Folder, imageName));
                     graphics.Dispose();
                     screenShot.Dispose();
                 }
@@ -105,5 +99,49 @@ namespace SkyStopwatch
                 File.AppendAllText(_Path, detail + Environment.NewLine);
             });
         }
+
+
+        private void CheckDayRollover()
+        {
+            if (_PathDate != DateTime.Today)
+            {
+                _PathDate = DateTime.Today;
+                _Path = GetDefaultPath();
+                _Folder = Path.GetDirectoryName(_Path);
+                System.Diagnostics.Debug.WriteLine($"log file path: {_Path}");
+            }
+        }
+
+        public void SaveAsync(string message, string source, byte[] imageData)
+        {
+            Console(message, source);
+
+            if (!MainOCR.LogToFile)
+            {
+                System.Diagnostics.Debug.WriteLine($"not going to log to file, switch is off");
+                return;
+            }
+
+            CheckDayRollover();
+
+            string detail = $"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}{", bytes saved"}";
+            DateTime createTime = DateTime.Now;
+
+            //write to disk, do it on background thread
+            Task.Run(() =>
+            {
+                string imageName = $"{Path.GetFileNameWithoutExtension(_Path)}-bytes-before-{createTime.ToString("HHmmss")}.bmp";
+                string imagePath = Path.Combine(_Folder, imageName);
+
+                using (Bitmap image = MainOCR.BytesToBitmap(imageData))
+                {
+                    image.Save(imagePath);
+                }
+
+                File.AppendAllText(_Path, detail + Environment.NewLine);
+            });
+        }
+
+
     }
 }
