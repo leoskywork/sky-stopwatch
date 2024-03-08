@@ -219,7 +219,7 @@ namespace SkyStopwatch
         private void SetDialogTitle()
         {
             string prefix = MainOCR.IsDebugging ? $"debugging - OCR data {MainOCR.OCRTessdataFolder}" : "Tool box - dialog will auto close";
-            this.Text = $"{prefix} - v{MainOCR.Version}";
+            this.Text = $"{prefix} - v{Program.Version}";
         }
 
 
