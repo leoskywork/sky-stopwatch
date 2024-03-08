@@ -86,12 +86,12 @@ namespace SkyStopwatch.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool TopMost {
+        public bool EnableTopMost {
             get {
-                return ((bool)(this["TopMost"]));
+                return ((bool)(this["EnableTopMost"]));
             }
             set {
-                this["TopMost"] = value;
+                this["EnableTopMost"] = value;
             }
         }
         
@@ -122,12 +122,24 @@ namespace SkyStopwatch.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool LogToFile {
+        public bool EnableLogToFile {
             get {
-                return ((bool)(this["LogToFile"]));
+                return ((bool)(this["EnableLogToFile"]));
             }
             set {
-                this["LogToFile"] = value;
+                this["EnableLogToFile"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableCheckTimeNode {
+            get {
+                return ((bool)(this["EnableCheckTimeNode"]));
+            }
+            set {
+                this["EnableCheckTimeNode"] = value;
             }
         }
     }

@@ -29,7 +29,6 @@ namespace SkyStopwatch
         }
 
         public FormToolBox(Bitmap image,
-            string message,
             Action<Button, string> onInit = null,
             Action runOCR = null,
             Action onNewGame = null,
@@ -41,7 +40,7 @@ namespace SkyStopwatch
         {
 
             this.pictureBoxOne.Image = image;
-            this.labelMessage.Text = message;
+            this.labelMessage.Text = "<hover to show config>";
 
             _RunOCR = runOCR;
             _NewGameClick = onNewGame;
@@ -67,7 +66,7 @@ namespace SkyStopwatch
            
 
             this.checkBoxDebugging.Checked = MainOCR.IsDebugging;
-            this.checkBoxPopWarning.Checked = MainOCR.EnableTimeNodeChecking;
+            this.checkBoxPopWarning.Checked = MainOCR.EnableCheckTimeNode;
             this.textBoxTimeSpanNodes.Text = MainOCR.TimeNodeCheckingList;
 
 
@@ -87,7 +86,7 @@ namespace SkyStopwatch
             SetMainOCRBootingArgsAndButtonText();
 
             this.buttonTopMost.Visible = false;
-            this.checkBoxTopMost.Checked = MainOCR.TopMost;
+            this.checkBoxTopMost.Checked = MainOCR.EnableTopMost;
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
@@ -166,8 +165,8 @@ namespace SkyStopwatch
         private void checkBoxPopWarning_CheckedChanged(object sender, EventArgs e)
         {
             this.groupBoxTimeNode.Enabled = this.checkBoxPopWarning.Checked;
+            MainOCR.EnableCheckTimeNode = this.checkBoxPopWarning.Checked;
 
-            MainOCR.EnableTimeNodeChecking = this.checkBoxPopWarning.Checked;
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 
@@ -295,6 +294,26 @@ namespace SkyStopwatch
         {
             System.Diagnostics.Debug.WriteLine($"----- checkBoxTopMost_CheckedChanged, checked: {this.checkBoxTopMost.Checked}");
             _TopMostClick?.Invoke();
+        }
+
+        private void labelMessage_MouseHover(object sender, EventArgs e)
+        {
+            ToolTip tip = new ToolTip();
+
+            tip.AutoPopDelay = 5000;//提示信息的可见时间
+            tip.InitialDelay = 50;// 500;//事件触发多久后出现提示
+            tip.ReshowDelay = 500;//指针从一个控件移向另一个控件时，经过多久才会显示下一个提示框
+            tip.ShowAlways = true;
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append($"{nameof(MainOCR.EnableLogToFile)}: {MainOCR.EnableLogToFile}");
+            builder.Append(Environment.NewLine);
+
+            builder.Append($"{nameof(MainOCR.ProcessList)}: ");
+            MainOCR.ProcessList.ForEach(p => builder.Append(p + ","));
+            builder.Remove(builder.Length - 1, 1); //remove the last comma (,)
+
+            tip.SetToolTip(this.labelMessage, builder.ToString());
         }
     }
 }

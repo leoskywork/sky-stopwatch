@@ -65,7 +65,7 @@ namespace SkyStopwatch
         {
             Console(message, source);
 
-            if (!MainOCR.LogToFile)
+            if (!MainOCR.EnableLogToFile)
             {
                 System.Diagnostics.Debug.WriteLine($"not going to log to file, switch is off");
                 return;
@@ -116,7 +116,7 @@ namespace SkyStopwatch
         {
             Console(message, source);
 
-            if (!MainOCR.LogToFile)
+            if (!MainOCR.EnableLogToFile)
             {
                 System.Diagnostics.Debug.WriteLine($"not going to log to file, switch is off");
                 return;

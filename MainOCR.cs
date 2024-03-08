@@ -60,14 +60,12 @@ namespace SkyStopwatch
         //public static bool ShowSystemClock { get; set; } = true;
         //does not default this to Empty, since user may clear up the list
         public static string TimeNodeCheckingList { get; set; } = null;
-        public static bool EnableTimeNodeChecking { get; set; } = true;
+        public static bool EnableCheckTimeNode { get; set; } = true;
+        public static bool EnableTopMost { get; set; } = true;//false;
+        public static bool EnableLogToFile { get; set; } = false;
 
         public static int BootingArgs { get; set; } = 0;
-        public static bool TopMost { get; set; } = true;//false;
         public static List<string> ProcessList { get; set; } = new List<string>();
-
-        public static bool LogToFile { get; set; } = false;
-
         //lazy way to do it, should be singleton
         public static event EventHandler ChangeTheme;
         public static event EventHandler CloseApp;
@@ -478,9 +476,11 @@ namespace SkyStopwatch
             if(action == null) return;
             if(form.IsDead()) return;
 
+            System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed} - before if");
             if (form.InvokeRequired)
             {
                 if (form.IsDead()) return; //not sure why, the is dead check above not working sometimes, do it again here
+                System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed}");
                 form.Invoke(action);
             }
             else

@@ -245,8 +245,8 @@ namespace SkyStopwatch
 
         private void SyncTopMost()
         {
-            this.TopMost = MainOCR.TopMost;
-            this.buttonToolBox.Text = MainOCR.TopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+            this.TopMost = MainOCR.EnableTopMost;
+            this.buttonToolBox.Text = MainOCR.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void SetGameStartTime(DateTime newTime, string source)
@@ -345,7 +345,7 @@ namespace SkyStopwatch
                         //can not use using block here, since we pass the bitmap into a form and show it
                         Bitmap cloneBitmap = bitPic.Clone(new Rectangle(MainOCR.XPoint, MainOCR.YPoint, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
                         {
-                            FormToolBox tool = CreateToolBox(cloneBitmap, "current screen");
+                            FormToolBox tool = CreateToolBox(cloneBitmap);
                             tool.StartPosition = FormStartPosition.Manual;
                             tool.Location = new Point(this.Location.X - tool.Width + this.Width + 10, this.Location.Y + this.Size.Height + 24);
                             tool.Show();
@@ -361,21 +361,16 @@ namespace SkyStopwatch
             }
         }
 
-        private FormToolBox CreateToolBox(Bitmap bitmap, string source)
+        private FormToolBox CreateToolBox(Bitmap bitmap)
         {
-            FormToolBox tool = new FormToolBox(
-                               bitmap,
-                                source,
+            FormToolBox tool = new FormToolBox(bitmap,
                                (_, __) => { this.OnInitToolBox(_, __); },
                                () => { this.OnRunOCR(); },
                                () => { this.OnNewGameStart(); },
                                () => { this.OnSwitchTopMost(); },
                                () => { this.OnClearOCR(); },
                                (_) => { this.OnAddSeconds(_); },
-                               (_) => { this.OnChangeTimeNodes(_); }
-                               );
-
-
+                               (_) => { this.OnChangeTimeNodes(_); });
 
             return tool;
         }
@@ -494,7 +489,7 @@ namespace SkyStopwatch
 
         private void OnSwitchTopMost()
         {
-            MainOCR.TopMost = !MainOCR.TopMost;
+            MainOCR.EnableTopMost = !MainOCR.EnableTopMost;
             SyncTopMost();
         }
 
@@ -528,7 +523,7 @@ namespace SkyStopwatch
 
         private void CheckTimeNodes()
         {
-            if (!MainOCR.EnableTimeNodeChecking) return;
+            if (!MainOCR.EnableCheckTimeNode) return;
             if (string.IsNullOrWhiteSpace(MainOCR.TimeNodeCheckingList)) return;
             if (_TimeAroundGameStart == DateTime.MinValue) return;
             if (_HasTimeNodeWarningPopped) return;
