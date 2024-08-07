@@ -39,7 +39,6 @@ namespace SkyStopwatch
          {
             this.labelKill.Cursor = Cursors.Arrow;
             this.labelMessage.Text = "-";
-            //this.labelGroupNumber.Text = "-";
             this.labelTotal.Text = "-";
         }
 
@@ -48,24 +47,12 @@ namespace SkyStopwatch
             if(_BossCallGroups == null ||  _BossCallGroups.Count == 0)
             {
                 this.labelMessage.Text = DateTime.Now.Second % 2 == 1 ?  "." : "";
-                //this.labelGroupNumber.Text = "-";
                 this.labelTotal.Text = "-";
                 return; 
             }
 
-            this.labelMessage.Text = _BossCallGroups.Last().Calls.Count.ToString();
-
-
-            //if (_AutoSlice)
-            //{
-            //    this.labelGroupNumber.Text = "n." + _BossCallGroups.Count.ToString();
-            //}
-            //else
-            //{
-            //    this.labelGroupNumber.Text = "n.1";
-            //}
-
-            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Count)}.P{this._BossCallGroups.Count}";
+            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.IsValid).Count().ToString();
+            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.IsValid).Count())}.P{this._BossCallGroups.Count}";
         }
 
         private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)

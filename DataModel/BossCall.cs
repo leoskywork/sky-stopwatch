@@ -13,6 +13,21 @@ namespace SkyStopwatch.DataModel
 
         //public int GroupId { get; set; }
 
-        public DateTime CreatedAt { get; set; }
+        public BossCall()
+        {
+            
+        }
+
+        public DateTime MatchTimeFirst { get; set; }
+        public DateTime MatchTimeSecond { get; set; }
+
+        public bool IsValid { get; set; }
+         
+
+        public int OCRLastMatch { get; set; }
+
+        public string OCRMatchList { get; set; }
+
+         
     }
 }

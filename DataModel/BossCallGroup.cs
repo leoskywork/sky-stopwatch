@@ -10,7 +10,7 @@ namespace SkyStopwatch.DataModel
     {
         public List<BossCall> Calls { get; set; } = new List<BossCall>();
 
-        public DateTime FirstCallTime { get; set; }
-        public DateTime LastCallTime { get; set;}
+        //public DateTime FirstCallTime { get; set; }
+        //public DateTime LastCallTime { get; set;}
     }
 }

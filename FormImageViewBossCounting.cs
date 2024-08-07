@@ -67,6 +67,7 @@ namespace SkyStopwatch
         private void ResetBossCallCounting()
         {
             _BossGroups.Clear();
+            _BossGroups.Add(new BossCallGroup());
             _ApproximateGameRoundStartTime = DateTime.Now;
         }
 
@@ -275,59 +276,61 @@ namespace SkyStopwatch
 
                 _IsComparing = true;
                 this._CompareCount++;
-                bool enableAutoSlice = this.checkBoxAutoSlice.Checked;
+                //leotodo
+                //bool enableAutoSlice = this.checkBoxAutoSlice.Checked;
 
                 Task.Factory.StartNew(() =>
                 {
 
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
-
                     if (_AutoOCREngine == null)
                     {
                         _AutoOCREngine = MainOCRBossCounting.GetDefaultOCREngine();
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
                     }
 
-                    byte[] rawData = _BossCallImageQueue.Dequeue();
-                    string ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
+                    var rawData = _BossCallImageQueue.Dequeue();
+                    var ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
+                    var lastBossCall = _BossGroups.Last().Calls.LastOrDefault();
+                    int ocrLastMatchDigit = 5;
 
-                    var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, MainOCRBossCounting.Candidate1, MainOCRBossCounting.Candidate2);
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
+                    if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.MatchTimeFirst.AddSeconds(4) > DateTime.Now)
+                    {
+                        ocrLastMatchDigit = lastBossCall.OCRLastMatch - 1;
+                    }
+
+                    var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrLastMatchDigit, ocrLastMatchDigit - 1);
 
                     if (found.Item1)
                     {
-                        _LastBossCallFoundTime = DateTime.Now;
-                        var bossCall = new BossCall() { CreatedAt = _LastBossCallFoundTime };
-
-                        //leotodo need this ???
-                        //if (_ApproximateGameRoundStartTime.AddMinutes(MainOCR.MaxGameRoundMinutes) < DateTime.Now)
-                        //{
-                        //    ResetBossCallCounting();
-                        //}
-
-                        if (enableAutoSlice)
+                        if (lastBossCall == null || lastBossCall.IsValid)
                         {
-                            //leotodo
+                            var bossCall = new BossCall() { MatchTimeFirst = DateTime.Now, OCRMatchList = found.Item2, OCRLastMatch = found.Item3 };
+                            _BossGroups.Last().Calls.Add(bossCall);
                         }
                         else
                         {
-                            if (_BossGroups.Count == 0)
-                            {
-                                _BossGroups.Add(new BossCallGroup());
-                            }
+                            lastBossCall.MatchTimeSecond = DateTime.Now;
+                            lastBossCall.OCRMatchList += found.Item2;
+                            lastBossCall.OCRLastMatch = found.Item3;
 
-                            _BossGroups.Last().Calls.Add(bossCall);
+                            if (lastBossCall.MatchTimeFirst.AddSeconds(4) > lastBossCall.MatchTimeSecond)
+                            {
+                                lastBossCall.IsValid = true;
+                                _LastBossCallFoundTime = DateTime.Now;
+                            }
+                            else //not the same call, remove old and add new
+                            {
+                                _BossGroups.Last().Calls.Remove(lastBossCall);
+                                var bossCall = new BossCall() { MatchTimeFirst = DateTime.Now, OCRMatchList = found.Item2, OCRLastMatch = found.Item3 };
+                                _BossGroups.Last().Calls.Add(bossCall);
+                            }
                         }
                     }
 
                     if (GlobalData.Default.IsDebugging || found.Item1)
                     {
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                        System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}, OCR data: {ocrProcessedData}");
                         string tmpPath = MainOCR.SaveTmpFile($"boss-call-{found.Item1}-{found.Item2}", rawData);
                         System.Diagnostics.Debug.WriteLine($"tmp path: {tmpPath}");
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
+                        System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}, OCR data: {ocrProcessedData}");
                     }
 
                     return found;

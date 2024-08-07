@@ -22,8 +22,6 @@ namespace SkyStopwatch
         public static bool EnableAutoSlice = false;
         public static int AutoSliceIntervalSeconds = 12;
 
-        public const int Candidate1 = 5;
-        public const int Candidate2 = 4;
 
 
         public static byte[] GetFixedLocationImageData()
@@ -79,24 +77,35 @@ namespace SkyStopwatch
 
 
 
-        public static Tuple<bool, string> FindBossCall(string data, int candidate1, int candidate2)
+        public static Tuple<bool, string, int> FindBossCall(string data, params int[] candidates)
         {
+            if (data == null || candidates == null) throw new ArgumentNullException("data or candidates");
+
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length == 0) return Tuple.Create(false, "lines-length-0", -1);
 
             //sometimes, failed to recognise 5, so add one more candidate(4) here
             //still, the ocr engine is poor, lots of blank-almost pics are processed as value 5, leotodo, improve the engine or replace it
-            if (lines.Length == 1 && (lines[0] == candidate1.ToString() || lines[0] == candidate2.ToString()))
+            //if (lines.Length == 1 && (lines[0] == candidate1.ToString() || lines[0] == candidate2.ToString()))
             //if (lines.Length == 1 && lines[0] == candidate1.ToString())
+            //{
+            //    return Tuple.Create(true, lines[0]);
+            //}
+
+
+
+            for (int i = 0; i < candidates.Length; i++)
             {
-                return Tuple.Create(true, lines[0]);
+                string current = candidates[i].ToString();
+
+                if (current == lines[0])
+                {
+                    return Tuple.Create(true, current, candidates[i]);
+                }
             }
 
-            if (lines.Length >= 1)
-            {
-                return Tuple.Create(false, lines[0]);
-            }
 
-            return Tuple.Create(false, "1-1-1");
+            return Tuple.Create(false, lines[0], -1);
         }
 
 
