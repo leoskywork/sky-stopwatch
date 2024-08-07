@@ -19,6 +19,9 @@ namespace SkyStopwatch
 
     ## todo
 
+
+    ### ignore the game end count down``
+
     [done] ### new game start - no timestamp
 
     [done-half] ### auto run ocr - so no need to manual click button every time into a new game

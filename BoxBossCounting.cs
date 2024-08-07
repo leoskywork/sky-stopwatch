@@ -41,19 +41,19 @@ namespace SkyStopwatch
             this.labelMessage.Text = "-";
             this.labelTotal.Text = "-";
 
+            if (Environment.MachineName == "LEO-PC-PRO")
+            {
+                for (int i = 0; i < 999; i++)
+                {
+                    _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true });
+                }
+            };
+
             if (GlobalData.Default.EnableBossCountingOneMode)
             {
                 this.tableLayoutPanelRight.Hide();
                 this.Size = new Size(this.Size.Width - 44, this.Size.Height - 10);
                 
-                if (Environment.MachineName == "LEO-PC-PRO")
-                {
-                    for (int i = 0; i < 999; i++)
-                    {
-                        _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true});
-                    }
-                };
-
                 const int closeSize = 30;
                 this.buttonKill.Text = null;
                 this.buttonKill.Size = new System.Drawing.Size(closeSize, closeSize);
@@ -71,6 +71,12 @@ namespace SkyStopwatch
             else
             {
                 this.buttonKill.Hide();
+                this.Size = new Size(this.Size.Width - 20, this.Size.Height);
+                this.labelAddGroup.ForeColor = System.Drawing.Color.Black;
+                this.labelAddGroup.BackColor = System.Drawing.Color.White;
+                this.labelAddGroup.Padding = new Padding(2, 1,2,0);
+                this.labelKill.ForeColor = System.Drawing.Color.Black;
+                this.labelKill.BackColor = System.Drawing.Color.White;
             }
         }
 
@@ -84,7 +90,7 @@ namespace SkyStopwatch
             }
 
             this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
-            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.PreCounting).Count())}.P{this._BossCallGroups.Count}";
+            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.PreCounting).Count())}-P{this._BossCallGroups.Count}";
         }
 
         private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)
@@ -195,14 +201,18 @@ namespace SkyStopwatch
             }
 
 
-            this.labelAddGroup.BackColor = System.Drawing.Color.LightGray;
-            this.labelAddGroup.ForeColor = System.Drawing.Color.RoyalBlue;
+            var oldBackColor = this.labelAddGroup.BackColor; 
+            var oldForeColor = this.labelAddGroup.ForeColor;
+
+
+            this.labelAddGroup.BackColor = System.Drawing.Color.Gray;
+            this.labelAddGroup.ForeColor = System.Drawing.Color.White;
             this.labelAddGroup.Enabled = false;
 
             this.RunOnMain(() =>
             {
-                this.labelAddGroup.BackColor = System.Drawing.Color.RoyalBlue;
-                this.labelAddGroup.ForeColor = System.Drawing.Color.Transparent;
+                this.labelAddGroup.BackColor = oldBackColor;
+                this.labelAddGroup.ForeColor = oldForeColor;
                 this.labelAddGroup.Enabled = true;
             }, 300);
         }
