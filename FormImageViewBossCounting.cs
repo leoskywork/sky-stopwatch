@@ -52,6 +52,7 @@ namespace SkyStopwatch
             this.timerCompare.Interval = 100;
 
             GlobalData.Default.ChangeGameStartTime += OnChangeGameStartTime;
+            this.checkBoxOneMode.Checked = GlobalData.Default.EnableBossCountingOneMode;
         }
 
         private void OnChangeGameStartTime(object sender, ChangeGameStartTimeEventArgs e)
@@ -290,20 +291,27 @@ namespace SkyStopwatch
                     var rawData = _BossCallImageQueue.Dequeue();
                     var ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
                     var lastBossCall = _BossGroups.Last().Calls.LastOrDefault();
-                    int ocrLastMatchDigit = 5;
+                    int sameCallTimeSeconds = 4;
+                    int ocrMatchDigit = 5;
 
-                    if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.MatchTimeFirst.AddSeconds(4) > DateTime.Now)
+                    if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.MatchTimeFirst.AddSeconds(sameCallTimeSeconds) > DateTime.Now)
                     {
-                        ocrLastMatchDigit = lastBossCall.OCRLastMatch - 1;
+                        ocrMatchDigit = lastBossCall.OCRLastMatch - 1;
                     }
 
-                    var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrLastMatchDigit, ocrLastMatchDigit - 1);
+                    var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrMatchDigit, ocrMatchDigit - 1);
 
                     if (found.Item1)
                     {
                         if (lastBossCall == null || lastBossCall.IsValid)
                         {
-                            var bossCall = new BossCall() { MatchTimeFirst = DateTime.Now, OCRMatchList = found.Item2, OCRLastMatch = found.Item3 };
+                            var bossCall = new BossCall
+                            {
+                                MatchTimeFirst = DateTime.Now,
+                                OCRMatchList = found.Item2,
+                                OCRLastMatch = found.Item3,
+                                PreCounting = true
+                            };
                             _BossGroups.Last().Calls.Add(bossCall);
                         }
                         else
@@ -312,18 +320,30 @@ namespace SkyStopwatch
                             lastBossCall.OCRMatchList += found.Item2;
                             lastBossCall.OCRLastMatch = found.Item3;
 
-                            if (lastBossCall.MatchTimeFirst.AddSeconds(4) > lastBossCall.MatchTimeSecond)
+                            if (lastBossCall.MatchTimeFirst.AddSeconds(sameCallTimeSeconds) > lastBossCall.MatchTimeSecond)
                             {
                                 lastBossCall.IsValid = true;
+                                lastBossCall.PreCounting = true;
                                 _LastBossCallFoundTime = DateTime.Now;
                             }
                             else //not the same call, remove old and add new
                             {
+                                lastBossCall.PreCounting = false;
                                 _BossGroups.Last().Calls.Remove(lastBossCall);
-                                var bossCall = new BossCall() { MatchTimeFirst = DateTime.Now, OCRMatchList = found.Item2, OCRLastMatch = found.Item3 };
+                                var bossCall = new BossCall
+                                {
+                                    MatchTimeFirst = DateTime.Now,
+                                    OCRMatchList = found.Item2,
+                                    OCRLastMatch = found.Item3,
+                                    PreCounting = true
+                                };
                                 _BossGroups.Last().Calls.Add(bossCall);
                             }
                         }
+                    }
+                    else if(lastBossCall != null)
+                    {
+                        lastBossCall.PreCounting = false;
                     }
 
                     if (GlobalData.Default.IsDebugging || found.Item1)
@@ -345,6 +365,11 @@ namespace SkyStopwatch
                     {
                         this.OnError(t.Exception);
                         return;
+                    }
+
+                    if(_BossGroups.Sum(g => g.Calls.Count) >= 1000)
+                    {
+                        ResetBossCallCounting();
                     }
                 });
             }
@@ -389,6 +414,19 @@ namespace SkyStopwatch
                 this.timerScan.Stop();
                 this.timerCompare.Stop();
                 GlobalData.Default.ChangeGameStartTime -= OnChangeGameStartTime;
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
+        }
+
+        private void checkBoxOneMode_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                GlobalData.Default.EnableBossCountingOneMode = this.checkBoxOneMode.Checked;
+                this.buttonSave.Enabled= true;
             }
             catch (Exception ex)
             {

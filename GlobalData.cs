@@ -45,6 +45,7 @@ namespace SkyStopwatch
         public List<Form> LongLivePopups { get; } = new List<Form>();
 
         public int BootingArgs { get; set; } = 0;
+        public bool EnableBossCountingOneMode { get; set; }
 
         private GlobalData() { }
 

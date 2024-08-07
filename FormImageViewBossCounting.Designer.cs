@@ -46,6 +46,7 @@
             this.panelImage = new System.Windows.Forms.Panel();
             this.checkBoxAutoSlice = new System.Windows.Forms.CheckBox();
             this.numericUpDownAutoSliceIntervalSeconds = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxOneMode = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -277,11 +278,23 @@
             0});
             this.numericUpDownAutoSliceIntervalSeconds.ValueChanged += new System.EventHandler(this.numericUpDownAux1_ValueChanged);
             // 
+            // checkBoxOneMode
+            // 
+            this.checkBoxOneMode.AutoSize = true;
+            this.checkBoxOneMode.Location = new System.Drawing.Point(22, 599);
+            this.checkBoxOneMode.Name = "checkBoxOneMode";
+            this.checkBoxOneMode.Size = new System.Drawing.Size(93, 19);
+            this.checkBoxOneMode.TabIndex = 119;
+            this.checkBoxOneMode.Text = "One mode";
+            this.checkBoxOneMode.UseVisualStyleBackColor = true;
+            this.checkBoxOneMode.CheckedChanged += new System.EventHandler(this.checkBoxOneMode_CheckedChanged);
+            // 
             // FormImageViewBossCounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(528, 759);
+            this.Controls.Add(this.checkBoxOneMode);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.checkBoxAutoSlice);
             this.Controls.Add(this.numericUpDownAutoSliceIntervalSeconds);
@@ -335,5 +348,6 @@
         private System.Windows.Forms.Panel panelImage;
         private System.Windows.Forms.CheckBox checkBoxAutoSlice;
         private System.Windows.Forms.NumericUpDown numericUpDownAutoSliceIntervalSeconds;
+        private System.Windows.Forms.CheckBox checkBoxOneMode;
     }
 }

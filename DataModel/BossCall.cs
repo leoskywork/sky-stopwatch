@@ -15,14 +15,15 @@ namespace SkyStopwatch.DataModel
 
         public BossCall()
         {
-            
         }
 
         public DateTime MatchTimeFirst { get; set; }
         public DateTime MatchTimeSecond { get; set; }
 
         public bool IsValid { get; set; }
-         
+
+
+        public bool PreCounting { get; set; }
 
         public int OCRLastMatch { get; set; }
 

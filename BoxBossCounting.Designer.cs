@@ -34,8 +34,9 @@
             this.tableLayoutPanelRight = new System.Windows.Forms.TableLayoutPanel();
             this.labelTotal = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
-            this.labelKill = new System.Windows.Forms.Label();
             this.labelAddGroup = new System.Windows.Forms.Label();
+            this.labelKill = new System.Windows.Forms.Label();
+            this.buttonKill = new System.Windows.Forms.Button();
             this.tableLayoutPanelRight.SuspendLayout();
             this.panelButtons.SuspendLayout();
             this.SuspendLayout();
@@ -96,21 +97,6 @@
             this.panelButtons.Size = new System.Drawing.Size(74, 19);
             this.panelButtons.TabIndex = 1;
             // 
-            // labelKill
-            // 
-            this.labelKill.AutoSize = true;
-            this.labelKill.BackColor = System.Drawing.Color.Tomato;
-            this.labelKill.Dock = System.Windows.Forms.DockStyle.Right;
-            this.labelKill.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelKill.ForeColor = System.Drawing.Color.Transparent;
-            this.labelKill.Location = new System.Drawing.Point(31, 0);
-            this.labelKill.Name = "labelKill";
-            this.labelKill.Size = new System.Drawing.Size(43, 15);
-            this.labelKill.TabIndex = 0;
-            this.labelKill.Text = "Kill";
-            this.labelKill.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.labelKill.Click += new System.EventHandler(this.labelKill_Click);
-            // 
             // labelAddGroup
             // 
             this.labelAddGroup.AutoSize = true;
@@ -127,15 +113,41 @@
             this.labelAddGroup.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelAddGroup.Click += new System.EventHandler(this.labelAddGroup_Click);
             // 
-            // BoxNodeBossCounting
+            // labelKill
+            // 
+            this.labelKill.AutoSize = true;
+            this.labelKill.BackColor = System.Drawing.Color.Tomato;
+            this.labelKill.Dock = System.Windows.Forms.DockStyle.Right;
+            this.labelKill.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelKill.ForeColor = System.Drawing.Color.Transparent;
+            this.labelKill.Location = new System.Drawing.Point(31, 0);
+            this.labelKill.Name = "labelKill";
+            this.labelKill.Size = new System.Drawing.Size(43, 15);
+            this.labelKill.TabIndex = 0;
+            this.labelKill.Text = "Kill";
+            this.labelKill.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.labelKill.Click += new System.EventHandler(this.labelKill_Click);
+            // 
+            // buttonKill
+            // 
+            this.buttonKill.Location = new System.Drawing.Point(7, 0);
+            this.buttonKill.Name = "buttonKill";
+            this.buttonKill.Size = new System.Drawing.Size(75, 23);
+            this.buttonKill.TabIndex = 2;
+            this.buttonKill.Text = "Kill";
+            this.buttonKill.UseVisualStyleBackColor = true;
+            this.buttonKill.Click += new System.EventHandler(this.buttonKill_Click);
+            // 
+            // BoxBossCounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(166, 50);
+            this.Controls.Add(this.buttonKill);
             this.Controls.Add(this.tableLayoutPanelRight);
             this.Controls.Add(this.labelMessage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "BoxNodeBossCounting";
+            this.Name = "BoxBossCounting";
             this.Text = "Node Warning";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormNodeWarning_FormClosing);
             this.Load += new System.EventHandler(this.FormNodeBossCounting_Load);
@@ -156,5 +168,6 @@
         private System.Windows.Forms.Panel panelButtons;
         private System.Windows.Forms.Label labelKill;
         private System.Windows.Forms.Label labelAddGroup;
+        private System.Windows.Forms.Button buttonKill;
     }
 }
