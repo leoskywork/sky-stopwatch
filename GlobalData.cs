@@ -47,6 +47,14 @@ namespace SkyStopwatch
         public int BootingArgs { get; set; } = 0;
         public bool EnableBossCountingOneMode { get; set; }
 
+        public int BossCountingScanTimerIntervalMS { get; } = 600;
+        public int BossCountingCompareTimerIntervalMS { get; } = 100;
+
+
+
+
+
+
         private GlobalData() { }
 
         public void FireChangeTheme()

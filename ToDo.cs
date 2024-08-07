@@ -20,7 +20,9 @@ namespace SkyStopwatch
     ## todo
 
 
-    ### ignore the game end count down``
+    ### low - ignore the game end count down``
+
+    ### not working for 0 cd boss call
 
     [done] ### new game start - no timestamp
 

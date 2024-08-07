@@ -43,10 +43,10 @@ namespace SkyStopwatch
 
             if (Environment.MachineName == "LEO-PC-PRO")
             {
-                for (int i = 0; i < 999; i++)
-                {
-                    _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true });
-                }
+                //for (int i = 0; i < 999; i++)
+                //{
+                //    _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true });
+                //}
             };
 
             if (GlobalData.Default.EnableBossCountingOneMode)
@@ -90,7 +90,7 @@ namespace SkyStopwatch
             }
 
             this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
-            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.PreCounting).Count())}-P{this._BossCallGroups.Count}";
+            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.IsValid).Count())}-P{this._BossCallGroups.Count}";
         }
 
         private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)

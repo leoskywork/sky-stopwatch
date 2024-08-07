@@ -66,7 +66,7 @@ namespace SkyStopwatch
             var engine = new Tesseract.TesseractEngine(MainOCR.OCRTessdataFolder, MainOCR.OCRLanguage, Tesseract.EngineMode.Default);
 
             //in case the number got blocked by other images?? so try to recognise multi digits here ??
-            engine.SetVariable("tessedit_char_whitelist", "123456789"); //only look for pre-set chars for speed up
+            engine.SetVariable("tessedit_char_whitelist", "0123456789"); //only look for pre-set chars for speed up
 
             //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
             //_tesseractEngine.SetVariable("debug_file", "NUL");
@@ -82,7 +82,7 @@ namespace SkyStopwatch
             if (data == null || candidates == null) throw new ArgumentNullException("data or candidates");
 
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length == 0) return Tuple.Create(false, "lines-length-0", -1);
+            if (lines.Length == 0) return Tuple.Create(false, "lines-length-0", -2);
 
             //sometimes, failed to recognise 5, so add one more candidate(4) here
             //still, the ocr engine is poor, lots of blank-almost pics are processed as value 5, leotodo, improve the engine or replace it

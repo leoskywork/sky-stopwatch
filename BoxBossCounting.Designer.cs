@@ -79,9 +79,10 @@
             // 
             this.labelTotal.AutoSize = true;
             this.labelTotal.Dock = System.Windows.Forms.DockStyle.Right;
-            this.labelTotal.Location = new System.Drawing.Point(22, 0);
+            this.labelTotal.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelTotal.Location = new System.Drawing.Point(16, 0);
             this.labelTotal.Name = "labelTotal";
-            this.labelTotal.Size = new System.Drawing.Size(55, 25);
+            this.labelTotal.Size = new System.Drawing.Size(61, 25);
             this.labelTotal.TabIndex = 0;
             this.labelTotal.Text = "P5-599";
             this.labelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
