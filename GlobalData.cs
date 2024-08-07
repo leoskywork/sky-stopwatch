@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
@@ -40,6 +41,9 @@ namespace SkyStopwatch
 
         public bool IsDebugging { get; set; }
 
+        //leotodo, improve this?
+        public List<Form> LongLivePopups { get; } = new List<Form>();
+
         private GlobalData() { }
 
         public void FireChangeTheme()
@@ -60,6 +64,19 @@ namespace SkyStopwatch
         public void FireChangeGameStartTime(ChangeGameStartTimeEventArgs e)
         {
             ChangeGameStartTime?.Invoke(null, e);
+        }
+
+        public void ClearPopups()
+        {
+            this.LongLivePopups.ForEach(c =>
+            {
+                if (!c.IsDead()) 
+                { 
+                    c.Close();
+                };
+            });
+
+            this.LongLivePopups.Clear();
         }
     }
 

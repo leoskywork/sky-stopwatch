@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace SkyStopwatch
 {
@@ -24,10 +25,12 @@ namespace SkyStopwatch
 
         //leotodo, multi-thread issue
         private List<BossCallGroup> _BossGroups = new List<BossCallGroup>();
+
         private DateTime _ApproximateGameRoundStartTime;
         private DateTime _LastBossCallFoundTime;
+        private bool _ShowSettings;
 
-        public FormImageViewBossCounting()
+        public FormImageViewBossCounting(bool showSettings)
         {
             InitializeComponent();
 
@@ -38,6 +41,7 @@ namespace SkyStopwatch
             this.numericUpDownHeight.Value = MainOCRBossCounting.BlockHeight;
             this.checkBoxAutoSlice.Checked = MainOCRBossCounting.EnableAutoSlice;
             this.numericUpDownAutoSliceIntervalSeconds.Value = MainOCRBossCounting.AutoSliceIntervalSeconds;
+            this._ShowSettings = showSettings;
 
             this.timerScan.Interval = 600;
             this.timerCompare.Interval = 100;
@@ -157,7 +161,14 @@ namespace SkyStopwatch
         {
             this.buttonSave.Enabled = false;
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
+            GlobalData.Default.ClearPopups();
 
+            if (this._ShowSettings) return;
+
+            this.ResetTimers();
+            this.ResetBossCallCounting();
+            this.PopupCountingBox();
+            this.RunOnMain(() => this.Hide(), 1);
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -173,28 +184,11 @@ namespace SkyStopwatch
                     return;
                 }
 
-                this._BossCallImageQueue.Clear();
-                this._ScanCount = 0;
-                this._CompareCount = 0;
-
-                if (!this.timerScan.Enabled)
-                {
-                    this.timerScan.Start();
-                }
-
-                if (!this.timerCompare.Enabled)
-                {
-                    this.timerCompare.Start();
-                }
-
                 this.pictureBoxOne.Image = null;
 
+                ResetTimers();
                 ResetBossCallCounting();
-                var bossCountingBox = new BoxNodeBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
-                bossCountingBox.StartPosition = FormStartPosition.Manual;
-                bossCountingBox.Location = new Point(this.Location.X + this.Width, this.Location.Y + 100);
-                bossCountingBox.Show();
-
+                PopupCountingBox();
                 this.Hide();
             }
             catch (Exception ex)
@@ -203,6 +197,31 @@ namespace SkyStopwatch
             }
         }
 
+        private void ResetTimers()
+        {
+            this._BossCallImageQueue.Clear();
+            this._ScanCount = 0;
+            this._CompareCount = 0;
+
+            if (!this.timerScan.Enabled)
+            {
+                this.timerScan.Start();
+            }
+
+            if (!this.timerCompare.Enabled)
+            {
+                this.timerCompare.Start();
+            }
+        }
+
+        private void PopupCountingBox()
+        {
+            var bossCountingBox = new BoxNodeBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
+            bossCountingBox.StartPosition = FormStartPosition.Manual;
+            bossCountingBox.Location = new Point(this.Location.X + this.Width, this.Location.Y + 100);
+            bossCountingBox.Show();
+            GlobalData.Default.LongLivePopups.Add(bossCountingBox);
+        }
        
 
         private void timerScan_Tick(object sender, EventArgs e)
@@ -284,7 +303,7 @@ namespace SkyStopwatch
                                 _BossGroups.Add(new BossCallGroup());
                             }
 
-                            _BossGroups[0].Calls.Add(bossCall);
+                            _BossGroups.Last().Calls.Add(bossCall);
                         }
                     }
 

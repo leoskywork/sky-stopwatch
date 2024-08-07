@@ -65,7 +65,7 @@
             this.tableLayoutPanelRight.Controls.Add(this.labelTotal, 0, 0);
             this.tableLayoutPanelRight.Controls.Add(this.panelButtons, 0, 1);
             this.tableLayoutPanelRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tableLayoutPanelRight.Location = new System.Drawing.Point(88, 0);
+            this.tableLayoutPanelRight.Location = new System.Drawing.Point(86, 0);
             this.tableLayoutPanelRight.Name = "tableLayoutPanelRight";
             this.tableLayoutPanelRight.RowCount = 2;
             this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -131,7 +131,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(168, 50);
+            this.ClientSize = new System.Drawing.Size(166, 50);
             this.Controls.Add(this.tableLayoutPanelRight);
             this.Controls.Add(this.labelMessage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

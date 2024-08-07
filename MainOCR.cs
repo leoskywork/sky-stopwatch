@@ -197,11 +197,11 @@ namespace SkyStopwatch
                     Directory.CreateDirectory(subFolder);
                 }
 
-                int maxTmpFileCount = 600;
+                int maxTmpFileCount = 200;
 
-                if(Environment.MachineName.ToUpper() == "LEO-PC-PRO")
+                if (Environment.MachineName.ToUpper() == "LEO-PC-PRO" || GlobalData.Default.IsDebugging)
                 {
-                    maxTmpFileCount = 10000;
+                    maxTmpFileCount = 1000;
                 }
 
                 if (Directory.GetFiles(subFolder).Length > maxTmpFileCount)
@@ -459,11 +459,11 @@ namespace SkyStopwatch
             }
         }
 
-        public static void RunOnMain(this Form form, Action action, int delaySeconds)
+        public static void RunOnMain(this Form form, Action action, int delayMS)
         {
             Task.Run(() =>
             {
-                Thread.Sleep(delaySeconds * 1000);
+                Thread.Sleep(delayMS);
                 RunOnMain(form, action);
             });
         }

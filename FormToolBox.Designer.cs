@@ -43,6 +43,7 @@
             this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonCount = new System.Windows.Forms.Button();
             this.buttonPriceList = new System.Windows.Forms.Button();
             this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
@@ -54,7 +55,7 @@
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
-            this.buttonCount = new System.Windows.Forms.Button();
+            this.buttonCountRun = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -215,6 +216,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.buttonCountRun);
             this.groupBox2.Controls.Add(this.buttonCount);
             this.groupBox2.Controls.Add(this.buttonPriceList);
             this.groupBox2.Controls.Add(this.checkBoxDebugging);
@@ -227,6 +229,18 @@
             this.groupBox2.TabIndex = 403;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tools";
+            // 
+            // buttonCount
+            // 
+            this.buttonCount.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonCount.Location = new System.Drawing.Point(376, 25);
+            this.buttonCount.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonCount.Name = "buttonCount";
+            this.buttonCount.Size = new System.Drawing.Size(95, 30);
+            this.buttonCount.TabIndex = 404;
+            this.buttonCount.Text = "Count...";
+            this.buttonCount.UseVisualStyleBackColor = true;
+            this.buttonCount.Click += new System.EventHandler(this.buttonCount_Click);
             // 
             // buttonPriceList
             // 
@@ -371,17 +385,17 @@
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
             // 
-            // buttonCount
+            // buttonCountRun
             // 
-            this.buttonCount.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonCount.Location = new System.Drawing.Point(376, 25);
-            this.buttonCount.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonCount.Name = "buttonCount";
-            this.buttonCount.Size = new System.Drawing.Size(95, 30);
-            this.buttonCount.TabIndex = 404;
-            this.buttonCount.Text = "Count...";
-            this.buttonCount.UseVisualStyleBackColor = true;
-            this.buttonCount.Click += new System.EventHandler(this.buttonCount_Click);
+            this.buttonCountRun.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonCountRun.Location = new System.Drawing.Point(477, 25);
+            this.buttonCountRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonCountRun.Name = "buttonCountRun";
+            this.buttonCountRun.Size = new System.Drawing.Size(54, 30);
+            this.buttonCountRun.TabIndex = 405;
+            this.buttonCountRun.Text = "Run";
+            this.buttonCountRun.UseVisualStyleBackColor = true;
+            this.buttonCountRun.Click += new System.EventHandler(this.buttonCountRun_Click);
             // 
             // FormToolBox
             // 
@@ -442,5 +456,6 @@
         private System.Windows.Forms.Button buttonPriceList;
         private System.Windows.Forms.CheckBox checkBoxTopMost;
         private System.Windows.Forms.Button buttonCount;
+        private System.Windows.Forms.Button buttonCountRun;
     }
 }

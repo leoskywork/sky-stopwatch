@@ -318,7 +318,14 @@ namespace SkyStopwatch
 
         private void buttonCount_Click(object sender, EventArgs e)
         {
-            var imageView = new FormImageViewBossCounting();
+            var imageView = new FormImageViewBossCounting(true);
+            imageView.Show();
+            this.Close();
+        }
+
+        private void buttonCountRun_Click(object sender, EventArgs e)
+        {
+            var imageView = new FormImageViewBossCounting(false);
             imageView.Show();
             this.Close();
         }

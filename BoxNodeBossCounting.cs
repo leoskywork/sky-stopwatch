@@ -65,7 +65,7 @@ namespace SkyStopwatch
             //    this.labelGroupNumber.Text = "n.1";
             //}
 
-            this.labelTotal.Text = $"P{this._BossCallGroups.Count}-{this._BossCallGroups.Sum(g => g.Calls.Count)}";
+            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Count)}.P{this._BossCallGroups.Count}";
         }
 
         private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)
@@ -157,6 +157,14 @@ namespace SkyStopwatch
 
             _BossCallGroups.Add(new BossCallGroup());
 
+            if(Environment.MachineName == "LEO-PC-PRO")
+            {
+                //for(int i = 0 ; i < 200; i++)
+                //{
+                //    _BossCallGroups.Last().Calls.Add(new BossCall());
+                //}
+            }
+
 
             this.labelAddGroup.BackColor = System.Drawing.Color.LightGray;
             this.labelAddGroup.ForeColor = System.Drawing.Color.RoyalBlue;
@@ -167,7 +175,7 @@ namespace SkyStopwatch
                 this.labelAddGroup.BackColor = System.Drawing.Color.RoyalBlue;
                 this.labelAddGroup.ForeColor = System.Drawing.Color.Transparent;
                 this.labelAddGroup.Enabled = true;
-            }, 1);
+            }, 300);
         }
     }
 }
