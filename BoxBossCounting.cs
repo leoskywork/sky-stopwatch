@@ -41,19 +41,19 @@ namespace SkyStopwatch
             this.labelMessage.Text = "-";
             this.labelTotal.Text = "-";
 
-            if (Environment.MachineName == "LEO-PC-PRO")
+            if (Environment.MachineName == "LEO-PC-PRO22")
             {
-                //for (int i = 0; i < 999; i++)
-                //{
-                //    _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true });
-                //}
+                for (int i = 0; i < 999; i++)
+                {
+                    _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true });
+                }
             };
 
             if (GlobalData.Default.EnableBossCountingOneMode)
             {
                 this.tableLayoutPanelRight.Hide();
                 this.Size = new Size(this.Size.Width - 44, this.Size.Height - 10);
-                
+
                 const int closeSize = 30;
                 this.buttonKill.Text = null;
                 this.buttonKill.Size = new System.Drawing.Size(closeSize, closeSize);
@@ -71,12 +71,28 @@ namespace SkyStopwatch
             else
             {
                 this.buttonKill.Hide();
-                this.Size = new Size(this.Size.Width - 20, this.Size.Height);
+                this.Size = new Size(this.Size.Width - 10, this.Size.Height);
+                this.tableLayoutPanelRight.Size = new Size(this.tableLayoutPanelRight.Width + 12, this.tableLayoutPanelRight.Height);
+
                 this.labelAddGroup.ForeColor = System.Drawing.Color.Black;
                 this.labelAddGroup.BackColor = System.Drawing.Color.White;
-                this.labelAddGroup.Padding = new Padding(2, 1,2,0);
+                this.labelAddGroup.Padding = new Padding(0);
+                this.labelAddGroup.Text = "+P";
+
+                this.labelAddBossCall.ForeColor = System.Drawing.Color.Black;
+                this.labelAddBossCall.BackColor = System.Drawing.Color.White;
+                this.labelAddBossCall.Padding = new Padding(2, 0, 2, 0);
+                this.labelAddBossCall.Text = "+";
+
+                this.labelRemoveBossCall.ForeColor = System.Drawing.Color.Black;
+                this.labelRemoveBossCall.BackColor = System.Drawing.Color.White;
+                this.labelRemoveBossCall.Padding = new Padding(4, 0, 2, 0);
+                this.labelRemoveBossCall.Text = "-";
+
                 this.labelKill.ForeColor = System.Drawing.Color.Black;
                 this.labelKill.BackColor = System.Drawing.Color.White;
+                //this.labelKill.Margin = new Padding(0, -10, 0, 6); //not working
+                this.labelKill.Text = "X";
             }
         }
 
@@ -192,35 +208,62 @@ namespace SkyStopwatch
 
             _BossCallGroups.Add(new BossCallGroup());
 
-            if(Environment.MachineName == "LEO-PC-PRO")
-            {
-                //for(int i = 0 ; i < 200; i++)
-                //{
-                //    _BossCallGroups.Last().Calls.Add(new BossCall());
-                //}
-            }
 
-
-            var oldBackColor = this.labelAddGroup.BackColor; 
-            var oldForeColor = this.labelAddGroup.ForeColor;
-
-
-            this.labelAddGroup.BackColor = System.Drawing.Color.Gray;
-            this.labelAddGroup.ForeColor = System.Drawing.Color.White;
-            this.labelAddGroup.Enabled = false;
-
-            this.RunOnMain(() =>
-            {
-                this.labelAddGroup.BackColor = oldBackColor;
-                this.labelAddGroup.ForeColor = oldForeColor;
-                this.labelAddGroup.Enabled = true;
-            }, 300);
+            DisableButtonShortTime(this.labelAddGroup);
         }
  
 
         private void buttonKill_Click(object sender, EventArgs e)
         {
             this.CloseInternal();
+        }
+
+        private void labelAddBossCall_Click(object sender, EventArgs e)
+        {
+            if (_BossCallGroups == null) return;
+            if (_BossCallGroups.Count == 0) _BossCallGroups.Add(new BossCallGroup());
+
+            _BossCallGroups.Last().Calls.Add(new BossCall()
+            {
+                Id = -1,
+                IsValid = true,
+                FirstMatchTime = DateTime.Now,
+                FirstMatchValue = -1,
+                SecondMatchTime = DateTime.Now,
+                SecondMatchValue = -1,
+                OCRLastMatch = -1,
+                PreCounting = true
+            });
+
+            DisableButtonShortTime(this.labelAddBossCall);
+          
+        }
+
+        private void DisableButtonShortTime(Label control)
+        {
+            var oldBackColor = control.BackColor;
+            var oldForeColor = control.ForeColor;
+
+
+            control.ForeColor = System.Drawing.Color.White;
+            control.BackColor = System.Drawing.Color.LightGray;
+            control.Enabled = false;
+
+            this.RunOnMain(() =>
+            {
+                control.BackColor = oldBackColor;
+                control.ForeColor = oldForeColor;
+                control.Enabled = true;
+            }, 300);
+        }
+
+        private void labelRemoveBossCall_Click(object sender, EventArgs e)
+        {
+            if (_BossCallGroups == null || _BossCallGroups.Count == 0 || _BossCallGroups.Last().Calls.Count == 0) return;
+
+            _BossCallGroups.Last().Calls.RemoveAt(_BossCallGroups.Last().Calls.Count - 1);
+
+            DisableButtonShortTime(this.labelRemoveBossCall);
         }
     }
 }

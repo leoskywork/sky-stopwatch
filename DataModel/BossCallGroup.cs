@@ -8,9 +8,7 @@ namespace SkyStopwatch.DataModel
 {
     public class BossCallGroup
     {
-        public List<BossCall> Calls { get; set; } = new List<BossCall>();
+        public List<BossCall> Calls { get; } = new List<BossCall>();
 
-        //public DateTime FirstCallTime { get; set; }
-        //public DateTime LastCallTime { get; set;}
     }
 }
