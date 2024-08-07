@@ -67,7 +67,6 @@ namespace SkyStopwatch
         public static bool EnableTopMost { get; set; } = true;//false;
         public static bool EnableLogToFile { get; set; } = false;
 
-        public static int BootingArgs { get; set; } = 0;
         public static List<string> ProcessList { get; set; } = new List<string>();
       
 
@@ -450,6 +449,7 @@ namespace SkyStopwatch
             if (form.InvokeRequired)
             {
                 if (form.IsDead()) return; //not sure why, the is dead check above not working sometimes, do it again here
+                if (form.Disposing || form.IsDisposed) return;
                 //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed}");
                 form.Invoke(action);
             }

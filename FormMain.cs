@@ -246,17 +246,16 @@ namespace SkyStopwatch
         private void InitGUILayoutV6()
         {
             var toolBox = this.ShowToolBox();
-            var imageView = new FormImageViewBossCounting(false);
-            imageView.FormClosed += (_, __) =>
-            {
-                GlobalData.Default.FireCloseApp();
-                this.Close();
-                if(!toolBox.IsDead()) toolBox.Close();
-            };
+            var imageView = new FormImageViewBossCounting(true);
             imageView.Show();
 
-            //hide main form in this theme
-            this.Location = new Point(-10000, -10000);
+            this.FormClosing += (_, __) => {
+                imageView.Close();
+                GlobalData.Default.ClearPopups();
+            };
+
+            //hide main form in this theme, not working ?
+            this.Location = new Point(10000, 10000);
             this.Size = new Size(1, 1);
             this.RunOnMain(()=> this.Hide(), 1);
         }

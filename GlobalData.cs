@@ -44,6 +44,8 @@ namespace SkyStopwatch
         //leotodo, improve this?
         public List<Form> LongLivePopups { get; } = new List<Form>();
 
+        public int BootingArgs { get; set; } = 0;
+
         private GlobalData() { }
 
         public void FireChangeTheme()
@@ -70,7 +72,7 @@ namespace SkyStopwatch
         {
             this.LongLivePopups.ForEach(c =>
             {
-                if (!c.IsDead()) 
+                if (!c.Disposing && !c.IsDisposed) 
                 { 
                     c.Close();
                 };

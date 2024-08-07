@@ -81,7 +81,7 @@ namespace SkyStopwatch
 
             SetDialogTitle();
 
-            this._BootingArgs = MainOCR.BootingArgs;
+            this._BootingArgs = GlobalData.Default.BootingArgs;
             //this.buttonChangeTheme.Text = $"Change theme {_BootingArgs}";
             SetMainOCRBootingArgsAndButtonText();
 
@@ -253,11 +253,11 @@ namespace SkyStopwatch
         private void SetMainOCRBootingArgsAndButtonText()
         {
             int themeCount = Enum.GetNames(typeof(MainTheme)).Length - 1;
-            MainOCR.BootingArgs = this._BootingArgs % themeCount;
+            GlobalData.Default.BootingArgs = this._BootingArgs % themeCount;
 
             //lazy way to do it, error when theme count >= 10
             string prefix = "Theme"; //this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
-            this.buttonChangeTheme.Text = $"{prefix} {MainOCR.BootingArgs} - {(MainTheme)MainOCR.BootingArgs}";
+            this.buttonChangeTheme.Text = $"{prefix} {GlobalData.Default.BootingArgs} - {(MainTheme)GlobalData.Default.BootingArgs}";
         }
 
         private void buttonAddMinute_Click(object sender, EventArgs e)
@@ -318,14 +318,14 @@ namespace SkyStopwatch
 
         private void buttonCount_Click(object sender, EventArgs e)
         {
-            var imageView = new FormImageViewBossCounting(true);
+            var imageView = new FormImageViewBossCounting(false);
             imageView.Show();
             this.Close();
         }
 
         private void buttonCountRun_Click(object sender, EventArgs e)
         {
-            var imageView = new FormImageViewBossCounting(false);
+            var imageView = new FormImageViewBossCounting(true);
             imageView.Show();
             this.Close();
         }

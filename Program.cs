@@ -51,7 +51,7 @@ namespace SkyStopwatch
 
         private static void ReadAppConfig()
         {
-            MainOCR.BootingArgs = Properties.Settings.Default.BootingArgs;
+            GlobalData.Default.BootingArgs = Properties.Settings.Default.BootingArgs;
             MainOCR.TimeNodeCheckingList = Properties.Settings.Default.TimeNodeCheckingList;
             MainOCR.TimeNodeCheckingList = LeotodoHackNewLine(MainOCR.TimeNodeCheckingList);
             MainOCR.EnableTopMost = Properties.Settings.Default.EnableTopMost;
@@ -99,7 +99,7 @@ namespace SkyStopwatch
         {
             try
             {
-                Properties.Settings.Default.BootingArgs = MainOCR.BootingArgs;
+                Properties.Settings.Default.BootingArgs = GlobalData.Default.BootingArgs;
                 Properties.Settings.Default.TimeNodeCheckingList = MainOCR.TimeNodeCheckingList;
                 Properties.Settings.Default.EnableTopMost = MainOCR.EnableTopMost;
                 Properties.Settings.Default.EnableLogToFile = MainOCR.EnableLogToFile;

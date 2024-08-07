@@ -28,9 +28,9 @@ namespace SkyStopwatch
 
         private DateTime _ApproximateGameRoundStartTime;
         private DateTime _LastBossCallFoundTime;
-        private bool _ShowSettings;
+        private bool _AutoShowPopupBox;
 
-        public FormImageViewBossCounting(bool showSettings)
+        public FormImageViewBossCounting(bool autoPopup)
         {
             InitializeComponent();
 
@@ -41,7 +41,12 @@ namespace SkyStopwatch
             this.numericUpDownHeight.Value = MainOCRBossCounting.BlockHeight;
             this.checkBoxAutoSlice.Checked = MainOCRBossCounting.EnableAutoSlice;
             this.numericUpDownAutoSliceIntervalSeconds.Value = MainOCRBossCounting.AutoSliceIntervalSeconds;
-            this._ShowSettings = showSettings;
+            this._AutoShowPopupBox = autoPopup;
+            if (this._AutoShowPopupBox)
+            {
+                this.Hide();
+                this.Location = new Point(10000, 10000);
+            }
 
             this.timerScan.Interval = 600;
             this.timerCompare.Interval = 100;
@@ -157,18 +162,19 @@ namespace SkyStopwatch
             this.TryUpdateImage();
         }
 
-        private void FormImageViewPrice_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
             this.buttonSave.Enabled = false;
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
             GlobalData.Default.ClearPopups();
 
-            if (this._ShowSettings) return;
-
-            this.ResetTimers();
-            this.ResetBossCallCounting();
-            this.PopupCountingBox();
-            this.RunOnMain(() => this.Hide(), 1);
+            if (this._AutoShowPopupBox)
+            {
+                this.ResetTimers();
+                this.ResetBossCallCounting();
+                this.PopupCountingBox();
+                this.RunOnMain(() => this.Hide(), 1);
+            };
         }
 
         private void buttonStart_Click(object sender, EventArgs e)
@@ -217,8 +223,16 @@ namespace SkyStopwatch
         private void PopupCountingBox()
         {
             var bossCountingBox = new BoxBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
-            bossCountingBox.StartPosition = FormStartPosition.Manual;
-            bossCountingBox.Location = new Point(this.Location.X + this.Width, this.Location.Y + 100);
+            if (this._AutoShowPopupBox)
+            {
+                //leotodo, improve this, just center it now
+                bossCountingBox.StartPosition = FormStartPosition.CenterScreen;
+            }
+            else
+            {
+                bossCountingBox.StartPosition = FormStartPosition.Manual;
+                bossCountingBox.Location = new Point(this.Location.X + this.Width, this.Location.Y + 100);
+            }
             bossCountingBox.Show();
             GlobalData.Default.LongLivePopups.Add(bossCountingBox);
         }

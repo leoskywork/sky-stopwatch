@@ -149,6 +149,11 @@ namespace SkyStopwatch
         private void labelKill_Click(object sender, EventArgs e)
         {
             this.Close();
+
+            if (GlobalData.Default.BootingArgs == (int)MainTheme.BossCallOnly)
+            {
+                GlobalData.Default.FireCloseApp();
+            }
         }
 
         private void labelAddGroup_Click(object sender, EventArgs e)
