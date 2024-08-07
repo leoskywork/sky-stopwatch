@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace SkyStopwatch
 {
@@ -455,6 +457,15 @@ namespace SkyStopwatch
             {
                 action();
             }
+        }
+
+        public static void RunOnMain(this Form form, Action action, int delaySeconds)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(delaySeconds * 1000);
+                RunOnMain(form, action);
+            });
         }
 
         public static void RunOnMainAsync(this Form form, Action action)

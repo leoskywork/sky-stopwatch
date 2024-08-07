@@ -150,5 +150,24 @@ namespace SkyStopwatch
         {
             this.Close();
         }
+
+        private void labelAddGroup_Click(object sender, EventArgs e)
+        {
+            if(_BossCallGroups == null) return;
+
+            _BossCallGroups.Add(new BossCallGroup());
+
+
+            this.labelAddGroup.BackColor = System.Drawing.Color.LightGray;
+            this.labelAddGroup.ForeColor = System.Drawing.Color.RoyalBlue;
+            this.labelAddGroup.Enabled = false;
+
+            this.RunOnMain(() =>
+            {
+                this.labelAddGroup.BackColor = System.Drawing.Color.RoyalBlue;
+                this.labelAddGroup.ForeColor = System.Drawing.Color.Transparent;
+                this.labelAddGroup.Enabled = true;
+            }, 1);
+        }
     }
 }
