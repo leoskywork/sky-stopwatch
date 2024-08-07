@@ -388,7 +388,7 @@
             // buttonCountRun
             // 
             this.buttonCountRun.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonCountRun.Location = new System.Drawing.Point(477, 25);
+            this.buttonCountRun.Location = new System.Drawing.Point(469, 25);
             this.buttonCountRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonCountRun.Name = "buttonCountRun";
             this.buttonCountRun.Size = new System.Drawing.Size(54, 30);
