@@ -1,6 +1,6 @@
 ﻿namespace SkyStopwatch
 {
-    partial class BoxNodeBossCounting
+    partial class BoxBossCounting
     {
         /// <summary>
         /// Required designer variable.

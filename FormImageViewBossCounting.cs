@@ -216,7 +216,7 @@ namespace SkyStopwatch
 
         private void PopupCountingBox()
         {
-            var bossCountingBox = new BoxNodeBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
+            var bossCountingBox = new BoxBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
             bossCountingBox.StartPosition = FormStartPosition.Manual;
             bossCountingBox.Location = new Point(this.Location.X + this.Width, this.Location.Y + 100);
             bossCountingBox.Show();

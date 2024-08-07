@@ -243,6 +243,24 @@ namespace SkyStopwatch
             this.buttonCloseOverlay.Visible = false;
         }
 
+        private void InitGUILayoutV6()
+        {
+            var toolBox = this.ShowToolBox();
+            var imageView = new FormImageViewBossCounting(false);
+            imageView.FormClosed += (_, __) =>
+            {
+                GlobalData.Default.FireCloseApp();
+                this.Close();
+                if(!toolBox.IsDead()) toolBox.Close();
+            };
+            imageView.Show();
+
+            //hide main form in this theme
+            this.Location = new Point(-10000, -10000);
+            this.Size = new Size(1, 1);
+            this.RunOnMain(()=> this.Hide(), 1);
+        }
+
         private void SyncTopMost()
         {
             this.TopMost = MainOCR.EnableTopMost;
@@ -315,33 +333,36 @@ namespace SkyStopwatch
                 //}
 
 
-                // curren screen shot
-                {
-                    Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-
-                    using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
-                    using (Graphics gra = Graphics.FromImage(bitPic))
-                    {
-
-                        gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                        gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
-
-                        //can not use using block here, since we pass the bitmap into a form and show it
-                        Bitmap cloneBitmap = bitPic.Clone(new Rectangle(MainOCR.XPoint, MainOCR.YPoint, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
-                        {
-                            FormToolBox tool = CreateToolBox(cloneBitmap);
-                            tool.StartPosition = FormStartPosition.Manual;
-                            tool.Location = new Point(this.Location.X - tool.Width + this.Width + 10, this.Location.Y + this.Size.Height + 24);
-                            tool.Show();
-                        }
-                    }
-                }
+                ShowToolBox();
 
                 buttonToolBox.Enabled = true;
             }
             catch (Exception ex)
             {
                 this.OnError(ex);
+            }
+        }
+
+        private Form ShowToolBox()
+        {
+            // curren screen shot
+            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+
+            using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
+            using (Graphics gra = Graphics.FromImage(bitPic))
+            {
+
+                gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
+                gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+
+                //can not use using block here, since we pass the bitmap into a form and show it
+                Bitmap cloneBitmap = bitPic.Clone(new Rectangle(MainOCR.XPoint, MainOCR.YPoint, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
+
+                FormToolBox tool = CreateToolBox(cloneBitmap);
+                tool.StartPosition = FormStartPosition.Manual;
+                tool.Location = new Point(this.Location.X - tool.Width + this.Width + 10, this.Location.Y + this.Size.Height + 24);
+                tool.Show();
+                return tool;
             }
         }
 
@@ -732,6 +753,9 @@ namespace SkyStopwatch
                     break;
                 case MainTheme.ThinTime:
                     InitGUILayoutV5();
+                    break;
+                case MainTheme.BossCallOnly:
+                    InitGUILayoutV6();
                     break;
                 default:
                     InitGUILayoutV4();

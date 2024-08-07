@@ -98,11 +98,11 @@
     <Compile Include="FormImageView.Designer.cs">
       <DependentUpon>FormImageView.cs</DependentUpon>
     </Compile>
-    <Compile Include="BoxNodeBossCounting.cs">
+    <Compile Include="BoxBossCounting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BoxNodeBossCounting.Designer.cs">
-      <DependentUpon>BoxNodeBossCounting.cs</DependentUpon>
+    <Compile Include="BoxBossCounting.Designer.cs">
+      <DependentUpon>BoxBossCounting.cs</DependentUpon>
     </Compile>
     <Compile Include="BoxNodeWarning.cs">
       <SubType>Form</SubType>
@@ -147,8 +147,8 @@
     <EmbeddedResource Include="FormImageView.resx">
       <DependentUpon>FormImageView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BoxNodeBossCounting.resx">
-      <DependentUpon>BoxNodeBossCounting.cs</DependentUpon>
+    <EmbeddedResource Include="BoxBossCounting.resx">
+      <DependentUpon>BoxBossCounting.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BoxNodeWarning.resx">
       <DependentUpon>BoxNodeWarning.cs</DependentUpon>

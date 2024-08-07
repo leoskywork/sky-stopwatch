@@ -13,14 +13,14 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxNodeBossCounting : Form
+    public partial class BoxBossCounting : Form
     {
         //private DateTime _CreatedTime = DateTime.Now;
         private Action _BeforeClose;
         private List<BossCallGroup> _BossCallGroups;
         private bool _AutoSlice;
 
-        public BoxNodeBossCounting(List<BossCallGroup> groups, bool autoSlice, Action onClosing)
+        public BoxBossCounting(List<BossCallGroup> groups, bool autoSlice, Action onClosing)
         {
             InitializeComponent();
 
