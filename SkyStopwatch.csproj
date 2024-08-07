@@ -71,11 +71,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModel\BossCall.cs" />
+    <Compile Include="DataModel\BossCallGroup.cs" />
+    <Compile Include="DataModel\DataItem.cs" />
     <Compile Include="FormBoot.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FormBoot.Designer.cs">
       <DependentUpon>FormBoot.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormImageViewBossCounting.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormImageViewBossCounting.Designer.cs">
+      <DependentUpon>FormImageViewBossCounting.cs</DependentUpon>
     </Compile>
     <Compile Include="FormImageViewPrice.cs">
       <SubType>Form</SubType>
@@ -89,12 +98,19 @@
     <Compile Include="FormImageView.Designer.cs">
       <DependentUpon>FormImageView.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormNodeWarning.cs">
+    <Compile Include="BoxNodeBossCounting.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormNodeWarning.Designer.cs">
-      <DependentUpon>FormNodeWarning.cs</DependentUpon>
+    <Compile Include="BoxNodeBossCounting.Designer.cs">
+      <DependentUpon>BoxNodeBossCounting.cs</DependentUpon>
     </Compile>
+    <Compile Include="BoxNodeWarning.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoxNodeWarning.Designer.cs">
+      <DependentUpon>BoxNodeWarning.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalData.cs" />
     <Compile Include="MainOCR.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -102,6 +118,7 @@
     <Compile Include="FormMain.Designer.cs">
       <DependentUpon>FormMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="MainOCRBossCounting.cs" />
     <Compile Include="MainOCRPrice.cs" />
     <Compile Include="MainTheme.cs" />
     <Compile Include="PowerLog.cs" />
@@ -118,6 +135,9 @@
     <EmbeddedResource Include="FormBoot.resx">
       <DependentUpon>FormBoot.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FormImageViewBossCounting.resx">
+      <DependentUpon>FormImageViewBossCounting.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormImageViewPrice.resx">
       <DependentUpon>FormImageViewPrice.cs</DependentUpon>
     </EmbeddedResource>
@@ -127,8 +147,11 @@
     <EmbeddedResource Include="FormImageView.resx">
       <DependentUpon>FormImageView.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormNodeWarning.resx">
-      <DependentUpon>FormNodeWarning.cs</DependentUpon>
+    <EmbeddedResource Include="BoxNodeBossCounting.resx">
+      <DependentUpon>BoxNodeBossCounting.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BoxNodeWarning.resx">
+      <DependentUpon>BoxNodeWarning.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

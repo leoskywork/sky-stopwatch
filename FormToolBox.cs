@@ -65,12 +65,12 @@ namespace SkyStopwatch
 
            
 
-            this.checkBoxDebugging.Checked = MainOCR.IsDebugging;
+            this.checkBoxDebugging.Checked = GlobalData.Default.IsDebugging;
             this.checkBoxPopWarning.Checked = MainOCR.EnableCheckTimeNode;
             this.textBoxTimeSpanNodes.Text = MainOCR.TimeNodeCheckingList;
 
 
-            if (MainOCR.IsDebugging)
+            if (GlobalData.Default.IsDebugging)
             {
 
                 //this.textBoxTimeSpanNodes.Text = "1:00";
@@ -212,13 +212,13 @@ namespace SkyStopwatch
 
         private void checkBoxDebugging_CheckedChanged(object sender, EventArgs e)
         {
-            MainOCR.IsDebugging = this.checkBoxDebugging.Checked;
+            GlobalData.Default.IsDebugging = this.checkBoxDebugging.Checked;
             SetDialogTitle();
         }
 
         private void SetDialogTitle()
         {
-            string prefix = MainOCR.IsDebugging ? $"debugging - OCR data {MainOCR.OCRTessdataFolder}" : "Tool box - dialog will auto close";
+            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {MainOCR.OCRTessdataFolder}" : "Tool box - dialog will auto close";
             this.Text = $"{prefix} - v{Program.Version}";
         }
 
@@ -236,7 +236,7 @@ namespace SkyStopwatch
 
           
 
-            MainOCR.FireChangeTheme();
+            GlobalData.Default.FireChangeTheme();
 
             Task.Delay(300).ContinueWith((_) =>
             {
@@ -278,7 +278,7 @@ namespace SkyStopwatch
         private void buttonCloseApp_Click(object sender, EventArgs e)
         {
             this.Close();
-            MainOCR.FireCloseApp();
+            GlobalData.Default.FireCloseApp();
         }
 
         private void buttonPriceList_Click(object sender, EventArgs e)
@@ -314,6 +314,13 @@ namespace SkyStopwatch
             builder.Remove(builder.Length - 1, 1); //remove the last comma (,)
 
             tip.SetToolTip(this.labelMessage, builder.ToString());
+        }
+
+        private void buttonCount_Click(object sender, EventArgs e)
+        {
+            var imageView = new FormImageViewBossCounting();
+            imageView.Show();
+            this.Close();
         }
     }
 }

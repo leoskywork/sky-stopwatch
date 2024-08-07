@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.DataModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,35 +12,54 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class FormImageViewPrice : Form
+    public partial class FormImageViewBossCounting : Form
     {
 
         //leotodo, pentontial multi-thread issue
-        private Queue<byte[]> _PriceImageQueue = new Queue<byte[]>();
+        private Queue<byte[]> _BossCallImageQueue = new Queue<byte[]>();
         private int _ScanCount;
         private int _CompareCount;
-        private bool _FoundTargetPrice;
         private Tesseract.TesseractEngine _AutoOCREngine;
         private bool _IsComparing;
 
-        public FormImageViewPrice()
+        //leotodo, multi-thread issue
+        private List<BossCallGroup> _BossGroups = new List<BossCallGroup>();
+        private DateTime _ApproximateGameRoundStartTime;
+        private DateTime _LastBossCallFoundTime;
+
+        public FormImageViewBossCounting()
         {
             InitializeComponent();
 
 
-            this.numericUpDownX.Value = MainOCRPrice.XPoint;
-            this.numericUpDownY.Value = MainOCRPrice.YPoint;
-            this.numericUpDownWidth.Value = MainOCRPrice.BlockWidth;
-            this.numericUpDownHeight.Value = MainOCRPrice.BlockHeight;
+            this.numericUpDownX.Value = MainOCRBossCounting.XPoint;
+            this.numericUpDownY.Value = MainOCRBossCounting.YPoint;
+            this.numericUpDownWidth.Value = MainOCRBossCounting.BlockWidth;
+            this.numericUpDownHeight.Value = MainOCRBossCounting.BlockHeight;
+            this.checkBoxAutoSlice.Checked = MainOCRBossCounting.EnableAutoSlice;
+            this.numericUpDownAutoSliceIntervalSeconds.Value = MainOCRBossCounting.AutoSliceIntervalSeconds;
 
-            this.timerScan.Interval = 300;
+            this.timerScan.Interval = 600;
             this.timerCompare.Interval = 100;
 
-            this.numericUpDownTargetPrice.Value = MainOCRPrice.TargetPrice;
-            this.numericUpDownAux1.Value = MainOCRPrice.Aux1Price;
-            this.numericUpDownAux2.Value = MainOCRPrice.Aux2Price;
+            GlobalData.Default.ChangeGameStartTime += OnChangeGameStartTime;
         }
 
+        private void OnChangeGameStartTime(object sender, ChangeGameStartTimeEventArgs e)
+        {
+            if (e == null || e.Source == null) return;
+
+            if (!e.Source.StartsWith(GlobalData.ChangeTimeSourcePreWarmUp) && !e.Source.StartsWith(GlobalData.ChangeTimeSourceAdjustTimeButton))
+            {
+                ResetBossCallCounting();
+            }
+        }
+
+        private void ResetBossCallCounting()
+        {
+            _BossGroups.Clear();
+            _ApproximateGameRoundStartTime = DateTime.Now;
+        }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
@@ -54,10 +74,12 @@ namespace SkyStopwatch
 
                 MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
-                MainOCRPrice.XPoint = x;
-                MainOCRPrice.YPoint = y;
-                MainOCRPrice.BlockWidth = width;
-                MainOCRPrice.BlockHeight = height;
+                MainOCRBossCounting.XPoint = x;
+                MainOCRBossCounting.YPoint = y;
+                MainOCRBossCounting.BlockWidth = width;
+                MainOCRBossCounting.BlockHeight = height;
+                MainOCRBossCounting.EnableAutoSlice = this.checkBoxAutoSlice.Checked;
+                MainOCRBossCounting.AutoSliceIntervalSeconds = (int)this.numericUpDownAutoSliceIntervalSeconds.Value;
 
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
             }
@@ -143,9 +165,15 @@ namespace SkyStopwatch
             try
             {
                 this.buttonStart.Enabled = false;
-                this.buttonStop.Enabled = true;
+                //leotodo, a better way to do this, unsaved changes found
+                //this.buttonSave.Enabled = false;
+                if (this.buttonSave.Enabled)
+                {
+                    MessageBox.Show("Please click the save button to submit changes first.");
+                    return;
+                }
 
-                this._PriceImageQueue.Clear();
+                this._BossCallImageQueue.Clear();
                 this._ScanCount = 0;
                 this._CompareCount = 0;
 
@@ -160,10 +188,14 @@ namespace SkyStopwatch
                 }
 
                 this.pictureBoxOne.Image = null;
-                this.textBoxPriceList.Text = null;
-                this.labelMessage.Text = "start";
-                this.labelPriceMessage.Text = null;
 
+                ResetBossCallCounting();
+                var bossCountingBox = new BoxNodeBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
+                bossCountingBox.StartPosition = FormStartPosition.Manual;
+                bossCountingBox.Location = new Point(this.Location.X + this.Width, this.Location.Y + 100);
+                bossCountingBox.Show();
+
+                this.Hide();
             }
             catch (Exception ex)
             {
@@ -171,89 +203,106 @@ namespace SkyStopwatch
             }
         }
 
-        private void buttonStop_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                this.buttonStart.Enabled = true;
-                this.buttonStop.Enabled = false;
-
-                if(this.timerScan.Enabled)
-                {
-                    this.timerScan.Stop();
-                }
-
-                if (this.timerCompare.Enabled)
-                {
-                    this.timerCompare.Stop();
-                }
-
-                this.labelMessage.Text = "stop";
-                this.labelPriceMessage.Text = null;
-            }
-            catch (Exception ex)
-            {
-                this.OnError(ex);
-            }
-        }
+       
 
         private void timerScan_Tick(object sender, EventArgs e)
         {
             try
             {
+                if (IsWithinOneRoundBossCall()) return;
+
                 this._ScanCount++;
-                var priceData = MainOCRPrice.GetPriceImageData();
-                this._PriceImageQueue.Enqueue(priceData);
+                var imageData = MainOCRBossCounting.GetFixedLocationImageData();
+                this._BossCallImageQueue.Enqueue(imageData);
             }
             catch (Exception ex)
             {
                 this.OnError(ex);
             }
+        }
+
+        private bool IsWithinOneRoundBossCall()
+        {
+            if (_LastBossCallFoundTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) > DateTime.Now)
+            {
+                System.Diagnostics.Debug.WriteLine($"boss call {DateTime.Now.ToString("h:mm:ss.fff")} scan: {_ScanCount}, compare: {_CompareCount}");
+                System.Diagnostics.Debug.WriteLine($"boss call check within one round - within: {_LastBossCallFoundTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) > DateTime.Now}");
+            }
+
+            return _LastBossCallFoundTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) > DateTime.Now;
         }
 
         private void timerCompare_Tick(object sender, EventArgs e)
         {
             try
             {
-                if (_PriceImageQueue.Count == 0) return;
+                if (_BossCallImageQueue.Count == 0) return;
                 if (_IsComparing) return;
+                if (IsWithinOneRoundBossCall()) return;
 
                 _IsComparing = true;
                 this._CompareCount++;
-                bool enableAux1 = this.checkBoxAux1.Checked;
-                bool enableAux2 = this.checkBoxAux2.Checked;
+                bool enableAutoSlice = this.checkBoxAutoSlice.Checked;
 
                 Task.Factory.StartNew(() =>
                 {
+
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
 
                     if (_AutoOCREngine == null)
                     {
-                        _AutoOCREngine = MainOCRPrice.GetDefaultOCREngine();
+                        _AutoOCREngine = MainOCRBossCounting.GetDefaultOCREngine();
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
                     }
 
-                    byte[] priceData = _PriceImageQueue.Dequeue();
-                    string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, priceData);
+                    byte[] rawData = _BossCallImageQueue.Dequeue();
+                    string ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
-                    var found = MainOCRPrice.FindPrice(data, enableAux1, enableAux2);
+                    var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, MainOCRBossCounting.Candidate1, MainOCRBossCounting.Candidate2);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
-                    if (GlobalData.Default.IsDebugging)
+                    if (found.Item1)
                     {
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
-                        System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}");
-                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
-                        string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), priceData);
+                        _LastBossCallFoundTime = DateTime.Now;
+                        var bossCall = new BossCall() { CreatedAt = _LastBossCallFoundTime };
+
+                        //leotodo need this ???
+                        //if (_ApproximateGameRoundStartTime.AddMinutes(MainOCR.MaxGameRoundMinutes) < DateTime.Now)
+                        //{
+                        //    ResetBossCallCounting();
+                        //}
+
+                        if (enableAutoSlice)
+                        {
+                            //leotodo
+                        }
+                        else
+                        {
+                            if (_BossGroups.Count == 0)
+                            {
+                                _BossGroups.Add(new BossCallGroup());
+                            }
+
+                            _BossGroups[0].Calls.Add(bossCall);
+                        }
+                    }
+
+                    if (GlobalData.Default.IsDebugging || found.Item1)
+                    {
+                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
+                        System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}, OCR data: {ocrProcessedData}");
+                        string tmpPath = MainOCR.SaveTmpFile($"boss-call-{found.Item1}-{found.Item2}", rawData);
                         System.Diagnostics.Debug.WriteLine($"tmp path: {tmpPath}");
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
 
-                    return Tuple.Create(found.Item1, data, priceData, found.Item2);
+                    return found;
 
                 }).ContinueWith(t =>
                 {
+                    _IsComparing = false;
+
                     if (this.IsDead()) return;
 
                     if (t.IsFaulted)
@@ -261,64 +310,7 @@ namespace SkyStopwatch
                         this.OnError(t.Exception);
                         return;
                     }
-
-                    this.RunOnMain(() =>
-                    {
-                        _FoundTargetPrice = t.Result.Item1;
-                        this.labelMessage.Text = $"scan: {_ScanCount}, compare: {_CompareCount}";
-
-
-                        if (_FoundTargetPrice)
-                        {
-                            string aux1Message = enableAux1 ? "|" + MainOCRPrice.Aux1Price : string.Empty;
-                            string aux2Message = enableAux2 ? "|" + MainOCRPrice.Aux2Price : string.Empty;
-                            this.labelPriceMessage.Text = $"FOUND: {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}, no.{t.Result.Item4 + 1}";
-                            this.labelPriceMessage.BackColor = Color.Red;
-                            this.labelPriceMessage.ForeColor = Color.White;
-
-                            // the following code not show correctly
-                            // this.textBoxPriceList.Text = t.Result.Item2;
-                            string[] lines = t.Result.Item2.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                            this.textBoxPriceList.Text = lines.Aggregate(string.Empty, (a, b) => a + Environment.NewLine + b);
-                            
-                            this.pictureBoxOne.Image?.Dispose();
-                            this.pictureBoxOne.Image = MainOCR.BytesToBitmap(t.Result.Item3);
-                        }
-                        else
-                        {
-                            string aux1Message = enableAux1 ? "," + MainOCRPrice.Aux1Price : string.Empty;
-                            string aux2Message = enableAux2 ? "," + MainOCRPrice.Aux2Price : string.Empty;
-                            this.labelPriceMessage.Text = $"checking {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}...";
-                            this.labelPriceMessage.BackColor = Color.Transparent;
-                            this.labelPriceMessage.ForeColor = Color.Black;
-
-                            this.textBoxPriceList.Text = null;
-
-                            if (this.pictureBoxOne.Image != null)
-                            {
-                                this.pictureBoxOne.Image.Dispose();
-                                this.pictureBoxOne.Image = null;
-                            }
-                        }
-
-                        _IsComparing = false;
-
-                    });
                 });
-            }
-            catch (Exception ex)
-            {
-                this.OnError(ex);
-            }
-        }
-
-        private void numericUpDownTargetPrice_ValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                int oldValue = MainOCRPrice.TargetPrice;
-                MainOCRPrice.TargetPrice = (int)this.numericUpDownTargetPrice.Value;
-                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} change target price: {oldValue} -> {MainOCRPrice.TargetPrice}");
             }
             catch (Exception ex)
             {
@@ -330,7 +322,8 @@ namespace SkyStopwatch
         {
             try
             {
-              this.numericUpDownAux1.Enabled = this.checkBoxAux1.Checked;
+                this.numericUpDownAutoSliceIntervalSeconds.Enabled = this.checkBoxAutoSlice.Checked;
+                this.buttonSave.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -338,23 +331,14 @@ namespace SkyStopwatch
             }
         }
 
-        private void checkBoxAux2_CheckedChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                this.numericUpDownAux2.Enabled = this.checkBoxAux2.Checked;
-            }
-            catch (Exception ex)
-            {
-                this.OnError(ex);
-            }
-        }
+     
 
         private void numericUpDownAux1_ValueChanged(object sender, EventArgs e)
         {
             try
             {
-                MainOCRPrice.Aux1Price = (int) this.numericUpDownAux1.Value;
+                MainOCRBossCounting.AutoSliceIntervalSeconds = (int) this.numericUpDownAutoSliceIntervalSeconds.Value;
+                this.buttonSave.Enabled = true;
             }
             catch (Exception ex)
             {
@@ -362,11 +346,13 @@ namespace SkyStopwatch
             }
         }
 
-        private void numericUpDownAux2_ValueChanged(object sender, EventArgs e)
+        private void FormImageViewCounting_FormClosing(object sender, FormClosingEventArgs e)
         {
             try
             {
-                MainOCRPrice.Aux2Price = (int) this.numericUpDownAux2.Value;
+                this.timerScan.Stop();
+                this.timerCompare.Stop();
+                GlobalData.Default.ChangeGameStartTime -= OnChangeGameStartTime;
             }
             catch (Exception ex)
             {

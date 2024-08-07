@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class FormNodeWarning : Form
+    public partial class BoxNodeWarning : Form
     {
         private DateTime _CreatedTime = DateTime.Now;
         private Action _BeforeClose;
 
-        public FormNodeWarning(Action onClosing)
+        public BoxNodeWarning(Action onClosing)
         {
             InitializeComponent();
 
@@ -27,7 +27,7 @@ namespace SkyStopwatch
             //do this at last
             this.timerClose.Interval = 1000;
             this.timerClose.Start();
-            MainOCR.ChangeGameStartTime += MainOCR_ChangeGameStartTime;
+            GlobalData.Default.ChangeGameStartTime += MainOCR_ChangeGameStartTime;
         }
 
         private void MainOCR_ChangeGameStartTime(object sender, ChangeGameStartTimeEventArgs e)
@@ -53,7 +53,7 @@ namespace SkyStopwatch
         {
             _BeforeClose?.Invoke();
             _BeforeClose = null;
-            MainOCR.ChangeGameStartTime -= MainOCR_ChangeGameStartTime;
+            GlobalData.Default.ChangeGameStartTime -= MainOCR_ChangeGameStartTime;
         }
 
 

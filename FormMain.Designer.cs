@@ -30,7 +30,6 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonToolBox = new System.Windows.Forms.Button();
             this.labelTimer = new System.Windows.Forms.Label();
             this.timerMain = new System.Windows.Forms.Timer(this.components);
@@ -42,14 +41,7 @@
             // 
             // buttonOCR
             // 
-            this.buttonOCR.Location = new System.Drawing.Point(167, 44);
-            this.buttonOCR.Margin = new System.Windows.Forms.Padding(4);
-            this.buttonOCR.Name = "buttonOCR";
-            this.buttonOCR.Size = new System.Drawing.Size(70, 30);
-            this.buttonOCR.TabIndex = 0;
-            this.buttonOCR.Text = "OCR";
-            this.buttonOCR.UseVisualStyleBackColor = true;
-            this.buttonOCR.Click += new System.EventHandler(this.buttonOCR_Click);
+     
             // 
             // buttonToolBox
             // 
@@ -126,7 +118,6 @@
             this.Controls.Add(this.buttonCloseOverlay);
             this.Controls.Add(this.labelTimer);
             this.Controls.Add(this.buttonToolBox);
-            this.Controls.Add(this.buttonOCR);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
@@ -143,7 +134,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button buttonOCR;
         private System.Windows.Forms.Button buttonToolBox;
         private System.Windows.Forms.Label labelTimer;
         private System.Windows.Forms.Timer timerMain;

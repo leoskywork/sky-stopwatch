@@ -142,5 +142,65 @@ namespace SkyStopwatch.Properties {
                 this["EnableCheckTimeNode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableBossCountingAutoSlice {
+            get {
+                return ((bool)(this["EnableBossCountingAutoSlice"]));
+            }
+            set {
+                this["EnableBossCountingAutoSlice"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int BossCountingAutoSliceSeconds {
+            get {
+                return ((int)(this["BossCountingAutoSliceSeconds"]));
+            }
+            set {
+                this["BossCountingAutoSliceSeconds"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("800, 800")]
+        public global::System.Drawing.Point BossCountingViewPoint {
+            get {
+                return ((global::System.Drawing.Point)(this["BossCountingViewPoint"]));
+            }
+            set {
+                this["BossCountingViewPoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size BossCountingViewSize {
+            get {
+                return ((global::System.Drawing.Size)(this["BossCountingViewSize"]));
+            }
+            set {
+                this["BossCountingViewSize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool EnableDebugging {
+            get {
+                return ((bool)(this["EnableDebugging"]));
+            }
+            set {
+                this["EnableDebugging"] = value;
+            }
+        }
     }
 }

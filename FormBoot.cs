@@ -39,12 +39,12 @@ namespace SkyStopwatch
                     });
                 });
 
-                MainOCR.ChangeTheme += (_, __) =>
+                GlobalData.Default.ChangeTheme += (_, __) =>
                 {
                     this.RunOnMain(this.OnChangeTheme);
                 };
 
-                MainOCR.CloseApp += (_, __) =>
+                GlobalData.Default.CloseApp += (_, __) =>
                 {
                     if (this._LastTheme != null && !_LastTheme.IsDead())
                     {

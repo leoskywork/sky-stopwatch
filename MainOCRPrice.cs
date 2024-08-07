@@ -13,7 +13,6 @@ namespace SkyStopwatch
 {
     public class MainOCRPrice
     {
-        //leotodo, a better way to do this, config file ？
         //big screen (pc-pro) ----- 1470, 240, 160, 740
         public static int XPoint = 1470;
         public static int YPoint = 240;
@@ -29,7 +28,7 @@ namespace SkyStopwatch
         {
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
-            if (MainOCR.IsDebugging)
+            if (GlobalData.Default.IsDebugging)
             {
                 System.Diagnostics.Debug.WriteLine($"screen: {screenRect}");
             }

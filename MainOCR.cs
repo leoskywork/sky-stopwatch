@@ -43,6 +43,8 @@ namespace SkyStopwatch
         public const int TimeNodeEarlyWarningSeconds = 15;//20;//30;
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
         public const int PreRoundGameMinutes = 30; //can not join game after 30 min
+        public const int MaxGameRoundMinutes = 40;
+        public const int MinBossCallTimeSeconds = 5;
 
         public const string TimeSpanFormat = @"hh\:mm\:ss";
         public const string TImeSpanFormatNoHour = @"mm\:ss";
@@ -55,7 +57,7 @@ namespace SkyStopwatch
         public const string OCRTessdataFolder = @"C:\Dev\OCR\";
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
-        public static bool IsDebugging { get; set; } = false;
+        //public static bool IsDebugging { get; set; } = false; //moved to global data
         //public static bool ShowSystemClock { get; set; } = true;
         //does not default this to Empty, since user may clear up the list
         public static string TimeNodeCheckingList { get; set; } = null;
@@ -65,11 +67,7 @@ namespace SkyStopwatch
 
         public static int BootingArgs { get; set; } = 0;
         public static List<string> ProcessList { get; set; } = new List<string>();
-        //lazy way to do it, should be singleton
-        public static event EventHandler ChangeTheme;
-        public static event EventHandler CloseApp;
-        public static event EventHandler<ChangeAppConfigEventArgs> ChangeAppConfig;
-        public static event EventHandler<ChangeGameStartTimeEventArgs> ChangeGameStartTime;
+      
 
         public static void PrintScreenAsFile(string path)
         {
@@ -127,7 +125,7 @@ namespace SkyStopwatch
         {
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
-            if (MainOCR.IsDebugging)
+            if (GlobalData.Default.IsDebugging)
             {
                 System.Diagnostics.Debug.WriteLine($"screen: {screenRect}");
             }
@@ -197,7 +195,14 @@ namespace SkyStopwatch
                     Directory.CreateDirectory(subFolder);
                 }
 
-                if (Directory.GetFiles(subFolder).Length > 600)
+                int maxTmpFileCount = 600;
+
+                if(Environment.MachineName.ToUpper() == "LEO-PC-PRO")
+                {
+                    maxTmpFileCount = 10000;
+                }
+
+                if (Directory.GetFiles(subFolder).Length > maxTmpFileCount)
                 {
                     try
                     {
@@ -404,48 +409,12 @@ namespace SkyStopwatch
             height = safeHeight;
         }
 
-        public static void FireChangeTheme()
-        {
-           ChangeTheme?.Invoke(null, null);
-        }
 
-        public static void FireCloseApp()
-        {
-            CloseApp?.Invoke(null, null);
-        }
 
-        public static void FireChangeAppConfig(ChangeAppConfigEventArgs e)
-        {
-            ChangeAppConfig?.Invoke(null, e);
-        }
-
-        public static void FireChangeGameStartTime(ChangeGameStartTimeEventArgs e)
-        {
-            ChangeGameStartTime?.Invoke(null, e);
-        }
+      
     }
 
-    public class ChangeAppConfigEventArgs : EventArgs
-    {
-        public string Source { get; set; }
-        public bool SaveRightNow { get; set; }
 
-        public ChangeAppConfigEventArgs(string source, bool saveRightNow)
-        {
-            this.Source = source;
-            this.SaveRightNow = saveRightNow;
-        }
-    }
-
-    public class ChangeGameStartTimeEventArgs: EventArgs
-    {
-        public DateTime NewTime{ get; set; }
-
-        public ChangeGameStartTimeEventArgs(DateTime time)
-        {
-                NewTime = time;
-        }
-    }
 
     public static class FormLeoExt
     {
@@ -453,7 +422,7 @@ namespace SkyStopwatch
         {
             System.Diagnostics.Debug.WriteLine(e.ToString());
 
-            if (MainOCR.IsDebugging)
+            if (GlobalData.Default.IsDebugging)
             {
                 MessageBox.Show(e.ToString());
             }
@@ -461,7 +430,7 @@ namespace SkyStopwatch
             {
                 MessageBox.Show(e.Message);
 
-                form.RunOnMain(() => MainOCR.FireCloseApp());
+                form.RunOnMain(() => GlobalData.Default.FireCloseApp());
             }
         }
 
@@ -475,11 +444,11 @@ namespace SkyStopwatch
             if(action == null) return;
             if(form.IsDead()) return;
 
-            System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed} - before if");
+            //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed} - before if");
             if (form.InvokeRequired)
             {
                 if (form.IsDead()) return; //not sure why, the is dead check above not working sometimes, do it again here
-                System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed}");
+                //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed}");
                 form.Invoke(action);
             }
             else

@@ -33,7 +33,7 @@ namespace SkyStopwatch
                 //MainOCR.TimeNodeCheckingList = "10:30\r\n20:30\r\n35:00";
             }
 
-            MainOCR.ChangeAppConfig += (_, e) =>
+            GlobalData.Default.ChangeAppConfig += (_, e) =>
             {
                 if (e.SaveRightNow)
                 {
@@ -57,6 +57,7 @@ namespace SkyStopwatch
             MainOCR.EnableTopMost = Properties.Settings.Default.EnableTopMost;
             MainOCR.EnableLogToFile = Properties.Settings.Default.EnableLogToFile;
             MainOCR.EnableCheckTimeNode = Properties.Settings.Default.EnableCheckTimeNode;
+            GlobalData.Default.IsDebugging = Properties.Settings.Default.EnableDebugging;
 
 
             MainOCR.XPoint = Properties.Settings.Default.TimeViewPoint.X;
@@ -69,12 +70,23 @@ namespace SkyStopwatch
             MainOCRPrice.BlockWidth = Properties.Settings.Default.PriceViewSize.Width;
             MainOCRPrice.BlockHeight = Properties.Settings.Default.PriceViewSize.Height;
 
+
+            MainOCRBossCounting.EnableAutoSlice = Properties.Settings.Default.EnableBossCountingAutoSlice;
+            MainOCRBossCounting.AutoSliceIntervalSeconds = Properties.Settings.Default.BossCountingAutoSliceSeconds;
+            MainOCRBossCounting.XPoint = Properties.Settings.Default.BossCountingViewPoint.X;
+            MainOCRBossCounting.YPoint = Properties.Settings.Default.BossCountingViewPoint.Y;
+            MainOCRBossCounting.BlockWidth = Properties.Settings.Default.BossCountingViewSize.Width;
+            MainOCRBossCounting.BlockHeight = Properties.Settings.Default.BossCountingViewSize.Height;
+
+
             //safe check
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
             MainOCR.XPoint = Math.Min(MainOCR.XPoint, screenRect.Width - MainOCR.BlockWidth);
             MainOCR.YPoint = Math.Min(MainOCR.YPoint, screenRect.Height - MainOCR.BlockHeight);
             MainOCRPrice.XPoint = Math.Min(MainOCRPrice.XPoint, screenRect.Width - MainOCRPrice.BlockWidth);
             MainOCRPrice.YPoint = Math.Min(MainOCRPrice.YPoint, screenRect.Height - MainOCRPrice.BlockHeight);
+            MainOCRBossCounting.XPoint = Math.Min(MainOCRBossCounting.XPoint, screenRect.Width - MainOCRBossCounting.BlockWidth);
+            MainOCRBossCounting.YPoint = Math.Min(MainOCRBossCounting.YPoint, screenRect.Height - MainOCRBossCounting.BlockHeight);
 
             if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ProcessListCSV))
             {
@@ -92,6 +104,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.EnableTopMost = MainOCR.EnableTopMost;
                 Properties.Settings.Default.EnableLogToFile = MainOCR.EnableLogToFile;
                 Properties.Settings.Default.EnableCheckTimeNode = MainOCR.EnableCheckTimeNode;
+                Properties.Settings.Default.EnableDebugging = GlobalData.Default.IsDebugging;
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(MainOCR.XPoint, MainOCR.YPoint);
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(MainOCR.BlockWidth, MainOCR.BlockHeight);
@@ -100,6 +113,11 @@ namespace SkyStopwatch
                 Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(MainOCRPrice.BlockWidth, MainOCRPrice.BlockHeight);
 
                 Properties.Settings.Default.ProcessListCSV = MainOCR.ProcessList.Count > 0 ? string.Join(",", MainOCR.ProcessList) : string.Empty;
+
+                Properties.Settings.Default.EnableBossCountingAutoSlice = MainOCRBossCounting.EnableAutoSlice;
+                Properties.Settings.Default.BossCountingAutoSliceSeconds = MainOCRBossCounting.AutoSliceIntervalSeconds;
+                Properties.Settings.Default.BossCountingViewPoint = new System.Drawing.Point(MainOCRBossCounting.XPoint, MainOCRBossCounting.YPoint);
+                Properties.Settings.Default.BossCountingViewSize = new System.Drawing.Size(MainOCRBossCounting.BlockWidth, MainOCRBossCounting.BlockHeight);
 
                 Properties.Settings.Default.Save();
             }

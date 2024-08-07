@@ -46,7 +46,7 @@ namespace SkyStopwatch
                 MainOCR.YPoint = y;
                 MainOCR.BlockWidth = width;
                 MainOCR.BlockHeight = height;
-                MainOCR.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
                 this.Close();
             }
             catch (Exception ex)
