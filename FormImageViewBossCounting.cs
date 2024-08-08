@@ -24,9 +24,8 @@ namespace SkyStopwatch
         private bool _IsComparing;
 
         //leotodo, multi-thread issue
-        private List<BossCallGroup> _BossGroups = new List<BossCallGroup>();
+        private BossCallSet _BossGroups = new BossCallSet();
 
-        private DateTime _ApproximateGameRoundStartTime;
         private DateTime _LastBossCallFoundTime;
         private bool _AutoShowPopupBox;
 
@@ -62,16 +61,11 @@ namespace SkyStopwatch
 
             if (!e.Source.StartsWith(GlobalData.ChangeTimeSourcePreWarmUp) && !e.Source.StartsWith(GlobalData.ChangeTimeSourceAdjustTimeButton))
             {
-                ResetBossCallCounting();
+                _BossGroups.Reset();
             }
         }
 
-        private void ResetBossCallCounting()
-        {
-            _BossGroups.Clear();
-            _BossGroups.Add(new BossCallGroup());
-            _ApproximateGameRoundStartTime = DateTime.Now;
-        }
+      
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
@@ -94,9 +88,12 @@ namespace SkyStopwatch
                 MainOCRBossCounting.AutoSliceIntervalSeconds = (int)this.numericUpDownAutoSliceIntervalSeconds.Value;
 
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
+
+                this.buttonStart.Enabled = true;
             }
             catch (Exception ex)
             {
+                this.buttonSave.Enabled = true;
                 this.OnError(ex);
             }
         }
@@ -174,7 +171,7 @@ namespace SkyStopwatch
             if (this._AutoShowPopupBox)
             {
                 this.ResetTimers();
-                this.ResetBossCallCounting();
+                _BossGroups.Reset();
                 this.PopupCountingBox();
                 this.RunOnMain(() => this.Hide(), 1);
             };
@@ -196,7 +193,7 @@ namespace SkyStopwatch
                 this.pictureBoxOne.Image = null;
 
                 ResetTimers();
-                ResetBossCallCounting();
+                _BossGroups.Reset();
                 PopupCountingBox();
                 this.Hide();
             }
@@ -290,7 +287,7 @@ namespace SkyStopwatch
 
                     var rawData = _BossCallImageQueue.Dequeue();
                     var ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
-                    var lastBossCall = _BossGroups.Last().Calls.LastOrDefault();
+                    var lastBossCall = _BossGroups.LastCallOrDefault();
                     int ocrMatchDigit = 5;
 
                     if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.IsTop1CallSameBossCallWith(DateTime.Now))
@@ -312,7 +309,7 @@ namespace SkyStopwatch
                                 OCRLastMatch = found.Item3,
                                 PreCounting = true
                             };
-                            _BossGroups.Last().Calls.Add(bossCall);
+                            _BossGroups.Last().Add(bossCall);
                         }
                         else
                         {
@@ -329,7 +326,7 @@ namespace SkyStopwatch
                             else //not the same call, remove old and add new
                             {
                                 lastBossCall.PreCounting = false;
-                                _BossGroups.Last().Calls.Remove(lastBossCall);
+                                _BossGroups.Last().Remove(lastBossCall);
                                 var bossCall = new BossCall
                                 {
                                     FirstMatchTime = DateTime.Now,
@@ -337,7 +334,7 @@ namespace SkyStopwatch
                                     OCRLastMatch = found.Item3,
                                     PreCounting = true
                                 };
-                                _BossGroups.Last().Calls.Add(bossCall);
+                                _BossGroups.Last().Add(bossCall);
                             }
                         }
                     }
@@ -351,7 +348,7 @@ namespace SkyStopwatch
 
                     if (GlobalData.Default.IsDebugging || found.Item1)
                     {
-                        string tmpPath = MainOCR.SaveTmpFile($"boss-call-{found.Item1}-{found.Item2}", rawData);
+                        string tmpPath = MainOCR.SaveTmpFile($"boss-call-{found.Item1}-{found.Item2}-within-1-{IsWithinOneRoundBossCall()}", rawData);
                         System.Diagnostics.Debug.WriteLine($"tmp path: {tmpPath}");
                         System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}, OCR data: {ocrProcessedData}");
                     }
@@ -372,7 +369,7 @@ namespace SkyStopwatch
 
                     if(_BossGroups.Sum(g => g.Calls.Count) >= 1000)
                     {
-                        ResetBossCallCounting();
+                        _BossGroups.Reset();
                     }
                 });
             }

@@ -15,12 +15,11 @@ namespace SkyStopwatch
 {
     public partial class BoxBossCounting : Form
     {
-        //private DateTime _CreatedTime = DateTime.Now;
         private Action _BeforeClose;
-        private List<BossCallGroup> _BossCallGroups;
+        private BossCallSet  _BossCallGroups;
         private bool _AutoSlice;
 
-        public BoxBossCounting(List<BossCallGroup> groups, bool autoSlice, Action onClosing)
+        public BoxBossCounting(BossCallSet groups, bool autoSlice, Action onClosing)
         {
             InitializeComponent();
 
@@ -53,6 +52,9 @@ namespace SkyStopwatch
             {
                 this.tableLayoutPanelRight.Hide();
                 this.Size = new Size(this.Size.Width - 44, this.Size.Height - 10);
+                this.labelMessage.Font = new Font("SimSun", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+                //this.labelMessage.Padding = new Padding(2,0,10,0);
+                //this.labelMessage.BackColor = System.Drawing.Color.Gray;
 
                 const int closeSize = 30;
                 this.buttonKill.Text = null;
@@ -65,12 +67,15 @@ namespace SkyStopwatch
                 this.buttonKill.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
                 this.buttonKill.UseVisualStyleBackColor = true;
                 this.buttonKill.Margin = new System.Windows.Forms.Padding(0);
+                this.buttonReset.Size = new Size(50, 30);
+                this.buttonReset.Location = new Point(this.Size.Width, 0);
 
                 this.RunOnMain(() => { this.labelMessage.Focus(); }, 1);
             }
             else
             {
                 this.buttonKill.Hide();
+                this.buttonReset.Hide();
                 this.Size = new Size(this.Size.Width - 10, this.Size.Height);
                 this.tableLayoutPanelRight.Size = new Size(this.tableLayoutPanelRight.Width + 12, this.tableLayoutPanelRight.Height);
 
@@ -105,7 +110,7 @@ namespace SkyStopwatch
                 return; 
             }
 
-            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
+            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => GlobalData.Default.EnableBossCountingOneMode ? c.IsValid : c.PreCounting ).Count().ToString();
             this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.IsValid).Count())}-P{this._BossCallGroups.Count}";
         }
 
@@ -264,6 +269,23 @@ namespace SkyStopwatch
             _BossCallGroups.Last().Calls.RemoveAt(_BossCallGroups.Last().Calls.Count - 1);
 
             DisableButtonShortTime(this.labelRemoveBossCall);
+        }
+
+     
+
+        private void buttonReset_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BoxBossCounting_MouseHover(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BoxBossCounting_MouseEnter(object sender, EventArgs e)
+        {
+
         }
     }
 }

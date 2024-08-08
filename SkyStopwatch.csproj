@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="DataModel\BossCall.cs" />
     <Compile Include="DataModel\BossCallGroup.cs" />
+    <Compile Include="DataModel\BossCallSet.cs" />
     <Compile Include="DataModel\DataItem.cs" />
     <Compile Include="FormBoot.cs">
       <SubType>Form</SubType>

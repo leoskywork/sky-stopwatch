@@ -10,5 +10,17 @@ namespace SkyStopwatch.DataModel
     {
         public List<BossCall> Calls { get; } = new List<BossCall>();
 
+        public string Name { get; set; }
+
+        public void Add(BossCall call)
+        {
+            Calls.Add(call);
+        }
+
+        public void Remove(BossCall call)
+        {
+            Calls.Remove(call);
+        }
+
     }
 }

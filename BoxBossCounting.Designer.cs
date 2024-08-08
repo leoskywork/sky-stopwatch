@@ -34,11 +34,12 @@
             this.tableLayoutPanelRight = new System.Windows.Forms.TableLayoutPanel();
             this.labelTotal = new System.Windows.Forms.Label();
             this.panelButtons = new System.Windows.Forms.Panel();
+            this.labelRemoveBossCall = new System.Windows.Forms.Label();
+            this.labelAddBossCall = new System.Windows.Forms.Label();
             this.labelAddGroup = new System.Windows.Forms.Label();
             this.labelKill = new System.Windows.Forms.Label();
             this.buttonKill = new System.Windows.Forms.Button();
-            this.labelAddBossCall = new System.Windows.Forms.Label();
-            this.labelRemoveBossCall = new System.Windows.Forms.Label();
+            this.buttonReset = new System.Windows.Forms.Button();
             this.tableLayoutPanelRight.SuspendLayout();
             this.panelButtons.SuspendLayout();
             this.SuspendLayout();
@@ -102,6 +103,38 @@
             this.panelButtons.Size = new System.Drawing.Size(74, 19);
             this.panelButtons.TabIndex = 1;
             // 
+            // labelRemoveBossCall
+            // 
+            this.labelRemoveBossCall.AutoSize = true;
+            this.labelRemoveBossCall.BackColor = System.Drawing.Color.RoyalBlue;
+            this.labelRemoveBossCall.Dock = System.Windows.Forms.DockStyle.Left;
+            this.labelRemoveBossCall.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelRemoveBossCall.ForeColor = System.Drawing.Color.Transparent;
+            this.labelRemoveBossCall.Location = new System.Drawing.Point(50, 0);
+            this.labelRemoveBossCall.Margin = new System.Windows.Forms.Padding(3);
+            this.labelRemoveBossCall.Name = "labelRemoveBossCall";
+            this.labelRemoveBossCall.Size = new System.Drawing.Size(25, 15);
+            this.labelRemoveBossCall.TabIndex = 3;
+            this.labelRemoveBossCall.Text = "-B";
+            this.labelRemoveBossCall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelRemoveBossCall.Click += new System.EventHandler(this.labelRemoveBossCall_Click);
+            // 
+            // labelAddBossCall
+            // 
+            this.labelAddBossCall.AutoSize = true;
+            this.labelAddBossCall.BackColor = System.Drawing.Color.RoyalBlue;
+            this.labelAddBossCall.Dock = System.Windows.Forms.DockStyle.Left;
+            this.labelAddBossCall.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelAddBossCall.ForeColor = System.Drawing.Color.Transparent;
+            this.labelAddBossCall.Location = new System.Drawing.Point(25, 0);
+            this.labelAddBossCall.Margin = new System.Windows.Forms.Padding(3);
+            this.labelAddBossCall.Name = "labelAddBossCall";
+            this.labelAddBossCall.Size = new System.Drawing.Size(25, 15);
+            this.labelAddBossCall.TabIndex = 2;
+            this.labelAddBossCall.Text = "+B";
+            this.labelAddBossCall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.labelAddBossCall.Click += new System.EventHandler(this.labelAddBossCall_Click);
+            // 
             // labelAddGroup
             // 
             this.labelAddGroup.AutoSize = true;
@@ -143,43 +176,22 @@
             this.buttonKill.UseVisualStyleBackColor = true;
             this.buttonKill.Click += new System.EventHandler(this.buttonKill_Click);
             // 
-            // labelAddBossCall
+            // buttonReset
             // 
-            this.labelAddBossCall.AutoSize = true;
-            this.labelAddBossCall.BackColor = System.Drawing.Color.RoyalBlue;
-            this.labelAddBossCall.Dock = System.Windows.Forms.DockStyle.Left;
-            this.labelAddBossCall.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelAddBossCall.ForeColor = System.Drawing.Color.Transparent;
-            this.labelAddBossCall.Location = new System.Drawing.Point(25, 0);
-            this.labelAddBossCall.Margin = new System.Windows.Forms.Padding(3);
-            this.labelAddBossCall.Name = "labelAddBossCall";
-            this.labelAddBossCall.Size = new System.Drawing.Size(25, 15);
-            this.labelAddBossCall.TabIndex = 2;
-            this.labelAddBossCall.Text = "+B";
-            this.labelAddBossCall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelAddBossCall.Click += new System.EventHandler(this.labelAddBossCall_Click);
-            // 
-            // labelRemoveBossCall
-            // 
-            this.labelRemoveBossCall.AutoSize = true;
-            this.labelRemoveBossCall.BackColor = System.Drawing.Color.RoyalBlue;
-            this.labelRemoveBossCall.Dock = System.Windows.Forms.DockStyle.Left;
-            this.labelRemoveBossCall.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.labelRemoveBossCall.ForeColor = System.Drawing.Color.Transparent;
-            this.labelRemoveBossCall.Location = new System.Drawing.Point(50, 0);
-            this.labelRemoveBossCall.Margin = new System.Windows.Forms.Padding(3);
-            this.labelRemoveBossCall.Name = "labelRemoveBossCall";
-            this.labelRemoveBossCall.Size = new System.Drawing.Size(25, 15);
-            this.labelRemoveBossCall.TabIndex = 3;
-            this.labelRemoveBossCall.Text = "-B";
-            this.labelRemoveBossCall.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.labelRemoveBossCall.Click += new System.EventHandler(this.labelRemoveBossCall_Click);
+            this.buttonReset.Location = new System.Drawing.Point(5, 27);
+            this.buttonReset.Name = "buttonReset";
+            this.buttonReset.Size = new System.Drawing.Size(75, 23);
+            this.buttonReset.TabIndex = 3;
+            this.buttonReset.Text = "Reset";
+            this.buttonReset.UseVisualStyleBackColor = true;
+            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // BoxBossCounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(166, 50);
+            this.Controls.Add(this.buttonReset);
             this.Controls.Add(this.buttonKill);
             this.Controls.Add(this.tableLayoutPanelRight);
             this.Controls.Add(this.labelMessage);
@@ -188,6 +200,8 @@
             this.Text = "Node Warning";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormNodeWarning_FormClosing);
             this.Load += new System.EventHandler(this.FormNodeBossCounting_Load);
+            this.MouseEnter += new System.EventHandler(this.BoxBossCounting_MouseEnter);
+            this.MouseHover += new System.EventHandler(this.BoxBossCounting_MouseHover);
             this.tableLayoutPanelRight.ResumeLayout(false);
             this.tableLayoutPanelRight.PerformLayout();
             this.panelButtons.ResumeLayout(false);
@@ -208,5 +222,6 @@
         private System.Windows.Forms.Button buttonKill;
         private System.Windows.Forms.Label labelAddBossCall;
         private System.Windows.Forms.Label labelRemoveBossCall;
+        private System.Windows.Forms.Button buttonReset;
     }
 }
