@@ -13,13 +13,13 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxBossCounting : Form
+    public partial class BoxBossCountingSuccinct : Form
     {
         private Action _BeforeClose;
         private BossCallSet  _BossCallGroups;
         private bool _AutoSlice;
 
-        public BoxBossCounting(BossCallSet groups, bool autoSlice, Action onClosing)
+        public BoxBossCountingSuccinct(BossCallSet groups, bool autoSlice, Action onClosing)
         {
             InitializeComponent();
 
@@ -36,9 +36,7 @@ namespace SkyStopwatch
 
         private void FormNodeBossCounting_Load(object sender, EventArgs e)
          {
-            this.labelKill.Cursor = Cursors.Arrow;
             this.labelMessage.Text = "-";
-            this.labelTotal.Text = "-";
 
             if (Environment.MachineName == "LEO-PC-PRO22")
             {
@@ -74,30 +72,7 @@ namespace SkyStopwatch
             }
             else
             {
-                this.buttonKill.Hide();
-                this.buttonReset.Hide();
-                this.Size = new Size(this.Size.Width - 10, this.Size.Height);
-                this.tableLayoutPanelRight.Size = new Size(this.tableLayoutPanelRight.Width + 12, this.tableLayoutPanelRight.Height);
-
-                this.labelAddGroup.ForeColor = System.Drawing.Color.Black;
-                this.labelAddGroup.BackColor = System.Drawing.Color.White;
-                this.labelAddGroup.Padding = new Padding(0);
-                this.labelAddGroup.Text = "+P";
-
-                this.labelAddBossCall.ForeColor = System.Drawing.Color.Black;
-                this.labelAddBossCall.BackColor = System.Drawing.Color.White;
-                this.labelAddBossCall.Padding = new Padding(2, 0, 2, 0);
-                this.labelAddBossCall.Text = "+";
-
-                this.labelRemoveBossCall.ForeColor = System.Drawing.Color.Black;
-                this.labelRemoveBossCall.BackColor = System.Drawing.Color.White;
-                this.labelRemoveBossCall.Padding = new Padding(4, 0, 2, 0);
-                this.labelRemoveBossCall.Text = "-";
-
-                this.labelKill.ForeColor = System.Drawing.Color.Black;
-                this.labelKill.BackColor = System.Drawing.Color.White;
-                //this.labelKill.Margin = new Padding(0, -10, 0, 6); //not working
-                this.labelKill.Text = "X";
+          
             }
         }
 
@@ -106,12 +81,10 @@ namespace SkyStopwatch
             if(_BossCallGroups == null ||  _BossCallGroups.Count == 0)
             {
                 this.labelMessage.Text = DateTime.Now.Second % 2 == 1 ?  "." : "";
-                this.labelTotal.Text = "-";
                 return; 
             }
 
             this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => GlobalData.Default.EnableBossCountingOneMode ? c.IsValid : c.PreCounting ).Count().ToString();
-            this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.IsValid).Count())}-P{this._BossCallGroups.Count}";
         }
 
         private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)
@@ -208,16 +181,7 @@ namespace SkyStopwatch
                 GlobalData.Default.FireCloseApp();
             }
         }
-
-        private void labelAddGroup_Click(object sender, EventArgs e)
-        {
-            if(_BossCallGroups == null) return;
-
-            _BossCallGroups.Add(new BossCallGroup());
-
-
-            DisableButtonShortTime(this.labelAddGroup);
-        }
+ 
  
 
         private void buttonKill_Click(object sender, EventArgs e)
@@ -225,26 +189,7 @@ namespace SkyStopwatch
             this.CloseInternal();
         }
 
-        private void labelAddBossCall_Click(object sender, EventArgs e)
-        {
-            if (_BossCallGroups == null) return;
-            if (_BossCallGroups.Count == 0) _BossCallGroups.Add(new BossCallGroup());
-
-            _BossCallGroups.Last().Calls.Add(new BossCall()
-            {
-                Id = -1,
-                IsValid = true,
-                FirstMatchTime = DateTime.Now,
-                FirstMatchValue = -1,
-                SecondMatchTime = DateTime.Now,
-                SecondMatchValue = -1,
-                OCRLastMatch = -1,
-                PreCounting = true
-            });
-
-            DisableButtonShortTime(this.labelAddBossCall);
-          
-        }
+    
 
         private void DisableButtonShortTime(Label control)
         {
@@ -264,14 +209,7 @@ namespace SkyStopwatch
             }, 300);
         }
 
-        private void labelRemoveBossCall_Click(object sender, EventArgs e)
-        {
-            if (_BossCallGroups == null || _BossCallGroups.Count == 0 || _BossCallGroups.Last().Calls.Count == 0) return;
-
-            _BossCallGroups.Last().Calls.RemoveAt(_BossCallGroups.Last().Calls.Count - 1);
-
-            DisableButtonShortTime(this.labelRemoveBossCall);
-        }
+ 
 
      
 

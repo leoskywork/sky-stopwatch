@@ -71,6 +71,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoxBossCountingSuccinct.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoxBossCountingSuccinct.Designer.cs">
+      <DependentUpon>BoxBossCountingSuccinct.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataModel\BossCall.cs" />
     <Compile Include="DataModel\BossCallGroup.cs" />
     <Compile Include="DataModel\BossCallSet.cs" />
@@ -133,6 +139,9 @@
       <DependentUpon>FormToolBox.cs</DependentUpon>
     </Compile>
     <Compile Include="ToDo.cs" />
+    <EmbeddedResource Include="BoxBossCountingSuccinct.resx">
+      <DependentUpon>BoxBossCountingSuccinct.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormBoot.resx">
       <DependentUpon>FormBoot.cs</DependentUpon>
     </EmbeddedResource>

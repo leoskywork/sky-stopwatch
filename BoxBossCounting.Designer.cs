@@ -61,6 +61,7 @@
             this.labelMessage.Text = "500";
             this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelMessage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.labelMessage_MouseDown);
+            this.labelMessage.MouseHover += new System.EventHandler(this.labelMessage_MouseHover);
             // 
             // tableLayoutPanelRight
             // 
@@ -197,11 +198,8 @@
             this.Controls.Add(this.labelMessage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BoxBossCounting";
-            this.Text = "Node Warning";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormNodeWarning_FormClosing);
             this.Load += new System.EventHandler(this.FormNodeBossCounting_Load);
-            this.MouseEnter += new System.EventHandler(this.BoxBossCounting_MouseEnter);
-            this.MouseHover += new System.EventHandler(this.BoxBossCounting_MouseHover);
             this.tableLayoutPanelRight.ResumeLayout(false);
             this.tableLayoutPanelRight.PerformLayout();
             this.panelButtons.ResumeLayout(false);

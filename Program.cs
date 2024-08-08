@@ -8,7 +8,7 @@ namespace SkyStopwatch
 {
     static class Program
     {
-        public const string Version = "4.0.0309.2";
+        public const string Version = "4.2.1.240808";
 
         /// <summary>
         /// The main entry point for the application.

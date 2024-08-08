@@ -222,7 +222,18 @@ namespace SkyStopwatch
 
         private void PopupCountingBox()
         {
-            var bossCountingBox = new BoxBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
+            Form bossCountingBox;
+
+            if (GlobalData.Default.EnableBossCountingOneMode)
+            {
+                bossCountingBox = new BoxBossCountingSuccinct(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
+            }
+            else
+            {
+                bossCountingBox = new BoxBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
+            }
+
+
             if (this._AutoShowPopupBox)
             {
                 //leotodo, improve this, just center it now
@@ -233,6 +244,7 @@ namespace SkyStopwatch
                 bossCountingBox.StartPosition = FormStartPosition.Manual;
                 bossCountingBox.Location = new Point(this.Location.X + this.Width, this.Location.Y + 100);
             }
+
             bossCountingBox.Show();
             GlobalData.Default.LongLivePopups.Add(bossCountingBox);
         }
