@@ -18,6 +18,7 @@ namespace SkyStopwatch
 
         //leotodo, pentontial multi-thread issue
         private Queue<byte[]> _BossCallImageQueue = new Queue<byte[]>();
+        private Queue<Tuple<byte[], byte[]>> _BossCallImagePairQueue = new Queue<Tuple<byte[], byte[]>>();
         private int _ScanCount;
         private int _CompareCount;
         private Tesseract.TesseractEngine _AutoOCREngine;
@@ -257,8 +258,17 @@ namespace SkyStopwatch
                 if (IsWithinOneRoundBossCall()) return;
 
                 this._ScanCount++;
-                var imageData = MainOCRBossCounting.GetFixedLocationImageData();
-                this._BossCallImageQueue.Enqueue(imageData);
+
+                if (this.checkBox2SpotsCompare.Checked)
+                {
+                    var imageData = MainOCRBossCounting.GetFixedLocationImageDataPair(false);
+                    _BossCallImagePairQueue.Enqueue(imageData);
+                }
+                else
+                {
+                    var imageData = MainOCRBossCounting.GetFixedLocationImageData();
+                    _BossCallImageQueue.Enqueue(imageData);
+                }
             }
             catch (Exception ex)
             {
@@ -282,13 +292,12 @@ namespace SkyStopwatch
             try
             {
                 if (_IsComparing) return;
-                if (_BossCallImageQueue.Count == 0) return;
+                if (_BossCallImageQueue.Count == 0 && _BossCallImagePairQueue.Count == 0) return;
                 if (IsWithinOneRoundBossCall()) return;
 
                 _IsComparing = true;
                 this._CompareCount++;
-                //leotodo
-                //bool enableAutoSlice = this.checkBoxAutoSlice.Checked;
+                bool enable2SpotsCompare = this.checkBox2SpotsCompare.Checked;
 
                 Task.Factory.StartNew(() =>
                 {
@@ -297,75 +306,14 @@ namespace SkyStopwatch
                         _AutoOCREngine = MainOCRBossCounting.GetDefaultOCREngine();
                     }
 
-                    var rawData = _BossCallImageQueue.Dequeue();
-                    var ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
-                    var lastBossCall = _BossGroups.LastCallOrDefault();
-                    int ocrMatchDigit = 5;
-
-                    if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.IsTop1CallSameBossCallWith(DateTime.Now))
+                    if (enable2SpotsCompare)
                     {
-                        ocrMatchDigit = lastBossCall.OCRLastMatch - 1;
+                        return CompareTwoSectionsOneRound();
                     }
-
-                    //var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrMatchDigit, ocrMatchDigit - 1);
-                    var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrMatchDigit);
-
-                    if (found.Item1)
+                    else
                     {
-                        if (lastBossCall == null || lastBossCall.IsValid)
-                        {
-                            var bossCall = new BossCall
-                            {
-                                FirstMatchTime = DateTime.Now,
-                                FirstMatchValue = found.Item3,
-                                OCRLastMatch = found.Item3,
-                                PreCounting = true
-                            };
-                            _BossGroups.Last().Add(bossCall);
-                        }
-                        else
-                        {
-                            lastBossCall.SecondMatchTime = DateTime.Now;
-                            lastBossCall.SecondMatchValue = found.Item3;
-                            lastBossCall.OCRLastMatch = found.Item3;
-
-                            if (lastBossCall.IsTop2CallsSameBossCall() && lastBossCall.IsTop2CallsMatchSecondCountdown())
-                            {
-                                lastBossCall.IsValid = true;
-                                lastBossCall.PreCounting = true;
-                                _LastBossCallFoundTime = DateTime.Now;
-                            }
-                            else //not the same call, remove old and add new
-                            {
-                                lastBossCall.PreCounting = false;
-                                _BossGroups.Last().Remove(lastBossCall);
-                                var bossCall = new BossCall
-                                {
-                                    FirstMatchTime = DateTime.Now,
-                                    FirstMatchValue = found.Item3,
-                                    OCRLastMatch = found.Item3,
-                                    PreCounting = true
-                                };
-                                _BossGroups.Last().Add(bossCall);
-                            }
-                        }
+                        return CompareOneSectionMultipleRounds();
                     }
-                    else if(lastBossCall != null)
-                    {
-                        if (!lastBossCall.IsValid && found.Item3 >= -1 && found.Item2 != lastBossCall.FirstMatchValue.ToString())
-                        {
-                            lastBossCall.PreCounting = false;
-                        }
-                    }
-
-                    if (GlobalData.Default.IsDebugging || found.Item1)
-                    {
-                        string tmpPath = MainOCR.SaveTmpFile($"boss-call-{found.Item1}-{found.Item2}-within-1-{IsWithinOneRoundBossCall()}", rawData);
-                        System.Diagnostics.Debug.WriteLine($"tmp path: {tmpPath}");
-                        System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}, OCR data: {ocrProcessedData}");
-                    }
-
-                    return found;
 
                 }).ContinueWith(t =>
                 {
@@ -379,7 +327,7 @@ namespace SkyStopwatch
                         return;
                     }
 
-                    if(_BossGroups.Sum(g => g.Calls.Count) >= 1000)
+                    if (_BossGroups.Sum(g => g.Calls.Count) >= 1000)
                     {
                         _BossGroups.Reset();
                     }
@@ -389,6 +337,86 @@ namespace SkyStopwatch
             {
                 this.OnError(ex);
             }
+        }
+
+        private OCRCompareResult<int> CompareTwoSectionsOneRound()
+        {
+
+
+            return null;
+        }
+
+        private OCRCompareResult<int> CompareOneSectionMultipleRounds()
+        {
+            var rawData = _BossCallImageQueue.Dequeue();
+            var ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
+            var lastBossCall = _BossGroups.LastCallOrDefault<BossCall>();
+            int ocrMatchDigit = 5;
+
+            if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.IsTop1CallSameBossCallWith(DateTime.Now))
+            {
+                ocrMatchDigit = lastBossCall.OCRLastMatch - 1;
+            }
+
+
+            //var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrMatchDigit); //sometimes, missing a count
+            var result = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrMatchDigit, ocrMatchDigit - 1); //sometimes, adding a invalid count
+
+            if (result.IsSuccess)
+            {
+                if (lastBossCall == null || lastBossCall.IsValid)
+                {
+                    var bossCall = new BossCall
+                    {
+                        FirstMatchTime = DateTime.Now,
+                        FirstMatchValue = result.CompareTarget,
+                        OCRLastMatch = result.CompareTarget,
+                        PreCounting = true
+                    };
+                    _BossGroups.Last().Add(bossCall);
+                }
+                else
+                {
+                    lastBossCall.SecondMatchTime = DateTime.Now;
+                    lastBossCall.SecondMatchValue = result.CompareTarget;
+                    lastBossCall.OCRLastMatch = result.CompareTarget;
+
+                    if (lastBossCall.IsTop2CallsSameBossCall() && lastBossCall.IsTop2CallsMatchSecondCountdown())
+                    {
+                        lastBossCall.IsValid = true;
+                        lastBossCall.PreCounting = true;
+                        _LastBossCallFoundTime = DateTime.Now;
+                    }
+                    else //not the same call, remove old and add new
+                    {
+                        lastBossCall.PreCounting = false;
+                        _BossGroups.Last().Remove(lastBossCall);
+                        var bossCall = new BossCall
+                        {
+                            FirstMatchTime = DateTime.Now,
+                            FirstMatchValue = result.CompareTarget,
+                            OCRLastMatch = result.CompareTarget,
+                            PreCounting = true
+                        };
+                        _BossGroups.Last().Add(bossCall);
+                    }
+                }
+            }
+            else if (lastBossCall != null)
+            {
+                if (!lastBossCall.IsValid && result.CompareTarget >= -1 && result.Info != lastBossCall.FirstMatchValue.ToString())
+                {
+                    lastBossCall.PreCounting = false;
+                }
+            }
+
+            if (GlobalData.Default.IsDebugging || result.IsSuccess)
+            {
+                string tmpPath = MainOCR.SaveTmpFile($"boss-call-{result.IsSuccess}-{result.Info}-within-1-{IsWithinOneRoundBossCall()}", rawData);
+                System.Diagnostics.Debug.WriteLine($"OCR compare: {result.IsSuccess}, OCR data: {ocrProcessedData}, tmp path: {tmpPath}");
+            }
+
+            return result;
         }
 
         private void checkBoxAux1_CheckedChanged(object sender, EventArgs e)
@@ -444,6 +472,11 @@ namespace SkyStopwatch
             {
                 this.OnError(ex);
             }
+        }
+
+        private void checkBox2SpotsCompare_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

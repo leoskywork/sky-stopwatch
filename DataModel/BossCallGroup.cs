@@ -8,16 +8,16 @@ namespace SkyStopwatch.DataModel
 {
     public class BossCallGroup
     {
-        public List<BossCall> Calls { get; } = new List<BossCall>();
+        public List<IBossCall> Calls { get; } = new List<IBossCall>();
 
         public string Name { get; set; }
 
-        public void Add(BossCall call)
+        public void Add(IBossCall call)
         {
             Calls.Add(call);
         }
 
-        public void Remove(BossCall call)
+        public void Remove(IBossCall call)
         {
             Calls.Remove(call);
         }

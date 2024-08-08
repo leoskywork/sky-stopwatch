@@ -6,26 +6,19 @@ using System.Threading.Tasks;
 
 namespace SkyStopwatch.DataModel
 {
-    public class BossCall : DataItem
+    public class BossCall : BossCallBase, IBossCall
     {
+        public int OCRLastMatch { get; set; }
+
+
+    
+
+
         public BossCall()
         {
         }
 
-        public DateTime FirstMatchTime { get; set; }
-        public int FirstMatchValue { get; set; }
 
-        public DateTime SecondMatchTime { get; set; }
-        public int SecondMatchValue { get; set; }
-
-        public bool IsValid { get; set; }
-
-
-        public int OCRLastMatch { get; set; }
-
-         
-        //does NOT involve in busness logic, just for fast ui updating of boss call number
-        public bool PreCounting { get; set; }
 
 
         public bool IsTop2CallsMatchSecondCountdown()

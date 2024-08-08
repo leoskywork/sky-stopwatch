@@ -47,6 +47,7 @@
             this.checkBoxAutoSlice = new System.Windows.Forms.CheckBox();
             this.numericUpDownAutoSliceIntervalSeconds = new System.Windows.Forms.NumericUpDown();
             this.checkBoxOneMode = new System.Windows.Forms.CheckBox();
+            this.checkBox2SpotsCompare = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -289,11 +290,25 @@
             this.checkBoxOneMode.UseVisualStyleBackColor = true;
             this.checkBoxOneMode.CheckedChanged += new System.EventHandler(this.checkBoxOneMode_CheckedChanged);
             // 
+            // checkBox2SpotsCompare
+            // 
+            this.checkBox2SpotsCompare.AutoSize = true;
+            this.checkBox2SpotsCompare.Checked = true;
+            this.checkBox2SpotsCompare.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2SpotsCompare.Location = new System.Drawing.Point(22, 640);
+            this.checkBox2SpotsCompare.Name = "checkBox2SpotsCompare";
+            this.checkBox2SpotsCompare.Size = new System.Drawing.Size(149, 19);
+            this.checkBox2SpotsCompare.TabIndex = 120;
+            this.checkBox2SpotsCompare.Text = "2 spots compare";
+            this.checkBox2SpotsCompare.UseVisualStyleBackColor = true;
+            this.checkBox2SpotsCompare.CheckedChanged += new System.EventHandler(this.checkBox2SpotsCompare_CheckedChanged);
+            // 
             // FormImageViewBossCounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(528, 759);
+            this.Controls.Add(this.checkBox2SpotsCompare);
             this.Controls.Add(this.checkBoxOneMode);
             this.Controls.Add(this.buttonStart);
             this.Controls.Add(this.checkBoxAutoSlice);
@@ -349,5 +364,6 @@
         private System.Windows.Forms.CheckBox checkBoxAutoSlice;
         private System.Windows.Forms.NumericUpDown numericUpDownAutoSliceIntervalSeconds;
         private System.Windows.Forms.CheckBox checkBoxOneMode;
+        private System.Windows.Forms.CheckBox checkBox2SpotsCompare;
     }
 }

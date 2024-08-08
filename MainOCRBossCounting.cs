@@ -1,8 +1,10 @@
-﻿using System;
+﻿using SkyStopwatch.DataModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,12 +21,27 @@ namespace SkyStopwatch
         public static int BlockWidth = 140;
         public static int BlockHeight = 740;
 
+
+        public static int AUXXPoint = 1470;
+        public static int AUXYPoint = 240;
+        public static int AUXBlockWidth = 140;
+        public static int AUXBlockHeight = 740;
+
+
+
         public static bool EnableAutoSlice = false;
         public static int AutoSliceIntervalSeconds = 12;
 
 
 
         public static byte[] GetFixedLocationImageData()
+        {
+            return GetFixedLocationImageDataPair(true).Item1;
+        }
+
+
+
+        public static Tuple<byte[], byte[]> GetFixedLocationImageDataPair(bool onlyFirst)
         {
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
@@ -49,14 +66,29 @@ namespace SkyStopwatch
                     return null;
                 }
 
-                //if (onlyReturnPartOfImage) //for speed up
+                //onlyReturnPartOfImage //for speed up
+
+                byte[] masterImage, auxImage;
+
+                using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitPic.PixelFormat))
                 {
-                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitPic.PixelFormat))
+                    masterImage = MainOCR.BitmapToBytes(cloneBitmap);
+                }
+
+
+                if (onlyFirst)
+                {
+                    auxImage = null;
+                }
+                else
+                {
+                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(AUXXPoint, AUXYPoint, AUXBlockWidth, AUXBlockHeight), bitPic.PixelFormat))
                     {
-                        return MainOCR.BitmapToBytes(cloneBitmap);
+                        auxImage = MainOCR.BitmapToBytes(cloneBitmap);
                     }
                 }
 
+                return Tuple.Create(masterImage, auxImage);
             }
         }
 
@@ -66,7 +98,7 @@ namespace SkyStopwatch
             var engine = new Tesseract.TesseractEngine(MainOCR.OCRTessdataFolder, MainOCR.OCRLanguage, Tesseract.EngineMode.Default);
 
             //in case the number got blocked by other images?? so try to recognise multi digits here ??
-            engine.SetVariable("tessedit_char_whitelist", "0123456789"); //only look for pre-set chars for speed up
+            engine.SetVariable("tessedit_char_whitelist", "0123456789oO"); //only look for pre-set chars for speed up
 
             //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
             //_tesseractEngine.SetVariable("debug_file", "NUL");
@@ -77,12 +109,12 @@ namespace SkyStopwatch
 
 
 
-        public static Tuple<bool, string, int> FindBossCall(string data, params int[] candidates)
+        public static OCRCompareResult<int> FindBossCall(string data, params int[] candidates)
         {
             if (data == null || candidates == null) throw new ArgumentNullException("data or candidates");
 
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length == 0) return Tuple.Create(false, "lines-length-0", -2);
+            if (lines.Length == 0) return OCRCompareResult<int>.Create(false, "lines-length-0", -2);
 
             //sometimes, failed to recognise 5, so add one more candidate(4) here
             //still, the ocr engine is poor, lots of blank-almost pics are processed as value 5, leotodo, improve the engine or replace it
@@ -100,12 +132,27 @@ namespace SkyStopwatch
 
                 if (current == lines[0])
                 {
-                    return Tuple.Create(true, current, candidates[i]);
+                    return OCRCompareResult<int>.Create(true, current, candidates[i]);
                 }
             }
 
 
-            return Tuple.Create(false, lines[0], -1);
+            return OCRCompareResult<int>.Create(false, lines[0], -1);
+        }
+
+        public static OCRCompareResult<int> FindBossCallPair(string data, params int[] candidates)
+        {
+            if (data == null || candidates == null) throw new ArgumentNullException("data or candidates");
+
+            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length == 0) return OCRCompareResult<int>.Create(false, "lines-length-0", -2);
+
+          
+
+            
+
+
+            return OCRCompareResult<int>.Create(false, lines[0], -1);
         }
 
 

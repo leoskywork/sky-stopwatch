@@ -32,9 +32,9 @@ namespace SkyStopwatch.DataModel
             return this.Groups.Last();
         }
 
-        public BossCall LastCallOrDefault()
+        public T LastCallOrDefault<T>() where T: class
         {
-            return this.Last().Calls.LastOrDefault();
+            return this.Last().Calls.LastOrDefault() as T;
         }
 
         public void Add(BossCallGroup group)

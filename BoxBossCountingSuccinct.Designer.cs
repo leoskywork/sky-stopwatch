@@ -63,7 +63,7 @@
             this.buttonKill.Location = new System.Drawing.Point(63, 0);
             this.buttonKill.Name = "buttonKill";
             this.buttonKill.Size = new System.Drawing.Size(24, 24);
-            this.buttonKill.TabIndex = 2;
+            this.buttonKill.TabIndex = 222;
             this.buttonKill.Text = "x";
             this.buttonKill.UseVisualStyleBackColor = true;
             this.buttonKill.Click += new System.EventHandler(this.buttonKill_Click);

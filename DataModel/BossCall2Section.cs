@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace SkyStopwatch.DataModel
 {
-    public class DataItem
+    public class BossCall2Section : BossCallBase, IBossCall
     {
-        public int Id { get; set; }
+
     }
 }

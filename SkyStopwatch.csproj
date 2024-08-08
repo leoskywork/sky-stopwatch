@@ -78,9 +78,12 @@
       <DependentUpon>BoxBossCountingSuccinct.cs</DependentUpon>
     </Compile>
     <Compile Include="DataModel\BossCall.cs" />
+    <Compile Include="DataModel\BossCall2Section.cs" />
     <Compile Include="DataModel\BossCallGroup.cs" />
     <Compile Include="DataModel\BossCallSet.cs" />
-    <Compile Include="DataModel\DataItem.cs" />
+    <Compile Include="DataModel\BossCallBase.cs" />
+    <Compile Include="DataModel\IBossCall.cs" />
+    <Compile Include="DataModel\OCRCompareResult.cs" />
     <Compile Include="FormBoot.cs">
       <SubType>Form</SubType>
     </Compile>
