@@ -16,8 +16,9 @@ namespace SkyStopwatch
     public partial class BoxBossCountingSuccinct : Form
     {
         private Action _BeforeClose;
-        private BossCallSet  _BossCallGroups;
+        private BossCallSet _BossCallGroups;
         private bool _AutoSlice;
+        private bool _IsShowingActionBar;
 
         public BoxBossCountingSuccinct(BossCallSet groups, bool autoSlice, Action onClosing)
         {
@@ -28,52 +29,42 @@ namespace SkyStopwatch
             _AutoSlice = autoSlice;
 
             this.TopMost = true;
-            
+
             //do this at last
-            this.timerClose.Interval = 100;
+            this.timerClose.Interval = GlobalData.TimerIntervalShowingBossCallMS;
             this.timerClose.Start();
         }
 
         private void FormNodeBossCounting_Load(object sender, EventArgs e)
-         {
+        {
             this.labelMessage.Text = "-";
 
-            if (Environment.MachineName == "LEO-PC-PRO22")
+            if (Environment.MachineName == "LEO-PC-PRO")
             {
                 for (int i = 0; i < 999; i++)
                 {
-                    _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true });
+                    //_BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true, IsValid = true });
                 }
             };
 
-            if (GlobalData.Default.EnableBossCountingOneMode)
-            {
-                this.tableLayoutPanelRight.Hide();
-                this.Size = new Size(this.Size.Width - 44, this.Size.Height - 10);
-                this.labelMessage.Font = new Font("SimSun", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-                //this.labelMessage.Padding = new Padding(2,0,10,0);
-                //this.labelMessage.BackColor = System.Drawing.Color.Gray;
+            this.tableLayoutPanelRight.Location = new Point(100, 2);
+            this.tableLayoutPanelRight.Hide();
 
-                const int closeSize = 30;
-                this.buttonKill.Text = null;
-                this.buttonKill.Size = new System.Drawing.Size(closeSize, closeSize);
-                this.buttonKill.Location = new System.Drawing.Point(this.Size.Width - closeSize, 0);
-                this.buttonKill.FlatStyle = FlatStyle.Flat;
-                this.buttonKill.FlatAppearance.BorderSize = 0;
-                this.buttonKill.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
-                this.buttonKill.BackgroundImage = global::SkyStopwatch.Properties.Resources.power_off_512_w;
-                this.buttonKill.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-                this.buttonKill.UseVisualStyleBackColor = true;
-                this.buttonKill.Margin = new System.Windows.Forms.Padding(0);
-                this.buttonReset.Size = new Size(50, 30);
-                this.buttonReset.Location = new Point(this.Size.Width - 20, 10);
+            const int closeSize = 30;
+            this.Size = new Size(320, closeSize);
 
-                this.RunOnMain(() => { this.labelMessage.Focus(); }, 1);
-            }
-            else
-            {
-          
-            }
+            this.buttonKill.Text = null;
+            this.buttonKill.Size = new System.Drawing.Size(closeSize, closeSize);
+            this.buttonKill.Location = new System.Drawing.Point(this.labelMessage.Width - 10, 0);
+            this.buttonKill.FlatStyle = FlatStyle.Flat;
+            this.buttonKill.FlatAppearance.BorderSize = 0;
+            this.buttonKill.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
+            this.buttonKill.BackgroundImage = global::SkyStopwatch.Properties.Resources.power_off_512_w;
+            this.buttonKill.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.buttonKill.UseVisualStyleBackColor = true;
+            this.buttonKill.Margin = new System.Windows.Forms.Padding(0);
+
+            this.RunOnMain(() => { this.labelMessage.Focus(); }, 1);
         }
 
         private void timerClose_Tick(object sender, EventArgs e)
@@ -84,7 +75,8 @@ namespace SkyStopwatch
                 return; 
             }
 
-            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => GlobalData.Default.EnableBossCountingOneMode ? c.IsValid : c.PreCounting ).Count().ToString();
+            //this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.IsValid).Count().ToString();
+            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
         }
 
         private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)
@@ -167,12 +159,9 @@ namespace SkyStopwatch
             this.Region = new Region(formPath);
         }
 
-        private void labelKill_Click(object sender, EventArgs e)
-        {
-            this.CloseInternal();
-        }
+       
 
-        private void CloseInternal()
+        private void buttonKill_Click(object sender, EventArgs e)
         {
             this.Close();
 
@@ -181,46 +170,57 @@ namespace SkyStopwatch
                 GlobalData.Default.FireCloseApp();
             }
         }
- 
- 
-
-        private void buttonKill_Click(object sender, EventArgs e)
-        {
-            this.CloseInternal();
-        }
-
-    
-
-        private void DisableButtonShortTime(Label control)
-        {
-            var oldBackColor = control.BackColor;
-            var oldForeColor = control.ForeColor;
-
-
-            control.ForeColor = System.Drawing.Color.White;
-            control.BackColor = System.Drawing.Color.LightGray;
-            control.Enabled = false;
-
-            this.RunOnMain(() =>
-            {
-                control.BackColor = oldBackColor;
-                control.ForeColor = oldForeColor;
-                control.Enabled = true;
-            }, 300);
-        }
-
- 
-
      
 
         private void buttonReset_Click(object sender, EventArgs e)
         {
             _BossCallGroups.Reset();
+            this.DisableButtonShortTime(this.buttonReset);
         }
- 
+
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+            if (_BossCallGroups.Count == 0) _BossCallGroups.Add(new BossCallGroup());
+
+            _BossCallGroups.Last().Add(new BossCall()
+            {
+                Id = -1,
+                IsValid = true,
+                FirstMatchTime = DateTime.Now,
+                FirstMatchValue = -1,
+                SecondMatchTime = DateTime.Now,
+                SecondMatchValue = -1,
+                OCRLastMatch = -1,
+                PreCounting = true
+            });
+
+            this.DisableButtonShortTime(this.buttonAdd);
+        }
+
+        private void buttonRemove_Click(object sender, EventArgs e)
+        {
+            if (_BossCallGroups == null || _BossCallGroups.Count == 0 || _BossCallGroups.Last().Calls.Count == 0) return;
+
+            _BossCallGroups.Last().Calls.RemoveAt(_BossCallGroups.Last().Calls.Count - 1);
+
+            this.DisableButtonShortTime(this.buttonRemove);
+        }
+
 
         private void labelMessage_MouseHover(object sender, EventArgs e)
         {
+            if (_IsShowingActionBar) { return; }
+
+            _IsShowingActionBar = true;
+
+            this.tableLayoutPanelRight.Show();
+
+
+            this.RunOnMainAsync(() =>
+            {
+                this.tableLayoutPanelRight.Hide();
+                _IsShowingActionBar = false;
+            }, 10 * 1000);
 
         }
     }

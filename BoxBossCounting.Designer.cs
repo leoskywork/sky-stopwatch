@@ -61,7 +61,6 @@
             this.labelMessage.Text = "500";
             this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.labelMessage.MouseDown += new System.Windows.Forms.MouseEventHandler(this.labelMessage_MouseDown);
-            this.labelMessage.MouseHover += new System.EventHandler(this.labelMessage_MouseHover);
             // 
             // tableLayoutPanelRight
             // 
@@ -185,7 +184,6 @@
             this.buttonReset.TabIndex = 3;
             this.buttonReset.Text = "Reset";
             this.buttonReset.UseVisualStyleBackColor = true;
-            this.buttonReset.Click += new System.EventHandler(this.buttonReset_Click);
             // 
             // BoxBossCounting
             // 

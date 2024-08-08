@@ -28,9 +28,9 @@ namespace SkyStopwatch
             _AutoSlice = autoSlice;
 
             this.TopMost = true;
-            
+
             //do this at last
-            this.timerClose.Interval = 100;
+            this.timerClose.Interval = GlobalData.TimerIntervalShowingBossCallMS;
             this.timerClose.Start();
         }
 
@@ -216,7 +216,7 @@ namespace SkyStopwatch
             _BossCallGroups.Add(new BossCallGroup());
 
 
-            DisableButtonShortTime(this.labelAddGroup);
+            this.DisableButtonShortTime(this.labelAddGroup);
         }
  
 
@@ -242,27 +242,11 @@ namespace SkyStopwatch
                 PreCounting = true
             });
 
-            DisableButtonShortTime(this.labelAddBossCall);
+            this.DisableButtonShortTime(this.labelAddBossCall);
           
         }
 
-        private void DisableButtonShortTime(Label control)
-        {
-            var oldBackColor = control.BackColor;
-            var oldForeColor = control.ForeColor;
 
-
-            control.ForeColor = System.Drawing.Color.White;
-            control.BackColor = System.Drawing.Color.LightGray;
-            control.Enabled = false;
-
-            this.RunOnMain(() =>
-            {
-                control.BackColor = oldBackColor;
-                control.ForeColor = oldForeColor;
-                control.Enabled = true;
-            }, 300);
-        }
 
         private void labelRemoveBossCall_Click(object sender, EventArgs e)
         {
@@ -270,20 +254,11 @@ namespace SkyStopwatch
 
             _BossCallGroups.Last().Calls.RemoveAt(_BossCallGroups.Last().Calls.Count - 1);
 
-            DisableButtonShortTime(this.labelRemoveBossCall);
+            this.DisableButtonShortTime(this.labelRemoveBossCall);
         }
 
-     
 
-        private void buttonReset_Click(object sender, EventArgs e)
-        {
-            _BossCallGroups.Reset();
-        }
  
 
-        private void labelMessage_MouseHover(object sender, EventArgs e)
-        {
-
-        }
     }
 }

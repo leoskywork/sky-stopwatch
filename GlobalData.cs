@@ -24,6 +24,8 @@ namespace SkyStopwatch
         public event EventHandler<ChangeGameStartTimeEventArgs> ChangeGameStartTime;
 
 
+        public const int TimerIntervalShowingBossCallMS = 10;
+
 
         private static GlobalData _instance;
         public static GlobalData Default

@@ -47,11 +47,11 @@
             // 
             this.labelMessage.BackColor = System.Drawing.SystemColors.Control;
             this.labelMessage.Dock = System.Windows.Forms.DockStyle.Left;
-            this.labelMessage.Font = new System.Drawing.Font("SimSun", 22.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.labelMessage.Font = new System.Drawing.Font("SimSun", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.labelMessage.ForeColor = System.Drawing.SystemColors.ControlText;
             this.labelMessage.Location = new System.Drawing.Point(0, 0);
             this.labelMessage.Name = "labelMessage";
-            this.labelMessage.Size = new System.Drawing.Size(90, 50);
+            this.labelMessage.Size = new System.Drawing.Size(90, 30);
             this.labelMessage.TabIndex = 0;
             this.labelMessage.Text = "500";
             this.labelMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -60,21 +60,21 @@
             // 
             // buttonKill
             // 
-            this.buttonKill.Location = new System.Drawing.Point(109, 12);
+            this.buttonKill.Location = new System.Drawing.Point(63, 0);
             this.buttonKill.Name = "buttonKill";
-            this.buttonKill.Size = new System.Drawing.Size(75, 23);
+            this.buttonKill.Size = new System.Drawing.Size(24, 24);
             this.buttonKill.TabIndex = 2;
-            this.buttonKill.Text = "Kill";
+            this.buttonKill.Text = "x";
             this.buttonKill.UseVisualStyleBackColor = true;
             this.buttonKill.Click += new System.EventHandler(this.buttonKill_Click);
             // 
             // buttonReset
             // 
             this.buttonReset.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonReset.Location = new System.Drawing.Point(12, 13);
-            this.buttonReset.Margin = new System.Windows.Forms.Padding(12, 3, 12, 3);
+            this.buttonReset.Location = new System.Drawing.Point(8, 5);
+            this.buttonReset.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
             this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(65, 23);
+            this.buttonReset.Size = new System.Drawing.Size(73, 23);
             this.buttonReset.TabIndex = 3;
             this.buttonReset.Text = "Reset";
             this.buttonReset.UseVisualStyleBackColor = true;
@@ -89,44 +89,45 @@
             this.tableLayoutPanelRight.Controls.Add(this.buttonRemove, 2, 1);
             this.tableLayoutPanelRight.Controls.Add(this.buttonAdd, 1, 1);
             this.tableLayoutPanelRight.Controls.Add(this.buttonReset, 0, 1);
-            this.tableLayoutPanelRight.Dock = System.Windows.Forms.DockStyle.Right;
-            this.tableLayoutPanelRight.Location = new System.Drawing.Point(201, 0);
+            this.tableLayoutPanelRight.Location = new System.Drawing.Point(93, 0);
             this.tableLayoutPanelRight.Name = "tableLayoutPanelRight";
             this.tableLayoutPanelRight.RowCount = 3;
-            this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
+            this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 2F));
             this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 2F));
             this.tableLayoutPanelRight.Size = new System.Drawing.Size(270, 50);
             this.tableLayoutPanelRight.TabIndex = 4;
             // 
             // buttonRemove
             // 
             this.buttonRemove.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonRemove.Location = new System.Drawing.Point(190, 13);
-            this.buttonRemove.Margin = new System.Windows.Forms.Padding(12, 3, 12, 3);
+            this.buttonRemove.Location = new System.Drawing.Point(186, 5);
+            this.buttonRemove.Margin = new System.Windows.Forms.Padding(8, 3, 12, 3);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(68, 23);
+            this.buttonRemove.Size = new System.Drawing.Size(72, 23);
             this.buttonRemove.TabIndex = 5;
             this.buttonRemove.Text = "- 1";
             this.buttonRemove.UseVisualStyleBackColor = true;
+            this.buttonRemove.Click += new System.EventHandler(this.buttonRemove_Click);
             // 
             // buttonAdd
             // 
             this.buttonAdd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonAdd.Location = new System.Drawing.Point(101, 13);
-            this.buttonAdd.Margin = new System.Windows.Forms.Padding(12, 3, 12, 3);
+            this.buttonAdd.Location = new System.Drawing.Point(97, 5);
+            this.buttonAdd.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(65, 23);
+            this.buttonAdd.Size = new System.Drawing.Size(73, 23);
             this.buttonAdd.TabIndex = 4;
             this.buttonAdd.Text = "+ 1";
             this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // BoxBossCountingSuccinct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(471, 50);
+            this.ClientSize = new System.Drawing.Size(360, 30);
             this.Controls.Add(this.tableLayoutPanelRight);
             this.Controls.Add(this.buttonKill);
             this.Controls.Add(this.labelMessage);

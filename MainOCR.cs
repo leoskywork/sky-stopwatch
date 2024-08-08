@@ -483,10 +483,60 @@ namespace SkyStopwatch
             }
         }
 
+        public static void RunOnMainAsync(this Form form, Action action, int delayMS)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(delayMS);
+                RunOnMainAsync(form, action);
+            });
+        }
+
         public static PowerLog Log(this Form form)
         {
             return PowerLog.One;
         }
-        
+
+        public static void DisableButtonShortTime(this Form form, Label control)
+        {
+            var oldForeColor = control.ForeColor;
+            var oldBackColor = control.BackColor;
+
+
+            control.ForeColor = System.Drawing.Color.White;
+            control.BackColor = System.Drawing.Color.LightGray;
+            control.Enabled = false;
+
+            form.RunOnMain(() =>
+            {
+                control.ForeColor = oldForeColor;
+                control.BackColor = oldBackColor;
+                control.Enabled = true;
+            }, 300);
+        }
+
+        public static void DisableButtonShortTime(this Form form, Button control)
+        {
+            var oldForeColor = control.ForeColor;
+            var oldBackColor = control.BackColor;
+
+            //leotodo, tmp fix for action bar, or else only the first click will work, and button become disabled forever
+            //is this caused by the transparent background/color ?
+            oldForeColor = System.Drawing.Color.Black;
+            oldBackColor = System.Drawing.Color.White;
+
+
+            control.ForeColor = System.Drawing.Color.White;
+            control.BackColor = System.Drawing.Color.LightGray;
+            control.Enabled = false;
+
+            form.RunOnMainAsync(() =>
+            {
+                control.ForeColor = oldForeColor;
+                control.BackColor = oldBackColor;
+                control.Enabled = true;
+            }, 300);
+        }
+
     }
 }
