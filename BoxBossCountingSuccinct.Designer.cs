@@ -125,12 +125,14 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.ClientSize = new System.Drawing.Size(471, 50);
             this.Controls.Add(this.tableLayoutPanelRight);
             this.Controls.Add(this.buttonKill);
             this.Controls.Add(this.labelMessage);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BoxBossCountingSuccinct";
+            this.TransparencyKey = System.Drawing.SystemColors.ControlLight;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormNodeWarning_FormClosing);
             this.Load += new System.EventHandler(this.FormNodeBossCounting_Load);
             this.tableLayoutPanelRight.ResumeLayout(false);
