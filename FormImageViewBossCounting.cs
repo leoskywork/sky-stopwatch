@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using TesseractOCR.Renderers;
 
 namespace SkyStopwatch
 {
@@ -29,6 +30,11 @@ namespace SkyStopwatch
 
         private DateTime _LastBossCallFoundTime;
         private bool _AutoShowPopupBox;
+
+        //private bool _GameEndingFlag = false;
+        //private DateTime _GameEndingDetectTime;
+        //private BossCall _GameEndingCall;
+        //private string[] _GameEndingCountdowns = new string[] { "9", "8", "7", "6" };
 
         public FormImageViewBossCounting(bool autoPopup)
         {
@@ -66,7 +72,7 @@ namespace SkyStopwatch
             }
         }
 
-      
+
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
@@ -123,7 +129,7 @@ namespace SkyStopwatch
                     //can not use using block here, since we pass the bitmap into a view and show it
                     var bitmapBlock = screenShot.Clone(new Rectangle(x, y, width, height), screenShot.PixelFormat);
 
-                    if(this.pictureBoxOne.Image!= null)
+                    if (this.pictureBoxOne.Image != null)
                     {
                         this.pictureBoxOne.Image.Dispose();
                     }
@@ -131,13 +137,13 @@ namespace SkyStopwatch
                     this.pictureBoxOne.Image = bitmapBlock;
 
                     labelX.Text = $"X: {(int)((decimal)x / (decimal)screenRect.Width * 10000) * 0.01}%";
-                    labelY.Text = $"Y: {(int)((decimal)y / (decimal)screenRect.Height * 10000)* 0.01}%";
+                    labelY.Text = $"Y: {(int)((decimal)y / (decimal)screenRect.Height * 10000) * 0.01}%";
 
                 }
             }
             catch (Exception ex)
             {
-               this.OnError(ex);
+                this.OnError(ex);
             }
         }
 
@@ -249,13 +255,14 @@ namespace SkyStopwatch
             bossCountingBox.Show();
             GlobalData.Default.LongLivePopups.Add(bossCountingBox);
         }
-       
+
 
         private void timerScan_Tick(object sender, EventArgs e)
         {
             try
             {
                 if (IsWithinOneRoundBossCall()) return;
+                if (IsGameEndingPeriod()) return;
 
                 this._ScanCount++;
 
@@ -294,6 +301,7 @@ namespace SkyStopwatch
                 if (_IsComparing) return;
                 if (_BossCallImageQueue.Count == 0 && _BossCallImagePairQueue.Count == 0) return;
                 if (IsWithinOneRoundBossCall()) return;
+                if (IsGameEndingPeriod()) return;
 
                 _IsComparing = true;
                 this._CompareCount++;
@@ -308,11 +316,11 @@ namespace SkyStopwatch
 
                     if (enable2SpotsCompare)
                     {
-                        return CompareTwoSectionsOneRound();
+                        CompareTwoSectionsOneRound();
                     }
                     else
                     {
-                        return CompareOneSectionMultipleRounds();
+                        CompareOneSectionMultipleRounds();
                     }
 
                 }).ContinueWith(t =>
@@ -339,21 +347,24 @@ namespace SkyStopwatch
             }
         }
 
-        private OCRCompareResult<int> CompareTwoSectionsOneRound()
+        private bool IsGameEndingPeriod()
         {
+            //if (_GameEndingFlag)
+            //{
+            //    return _GameEndingDetectTime.AddMinutes(1) > DateTime.Now;
+            //}
 
-
-            return null;
+            return false;
         }
 
-        private OCRCompareResult<int> CompareOneSectionMultipleRounds()
+        private void CompareOneSectionMultipleRounds()
         {
             var rawData = _BossCallImageQueue.Dequeue();
             var ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
             var lastBossCall = _BossGroups.LastCallOrDefault<BossCall>();
             int ocrMatchDigit = 5;
 
-            if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.IsTop1CallSameBossCallWith(DateTime.Now))
+            if (lastBossCall != null && !lastBossCall.IsValid && lastBossCall.IsTop1CallSameRoundWith(DateTime.Now))
             {
                 ocrMatchDigit = lastBossCall.OCRLastMatch - 1;
             }
@@ -381,7 +392,7 @@ namespace SkyStopwatch
                     lastBossCall.SecondMatchValue = result.CompareTarget;
                     lastBossCall.OCRLastMatch = result.CompareTarget;
 
-                    if (lastBossCall.IsTop2CallsSameBossCall() && lastBossCall.IsTop2CallsMatchSecondCountdown())
+                    if (lastBossCall.IsTop2CallsSameRound() && lastBossCall.IsTop2CallsMatchSecondCountdown())
                     {
                         lastBossCall.IsValid = true;
                         lastBossCall.PreCounting = true;
@@ -404,7 +415,7 @@ namespace SkyStopwatch
             }
             else if (lastBossCall != null)
             {
-                if (!lastBossCall.IsValid && result.CompareTarget >= -1 && result.Info != lastBossCall.FirstMatchValue.ToString())
+                if (!lastBossCall.IsValid && result.CompareTarget == -1 && result.Info != lastBossCall.FirstMatchValue.ToString())
                 {
                     lastBossCall.PreCounting = false;
                 }
@@ -416,7 +427,96 @@ namespace SkyStopwatch
                 System.Diagnostics.Debug.WriteLine($"OCR compare: {result.IsSuccess}, OCR data: {ocrProcessedData}, tmp path: {tmpPath}");
             }
 
-            return result;
+            //low priority - game ending
+            //else if (resultMaster.CompareTarget == -1 && _GameEndingCountdowns.Any(c => c == resultMaster.Info))
+            //{
+            //    //ignore when game final boss shows
+            //    int matchValue = int.Parse(resultMaster.Info);
+            //    if (_GameEndingCall == null || _GameEndingCall.IsValid)
+            //    {
+            //        _GameEndingCall = new BossCall() { FirstMatchTime = DateTime.Now, FirstMatchValue = matchValue };
+            //    }
+            //    else
+            //    {
+            //        _GameEndingCall.SecondMatchTime = DateTime.Now;
+            //        _GameEndingCall.SecondMatchValue = matchValue;
+            //        _GameEndingCall.IsValid = matchValue < _GameEndingCall.FirstMatchValue && _GameEndingCall.IsTop2CallsMatchSecondCountdown();
+            //    }
+
+            //    if (_GameEndingCall.IsValid)
+            //    {
+            //        _GameEndingFlag = true;
+            //        _GameEndingDetectTime = DateTime.Now;
+            //    }
+            //}
+        }
+
+        private void CompareTwoSectionsOneRound()
+        {
+            OCRCompareResult<int> resultAUX = null; int id = -404; bool saveImg = false; //for debug
+
+            var rawDataPair = _BossCallImagePairQueue.Dequeue();
+            var ocrProcessedMaster = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.Item1);
+            var lastCall = _BossGroups.LastCallOrDefault<BossCall2Section>();
+            var candidateMax = (lastCall == null || lastCall.IsValid || lastCall.FirstMatchValue < 2) ? 5 : lastCall.FirstMatchValue - 1;
+            var resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, 1);
+
+            if (resultMaster.IsSuccess)
+            {
+                if (lastCall == null || lastCall.IsValid) //compare 1-1
+                {
+                    var bossCall = new BossCall2Section
+                    {
+                        FirstMatchTime = DateTime.Now,
+                        FirstMatchValue = resultMaster.CompareTarget,
+                    };
+
+                    var ocrProcessedAUX = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.Item2);
+                    resultAUX = MainOCRBossCounting.FindBossCallPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
+
+                    if (resultAUX.IsSuccess) //compare 1-2
+                    {
+                        bossCall.PreCounting = true;
+                        bossCall.IsPairOneMatch = true;
+                        bossCall.PairOneMatchTime = DateTime.Now;
+                        bossCall.Id = _BossGroups.GetValidCount() + 1;
+                        _BossGroups.Last().Add(bossCall);
+                        saveImg = true;
+                        id = bossCall.Id;
+                    }
+                }
+                else //compare 2-1
+                {
+                    if (lastCall.IsPairOneMatch && lastCall.IsSameRound(DateTime.Now, resultMaster.CompareTarget))
+                    {
+                        lastCall.IsValid = true;
+                        lastCall.PreCounting = true;
+                        _LastBossCallFoundTime = DateTime.Now;
+                        saveImg = true;
+                        id = lastCall.Id;
+                    }
+                    else
+                    {
+                        _BossGroups.Last().Remove(lastCall);
+                    }
+                }
+            }
+            else if (lastCall != null && !lastCall.IsValid)
+            {
+                if (candidateMax > lastCall.FirstMatchValue || (resultMaster.CompareTarget == -1 && resultMaster.Info != lastCall.FirstMatchValue.ToString()))
+                {
+                    lastCall.PreCounting = false;
+                }
+            }
+
+            if (GlobalData.Default.IsDebugging || saveImg)
+            {
+                string tmpPath = MainOCR.SaveTmpFile($"pair-{resultMaster.IsSuccess}-{resultMaster.Info}-id-{id}", rawDataPair.Item1);
+                string tmpPath2 = MainOCR.SaveTmpFile($"pair-{resultAUX?.IsSuccess ?? false}-{resultAUX?.Info}-id-{id}-aux", rawDataPair.Item2);
+
+                System.Diagnostics.Debug.WriteLine($"OCR compare: {resultMaster.IsSuccess}, OCR data master: {ocrProcessedMaster}, file: {tmpPath}");
+                System.Diagnostics.Debug.WriteLine($"OCR compare aux: {resultAUX?.IsSuccess ?? false}, file: {tmpPath2}");
+            }
         }
 
         private void checkBoxAux1_CheckedChanged(object sender, EventArgs e)

@@ -22,5 +22,10 @@ namespace SkyStopwatch.DataModel
             Calls.Remove(call);
         }
 
+        public int GetValidCount()
+        {
+            return Calls.Sum(c => c.IsValid ? 1 : 0);
+        }
+
     }
 }

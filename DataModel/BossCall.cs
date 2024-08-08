@@ -10,8 +10,8 @@ namespace SkyStopwatch.DataModel
     {
         public int OCRLastMatch { get; set; }
 
-
-    
+        public DateTime SecondMatchTime { get; set; }
+        public int SecondMatchValue { get; set; }
 
 
         public BossCall()
@@ -23,20 +23,14 @@ namespace SkyStopwatch.DataModel
 
         public bool IsTop2CallsMatchSecondCountdown()
         {
-            int offsetSeconds = this.FirstMatchValue - this.SecondMatchValue;
-            int offsetMS = offsetSeconds * GlobalData.Default.BossCountingScanTimerIntervalMS;
-
-            return this.FirstMatchTime.AddMilliseconds(offsetMS) < this.SecondMatchTime && this.FirstMatchTime.AddSeconds(offsetSeconds + 1) > this.SecondMatchTime;
+            return IsTop1CallsMatchSecondCountdownWith(this.SecondMatchTime, this.SecondMatchValue);
         }
 
-        public bool IsTop2CallsSameBossCall()
+        public bool IsTop2CallsSameRound()
         {
-            return IsTop1CallSameBossCallWith(this.SecondMatchTime);
+            return IsTop1CallSameRoundWith(this.SecondMatchTime);
         }
 
-        public bool IsTop1CallSameBossCallWith(DateTime secondTime)
-        {
-            return this.FirstMatchTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) >  secondTime;
-        }
+      
     }
 }

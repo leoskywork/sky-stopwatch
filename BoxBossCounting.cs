@@ -103,14 +103,14 @@ namespace SkyStopwatch
 
         private void timerClose_Tick(object sender, EventArgs e)
         {
-            if(_BossCallGroups == null ||  _BossCallGroups.Count == 0)
+            if (_BossCallGroups == null || _BossCallGroups.Count == 0)
             {
-                this.labelMessage.Text = DateTime.Now.Second % 2 == 1 ?  "." : "";
+                this.labelMessage.Text = DateTime.Now.Second % 2 == 1 ? "." : "";
                 this.labelTotal.Text = "-";
-                return; 
+                return;
             }
 
-            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => GlobalData.Default.EnableBossCountingOneMode ? c.IsValid : c.PreCounting ).Count().ToString();
+            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
             this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.IsValid).Count())}-P{this._BossCallGroups.Count}";
         }
 

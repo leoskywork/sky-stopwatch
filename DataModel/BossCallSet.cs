@@ -46,5 +46,10 @@ namespace SkyStopwatch.DataModel
         {
             return Groups.Sum(selector);
         }
+
+        public int GetValidCount()
+        {
+            return this.Groups.Sum(g => g.GetValidCount());
+        }
     }
 }

@@ -22,10 +22,11 @@ namespace SkyStopwatch
         public static int BlockHeight = 740;
 
 
-        public static int AUXXPoint = 1470;
-        public static int AUXYPoint = 240;
-        public static int AUXBlockWidth = 140;
-        public static int AUXBlockHeight = 740;
+        //leotdo, save to config file
+        public static int AUXXPoint = 1226;
+        public static int AUXYPoint = 512;
+        public static int AUXBlockWidth = 14;
+        public static int AUXBlockHeight = 20;
 
 
 
@@ -140,17 +141,21 @@ namespace SkyStopwatch
             return OCRCompareResult<int>.Create(false, lines[0], -1);
         }
 
-        public static OCRCompareResult<int> FindBossCallPair(string data, params int[] candidates)
+        public static OCRCompareResult<int> FindBossCallPair(string data, int max, int min)
         {
-            if (data == null || candidates == null) throw new ArgumentNullException("data or candidates");
+            if (data == null) throw new ArgumentNullException("data or candidates");
 
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             if (lines.Length == 0) return OCRCompareResult<int>.Create(false, "lines-length-0", -2);
 
-          
 
-            
-
+            for (int i = max; i >= min; i--)
+            {
+                if (i.ToString() == lines[0])
+                {
+                    return OCRCompareResult<int>.Create(true, lines[0], i);
+                }
+            }
 
             return OCRCompareResult<int>.Create(false, lines[0], -1);
         }

@@ -29,7 +29,7 @@ namespace SkyStopwatch
         public static int BlockWidth = 140;
         public static int BlockHeight = 30;
 
-        public const int MinBlockWidth = 40;
+        public const int MinBlockWidth = 10;
         public const int MinBlockHeight = 10;
 
         public const int ManualOCRDelaySeconds = 10;
@@ -388,7 +388,7 @@ namespace SkyStopwatch
 
         public static void SafeCheckImageBlock(ref int x, ref int y, ref int width, ref int height)
         {
-            var screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+            var screenRect = new Rectangle(0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
 
             //in case the block is out of screen area
             int safeWidth = Math.Min(width, screenRect.Width - x);
