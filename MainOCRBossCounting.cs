@@ -23,10 +23,14 @@ namespace SkyStopwatch
 
 
         //leotdo, save to config file
-        public static int AUXXPoint = 1226;
-        public static int AUXYPoint = 512;
-        public static int AUXBlockWidth = 14;
-        public static int AUXBlockHeight = 20;
+        //public static int AUXXPoint = 1226;
+        //public static int AUXYPoint = 512;
+        //public static int AUXBlockWidth = 14;
+        //public static int AUXBlockHeight = 20; //seems easy get wrong value when img too small
+        public static int AUXXPoint = 1211;
+        public static int AUXYPoint = 508;
+        public static int AUXBlockWidth = 30;
+        public static int AUXBlockHeight = 30;
 
 
 

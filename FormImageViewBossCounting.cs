@@ -491,6 +491,8 @@ namespace SkyStopwatch
                     {
                         lastCall.IsValid = true;
                         lastCall.PreCounting = true;
+                        lastCall.Round2FirstMatchValue = resultMaster.CompareTarget;
+                        lastCall.Round2FirstMatchTime = DateTime.Now;
                         _LastBossCallFoundTime = DateTime.Now;
                         saveImg = true;
                         id = lastCall.Id;
@@ -501,11 +503,33 @@ namespace SkyStopwatch
                     }
                 }
             }
-            else if (lastCall != null && !lastCall.IsValid)
+            else
             {
-                if (candidateMax > lastCall.FirstMatchValue || (resultMaster.CompareTarget == -1 && resultMaster.Info != lastCall.FirstMatchValue.ToString()))
+                if (lastCall == null || lastCall.IsValid) //compare 1-1
                 {
-                    lastCall.PreCounting = false;
+
+                }
+                else //compare 2-1
+                {
+                    if (lastCall.IsPairOneMatch && lastCall.IsSameRound(DateTime.Now, candidateMax))
+                    {
+
+                    }
+                    else
+                    {
+                        _BossGroups.Last().Remove(lastCall);
+
+
+                        if (candidateMax > lastCall.FirstMatchValue || (resultMaster.CompareTarget == -1 && resultMaster.Info != lastCall.FirstMatchValue.ToString()))
+                        {
+                            //hack, found '4' is parsered as wrong value, e.g 546, 34
+                            if (!resultMaster.Info.Contains(candidateMax.ToString()))
+                            {
+                                lastCall.PreCounting = false;
+                            }
+                        }
+
+                    }
                 }
             }
 

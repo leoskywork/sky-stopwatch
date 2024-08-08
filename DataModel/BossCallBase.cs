@@ -20,8 +20,18 @@ namespace SkyStopwatch.DataModel
         //does NOT involve in busness logic, just for fast ui updating of boss call number
         public bool PreCounting { get; set; }
 
+
+        //public bool IsExpired
+        //{
+        //    get
+        //    {
+        //        return this.IsTop1CallSameRoundWith(DateTime.Now);
+        //    }
+        //}
+
         public bool IsTop1CallSameRoundWith(DateTime secondTime)
         {
+            //return this.FirstMatchTime.AddSeconds(MainOCR.MinBossCallTimeSeconds - this.FirstMatchValue) > secondTime;
             return this.FirstMatchTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) > secondTime;
         }
 
@@ -32,8 +42,16 @@ namespace SkyStopwatch.DataModel
 
             //hack, sometimes, the MS seems not accrute
             offsetMS = offsetMS - 200;
+            offsetSeconds = offsetSeconds + 4;
 
-            return this.FirstMatchTime.AddMilliseconds(offsetMS) < secondTime && this.FirstMatchTime.AddSeconds(offsetSeconds + 1) > secondTime;
+            bool match = this.FirstMatchTime.AddMilliseconds(offsetMS) < secondTime && this.FirstMatchTime.AddSeconds(offsetSeconds) > secondTime;
+
+            if (!match) //for debug
+            {
+
+            }
+
+            return match;
         }
     }
 }

@@ -11,9 +11,20 @@ namespace SkyStopwatch.DataModel
         public bool IsPairOneMatch { get; set; }
         public DateTime PairOneMatchTime { get; set; }
 
+
+        public int Round2FirstMatchValue { get; set; }
+        public DateTime Round2FirstMatchTime { get; set; }
+
         public bool IsSameRound(DateTime time, int value)
         {
-            return IsTop1CallSameRoundWith(time) && IsTop1CallsMatchSecondCountdownWith(time, value);
+            bool same = IsTop1CallSameRoundWith(time) && IsTop1CallsMatchSecondCountdownWith(time, value);
+
+            if (!same)
+            {
+
+            }
+
+            return same;
         }
     }
 }
