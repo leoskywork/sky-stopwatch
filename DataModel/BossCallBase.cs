@@ -42,16 +42,17 @@ namespace SkyStopwatch.DataModel
 
             //hack, sometimes, the MS seems not accrute
             offsetMS = offsetMS - 200;
-            offsetSeconds = offsetSeconds + 4;
+            offsetSeconds = offsetSeconds + 5;
 
-            bool match = this.FirstMatchTime.AddMilliseconds(offsetMS) < secondTime && this.FirstMatchTime.AddSeconds(offsetSeconds) > secondTime;
+            bool lessValid = this.FirstMatchTime.AddMilliseconds(offsetMS) < secondTime;
+            bool greatValid = this.FirstMatchTime.AddSeconds(offsetSeconds) > secondTime;
 
-            if (!match) //for debug
+            if (!lessValid) //for debug
             {
 
             }
 
-            return match;
+            return lessValid && greatValid;
         }
     }
 }

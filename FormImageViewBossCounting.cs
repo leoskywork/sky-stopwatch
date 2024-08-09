@@ -454,23 +454,20 @@ namespace SkyStopwatch
         private void CompareTwoSectionsOneRound()
         {
             OCRCompareResult<int> resultAUX = null; int id = -404; bool saveImg = false; //for debug
+            OCRCompareResult<int> resultMaster;
 
             var rawDataPair = _BossCallImagePairQueue.Dequeue();
             var ocrProcessedMaster = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.Item1);
             var lastCall = _BossGroups.LastCallOrDefault<BossCall2Section>();
-            var candidateMax = (lastCall == null || lastCall.IsValid || lastCall.FirstMatchValue < 2) ? 5 : lastCall.FirstMatchValue - 1;
-            var resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, 1);
+            int candidateMax = 5;
+            const int candidateMin = 1;
 
-            if (resultMaster.IsSuccess)
+            if (lastCall == null || lastCall.IsValid)
             {
-                if (lastCall == null || lastCall.IsValid) //compare 1-1
+                resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, candidateMin);
+                if (resultMaster.IsSuccess) //compare 1-1
                 {
-                    var bossCall = new BossCall2Section
-                    {
-                        FirstMatchTime = DateTime.Now,
-                        FirstMatchValue = resultMaster.CompareTarget,
-                    };
-
+                    var bossCall = new BossCall2Section { FirstMatchTime = DateTime.Now, FirstMatchValue = resultMaster.CompareTarget };
                     var ocrProcessedAUX = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.Item2);
                     resultAUX = MainOCRBossCounting.FindBossCallPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
 
@@ -485,51 +482,44 @@ namespace SkyStopwatch
                         id = bossCall.Id;
                     }
                 }
-                else //compare 2-1
-                {
-                    if (lastCall.IsPairOneMatch && lastCall.IsSameRound(DateTime.Now, resultMaster.CompareTarget))
-                    {
-                        lastCall.IsValid = true;
-                        lastCall.PreCounting = true;
-                        lastCall.Round2FirstMatchValue = resultMaster.CompareTarget;
-                        lastCall.Round2FirstMatchTime = DateTime.Now;
-                        _LastBossCallFoundTime = DateTime.Now;
-                        saveImg = true;
-                        id = lastCall.Id;
-                    }
-                    else
-                    {
-                        _BossGroups.Last().Remove(lastCall);
-                    }
-                }
             }
             else
             {
-                if (lastCall == null || lastCall.IsValid) //compare 1-1
+                bool removeLastCall = true;
+                candidateMax = lastCall.FirstMatchValue < 2 ? 1 : lastCall.FirstMatchValue - 1;
+                resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, candidateMin);
+                if (resultMaster.IsSuccess) //compare 2-1
                 {
-
-                }
-                else //compare 2-1
-                {
-                    if (lastCall.IsPairOneMatch && lastCall.IsSameRound(DateTime.Now, candidateMax))
+                    if (lastCall.IsPairOneMatch && lastCall.IsSameRound(DateTime.Now, resultMaster.CompareTarget))
                     {
+                        var ocrProcessedAUX = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.Item2);
+                        resultAUX = MainOCRBossCounting.FindBossCallPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
 
-                    }
-                    else
-                    {
-                        _BossGroups.Last().Remove(lastCall);
-
-
-                        if (candidateMax > lastCall.FirstMatchValue || (resultMaster.CompareTarget == -1 && resultMaster.Info != lastCall.FirstMatchValue.ToString()))
+                        if (resultAUX.IsSuccess) //compare 2-2
                         {
-                            //hack, found '4' is parsered as wrong value, e.g 546, 34
-                            if (!resultMaster.Info.Contains(candidateMax.ToString()))
-                            {
-                                lastCall.PreCounting = false;
-                            }
+                            lastCall.IsValid = true;
+                            lastCall.PreCounting = true;
+                            lastCall.Round2FirstMatchValue = resultMaster.CompareTarget;
+                            lastCall.Round2FirstMatchTime = DateTime.Now;
+                            _LastBossCallFoundTime = DateTime.Now;
+                            saveImg = true;
+                            id = lastCall.Id;
+                            removeLastCall = false;
                         }
-
                     }
+                }
+                else
+                {
+                    var now = DateTime.Now; //for debug
+                    if (lastCall.IsPairOneMatch && (lastCall.IsSameRound(now, candidateMax) || lastCall.IsSameRound(now, candidateMin))) //continue to next compare round
+                    {
+                        removeLastCall = false;
+                    }
+                }
+
+                if (removeLastCall)
+                {
+                    _BossGroups.Last().Remove(lastCall);
                 }
             }
 

@@ -17,14 +17,15 @@ namespace SkyStopwatch.DataModel
 
         public bool IsSameRound(DateTime time, int value)
         {
-            bool same = IsTop1CallSameRoundWith(time) && IsTop1CallsMatchSecondCountdownWith(time, value);
+            bool same = IsTop1CallSameRoundWith(time);
+            bool match = IsTop1CallsMatchSecondCountdownWith(time, value);
 
             if (!same)
             {
 
             }
 
-            return same;
+            return same && match;
         }
     }
 }
