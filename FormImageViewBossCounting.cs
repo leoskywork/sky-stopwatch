@@ -473,11 +473,7 @@ namespace SkyStopwatch
 
                     if (resultAUX.IsSuccess) //compare 1-2
                     {
-                        bossCall.PreCounting = true;
-                        bossCall.IsPairOneMatch = true;
-                        bossCall.PairOneMatchTime = DateTime.Now;
-                        bossCall.Id = _BossGroups.GetValidCount() + 1;
-                        _BossGroups.Last().Add(bossCall);
+                        SetBossCallForPairOneSuccess(bossCall);
                         saveImg = true;
                         id = bossCall.Id;
                     }
@@ -497,11 +493,7 @@ namespace SkyStopwatch
 
                         if (resultAUX.IsSuccess) //compare 2-2
                         {
-                            lastCall.IsValid = true;
-                            lastCall.PreCounting = true;
-                            lastCall.Round2FirstMatchValue = resultMaster.CompareTarget;
-                            lastCall.Round2FirstMatchTime = DateTime.Now;
-                            _LastBossCallFoundTime = DateTime.Now;
+                            SetBossCallForPairTwoSuccess(lastCall, resultMaster.CompareTarget, DateTime.Now);
                             saveImg = true;
                             id = lastCall.Id;
                             removeLastCall = false;
@@ -510,10 +502,20 @@ namespace SkyStopwatch
                 }
                 else
                 {
-                    var now = DateTime.Now; //for debug
-                    if (lastCall.IsPairOneMatch && (lastCall.IsSameRound(now, candidateMax) || lastCall.IsSameRound(now, candidateMin))) //continue to next compare round
+                    if (lastCall.IsPairOneMatch)
                     {
-                        removeLastCall = false;
+                        var now = DateTime.Now; //for debug
+
+                        //cause issue, adding fake one
+                        //if (lastCall.FirstMatchValue == candidateMin) //treat as success for min value (1)
+                        //{
+                        //    SetBossCallForPairTwoSuccess(lastCall, candidateMin, now);
+                        //    saveImg = true;
+                        //    id = lastCall.Id;
+                        //    removeLastCall = false;
+                        //} 
+
+                        if (lastCall.IsSameRound(now, candidateMax) || lastCall.IsSameRound(now, candidateMin)) removeLastCall = false; //within the same countdown window, continue to next compare round
                     }
                 }
 
@@ -523,6 +525,8 @@ namespace SkyStopwatch
                 }
             }
 
+
+            saveImg = false;
             if (GlobalData.Default.IsDebugging || saveImg)
             {
                 string tmpPath = MainOCR.SaveTmpFile($"pair-{resultMaster.IsSuccess}-{resultMaster.Info}-id-{id}", rawDataPair.Item1);
@@ -531,6 +535,25 @@ namespace SkyStopwatch
                 System.Diagnostics.Debug.WriteLine($"OCR compare: {resultMaster.IsSuccess}, OCR data master: {ocrProcessedMaster}, file: {tmpPath}");
                 System.Diagnostics.Debug.WriteLine($"OCR compare aux: {resultAUX?.IsSuccess ?? false}, file: {tmpPath2}");
             }
+        }
+
+        private void SetBossCallForPairOneSuccess(BossCall2Section bossCall)
+        {
+            bossCall.PreCounting = true;
+            bossCall.IsPairOneMatch = true;
+            bossCall.PairOneMatchTime = DateTime.Now;
+            bossCall.Id = _BossGroups.GetValidCount() + 1;
+            _BossGroups.Last().Add(bossCall);
+
+        }
+
+        private void SetBossCallForPairTwoSuccess(BossCall2Section bossCall, int value, DateTime time)
+        {
+            bossCall.IsValid = true;
+            bossCall.PreCounting = true;
+            bossCall.PairTwoMatchValue = value;
+            bossCall.PairTwoLastMatchTime = time;
+            _LastBossCallFoundTime = time;
         }
 
         private void checkBoxAux1_CheckedChanged(object sender, EventArgs e)

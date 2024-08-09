@@ -12,8 +12,8 @@ namespace SkyStopwatch.DataModel
         public DateTime PairOneMatchTime { get; set; }
 
 
-        public int Round2FirstMatchValue { get; set; }
-        public DateTime Round2FirstMatchTime { get; set; }
+        public int PairTwoMatchValue { get; set; }
+        public DateTime PairTwoLastMatchTime { get; set; }
 
         public bool IsSameRound(DateTime time, int value)
         {
