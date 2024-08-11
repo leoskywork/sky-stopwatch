@@ -19,6 +19,7 @@ namespace SkyStopwatch
         private BossCallSet _BossCallGroups;
         private bool _AutoSlice;
         private bool _IsShowingActionBar;
+        private DateTime? _BoxLoadTime;
 
         public BoxBossCountingSuccinct(BossCallSet groups, bool autoSlice, Action onClosing)
         {
@@ -65,6 +66,7 @@ namespace SkyStopwatch
             this.buttonKill.Margin = new System.Windows.Forms.Padding(0);
 
             this.RunOnMain(() => { this.labelMessage.Focus(); }, 1);
+            _BoxLoadTime = DateTime.Now;
         }
 
         private void timerClose_Tick(object sender, EventArgs e)
@@ -75,8 +77,16 @@ namespace SkyStopwatch
                 return; 
             }
 
-            //this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.IsValid).Count().ToString();
-            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
+            if (_BoxLoadTime != null && _BoxLoadTime.Value.AddSeconds(1) > DateTime.Now)
+            {
+                this.labelMessage.Text = "BC#";
+            }
+            else
+            {
+                _BoxLoadTime = null; //just for fast compare
+                //this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.IsValid).Count().ToString();
+                this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
+            }
         }
 
         private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)

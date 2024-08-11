@@ -46,7 +46,7 @@ namespace SkyStopwatch
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
         public const int PreRoundGameMinutes = 30; //can not join game after 30 min
         public const int MaxGameRoundMinutes = 40;
-        public const int MinBossCallTimeSeconds = 5 + 2;
+        public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
 
         public const string TimeSpanFormat = @"hh\:mm\:ss";
         public const string TImeSpanFormatNoHour = @"mm\:ss";

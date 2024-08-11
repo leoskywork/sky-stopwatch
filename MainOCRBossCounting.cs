@@ -41,12 +41,12 @@ namespace SkyStopwatch
 
         public static byte[] GetFixedLocationImageData()
         {
-            return GetFixedLocationImageDataPair(true).Item1;
+            return GetFixedLocationImageDataPair(false).Data;
         }
 
 
 
-        public static Tuple<byte[], byte[]> GetFixedLocationImageDataPair(bool onlyFirst)
+        public static TinyScreenShotBossCall GetFixedLocationImageDataPair(bool includeAUX)
         {
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
@@ -81,19 +81,19 @@ namespace SkyStopwatch
                 }
 
 
-                if (onlyFirst)
-                {
-                    auxImage = null;
-                }
-                else
+                if (includeAUX)
                 {
                     using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(AUXXPoint, AUXYPoint, AUXBlockWidth, AUXBlockHeight), bitPic.PixelFormat))
                     {
                         auxImage = MainOCR.BitmapToBytes(cloneBitmap);
                     }
                 }
+                else
+                {
+                    auxImage = null;
+                }
 
-                return Tuple.Create(masterImage, auxImage);
+                return new TinyScreenShotBossCall(masterImage, auxImage);
             }
         }
 

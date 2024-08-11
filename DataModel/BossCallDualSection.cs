@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SkyStopwatch.DataModel
 {
-    public class BossCall2Section : BossCallBase, IBossCall
+    public class BossCallDualSection : BossCallBase, IBossCall
     {
         public bool IsPairOneMatch { get; set; }
         public DateTime PairOneMatchTime { get; set; }
@@ -15,10 +15,12 @@ namespace SkyStopwatch.DataModel
         public int PairTwoMatchValue { get; set; }
         public DateTime PairTwoLastMatchTime { get; set; }
 
-        public bool IsSameRound(DateTime time, int value)
+        public DateTime PairTwoImageCreateAt { get; set; }
+
+        public bool IsImageTimeSameRoundUTC(DateTime time, int value)
         {
-            bool same = IsTop1CallSameRoundWith(time);
-            bool match = IsTop1CallsMatchSecondCountdownWith(time, value);
+            bool same = IsFirstCallImageSameRoundWithUTC(time);
+            bool match = IsFirstCallImageMatchSecondCountdownWithUTC(time, value);
 
             if (!same)
             {

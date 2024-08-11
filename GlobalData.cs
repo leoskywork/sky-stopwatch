@@ -24,8 +24,9 @@ namespace SkyStopwatch
         public event EventHandler<ChangeGameStartTimeEventArgs> ChangeGameStartTime;
 
 
-        public const int TimerIntervalShowingBossCallMS = 10;
-
+        public const int TimerIntervalShowingBossCallMS = 50; //10;
+        public const int BossCountingScanTimerIntervalMS = 300;//500;
+        public const int BossCountingCompareTimerIntervalMS = 50;//100;
 
         private static GlobalData _instance;
         public static GlobalData Default
@@ -49,10 +50,7 @@ namespace SkyStopwatch
         public int BootingArgs { get; set; } = 0;
         public bool EnableBossCountingOneMode { get; set; }
 
-        public int BossCountingScanTimerIntervalMS { get; } = 500;
-        public int BossCountingCompareTimerIntervalMS { get; } = 100;
-
-
+        public int ScreenShotSeedBossCall { get; set; } = 1;
 
 
 

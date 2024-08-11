@@ -23,12 +23,14 @@ namespace SkyStopwatch.DataModel
 
         public bool IsTop2CallsMatchSecondCountdown()
         {
-            return IsTop1CallsMatchSecondCountdownWith(this.SecondMatchTime, this.SecondMatchValue);
+            throw new Exception("need change code");
+           // return IsTop1CallsMatchSecondCountdownWithUTC(this.SecondMatchTime, this.SecondMatchValue);
         }
 
         public bool IsTop2CallsSameRound()
         {
-            return IsTop1CallSameRoundWith(this.SecondMatchTime);
+            throw new Exception("need change code");
+            //return IsTop1CallSameRoundWithUTC(this.SecondMatchTime);
         }
 
       
