@@ -457,7 +457,7 @@ namespace SkyStopwatch
          {
             OCRCompareResult<int> resultAUX = null;
             OCRCompareResult<int> resultMaster;
-            int testId = -404; bool testSaveImg = false; //for debug
+            string testId = "unset"; bool testSaveImg = false; //for debug
 
             var rawDataPair = _BossCallImagePairQueue.Dequeue();
             rawDataPair.ConsumeAt = DateTime.UtcNow;
@@ -479,15 +479,16 @@ namespace SkyStopwatch
                         var newCall = new BossCallDualSection { FirstMatchTime = DateTime.Now, FirstMatchValue = resultMaster.CompareTarget };
                         SetBossCallForPairOneSuccess(newCall, resultMaster.CompareTarget, rawDataPair);
                         testSaveImg = true;
-                        testId = newCall.Id * 100;
+                        testId = "p1-" + newCall.Id;
                     }
                 }
             }
             else
             {
+                //STILL have issue here when r1 value is 1, and r2 value also 1, lead to adding a fake call from time to time
                 bool removeLastCall = true;
                 candidateMax = lastCall.FirstMatchValue < 2 ? 1 : lastCall.FirstMatchValue - 1;
-                resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, candidateMin);
+                resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, candidateMin); 
                 if (resultMaster.IsSuccess) //compare 2-1
                 {
                     if (lastCall.IsPairOneMatch && lastCall.IsImageTimeSameRoundUTC(rawDataPair.CreateAt, resultMaster.CompareTarget))
@@ -499,7 +500,7 @@ namespace SkyStopwatch
                         {
                             SetBossCallForPairTwoSuccess(lastCall, resultMaster.CompareTarget, rawDataPair);
                             testSaveImg = true;
-                            testId = lastCall.Id;
+                            testId =  "p2-" + lastCall.Id;
                         }
 
                         removeLastCall = false; //still within current round countdown, do not remove regardless current compare success or fail
