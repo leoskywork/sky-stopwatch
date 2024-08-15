@@ -17,6 +17,16 @@ namespace SkyStopwatch.DataModel
 
         public DateTime PairTwoImageCreateAt { get; set; }
 
+
+
+        //leotodo, not a good way, but do this for now
+        public BossCallDualSection Previous { get; set; }   
+
+
+
+
+
+
         public bool IsImageTimeSameRoundUTC(DateTime time, int value)
         {
             bool same = IsFirstCallImageSameRoundWithUTC(time);
