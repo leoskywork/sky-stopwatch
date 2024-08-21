@@ -1,6 +1,6 @@
 ﻿namespace SkyStopwatch
 {
-    partial class BoxNodeWarning
+    partial class BoxPhaseBossWarning
     {
         /// <summary>
         /// Required designer variable.

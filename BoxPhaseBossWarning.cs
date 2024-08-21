@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxNodeWarning : Form
+    public partial class BoxPhaseBossWarning : Form
     {
         private DateTime _CreatedTime = DateTime.Now;
         private Action _BeforeClose;
 
-        public BoxNodeWarning(Action onClosing)
+        public BoxPhaseBossWarning(Action onClosing)
         {
             InitializeComponent();
 

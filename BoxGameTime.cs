@@ -546,7 +546,7 @@ namespace SkyStopwatch
 
                 if (remainingSeconds > 0 && remainingSeconds < GlobalData.TimeNodeEarlyWarningSeconds)
                 {
-                    var warningBox = new BoxNodeWarning(() => _HasTimeNodeWarningPopped = false);
+                    var warningBox = new BoxPhaseBossWarning(() => _HasTimeNodeWarningPopped = false);
                     _HasTimeNodeWarningPopped = true;
                     warningBox.StartPosition = FormStartPosition.Manual;
                     warningBox.Location = new Point(this.Location.X, this.Location.Y + this.Size.Height + 10);

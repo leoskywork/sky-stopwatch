@@ -116,11 +116,11 @@
     <Compile Include="BoxBossCounting.Designer.cs">
       <DependentUpon>BoxBossCounting.cs</DependentUpon>
     </Compile>
-    <Compile Include="BoxNodeWarning.cs">
+    <Compile Include="BoxPhaseBossWarning.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BoxNodeWarning.Designer.cs">
-      <DependentUpon>BoxNodeWarning.cs</DependentUpon>
+    <Compile Include="BoxPhaseBossWarning.Designer.cs">
+      <DependentUpon>BoxPhaseBossWarning.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
     <Compile Include="MainOCR.cs" />
@@ -167,8 +167,8 @@
     <EmbeddedResource Include="BoxBossCounting.resx">
       <DependentUpon>BoxBossCounting.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BoxNodeWarning.resx">
-      <DependentUpon>BoxNodeWarning.cs</DependentUpon>
+    <EmbeddedResource Include="BoxPhaseBossWarning.resx">
+      <DependentUpon>BoxPhaseBossWarning.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
