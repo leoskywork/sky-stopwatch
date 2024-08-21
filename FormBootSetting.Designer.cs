@@ -1,6 +1,6 @@
 ﻿namespace SkyStopwatch
 {
-    partial class FormToolBox
+    partial class FormBootSetting
     {
         /// <summary>
         /// Required designer variable.

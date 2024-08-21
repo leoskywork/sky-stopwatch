@@ -357,7 +357,7 @@ namespace SkyStopwatch
                 //can not use using block here, since we pass the bitmap into a form and show it
                 Bitmap cloneBitmap = bitPic.Clone(new Rectangle(MainOCR.XPoint, MainOCR.YPoint, MainOCR.BlockWidth, MainOCR.BlockHeight), bitPic.PixelFormat);
 
-                FormToolBox tool = CreateToolBox(cloneBitmap);
+                FormBootSetting tool = CreateToolBox(cloneBitmap);
                 tool.StartPosition = FormStartPosition.Manual;
                 tool.Location = new Point(this.Location.X - tool.Width + this.Width + 10, this.Location.Y + this.Size.Height + 24);
                 tool.Show();
@@ -365,9 +365,9 @@ namespace SkyStopwatch
             }
         }
 
-        private FormToolBox CreateToolBox(Bitmap bitmap)
+        private FormBootSetting CreateToolBox(Bitmap bitmap)
         {
-            FormToolBox tool = new FormToolBox(bitmap,
+            FormBootSetting tool = new FormBootSetting(bitmap,
                                (_, __) => { this.OnInitToolBox(_, __); },
                                () => { this.OnRunOCR(null, GlobalData.ChangeTimeSourceManualOCRButton); },
                                () => { this.OnNewGameStart(); },

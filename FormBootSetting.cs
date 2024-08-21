@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class FormToolBox : Form
+    public partial class FormBootSetting : Form
     {
         private Action _RunOCR;
         private Action _NewGameClick;
@@ -23,12 +23,12 @@ namespace SkyStopwatch
         private string _OriginalTimeNodes;
         private int _BootingArgs = 0; //0 = default theme
 
-        private FormToolBox()
+        private FormBootSetting()
         {
             InitializeComponent();
         }
 
-        public FormToolBox(Bitmap image,
+        public FormBootSetting(Bitmap image,
             Action<Button, string> onInit = null,
             Action runOCR = null,
             Action onNewGame = null,
