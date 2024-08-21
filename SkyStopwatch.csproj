@@ -131,6 +131,7 @@
       <DependentUpon>BoxGameTime.cs</DependentUpon>
     </Compile>
     <Compile Include="MainOCRBossCounting.cs" />
+    <Compile Include="MainOCRGameTime.cs" />
     <Compile Include="MainOCRPrice.cs" />
     <Compile Include="MainTheme.cs" />
     <Compile Include="PowerLog.cs" />

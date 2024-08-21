@@ -14,11 +14,11 @@ namespace SkyStopwatch
 
         OCR2Line = 1,
         OCR1LineLong= 2,
-        OCR1LineNoTime = 3,
+        OCR1LineNoSystemTime = 3,
 
-        ThinTime = 4,
-        ThinOCR = 0,
+        ThinSystemTime = 4,
+        ThinOCRTime = 0,
 
-        BossCallOnly = 5
+        BossCallCounting = 5
     }
 }

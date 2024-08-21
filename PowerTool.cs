@@ -5,7 +5,9 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
@@ -163,6 +165,130 @@ namespace SkyStopwatch
             TokenOwner,
             TokenPrimaryGroup,
             Token
+        }
+
+    }
+
+
+    public static class FormLeoExt
+    {
+        public static void OnError(this Form form, Exception e)
+        {
+            System.Diagnostics.Debug.WriteLine(e.ToString());
+
+            if (GlobalData.Default.IsDebugging)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            else
+            {
+                MessageBox.Show(e.Message);
+
+                form.RunOnMain(() => GlobalData.Default.FireCloseApp());
+            }
+        }
+
+        public static bool IsDead(this Form form)
+        {
+            return form.Disposing || form.IsDisposed;
+        }
+
+        public static void RunOnMain(this Form form, Action action)
+        {
+            if (action == null) return;
+            if (form.IsDead()) return;
+
+            //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed} - before if");
+            if (form.InvokeRequired)
+            {
+                if (form.IsDead()) return; //not sure why, the is dead check above not working sometimes, do it again here
+                if (form.Disposing || form.IsDisposed) return;
+                //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed}");
+                form.Invoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        public static void RunOnMain(this Form form, Action action, int delayMS)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(delayMS);
+                RunOnMain(form, action);
+            });
+        }
+
+        public static void RunOnMainAsync(this Form form, Action action)
+        {
+            if (action == null) return;
+            if (form.IsDead()) return;
+
+            if (form.InvokeRequired)
+            {
+                form.BeginInvoke(action);
+            }
+            else
+            {
+                action();
+            }
+        }
+
+        public static void RunOnMainAsync(this Form form, Action action, int delayMS)
+        {
+            Task.Run(() =>
+            {
+                Thread.Sleep(delayMS);
+                RunOnMainAsync(form, action);
+            });
+        }
+
+        public static PowerLog Log(this Form form)
+        {
+            return PowerLog.One;
+        }
+
+        public static void DisableButtonShortTime(this Form form, Label control)
+        {
+            var oldForeColor = control.ForeColor;
+            var oldBackColor = control.BackColor;
+
+
+            control.ForeColor = System.Drawing.Color.White;
+            control.BackColor = System.Drawing.Color.LightGray;
+            control.Enabled = false;
+
+            form.RunOnMain(() =>
+            {
+                control.ForeColor = oldForeColor;
+                control.BackColor = oldBackColor;
+                control.Enabled = true;
+            }, 300);
+        }
+
+        public static void DisableButtonShortTime(this Form form, Button control)
+        {
+            var oldForeColor = control.ForeColor;
+            var oldBackColor = control.BackColor;
+
+            //leotodo, tmp fix for action bar, or else only the first click will work, and button become disabled forever
+            //is this caused by the transparent background/color ?
+            oldForeColor = System.Drawing.Color.Black;
+            oldBackColor = System.Drawing.Color.White;
+
+
+            control.ForeColor = System.Drawing.Color.White;
+            control.BackColor = System.Drawing.Color.LightGray;
+            control.Enabled = false;
+
+            form.RunOnMainAsync(() =>
+            {
+                control.ForeColor = oldForeColor;
+                control.BackColor = oldBackColor;
+                control.Enabled = true;
+            }, 300);
         }
 
     }

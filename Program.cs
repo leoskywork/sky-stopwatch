@@ -61,10 +61,10 @@ namespace SkyStopwatch
             GlobalData.Default.EnableBossCountingOneMode = Properties.Settings.Default.EnableBossCountingOneMode;
 
 
-            MainOCR.XPoint = Properties.Settings.Default.TimeViewPoint.X;
-            MainOCR.YPoint = Properties.Settings.Default.TimeViewPoint.Y;
-            MainOCR.BlockWidth = Properties.Settings.Default.TimeViewSize.Width;
-            MainOCR.BlockHeight = Properties.Settings.Default.TimeViewSize.Height;
+            MainOCRGameTime.XPoint = Properties.Settings.Default.TimeViewPoint.X;
+            MainOCRGameTime.YPoint = Properties.Settings.Default.TimeViewPoint.Y;
+            MainOCRGameTime.BlockWidth = Properties.Settings.Default.TimeViewSize.Width;
+            MainOCRGameTime.BlockHeight = Properties.Settings.Default.TimeViewSize.Height;
 
             MainOCRPrice.XPoint = Properties.Settings.Default.PriceViewPoint.X;
             MainOCRPrice.YPoint = Properties.Settings.Default.PriceViewPoint.Y;
@@ -82,8 +82,8 @@ namespace SkyStopwatch
 
             //safe check
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-            MainOCR.XPoint = Math.Min(MainOCR.XPoint, screenRect.Width - MainOCR.BlockWidth);
-            MainOCR.YPoint = Math.Min(MainOCR.YPoint, screenRect.Height - MainOCR.BlockHeight);
+            MainOCRGameTime.XPoint = Math.Min(MainOCRGameTime.XPoint, screenRect.Width - MainOCRGameTime.BlockWidth);
+            MainOCRGameTime.YPoint = Math.Min(MainOCRGameTime.YPoint, screenRect.Height - MainOCRGameTime.BlockHeight);
             MainOCRPrice.XPoint = Math.Min(MainOCRPrice.XPoint, screenRect.Width - MainOCRPrice.BlockWidth);
             MainOCRPrice.YPoint = Math.Min(MainOCRPrice.YPoint, screenRect.Height - MainOCRPrice.BlockHeight);
             MainOCRBossCounting.XPoint = Math.Min(MainOCRBossCounting.XPoint, screenRect.Width - MainOCRBossCounting.BlockWidth);
@@ -108,8 +108,8 @@ namespace SkyStopwatch
                 Properties.Settings.Default.EnableDebugging = GlobalData.Default.IsDebugging;
                 Properties.Settings.Default.EnableBossCountingOneMode = GlobalData.Default.EnableBossCountingOneMode;
 
-                Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(MainOCR.XPoint, MainOCR.YPoint);
-                Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(MainOCR.BlockWidth, MainOCR.BlockHeight);
+                Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(MainOCRGameTime.XPoint, MainOCRGameTime.YPoint);
+                Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(MainOCRGameTime.BlockWidth, MainOCRGameTime.BlockHeight);
 
                 Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(MainOCRPrice.XPoint, MainOCRPrice.YPoint);
                 Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(MainOCRPrice.BlockWidth, MainOCRPrice.BlockHeight);

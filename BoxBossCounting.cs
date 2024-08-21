@@ -209,7 +209,7 @@ namespace SkyStopwatch
         {
             this.Close();
 
-            if (GlobalData.Default.BootingArgs == (int)MainTheme.BossCallOnly)
+            if (GlobalData.Default.BootingArgs == (int)MainTheme.BossCallCounting)
             {
                 GlobalData.Default.FireCloseApp();
             }

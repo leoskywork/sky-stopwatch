@@ -256,8 +256,8 @@ namespace SkyStopwatch
             GlobalData.Default.BootingArgs = this._BootingArgs % themeCount;
 
             //lazy way to do it, error when theme count >= 10
-            string prefix = "Theme"; //this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
-            this.buttonChangeTheme.Text = $"{prefix} {GlobalData.Default.BootingArgs} - {(MainTheme)GlobalData.Default.BootingArgs}";
+            string prefix = ""; //this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
+            this.buttonChangeTheme.Text = $"{prefix}{GlobalData.Default.BootingArgs} - {(MainTheme)GlobalData.Default.BootingArgs}";
         }
 
         private void buttonAddMinute_Click(object sender, EventArgs e)

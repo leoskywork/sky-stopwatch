@@ -17,30 +17,13 @@ namespace SkyStopwatch
 {
     public class MainOCR
     {
-        //public const int XPercent = 32;
-        //public const int YPercent = 68;
-        //public const int BlockWidth = 300;
-        //public const int BlockHeight = 100;
-        //public const int XYPercentDecimalSize = 4;
-        //public static decimal XPercent = 0.3922m;
-        //public static decimal YPercent = 0.7093m;
-        public static int XPoint = 1084;
-        public static int YPoint = 1068;
-        public static int BlockWidth = 140;
-        public static int BlockHeight = 30;
-
-        public const int MinBlockWidth = 10;
-        public const int MinBlockHeight = 10;
-
-        public const int ManualOCRDelaySeconds = 10;
-        public const int AutoOCRDelaySeconds = 2;
-        public const int NewGameDelaySeconds = 1;//10;
-        public const int NoDelay = 0;
         public const int IncrementSeconds = 10;
         public const int DecrementSeconds = 10;
         public const int IncrementMinutes = 1;
         public const int DecrementMinutes = 1;
-      
+
+        public const int MinBlockWidth = 10;
+        public const int MinBlockHeight = 10;
 
         public static void PrintScreenAsFile(string path)
         {
@@ -94,42 +77,7 @@ namespace SkyStopwatch
             return path;
         }
 
-        public static byte[] PrintScreenAsBytes(bool onlyReturnPartOfImage)
-        {
-            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
-            if (GlobalData.Default.IsDebugging)
-            {
-                System.Diagnostics.Debug.WriteLine($"screen: {screenRect}");
-            }
-
-            using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
-            using (Graphics gra = Graphics.FromImage(bitPic))
-            {
-                //leotodo - improve this, CopyFromScreen(...) throws Win32Exception sometimes, not sure why? happened when press ctrl + tab ?
-                //just ignore for now
-                try
-                {
-                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
-                }
-                catch(Win32Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"win32 error: {ex}");
-                    return null;
-                }
-
-                if (onlyReturnPartOfImage) //for speed up
-                {
-                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitPic.PixelFormat))
-                    {
-                        return BitmapToBytes(cloneBitmap);
-                    }
-                }
-
-                return BitmapToBytes(bitPic);
-            }
-        }
 
         public static byte[] BitmapToBytes(System.Drawing.Bitmap bitmap)
         {
@@ -200,37 +148,7 @@ namespace SkyStopwatch
         }
 
 
-        public static string ReadImageFromFile(string imgPath)
-        {
-            using (var engine = GetDefaultOCREngine())
-            {
-                //using (var img = Tesseract.Pix.LoadFromFile(imgPath))
-                //{
-                //    using (var page = engine.Process(img))
-                //    {
-                //        return page.GetText();
-                //    }
-                //}
-
-                //for speed up - only read part of the file
-                Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-
-                using (Bitmap bitmap = new Bitmap(imgPath))
-                using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitmap.PixelFormat))
-                {
-
-                    byte[] bytes = BitmapToBytes(cloneBitmap);
-
-                    using (var img = Tesseract.Pix.LoadFromMemory(bytes))
-                    {
-                        using (var page = engine.Process(img))
-                        {
-                            return page.GetText();
-                        }
-                    }
-                }
-            }
-        }
+   
 
         public static string ReadImageFromMemory(Tesseract.TesseractEngine engine, byte[] imgData)
         {
@@ -248,115 +166,8 @@ namespace SkyStopwatch
             }
         }
 
-        public static Tesseract.TesseractEngine GetDefaultOCREngine()
-        {
-            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
-            engine.SetVariable("tessedit_char_whitelist", "0123456789:oO"); //only look for pre-set chars for speed up
+  
 
-            //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
-            //_tesseractEngine.SetVariable("debug_file", "NUL");
-            engine.DefaultPageSegMode = PageSegMode.SingleBlock;
-
-            return engine;
-        }
-
-        public static string FindTime(string data)
-        {
-            //hh:mm:ss
-            const string regexPattern6Digits = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
-            const int colonCount = 2;
-
-            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            string[] zeroAlikeArray = new[] { "o", "O" };
-
-            foreach (string line in lines)
-            {
-                if (line.IndexOf(':') >= 0)
-                {
-                    //case 1 - xx: 00:01:26
-                    //case 2 - 00:01:26
-                    string line6TimeParts = line.Count(c => c == ':') > 2 ? line.Substring(line.IndexOf(":") + 1) : line;
-
-                    //remove empty space
-                    string line6TimePartsAdjust = line6TimeParts.Replace(" ", string.Empty);
-
-                    foreach (string item in zeroAlikeArray)
-                    {
-                        line6TimePartsAdjust = line6TimePartsAdjust.Replace(item, "0");
-                    }
-
-                    if (Regex.IsMatch(line6TimePartsAdjust, regexPattern6Digits))
-                    {
-                        //timePartAdjust = timePartAdjust.Replace("00", "12"); 
-                        //got bug when parse as datetime 00:00:123 -> 12:12:23 - no need to do this since we parse as timespan now
-                        //if (timePartAdjust.StartsWith("00"))
-                        //{
-                        //    timePartAdjust = "12" + timePartAdjust.Substring(2);
-                        //}
-
-                        System.Diagnostics.Debug.WriteLine("-----------------------------regex line");
-                        System.Diagnostics.Debug.WriteLine(line);
-                        System.Diagnostics.Debug.WriteLine(line6TimeParts);
-                        System.Diagnostics.Debug.WriteLine(line6TimePartsAdjust);
-
-                        return line6TimePartsAdjust;
-                    }
-
-                    //handle case "1353:1131: 00:01:26", split it then take the last 3 parts
-                    //do not remove empty entry here, do not want to parse invalid line part, e.g. [4  1  :: 7: 5     :: : 5  :   :: 1 ]
-                    //string[] parts = charsAfterFirstColonAdjust.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    string[] parts = line6TimePartsAdjust.Split(new[] { ':' }, StringSplitOptions.None);
-                    if (parts.Length > colonCount)
-                    {
-                        string last3Parts = $"{parts[parts.Length - 3]}:{parts[parts.Length - 2]}:{parts[parts.Length - 1]}";
-                        if (Regex.IsMatch(last3Parts, regexPattern6Digits))
-                        {
-                            System.Diagnostics.Debug.WriteLine($"regex - get last 3 parts [{last3Parts}] from line [{line}]");
-                            return last3Parts;
-                        }
-                    }
-
-                    /*
-                    //leotodo - ignore the following case 
-
-                     5:11:33 :5 5
-                     11:33 :5 5
-                     11:33:55
-                     */
-                }
-            }
-
-            return string.Empty;
-        }
-
-        public static List<string> ValidateTimeSpanLines(string data)
-        {
-            if (data == null) return null;
-
-            //mm:ss
-            string regexPattern = @"^([0-5]?\d:[0-5]?\d)$";
-            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            List<string> result = new List<string>();
-
-            foreach (string line in lines)
-            {
-                if (line.IndexOf(':') > 0)
-                {
-                    string timePartAdjust = line.Trim().Replace(": ", ":").Replace(" :", ":");
-
-                    if (Regex.IsMatch(timePartAdjust, regexPattern))
-                    {
-                        //System.Diagnostics.Debug.WriteLine("-----------------------------");
-                        //System.Diagnostics.Debug.WriteLine(line);
-                        //System.Diagnostics.Debug.WriteLine(timePartAdjust);
-
-                        result.Add(timePartAdjust);
-                    }
-                }
-            }
-
-            return result;
-        }
 
         public static void SafeCheckImageBlock(ref int x, ref int y, ref int width, ref int height)
         {
@@ -389,126 +200,4 @@ namespace SkyStopwatch
 
 
 
-    public static class FormLeoExt
-    {
-        public static void OnError(this Form form, Exception e)
-        {
-            System.Diagnostics.Debug.WriteLine(e.ToString());
-
-            if (GlobalData.Default.IsDebugging)
-            {
-                MessageBox.Show(e.ToString());
-            }
-            else
-            {
-                MessageBox.Show(e.Message);
-
-                form.RunOnMain(() => GlobalData.Default.FireCloseApp());
-            }
-        }
-
-        public static bool IsDead(this Form form)
-        {
-            return form.Disposing || form.IsDisposed;
-        }
-
-        public static void RunOnMain(this Form form, Action action)
-        {
-            if(action == null) return;
-            if(form.IsDead()) return;
-
-            //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed} - before if");
-            if (form.InvokeRequired)
-            {
-                if (form.IsDead()) return; //not sure why, the is dead check above not working sometimes, do it again here
-                if (form.Disposing || form.IsDisposed) return;
-                //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed}");
-                form.Invoke(action);
-            }
-            else
-            {
-                action();
-            }
-        }
-
-        public static void RunOnMain(this Form form, Action action, int delayMS)
-        {
-            Task.Run(() =>
-            {
-                Thread.Sleep(delayMS);
-                RunOnMain(form, action);
-            });
-        }
-
-        public static void RunOnMainAsync(this Form form, Action action)
-        {
-            if (action == null) return;
-            if (form.IsDead()) return;
-
-            if (form.InvokeRequired)
-            {
-                form.BeginInvoke(action);
-            }
-            else
-            {
-                action();
-            }
-        }
-
-        public static void RunOnMainAsync(this Form form, Action action, int delayMS)
-        {
-            Task.Run(() =>
-            {
-                Thread.Sleep(delayMS);
-                RunOnMainAsync(form, action);
-            });
-        }
-
-        public static PowerLog Log(this Form form)
-        {
-            return PowerLog.One;
-        }
-
-        public static void DisableButtonShortTime(this Form form, Label control)
-        {
-            var oldForeColor = control.ForeColor;
-            var oldBackColor = control.BackColor;
-
-
-            control.ForeColor = System.Drawing.Color.White;
-            control.BackColor = System.Drawing.Color.LightGray;
-            control.Enabled = false;
-
-            form.RunOnMain(() =>
-            {
-                control.ForeColor = oldForeColor;
-                control.BackColor = oldBackColor;
-                control.Enabled = true;
-            }, 300);
-        }
-
-        public static void DisableButtonShortTime(this Form form, Button control)
-        {
-            var oldForeColor = control.ForeColor;
-            var oldBackColor = control.BackColor;
-
-            //leotodo, tmp fix for action bar, or else only the first click will work, and button become disabled forever
-            //is this caused by the transparent background/color ?
-            oldForeColor = System.Drawing.Color.Black;
-            oldBackColor = System.Drawing.Color.White;
-
-
-            control.ForeColor = System.Drawing.Color.White;
-            control.BackColor = System.Drawing.Color.LightGray;
-            control.Enabled = false;
-
-            form.RunOnMainAsync(() =>
-            {
-                control.ForeColor = oldForeColor;
-                control.BackColor = oldBackColor;
-                control.Enabled = true;
-            }, 300);
-        }
-
-    }
 }

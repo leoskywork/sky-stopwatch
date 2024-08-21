@@ -20,10 +20,10 @@ namespace SkyStopwatch
 
 
             var screen = Screen.PrimaryScreen.Bounds;
-            this.numericUpDownX.Value = MainOCR.XPoint;
-            this.numericUpDownY.Value = MainOCR.YPoint;
-            this.numericUpDownWidth.Value = MainOCR.BlockWidth;
-            this.numericUpDownHeight.Value = MainOCR.BlockHeight;
+            this.numericUpDownX.Value = MainOCRGameTime.XPoint;
+            this.numericUpDownY.Value = MainOCRGameTime.YPoint;
+            this.numericUpDownWidth.Value = MainOCRGameTime.BlockWidth;
+            this.numericUpDownHeight.Value = MainOCRGameTime.BlockHeight;
         }
 
 
@@ -42,10 +42,10 @@ namespace SkyStopwatch
 
                 //MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
                 //MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
-                MainOCR.XPoint = x; 
-                MainOCR.YPoint = y;
-                MainOCR.BlockWidth = width;
-                MainOCR.BlockHeight = height;
+                MainOCRGameTime.XPoint = x; 
+                MainOCRGameTime.YPoint = y;
+                MainOCRGameTime.BlockWidth = width;
+                MainOCRGameTime.BlockHeight = height;
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
                 this.Close();
             }

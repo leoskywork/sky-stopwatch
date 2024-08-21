@@ -72,7 +72,7 @@ namespace SkyStopwatch
         public int BootingArgs { get; set; } = 0;
         public bool EnableBossCountingOneMode { get; set; }
 
-        public bool EnableBossCountingGameTime { get; set; }
+        public bool EnableBossCountingGameTime { get; set; } = true;// false;
 
         public int ScreenShotSeedBossCall { get; set; } = 1;
 
