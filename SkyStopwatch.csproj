@@ -123,17 +123,17 @@
       <DependentUpon>BoxPhaseBossWarning.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
-    <Compile Include="MainOCR.cs" />
+    <Compile Include="ViewModel\MainOCR.cs" />
     <Compile Include="BoxGameTime.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="BoxGameTime.Designer.cs">
       <DependentUpon>BoxGameTime.cs</DependentUpon>
     </Compile>
-    <Compile Include="MainOCRBossCounting.cs" />
-    <Compile Include="MainOCRGameTime.cs" />
-    <Compile Include="MainOCRPrice.cs" />
-    <Compile Include="MainTheme.cs" />
+    <Compile Include="ViewModel\MainOCRBossCounting.cs" />
+    <Compile Include="ViewModel\MainOCRGameTime.cs" />
+    <Compile Include="ViewModel\MainOCRPrice.cs" />
+    <Compile Include="ViewModel\MainTheme.cs" />
     <Compile Include="PowerLog.cs" />
     <Compile Include="PowerTool.cs" />
     <Compile Include="Program.cs" />

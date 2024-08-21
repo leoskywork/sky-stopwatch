@@ -24,43 +24,6 @@ namespace SkyStopwatch
         public static int Aux2Price = 1002;
 
 
-        public static byte[] GetPriceImageData()
-        {
-            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-
-            if (GlobalData.Default.IsDebugging)
-            {
-                System.Diagnostics.Debug.WriteLine($"screen: {screenRect}");
-            }
-
-            using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
-            using (Graphics gra = Graphics.FromImage(bitPic))
-            {
-                //leotodo - improve this, CopyFromScreen(...) throws Win32Exception sometimes, not sure why? happened when press ctrl + tab ?
-                //just ignore for now
-                try
-                {
-                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
-                }
-                catch (Win32Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"win32 error: {ex}");
-                    return null;
-                }
-
-                //if (onlyReturnPartOfImage) //for speed up
-                {
-                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitPic.PixelFormat))
-                    {
-                        return MainOCR.BitmapToBytes(cloneBitmap);
-                    }
-                }
-
-            }
-        }
-
-
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
             var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
@@ -73,6 +36,16 @@ namespace SkyStopwatch
             return engine;
         }
 
+
+        public static byte[] GetPriceImageData()
+        {
+            return MainOCR.PrintScreenAsBytes(GetScreenBlock()).Item1;
+        }
+
+        public static Rectangle GetScreenBlock()
+        {
+            return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
+        }
 
         public static Tuple<bool, int> FindPrice(string data, bool enableAux1, bool enableAux2)
         {
@@ -135,7 +108,6 @@ namespace SkyStopwatch
 
             //return false;
         }
-
-
+     
     }
 }

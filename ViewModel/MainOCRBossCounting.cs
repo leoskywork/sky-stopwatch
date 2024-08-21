@@ -33,69 +33,8 @@ namespace SkyStopwatch
         public static int AUXBlockHeight = 30;
 
 
-
         public static bool EnableAutoSlice = false;
         public static int AutoSliceIntervalSeconds = 12;
-
-
-
-        public static byte[] GetFixedLocationImageData()
-        {
-            return GetFixedLocationImageDataPair(false).Data;
-        }
-
-
-
-        public static TinyScreenShotBossCall GetFixedLocationImageDataPair(bool includeAUX)
-        {
-            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-
-            if (GlobalData.Default.IsDebugging)
-            {
-                System.Diagnostics.Debug.WriteLine($"screen: {screenRect}");
-            }
-
-            using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
-            using (Graphics gra = Graphics.FromImage(bitPic))
-            {
-                //leotodo - improve this, CopyFromScreen(...) throws Win32Exception sometimes, not sure why? happened when press ctrl + tab ?
-                //just ignore for now
-                try
-                {
-                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
-                }
-                catch (Win32Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"win32 error: {ex}");
-                    return null;
-                }
-
-                //onlyReturnPartOfImage //for speed up
-
-                byte[] masterImage, auxImage;
-
-                using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitPic.PixelFormat))
-                {
-                    masterImage = MainOCR.BitmapToBytes(cloneBitmap);
-                }
-
-
-                if (includeAUX)
-                {
-                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(AUXXPoint, AUXYPoint, AUXBlockWidth, AUXBlockHeight), bitPic.PixelFormat))
-                    {
-                        auxImage = MainOCR.BitmapToBytes(cloneBitmap);
-                    }
-                }
-                else
-                {
-                    auxImage = null;
-                }
-
-                return new TinyScreenShotBossCall(masterImage, auxImage);
-            }
-        }
 
 
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
@@ -112,6 +51,32 @@ namespace SkyStopwatch
             return engine;
         }
 
+
+        public static byte[] GetFixedLocationImageData()
+        {
+            var rect = GetScreenBlock();
+            var bytes = MainOCR.PrintScreenAsBytes(rect);
+
+            return bytes.Item1;
+        }
+        public static TinyScreenShotBossCall GetFixedLocationImageDataPair(bool includeAUX)
+        {
+            var rect = GetScreenBlock();
+            var rectAUX = GetScreenBlockAUX();
+            var bytes = MainOCR.PrintScreenAsBytes(rect, rectAUX);
+
+            return new TinyScreenShotBossCall(bytes.Item1, bytes.Item2);
+        }
+
+        public static Rectangle GetScreenBlock()
+        {
+            return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
+        }
+
+        public static Rectangle GetScreenBlockAUX()
+        {
+            return new Rectangle(AUXXPoint, AUXYPoint, AUXBlockWidth, AUXBlockHeight);
+        }
 
 
         public static OCRCompareResult<int> FindBossCall(string data, params int[] candidates)
@@ -144,7 +109,6 @@ namespace SkyStopwatch
 
             return OCRCompareResult<int>.Create(false, lines[0], -1);
         }
-
         public static OCRCompareResult<int> FindBossCallPair(string data, int max, int min)
         {
             if (data == null) throw new ArgumentNullException("data or candidates");
@@ -163,8 +127,5 @@ namespace SkyStopwatch
 
             return OCRCompareResult<int>.Create(false, lines[0], -1);
         }
-
-
-
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -13,7 +14,6 @@ namespace SkyStopwatch
 {
     public static class PowerTool
     {
-
         public static bool AnyAppConfigProcessRunning()
         {
             if(GlobalData.ProcessList.Count == 0) { return false; }
@@ -32,6 +32,38 @@ namespace SkyStopwatch
 
             return false;
         }
+
+        public static List<string> ValidateTimeSpanLines(string data)
+        {
+            if (data == null) return null;
+
+            //mm:ss
+            string regexPattern = @"^([0-5]?\d:[0-5]?\d)$";
+            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+            List<string> result = new List<string>();
+
+            foreach (string line in lines)
+            {
+                if (line.IndexOf(':') > 0)
+                {
+                    string timePartAdjust = line.Trim().Replace(": ", ":").Replace(" :", ":");
+
+                    if (Regex.IsMatch(timePartAdjust, regexPattern))
+                    {
+                        //System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        //System.Diagnostics.Debug.WriteLine(line);
+                        //System.Diagnostics.Debug.WriteLine(timePartAdjust);
+
+                        result.Add(timePartAdjust);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+
+
 
 
 

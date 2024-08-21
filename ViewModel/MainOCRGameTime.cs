@@ -25,83 +25,14 @@ namespace SkyStopwatch
         public static int BlockWidth = 140;
         public static int BlockHeight = 30;
 
-     
-
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
         public const int NewGameDelaySeconds = 1;//10;
         public const int NoDelay = 0;
 
 
+        public static bool IsUsingScreenTopTime = false;
 
-        public static byte[] PrintScreenAsBytes(bool onlyReturnPartOfImage)
-        {
-            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-
-            if (GlobalData.Default.IsDebugging)
-            {
-                System.Diagnostics.Debug.WriteLine($"screen: {screenRect}");
-            }
-
-            using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
-            using (Graphics gra = Graphics.FromImage(bitPic))
-            {
-                //leotodo - improve this, CopyFromScreen(...) throws Win32Exception sometimes, not sure why? happened when press ctrl + tab ?
-                //just ignore for now
-                try
-                {
-                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
-                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
-                }
-                catch (Win32Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine($"win32 error: {ex}");
-                    return null;
-                }
-
-                if (onlyReturnPartOfImage) //for speed up
-                {
-                    using (Bitmap cloneBitmap = bitPic.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitPic.PixelFormat))
-                    {
-                        return MainOCR.BitmapToBytes(cloneBitmap);
-                    }
-                }
-
-                return MainOCR.BitmapToBytes(bitPic);
-            }
-        }
-
-        public static string ReadImageFromFile(string imgPath)
-        {
-            using (var engine = GetDefaultOCREngine())
-            {
-                //using (var img = Tesseract.Pix.LoadFromFile(imgPath))
-                //{
-                //    using (var page = engine.Process(img))
-                //    {
-                //        return page.GetText();
-                //    }
-                //}
-
-                //for speed up - only read part of the file
-                Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-
-                using (Bitmap bitmap = new Bitmap(imgPath))
-                using (Bitmap cloneBitmap = bitmap.Clone(new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight), bitmap.PixelFormat))
-                {
-
-                    byte[] bytes =  MainOCR.BitmapToBytes(cloneBitmap);
-
-                    using (var img = Tesseract.Pix.LoadFromMemory(bytes))
-                    {
-                        using (var page = engine.Process(img))
-                        {
-                            return page.GetText();
-                        }
-                    }
-                }
-            }
-        }
 
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
@@ -114,6 +45,30 @@ namespace SkyStopwatch
 
             return engine;
         }
+
+
+        public static byte[] GetScreenBlockAsBytes()
+        {
+            return MainOCR.PrintScreenAsBytes(GetScreenBlock()).Item1;
+        }
+        public static Rectangle GetScreenBlock()
+        {
+            if (IsUsingScreenTopTime)
+            {
+                return new Rectangle(100, 100, 40, 40);
+            }
+
+            return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
+        }
+
+        public static string ReadImageFromFile(string imgPath)
+        {
+            using (var engine = GetDefaultOCREngine())
+            {
+               return MainOCR.ReadImageFromFile(engine, imgPath, GetScreenBlock());
+            }
+        }
+
 
         public static string FindTime(string data)
         {
@@ -184,38 +139,6 @@ namespace SkyStopwatch
             return string.Empty;
         }
 
-        public static List<string> ValidateTimeSpanLines(string data)
-        {
-            if (data == null) return null;
-
-            //mm:ss
-            string regexPattern = @"^([0-5]?\d:[0-5]?\d)$";
-            string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            List<string> result = new List<string>();
-
-            foreach (string line in lines)
-            {
-                if (line.IndexOf(':') > 0)
-                {
-                    string timePartAdjust = line.Trim().Replace(": ", ":").Replace(" :", ":");
-
-                    if (Regex.IsMatch(timePartAdjust, regexPattern))
-                    {
-                        //System.Diagnostics.Debug.WriteLine("-----------------------------");
-                        //System.Diagnostics.Debug.WriteLine(line);
-                        //System.Diagnostics.Debug.WriteLine(timePartAdjust);
-
-                        result.Add(timePartAdjust);
-                    }
-                }
-            }
-
-            return result;
-        }
-
-        public static Rectangle GetRectMiddle()
-        {
-            return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
-        }
+   
     }
 }

@@ -355,7 +355,7 @@ namespace SkyStopwatch
                 gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
                 //can not use using block here, since we pass the bitmap into a form and show it
-                Bitmap cloneBitmap = bitPic.Clone(MainOCRGameTime.GetRectMiddle(), bitPic.PixelFormat);
+                Bitmap cloneBitmap = bitPic.Clone(MainOCRGameTime.GetScreenBlock(), bitPic.PixelFormat);
 
                 FormBootSetting tool = CreateToolBox(cloneBitmap);
                 tool.StartPosition = FormStartPosition.Manual;
@@ -532,7 +532,7 @@ namespace SkyStopwatch
             if (_TimeAroundGameStart == DateTime.MinValue) return;
             if (_HasTimeNodeWarningPopped) return;
 
-            var timeNodes = MainOCRGameTime.ValidateTimeSpanLines(GlobalData.TimeNodeCheckingList);
+            var timeNodes = PowerTool.ValidateTimeSpanLines(GlobalData.TimeNodeCheckingList);
 
             if (timeNodes == null || timeNodes.Count == 0) return;
 
@@ -594,19 +594,17 @@ namespace SkyStopwatch
                 if (!labelTimer.Visible) return;
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
-                //buttonOCR.Enabled = false;
 
                 Task.Factory.StartNew(() =>
                 {
-                    //skip if no target process found 
                     if (!PowerTool.AnyAppConfigProcessRunning())
                     {
-                        //System.Diagnostics.Debug.WriteLine($"AnyAppConfigProcessRunning is false, return null, process list: {string.Join(",", MainOCR.ProcessList)}");
+                        System.Diagnostics.Debug.WriteLine($"AnyAppConfigProcessRunning is false, process list: {string.Join(",", GlobalData.ProcessList)}");
                         return "-1";
                     }
 
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
-                    byte[] screenShotBytes = MainOCRGameTime.PrintScreenAsBytes(true);
+                    byte[] screenShotBytes = MainOCRGameTime.GetScreenBlockAsBytes();
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
 
                     if(screenShotBytes == null)
@@ -623,19 +621,15 @@ namespace SkyStopwatch
 
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
-
                     string timeString = MainOCRGameTime.FindTime(data);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
-
                     if (GlobalData.Default.IsDebugging)
                     {
-                        System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
                         System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
                         string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
                         System.Diagnostics.Debug.WriteLine($"tmp file: {tmpPath}");
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
 
                     //this bug occurs when run cf in small window mode

@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Security.Cryptography;
 
 namespace SkyStopwatch
 {
@@ -38,7 +39,6 @@ namespace SkyStopwatch
                 }
             }
         }
-
         public static string PrintScreenAsTempFile()
         {
             string exePath = Assembly.GetExecutingAssembly().Location;
@@ -76,6 +76,90 @@ namespace SkyStopwatch
 
             return path;
         }
+        public static Tuple<byte[], byte[]> PrintScreenAsBytes(Rectangle rect, Rectangle? rectAUX = null)
+        {
+            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+
+            using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
+            using (Graphics gra = Graphics.FromImage(bitPic))
+            {
+                //leotodo - improve this, CopyFromScreen(...) throws Win32Exception sometimes, not sure why? happened when press ctrl + tab ?
+                //just ignore for now
+                try
+                {
+                    gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
+                    gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
+                }
+                catch (Win32Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"PrintScreenBlockAsBytes - win32 error: {ex}");
+                    return null;
+                }
+
+                byte[] masterImage, auxImage = null;
+
+                using (Bitmap cloneBitmap = bitPic.Clone(rect, bitPic.PixelFormat))
+                {
+                    masterImage = MainOCR.BitmapToBytes(cloneBitmap);
+                }
+
+                if (rectAUX.HasValue)
+                {
+                    using (Bitmap cloneBitmap = bitPic.Clone(rectAUX.Value, bitPic.PixelFormat))
+                    {
+                        auxImage = MainOCR.BitmapToBytes(cloneBitmap);
+                    }
+                }
+
+                return Tuple.Create(masterImage, auxImage);
+
+            }
+        }
+
+
+
+        public static string ReadImageFromMemory(TesseractEngine engine, byte[] imgData)
+        {
+            if (imgData == null) throw new ArgumentNullException(nameof(imgData));
+
+            //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 1");
+            using (var img = Tesseract.Pix.LoadFromMemory(imgData))
+            {
+                // System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 2");
+                using (var page = engine.Process(img))
+                {
+                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 3");
+                    return page.GetText();
+                }
+            }
+        }
+        public static string ReadImageFromFile(TesseractEngine engine, string imgPath, Rectangle rect)
+        {
+            //using (var img = Tesseract.Pix.LoadFromFile(imgPath))
+            //{
+            //    using (var page = engine.Process(img))
+            //    {
+            //        return page.GetText();
+            //    }
+            //}
+
+            //for speed up - only read part of the file
+            Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+
+            using (Bitmap bitmap = new Bitmap(imgPath))
+            using (Bitmap cloneBitmap = bitmap.Clone(rect, bitmap.PixelFormat))
+            {
+                byte[] bytes = MainOCR.BitmapToBytes(cloneBitmap);
+
+                using (var img = Tesseract.Pix.LoadFromMemory(bytes))
+                {
+                    using (var page = engine.Process(img))
+                    {
+                        return page.GetText();
+                    }
+                }
+            }
+        }
 
 
 
@@ -90,7 +174,6 @@ namespace SkyStopwatch
 
             return bytes;
         }
-
         public static Bitmap BytesToBitmap(byte[] imageByte)
         {
             using (MemoryStream stream = new MemoryStream(imageByte))
@@ -99,6 +182,7 @@ namespace SkyStopwatch
                 return bitmap;
             }
         }
+
 
         public static string SaveTmpFile(string fileNameSuffix, byte[] data)
         {
@@ -146,29 +230,6 @@ namespace SkyStopwatch
                 return path;
             }
         }
-
-
-   
-
-        public static string ReadImageFromMemory(Tesseract.TesseractEngine engine, byte[] imgData)
-        {
-            if(imgData == null) throw new ArgumentNullException(nameof(imgData));   
-
-            //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 1");
-            using (var img = Tesseract.Pix.LoadFromMemory(imgData))
-            {
-                // System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 2");
-                using (var page = engine.Process(img))
-                {
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - ReadImageFromMemory 3");
-                    return page.GetText();
-                }
-            }
-        }
-
-  
-
-
         public static void SafeCheckImageBlock(ref int x, ref int y, ref int width, ref int height)
         {
             var screenRect = new Rectangle(0, 0, Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
@@ -189,15 +250,10 @@ namespace SkyStopwatch
                 y = screenRect.Height - MainOCR.MinBlockHeight;
             }
 
-            width = safeWidth; 
+            width = safeWidth;
             height = safeHeight;
         }
 
-
-
       
     }
-
-
-
 }
