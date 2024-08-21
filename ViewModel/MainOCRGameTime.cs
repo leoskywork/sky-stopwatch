@@ -29,9 +29,14 @@ namespace SkyStopwatch
         public const int AutoOCRDelaySeconds = 2;
         public const int NewGameDelaySeconds = 1;//10;
         public const int NoDelay = 0;
+        public const int TimerNapSeconds = 10;
 
+         
+        public int BootingArgs { get; set; } = 0;
+        public string AutoOCRTimeOfLastRead { get; set; }
+        public DateTime TimeAroundGameStart { get; set; } = DateTime.MinValue;
+        public DateTime GameTimeLastUpdateTime { get; set; }
 
-        public bool IsUsingScreenTopTime { get; set; } = true;//false;
 
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
@@ -41,7 +46,7 @@ namespace SkyStopwatch
 
         public override Rectangle GetScreenBlock()
         {
-            if (IsUsingScreenTopTime)
+            if (GlobalData.IsUsingScreenTopTime)
             {
                 return new Rectangle(976, 210, 60, 60);
             }
@@ -63,7 +68,7 @@ namespace SkyStopwatch
             if(string.IsNullOrWhiteSpace(data)) return string.Empty;
 
             //leotodo, a tmp fix, screen top time has 4 digits(not 6)
-            if (this.IsUsingScreenTopTime)
+            if (GlobalData.IsUsingScreenTopTime)
             {
                 data = "00:" + data;
             }
@@ -101,10 +106,12 @@ namespace SkyStopwatch
                         //    timePartAdjust = "12" + timePartAdjust.Substring(2);
                         //}
 
-                        System.Diagnostics.Debug.WriteLine("-----------------------------regex line");
+                        System.Diagnostics.Debug.WriteLine("regex line");
+                        System.Diagnostics.Debug.WriteLine("-----------------------------");
                         System.Diagnostics.Debug.WriteLine(line);
                         System.Diagnostics.Debug.WriteLine(line6TimeParts);
                         System.Diagnostics.Debug.WriteLine(line6TimePartsAdjust);
+                        System.Diagnostics.Debug.WriteLine("-----------------------------");
 
                         return line6TimePartsAdjust;
                     }
@@ -136,6 +143,32 @@ namespace SkyStopwatch
             return string.Empty;
         }
 
-   
+
+        public bool IsOCRTimeMisread(string ocrDisplayTime)
+        {
+            if (!GlobalData.IsUsingScreenTopTime) return false;
+
+            TimeSpan ocrTimeSpan;
+
+            if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
+            {
+                DateTime now = DateTime.Now;
+                int offsetSeconds = 2;
+                ocrTimeSpan = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + offsetSeconds);
+
+                if (ocrTimeSpan < now - this.TimeAroundGameStart && (now - this.GameTimeLastUpdateTime).TotalSeconds < TimerNapSeconds + 10)
+                {
+                    System.Diagnostics.Debug.WriteLine($"--> ocr misread time: {ocrDisplayTime}, should NOT smaller than previuse read");
+                    return true;
+                }
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("failed to parse time：" + ocrDisplayTime);
+            }
+
+            return false;
+        }
+
     }
 }

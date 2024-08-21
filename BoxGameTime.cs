@@ -18,27 +18,22 @@ namespace SkyStopwatch
 {
     public partial class BoxGameTime : Form
     {
-
         private bool _IsUpdatingPassedTime = false;
-        private DateTime _TimeAroundGameStart = DateTime.MinValue;
 
         /// <summary>
         /// only the first time matter, the time does not auto update on the game label
         /// </summary>
         private bool _IsAutoRefreshing = false;
-        private string _AutoOCRTimeOfLastRead;
         private Tesseract.TesseractEngine _AutoOCREngine;
-
         private bool _HasTimeNodeWarningPopped = false;
 
-        private int _BootingArgs = 0;
-        private DateTime _GameTimeLastUpdateTime;
+        public MainOCRGameTime Model { get { return ViewModelFactory.Instance.GetGameTime(); } }
 
         public BoxGameTime(int args)
         {
             InitializeComponent();
 
-            this._BootingArgs = args;
+            this.Model.BootingArgs = args;
 
             InitStopwatch();
             SyncTopMost();
@@ -61,7 +56,7 @@ namespace SkyStopwatch
             this.labelTimer.Text = "run";
             Task.Factory.StartNew(() =>
             {
-                _AutoOCREngine = this.GetModels().GameTime.GetDefaultOCREngine();
+                _AutoOCREngine = this.Model.GetDefaultOCREngine();
 
                 Thread.Sleep(500);
 
@@ -251,7 +246,8 @@ namespace SkyStopwatch
             var imageView = new FormImageViewBossCounting(true);
             imageView.Show();
 
-            this.FormClosing += (_, __) => {
+            this.FormClosing += (_, __) =>
+            {
                 imageView.Close();
                 GlobalData.Default.ClearPopups();
             };
@@ -259,20 +255,20 @@ namespace SkyStopwatch
             //hide main form in this theme, not working ?
             this.Location = new Point(10000, 10000);
             this.Size = new Size(1, 1);
-            this.RunOnMain(()=> this.Hide(), 1);
+            this.RunOnMain(() => this.Hide(), 1);
         }
 
         private void SyncTopMost()
         {
-            this.TopMost = GlobalData .EnableTopMost;
+            this.TopMost = GlobalData.EnableTopMost;
             this.buttonToolBox.Text = GlobalData.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void SetGameStartTime(DateTime newTime, string source)
         {
-            DateTime oldTime = _TimeAroundGameStart;
-            _TimeAroundGameStart = newTime;
-            _GameTimeLastUpdateTime = DateTime.Now;
+            DateTime oldTime = this.Model.TimeAroundGameStart;
+            this.Model.TimeAroundGameStart = newTime;
+            this.Model.GameTimeLastUpdateTime = DateTime.Now;
 
             if (oldTime != newTime)
             {
@@ -358,7 +354,7 @@ namespace SkyStopwatch
                 gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
                 //can not use using block here, since we pass the bitmap into a form and show it
-                Bitmap cloneBitmap = bitPic.Clone(this.GetModels().GameTime.GetScreenBlock(), bitPic.PixelFormat);
+                Bitmap cloneBitmap = bitPic.Clone(this.Model.GetScreenBlock(), bitPic.PixelFormat);
 
                 FormBootSetting tool = CreateToolBox(cloneBitmap);
                 tool.StartPosition = FormStartPosition.Manual;
@@ -436,10 +432,10 @@ namespace SkyStopwatch
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-1.bmp";
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-2-min-zero.bmp";
 
-                string data = this.GetModels().GameTime.ReadImageFromFile(screenShotPath);
+                string data = this.Model.ReadImageFromFile(screenShotPath);
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");
                 //this.BeginInvoke((Action)(() => { labelTimer.Text = "read"; }));
-                string ocrDisplayTime =  this.GetModels().GameTime.Find(data);
+                string ocrDisplayTime = this.Model.Find(data);
 
                 if (this.IsDead()) return;
                 this.BeginInvoke((Action)(() =>
@@ -466,7 +462,7 @@ namespace SkyStopwatch
 
             //reset flags/history values
             //flag 1
-            this._AutoOCRTimeOfLastRead = null;
+            this.Model.AutoOCRTimeOfLastRead = null;
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
             StartUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), MainOCRGameTime.NewGameDelaySeconds, GlobalData.ChangeTimeSourceNewGame);
@@ -479,12 +475,12 @@ namespace SkyStopwatch
 
         private void OnAddSeconds(int seconds)
         {
-            if (_TimeAroundGameStart == DateTime.MinValue) return;
+            if (this.Model.TimeAroundGameStart == DateTime.MinValue) return;
 
             _IsUpdatingPassedTime = true;
             //this.buttonOCR.Enabled = false;
 
-            TimeSpan passedTimeWithIncrease = DateTime.Now.AddSeconds(seconds) - _TimeAroundGameStart;
+            TimeSpan passedTimeWithIncrease = DateTime.Now.AddSeconds(seconds) - this.Model.TimeAroundGameStart;
 
             if (passedTimeWithIncrease < TimeSpan.Zero)
             {
@@ -515,9 +511,9 @@ namespace SkyStopwatch
                 {
                     this.CheckTimeNodes();
 
-                    if (_IsUpdatingPassedTime && _TimeAroundGameStart != DateTime.MinValue)
+                    if (_IsUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
                     {
-                        var passed = DateTime.Now - _TimeAroundGameStart;
+                        var passed = DateTime.Now - this.Model.TimeAroundGameStart;
                         this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
                     }
                 }
@@ -532,14 +528,14 @@ namespace SkyStopwatch
         {
             if (!GlobalData.EnableCheckTimeNode) return;
             if (string.IsNullOrWhiteSpace(GlobalData.TimeNodeCheckingList)) return;
-            if (_TimeAroundGameStart == DateTime.MinValue) return;
+            if (this.Model.TimeAroundGameStart == DateTime.MinValue) return;
             if (_HasTimeNodeWarningPopped) return;
 
             var timeNodes = PowerTool.ValidateTimeSpanLines(GlobalData.TimeNodeCheckingList);
 
             if (timeNodes == null || timeNodes.Count == 0) return;
 
-            var elapsedSeconds = (DateTime.Now - _TimeAroundGameStart).TotalSeconds;
+            var elapsedSeconds = (DateTime.Now - this.Model.TimeAroundGameStart).TotalSeconds;
 
             timeNodes.ForEach(node =>
             {
@@ -568,7 +564,7 @@ namespace SkyStopwatch
                 _IsUpdatingPassedTime = false;
                 SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton);
                 _IsAutoRefreshing = false;
-                _AutoOCRTimeOfLastRead = string.Empty;
+                this.Model.AutoOCRTimeOfLastRead = string.Empty;
 
 
                 this.labelTimer.Text = "--";
@@ -598,7 +594,7 @@ namespace SkyStopwatch
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
 
-                if (this.GetModels().GameTime.IsUsingScreenTopTime && (DateTime.Now - _GameTimeLastUpdateTime).TotalSeconds < 10)
+                if (GlobalData.IsUsingScreenTopTime && (DateTime.Now - this.Model.GameTimeLastUpdateTime).TotalSeconds < MainOCRGameTime.TimerNapSeconds)
                 {
                     System.Diagnostics.Debug.WriteLine("auto refresh - less than 10s since last update, going to skip");
                     _IsAutoRefreshing = false;
@@ -613,11 +609,9 @@ namespace SkyStopwatch
                         return "-1";
                     }
 
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
-                    byte[] screenShotBytes = this.GetModels().GameTime.GetImageBytes();
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
+                    byte[] screenShotBytes = this.Model.GetImageBytes();
 
-                    if(screenShotBytes == null)
+                    if (screenShotBytes == null)
                     {
                         System.Diagnostics.Debug.WriteLine("screenShotBytes is null");
                         return null;
@@ -625,14 +619,11 @@ namespace SkyStopwatch
 
                     if (_AutoOCREngine == null)
                     {
-                        _AutoOCREngine = this.GetModels().GameTime.GetDefaultOCREngine();
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
+                        _AutoOCREngine = this.Model.GetDefaultOCREngine();
                     }
 
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
-                    string timeString = this.GetModels().GameTime.Find(data);
-                    //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
+                    string timeString = this.Model.Find(data);
 
                     if (GlobalData.Default.IsDebugging)
                     {
@@ -654,15 +645,14 @@ namespace SkyStopwatch
 
                 }).ContinueWith(t =>
                 {
+                    if (this.IsDead()) return;
+                    _IsAutoRefreshing = false;
+
                     if (t.IsFaulted)
                     {
                         this.OnError(t.Exception);
                         return;
                     }
-
-                    if (this.IsDead()) return;
-
-                    _IsAutoRefreshing = false;
 
                     this.RunOnMain(() =>
                     {
@@ -675,24 +665,24 @@ namespace SkyStopwatch
                                 this.labelTimer.Text = "--";
                                 SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne);
                             }
-                            else if (ocrDisplayTime != _AutoOCRTimeOfLastRead)
+                            else if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
                             {
-                                _AutoOCRTimeOfLastRead = ocrDisplayTime;
-                                int delaySeconds = this.GetModels().GameTime.IsUsingScreenTopTime ? 1 : MainOCRGameTime.AutoOCRDelaySeconds;
+                                if (this.Model.IsOCRTimeMisread(ocrDisplayTime)) return;
+
+                                this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime;
+                                int delaySeconds = GlobalData.IsUsingScreenTopTime ? 1 : MainOCRGameTime.AutoOCRDelaySeconds;
                                 StartUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
                             }
                             //else the same, the time of this read is a repeat read, the data is not fresh
                         }
-                        else if (_TimeAroundGameStart == DateTime.MinValue)
+                        else if (this.Model.TimeAroundGameStart == DateTime.MinValue)
                         {
                             int second = DateTime.Now.Second;
                             this.labelTimer.Text = second % 2 == 0 ? null : ".";
                             //this.labelTimer.Text = second % 3 == 0 ? "." : (second % 3 == 1 ? ".." : "...");
                         }
                         //else auto refresh failed, just use last result
-
                         //buttonOCR.Enabled = true; //makes ui blink, so disable it
-                        //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - end -----");
                     });
                 });
             }
@@ -741,7 +731,7 @@ namespace SkyStopwatch
             // SetClassLong(this.Handle, GCL_STYLE, GetClassLong(this.Handle, GCL_STYLE) | CS_DropSHADOW);
 
 
-            PopupBoxTheme theme = (PopupBoxTheme)this._BootingArgs;
+            PopupBoxTheme theme = (PopupBoxTheme)this.Model.BootingArgs;
             switch (theme)
             {
                 case PopupBoxTheme.OCR2Line:

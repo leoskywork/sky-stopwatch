@@ -88,6 +88,8 @@ namespace SkyStopwatch
 
         public static List<string> ProcessList { get;} = new List<string>();
 
+        public static bool IsUsingScreenTopTime { get; set; } = true;
+
         private GlobalData() { }
 
         public void FireChangeTheme()
