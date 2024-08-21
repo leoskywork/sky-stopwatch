@@ -11,7 +11,7 @@ using Tesseract;
 
 namespace SkyStopwatch
 {
-    public class MainOCRPrice
+    public class MainOCRPrice : MainOCR
     {
         //big screen (pc-pro) ----- 1470, 240, 160, 740
         public static int XPoint = 1470;
@@ -24,30 +24,18 @@ namespace SkyStopwatch
         public static int Aux2Price = 1002;
 
 
-        public static Tesseract.TesseractEngine GetDefaultOCREngine()
+        public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
-            engine.SetVariable("tessedit_char_whitelist", "0123456789oO"); //only look for pre-set chars for speed up
-
-            //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
-            //_tesseractEngine.SetVariable("debug_file", "NUL");
-            engine.DefaultPageSegMode = PageSegMode.SingleBlock;
-
-            return engine;
+            return MainOCR.GetOCREngine("0123456789oO"); //only look for pre-set chars for speed up
         }
 
 
-        public static byte[] GetPriceImageData()
-        {
-            return MainOCR.PrintScreenAsBytes(GetScreenBlock()).Item1;
-        }
-
-        public static Rectangle GetScreenBlock()
+        public override Rectangle GetScreenBlock()
         {
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
         }
 
-        public static Tuple<bool, int> FindPrice(string data, bool enableAux1, bool enableAux2)
+        public Tuple<bool, int> Find(string data, bool enableAux1, bool enableAux2)
         {
             string[] lines = data.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
             string[] zeroAlikeArray = new[] { "o", "O" };

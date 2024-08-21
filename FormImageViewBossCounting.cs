@@ -256,7 +256,7 @@ namespace SkyStopwatch
 
             if (GlobalData.Default.EnableBossCountingGameTime)
             {
-                var gameTime = new BoxGameTime((int)MainTheme.ThinOCRTime);
+                var gameTime = new BoxGameTime((int)PopupBoxTheme.ThinOCRTime);
                 gameTime.StartPosition = FormStartPosition.Manual;
                 gameTime.Location = new Point(bossCountingBox.Location.X, bossCountingBox.Location.Y + 40);
                 gameTime.Show();
@@ -275,12 +275,12 @@ namespace SkyStopwatch
 
                 if (this.checkBox2SpotsCompare.Checked)
                 {
-                    var imageData = MainOCRBossCounting.GetFixedLocationImageDataPair(true);
+                    var imageData = this.GetModels().BossCounting.GetFixedLocationImageDataPair(true);
                     _BossCallImagePairQueue.Enqueue(imageData);
                 }
                 else
                 {
-                    var imageData = MainOCRBossCounting.GetFixedLocationImageData();
+                    var imageData = this.GetModels().BossCounting.GetImageBytes();
                     _BossCallImageQueue.Enqueue(imageData);
                 }
             }
@@ -323,7 +323,7 @@ namespace SkyStopwatch
                 {
                     if (_AutoOCREngine == null)
                     {
-                        _AutoOCREngine = MainOCRBossCounting.GetDefaultOCREngine();
+                        _AutoOCREngine = this.GetModels().BossCounting.GetDefaultOCREngine();
                     }
 
                     if (enable2SpotsCompare)
@@ -377,7 +377,7 @@ namespace SkyStopwatch
 
 
             //var found = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrMatchDigit); //sometimes, missing a count
-            var result = MainOCRBossCounting.FindBossCall(ocrProcessedData, ocrMatchDigit, ocrMatchDigit - 1); //sometimes, adding a invalid count
+            var result = this.GetModels().BossCounting.FindPair(ocrProcessedData, ocrMatchDigit, ocrMatchDigit - 1); //sometimes, adding a invalid count
 
             if (result.IsSuccess)
             {
@@ -471,11 +471,11 @@ namespace SkyStopwatch
 
             if (lastCall == null || lastCall.IsValid)
             {
-                resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, candidateMin);
+                resultMaster = this.GetModels().BossCounting.FindPair(ocrProcessedMaster, candidateMax, candidateMin);
                 if (resultMaster.IsSuccess) //compare 1-1
                 {
                     var ocrProcessedAUX = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.AUXData);
-                    resultAUX = MainOCRBossCounting.FindBossCallPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
+                    resultAUX = this.GetModels().BossCounting.FindPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
 
                     if (resultAUX.IsSuccess) //compare 1-2
                     {
@@ -493,7 +493,7 @@ namespace SkyStopwatch
                 {
                     //have issue here when r1 value is 1, and r2 value also 1, lead to adding a fake call from time to time
                     candidateMax = lastCall.FirstMatchValue < 2 ? 1 : lastCall.FirstMatchValue - 1;
-                    resultMaster = MainOCRBossCounting.FindBossCallPair(ocrProcessedMaster, candidateMax, candidateMin);
+                    resultMaster = this.GetModels().BossCounting.FindPair(ocrProcessedMaster, candidateMax, candidateMin);
                     if (resultMaster.IsSuccess) //compare 2-1
                     {
                         //still within current round countdown, do not remove regardless current compare success or fail
@@ -501,7 +501,7 @@ namespace SkyStopwatch
                         if (lastCallWithinLifeCycle)
                         {
                             var ocrProcessedAUX = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.AUXData);
-                            resultAUX = MainOCRBossCounting.FindBossCallPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
+                            resultAUX = this.GetModels().BossCounting.FindPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
 
                             if (resultAUX.IsSuccess && IsValidCandidatesOneAndOne(lastCall, candidateMax, rawDataPair)) //compare 2-2
                             {

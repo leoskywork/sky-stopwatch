@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -31,6 +32,7 @@ namespace SkyStopwatch
         private bool _HasTimeNodeWarningPopped = false;
 
         private int _BootingArgs = 0;
+        private DateTime _GameTimeLastUpdateTime;
 
         public BoxGameTime(int args)
         {
@@ -46,8 +48,8 @@ namespace SkyStopwatch
         private void InitStopwatch()
         {
             this.labelTimer.Text = "unset";
-            this.timerMain.Interval = 900;
-            this.timerAutoRefresh.Interval = 1000;
+            this.timerMain.Interval = 200;
+            this.timerAutoRefresh.Interval = 900;
 
             //do the following in form_loaded
             //InitGUILayoutV1();
@@ -59,7 +61,7 @@ namespace SkyStopwatch
             this.labelTimer.Text = "run";
             Task.Factory.StartNew(() =>
             {
-                _AutoOCREngine = MainOCRGameTime.GetDefaultOCREngine();
+                _AutoOCREngine = this.GetModels().GameTime.GetDefaultOCREngine();
 
                 Thread.Sleep(500);
 
@@ -270,6 +272,7 @@ namespace SkyStopwatch
         {
             DateTime oldTime = _TimeAroundGameStart;
             _TimeAroundGameStart = newTime;
+            _GameTimeLastUpdateTime = DateTime.Now;
 
             if (oldTime != newTime)
             {
@@ -355,7 +358,7 @@ namespace SkyStopwatch
                 gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
                 //can not use using block here, since we pass the bitmap into a form and show it
-                Bitmap cloneBitmap = bitPic.Clone(MainOCRGameTime.GetScreenBlock(), bitPic.PixelFormat);
+                Bitmap cloneBitmap = bitPic.Clone(this.GetModels().GameTime.GetScreenBlock(), bitPic.PixelFormat);
 
                 FormBootSetting tool = CreateToolBox(cloneBitmap);
                 tool.StartPosition = FormStartPosition.Manual;
@@ -433,10 +436,10 @@ namespace SkyStopwatch
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-1.bmp";
                 //screenShotPath = @"C:\Dev\VS2022\SkyStopwatch\test-image\test-2-min-zero.bmp";
 
-                string data = MainOCRGameTime.ReadImageFromFile(screenShotPath);
+                string data = this.GetModels().GameTime.ReadImageFromFile(screenShotPath);
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");
                 //this.BeginInvoke((Action)(() => { labelTimer.Text = "read"; }));
-                string ocrDisplayTime = MainOCRGameTime.FindTime(data);
+                string ocrDisplayTime =  this.GetModels().GameTime.Find(data);
 
                 if (this.IsDead()) return;
                 this.BeginInvoke((Action)(() =>
@@ -591,9 +594,16 @@ namespace SkyStopwatch
         {
             try
             {
-                if (!labelTimer.Visible) return;
+                //if (!labelTimer.Visible) return;
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
+
+                if (this.GetModels().GameTime.IsUsingScreenTopTime && (DateTime.Now - _GameTimeLastUpdateTime).TotalSeconds < 10)
+                {
+                    System.Diagnostics.Debug.WriteLine("auto refresh - less than 10s since last update, going to skip");
+                    _IsAutoRefreshing = false;
+                    return;
+                }
 
                 Task.Factory.StartNew(() =>
                 {
@@ -604,7 +614,7 @@ namespace SkyStopwatch
                     }
 
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto");
-                    byte[] screenShotBytes = MainOCRGameTime.GetScreenBlockAsBytes();
+                    byte[] screenShotBytes = this.GetModels().GameTime.GetImageBytes();
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - bytes loaded");
 
                     if(screenShotBytes == null)
@@ -615,13 +625,13 @@ namespace SkyStopwatch
 
                     if (_AutoOCREngine == null)
                     {
-                        _AutoOCREngine = MainOCRGameTime.GetDefaultOCREngine();
+                        _AutoOCREngine = this.GetModels().GameTime.GetDefaultOCREngine();
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
                     }
 
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
-                    string timeString = MainOCRGameTime.FindTime(data);
+                    string timeString = this.GetModels().GameTime.Find(data);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
                     if (GlobalData.Default.IsDebugging)
@@ -652,6 +662,8 @@ namespace SkyStopwatch
 
                     if (this.IsDead()) return;
 
+                    _IsAutoRefreshing = false;
+
                     this.RunOnMain(() =>
                     {
                         string ocrDisplayTime = t.Result;
@@ -666,7 +678,8 @@ namespace SkyStopwatch
                             else if (ocrDisplayTime != _AutoOCRTimeOfLastRead)
                             {
                                 _AutoOCRTimeOfLastRead = ocrDisplayTime;
-                                StartUIStopwatch(ocrDisplayTime, MainOCRGameTime.AutoOCRDelaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
+                                int delaySeconds = this.GetModels().GameTime.IsUsingScreenTopTime ? 1 : MainOCRGameTime.AutoOCRDelaySeconds;
+                                StartUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
                             }
                             //else the same, the time of this read is a repeat read, the data is not fresh
                         }
@@ -678,7 +691,6 @@ namespace SkyStopwatch
                         }
                         //else auto refresh failed, just use last result
 
-                        _IsAutoRefreshing = false;
                         //buttonOCR.Enabled = true; //makes ui blink, so disable it
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - end -----");
                     });
@@ -729,25 +741,25 @@ namespace SkyStopwatch
             // SetClassLong(this.Handle, GCL_STYLE, GetClassLong(this.Handle, GCL_STYLE) | CS_DropSHADOW);
 
 
-            MainTheme theme = (MainTheme)this._BootingArgs;
+            PopupBoxTheme theme = (PopupBoxTheme)this._BootingArgs;
             switch (theme)
             {
-                case MainTheme.OCR2Line:
+                case PopupBoxTheme.OCR2Line:
                     InitGUILayoutV1();
                     break;
-                case MainTheme.OCR1LineLong:
+                case PopupBoxTheme.OCR1LineLong:
                     InitGUILayoutV2();
                     break;
-                case MainTheme.OCR1LineNoSystemTime:
+                case PopupBoxTheme.OCR1LineNoSystemTime:
                     InitGUILayoutV3();
                     break;
-                case MainTheme.ThinOCRTime:
+                case PopupBoxTheme.ThinOCRTime:
                     InitGUILayoutV4();
                     break;
-                case MainTheme.ThinSystemTime:
+                case PopupBoxTheme.ThinSystemTime:
                     InitGUILayoutV5();
                     break;
-                case MainTheme.BossCallCounting:
+                case PopupBoxTheme.BossCallCounting:
                     InitGUILayoutV6();
                     break;
                 default:

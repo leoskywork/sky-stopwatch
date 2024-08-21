@@ -68,6 +68,7 @@ namespace SkyStopwatch
             this.checkBoxDebugging.Checked = GlobalData.Default.IsDebugging;
             this.checkBoxPopWarning.Checked = GlobalData.EnableCheckTimeNode;
             this.textBoxTimeSpanNodes.Text = GlobalData.TimeNodeCheckingList;
+            this.checkBoxReadTopTime.Checked = this.GetModels().GameTime.IsUsingScreenTopTime;
 
 
             if (GlobalData.Default.IsDebugging)
@@ -252,12 +253,12 @@ namespace SkyStopwatch
 
         private void SetMainOCRBootingArgsAndButtonText()
         {
-            int themeCount = Enum.GetNames(typeof(MainTheme)).Length - 1;
+            int themeCount = Enum.GetNames(typeof(PopupBoxTheme)).Length - 1;
             GlobalData.Default.BootingArgs = this._BootingArgs % themeCount;
 
             //lazy way to do it, error when theme count >= 10
             string prefix = ""; //this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
-            this.buttonChangeTheme.Text = $"{prefix}{GlobalData.Default.BootingArgs} - {(MainTheme)GlobalData.Default.BootingArgs}";
+            this.buttonChangeTheme.Text = $"{prefix}{GlobalData.Default.BootingArgs} - {(PopupBoxTheme)GlobalData.Default.BootingArgs}";
         }
 
         private void buttonAddMinute_Click(object sender, EventArgs e)
@@ -328,6 +329,11 @@ namespace SkyStopwatch
             var imageView = new FormImageViewBossCounting(true);
             imageView.Show();
             this.Close();
+        }
+
+        private void checkBoxReadTopTime_CheckedChanged(object sender, EventArgs e)
+        {
+            this.GetModels().GameTime.IsUsingScreenTopTime = this.checkBoxReadTopTime.Checked;
         }
     }
 }

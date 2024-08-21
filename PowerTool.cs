@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -321,6 +322,11 @@ namespace SkyStopwatch
                 control.BackColor = oldBackColor;
                 control.Enabled = true;
             }, 300);
+        }
+
+        public static ViewModelFactory GetModels(this Form form)
+        {
+            return ViewModelFactory.Instance;
         }
 
     }

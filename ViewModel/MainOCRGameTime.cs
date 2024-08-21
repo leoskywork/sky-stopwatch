@@ -11,7 +11,7 @@ using Tesseract;
 
 namespace SkyStopwatch
 {
-    public class MainOCRGameTime
+    public class MainOCRGameTime : MainOCR
     {
         //public const int XPercent = 32;
         //public const int YPercent = 68;
@@ -31,37 +31,25 @@ namespace SkyStopwatch
         public const int NoDelay = 0;
 
 
-        public static bool IsUsingScreenTopTime = false;
+        public bool IsUsingScreenTopTime { get; set; } = true;//false;
 
 
-        public static Tesseract.TesseractEngine GetDefaultOCREngine()
+        public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
-            engine.SetVariable("tessedit_char_whitelist", "0123456789:oO"); //only look for pre-set chars for speed up
-
-            //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
-            //_tesseractEngine.SetVariable("debug_file", "NUL");
-            engine.DefaultPageSegMode = PageSegMode.SingleBlock;
-
-            return engine;
+            return MainOCR.GetOCREngine("0123456789:oO");
         }
 
-
-        public static byte[] GetScreenBlockAsBytes()
-        {
-            return MainOCR.PrintScreenAsBytes(GetScreenBlock()).Item1;
-        }
-        public static Rectangle GetScreenBlock()
+        public override Rectangle GetScreenBlock()
         {
             if (IsUsingScreenTopTime)
             {
-                return new Rectangle(100, 100, 40, 40);
+                return new Rectangle(976, 210, 60, 60);
             }
 
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
         }
 
-        public static string ReadImageFromFile(string imgPath)
+        public string ReadImageFromFile(string imgPath)
         {
             using (var engine = GetDefaultOCREngine())
             {
@@ -70,8 +58,17 @@ namespace SkyStopwatch
         }
 
 
-        public static string FindTime(string data)
+        public string Find(string data)
         {
+            if(string.IsNullOrWhiteSpace(data)) return string.Empty;
+
+            //leotodo, a tmp fix, screen top time has 4 digits(not 6)
+            if (this.IsUsingScreenTopTime)
+            {
+                data = "00:" + data;
+            }
+
+
             //hh:mm:ss
             const string regexPattern6Digits = @"^((20|21|22|23|[0-1]?\d):[0-5]?\d:[0-5]?\d)$";
             const int colonCount = 2;

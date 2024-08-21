@@ -16,7 +16,7 @@ using System.Security.Cryptography;
 
 namespace SkyStopwatch
 {
-    public class MainOCR
+    public abstract class MainOCR
     {
         public const int IncrementSeconds = 10;
         public const int DecrementSeconds = 10;
@@ -254,6 +254,30 @@ namespace SkyStopwatch
             height = safeHeight;
         }
 
-      
+
+        public static Tesseract.TesseractEngine GetOCREngine(string allowChars)
+        {
+            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
+
+            //in case the number got blocked by other images?? so try to recognise multi digits here ??
+            engine.SetVariable("tessedit_char_whitelist", allowChars); //only look for pre-set chars for speed up
+
+            //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
+            //_tesseractEngine.SetVariable("debug_file", "NUL");
+            engine.DefaultPageSegMode = PageSegMode.SingleBlock;
+
+            return engine;
+        }
+
+
+        public abstract Rectangle GetScreenBlock();
+
+        public abstract Tesseract.TesseractEngine GetDefaultOCREngine();
+        
+
+        public virtual byte[] GetImageBytes() 
+        {
+            return PrintScreenAsBytes(GetScreenBlock()).Item1;
+        }
     }
 }

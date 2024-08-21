@@ -123,6 +123,7 @@
       <DependentUpon>BoxPhaseBossWarning.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
+    <Compile Include="ViewModel\ViewModelFactory.cs" />
     <Compile Include="ViewModel\MainOCR.cs" />
     <Compile Include="BoxGameTime.cs">
       <SubType>Form</SubType>
@@ -133,7 +134,7 @@
     <Compile Include="ViewModel\MainOCRBossCounting.cs" />
     <Compile Include="ViewModel\MainOCRGameTime.cs" />
     <Compile Include="ViewModel\MainOCRPrice.cs" />
-    <Compile Include="ViewModel\MainTheme.cs" />
+    <Compile Include="ViewModel\PopupBoxTheme.cs" />
     <Compile Include="PowerLog.cs" />
     <Compile Include="PowerTool.cs" />
     <Compile Include="Program.cs" />

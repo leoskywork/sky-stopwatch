@@ -13,7 +13,7 @@ using Tesseract;
 
 namespace SkyStopwatch
 {
-    public class MainOCRBossCounting
+    public class MainOCRBossCounting : MainOCR
     {
         //big screen (pc-pro) ----- 1470, 240, 160, 740
         public static int XPoint = 1470;
@@ -37,29 +37,12 @@ namespace SkyStopwatch
         public static int AutoSliceIntervalSeconds = 12;
 
 
-        public static Tesseract.TesseractEngine GetDefaultOCREngine()
+        public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
-
-            //in case the number got blocked by other images?? so try to recognise multi digits here ??
-            engine.SetVariable("tessedit_char_whitelist", "0123456789oO"); //only look for pre-set chars for speed up
-
-            //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly
-            //_tesseractEngine.SetVariable("debug_file", "NUL");
-            engine.DefaultPageSegMode = PageSegMode.SingleBlock;
-
-            return engine;
+            return MainOCR.GetOCREngine("0123456789oO"); //only look for pre-set chars for speed up
         }
 
-
-        public static byte[] GetFixedLocationImageData()
-        {
-            var rect = GetScreenBlock();
-            var bytes = MainOCR.PrintScreenAsBytes(rect);
-
-            return bytes.Item1;
-        }
-        public static TinyScreenShotBossCall GetFixedLocationImageDataPair(bool includeAUX)
+        public TinyScreenShotBossCall GetFixedLocationImageDataPair(bool includeAUX)
         {
             var rect = GetScreenBlock();
             var rectAUX = GetScreenBlockAUX();
@@ -68,18 +51,18 @@ namespace SkyStopwatch
             return new TinyScreenShotBossCall(bytes.Item1, bytes.Item2);
         }
 
-        public static Rectangle GetScreenBlock()
+        public override Rectangle GetScreenBlock()
         {
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
         }
 
-        public static Rectangle GetScreenBlockAUX()
+        public Rectangle GetScreenBlockAUX()
         {
             return new Rectangle(AUXXPoint, AUXYPoint, AUXBlockWidth, AUXBlockHeight);
         }
 
 
-        public static OCRCompareResult<int> FindBossCall(string data, params int[] candidates)
+        public OCRCompareResult<int> Find(string data, params int[] candidates)
         {
             if (data == null || candidates == null) throw new ArgumentNullException("data or candidates");
 
@@ -109,7 +92,7 @@ namespace SkyStopwatch
 
             return OCRCompareResult<int>.Create(false, lines[0], -1);
         }
-        public static OCRCompareResult<int> FindBossCallPair(string data, int max, int min)
+        public OCRCompareResult<int> FindPair(string data, int max, int min)
         {
             if (data == null) throw new ArgumentNullException("data or candidates");
 

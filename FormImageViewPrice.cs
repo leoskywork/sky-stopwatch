@@ -202,7 +202,7 @@ namespace SkyStopwatch
             try
             {
                 this._ScanCount++;
-                var priceData = MainOCRPrice.GetPriceImageData();
+                var priceData = this.GetModels().Price.GetImageBytes();
                 this._PriceImageQueue.Enqueue(priceData);
             }
             catch (Exception ex)
@@ -229,7 +229,7 @@ namespace SkyStopwatch
 
                     if (_AutoOCREngine == null)
                     {
-                        _AutoOCREngine = MainOCRPrice.GetDefaultOCREngine();
+                        _AutoOCREngine = this.GetModels().Price.GetDefaultOCREngine();
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
                     }
 
@@ -237,7 +237,7 @@ namespace SkyStopwatch
                     string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, priceData);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
-                    var found = MainOCRPrice.FindPrice(data, enableAux1, enableAux2);
+                    var found = this.GetModels().Price.Find(data, enableAux1, enableAux2);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - parser txt done");
 
                     if (GlobalData.Default.IsDebugging)

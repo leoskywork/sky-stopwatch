@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SkyStopwatch
 {
-    public enum MainTheme
+    public enum PopupBoxTheme
     {
         [Description("default theme")]
         Default = 0,

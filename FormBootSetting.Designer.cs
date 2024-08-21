@@ -43,6 +43,7 @@
             this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.buttonCountRun = new System.Windows.Forms.Button();
             this.buttonCount = new System.Windows.Forms.Button();
             this.buttonPriceList = new System.Windows.Forms.Button();
             this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
@@ -55,7 +56,7 @@
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
-            this.buttonCountRun = new System.Windows.Forms.Button();
+            this.checkBoxReadTopTime = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -162,6 +163,7 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.checkBoxReadTopTime);
             this.groupBox1.Controls.Add(this.buttonReduceMinute);
             this.groupBox1.Controls.Add(this.buttonAddMinute);
             this.groupBox1.Controls.Add(this.buttonReduceSeconds);
@@ -229,6 +231,18 @@
             this.groupBox2.TabIndex = 403;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Tools";
+            // 
+            // buttonCountRun
+            // 
+            this.buttonCountRun.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonCountRun.Location = new System.Drawing.Point(469, 25);
+            this.buttonCountRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonCountRun.Name = "buttonCountRun";
+            this.buttonCountRun.Size = new System.Drawing.Size(54, 30);
+            this.buttonCountRun.TabIndex = 405;
+            this.buttonCountRun.Text = "Run";
+            this.buttonCountRun.UseVisualStyleBackColor = true;
+            this.buttonCountRun.Click += new System.EventHandler(this.buttonCountRun_Click);
             // 
             // buttonCount
             // 
@@ -385,19 +399,21 @@
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
             // 
-            // buttonCountRun
+            // checkBoxReadTopTime
             // 
-            this.buttonCountRun.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonCountRun.Location = new System.Drawing.Point(469, 25);
-            this.buttonCountRun.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonCountRun.Name = "buttonCountRun";
-            this.buttonCountRun.Size = new System.Drawing.Size(54, 30);
-            this.buttonCountRun.TabIndex = 405;
-            this.buttonCountRun.Text = "Run";
-            this.buttonCountRun.UseVisualStyleBackColor = true;
-            this.buttonCountRun.Click += new System.EventHandler(this.buttonCountRun_Click);
+            this.checkBoxReadTopTime.AutoSize = true;
+            this.checkBoxReadTopTime.Checked = true;
+            this.checkBoxReadTopTime.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxReadTopTime.Location = new System.Drawing.Point(9, 294);
+            this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
+            this.checkBoxReadTopTime.Size = new System.Drawing.Size(149, 19);
+            this.checkBoxReadTopTime.TabIndex = 409;
+            this.checkBoxReadTopTime.Text = "Screen top time";
+            this.checkBoxReadTopTime.UseVisualStyleBackColor = true;
+            this.checkBoxReadTopTime.CheckedChanged += new System.EventHandler(this.checkBoxReadTopTime_CheckedChanged);
             // 
-            // FormToolBox
+            // FormBootSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -411,11 +427,12 @@
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.MaximizeBox = false;
-            this.Name = "FormToolBox";
+            this.Name = "FormBootSetting";
             this.Text = "Tool Box - auto close in  60 sec";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
             this.Load += new System.EventHandler(this.FormToolBox_Load);
             this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -457,5 +474,6 @@
         private System.Windows.Forms.CheckBox checkBoxTopMost;
         private System.Windows.Forms.Button buttonCount;
         private System.Windows.Forms.Button buttonCountRun;
+        private System.Windows.Forms.CheckBox checkBoxReadTopTime;
     }
 }
