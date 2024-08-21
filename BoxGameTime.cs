@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class FormMain : Form
+    public partial class BoxGameTime : Form
     {
 
         private bool _IsUpdatingPassedTime = false;
@@ -32,7 +32,7 @@ namespace SkyStopwatch
 
         private int _BootingArgs = 0;
 
-        public FormMain(int args)
+        public BoxGameTime(int args)
         {
             InitializeComponent();
 

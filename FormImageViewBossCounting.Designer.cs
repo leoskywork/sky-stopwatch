@@ -48,6 +48,7 @@
             this.numericUpDownAutoSliceIntervalSeconds = new System.Windows.Forms.NumericUpDown();
             this.checkBoxOneMode = new System.Windows.Forms.CheckBox();
             this.checkBox2SpotsCompare = new System.Windows.Forms.CheckBox();
+            this.checkBoxShowGameTime = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -282,11 +283,13 @@
             // checkBoxOneMode
             // 
             this.checkBoxOneMode.AutoSize = true;
-            this.checkBoxOneMode.Location = new System.Drawing.Point(22, 599);
+            this.checkBoxOneMode.Checked = true;
+            this.checkBoxOneMode.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxOneMode.Location = new System.Drawing.Point(22, 593);
             this.checkBoxOneMode.Name = "checkBoxOneMode";
-            this.checkBoxOneMode.Size = new System.Drawing.Size(93, 19);
+            this.checkBoxOneMode.Size = new System.Drawing.Size(133, 19);
             this.checkBoxOneMode.TabIndex = 119;
-            this.checkBoxOneMode.Text = "One mode";
+            this.checkBoxOneMode.Text = "Succinct mode";
             this.checkBoxOneMode.UseVisualStyleBackColor = true;
             this.checkBoxOneMode.CheckedChanged += new System.EventHandler(this.checkBoxOneMode_CheckedChanged);
             // 
@@ -295,19 +298,33 @@
             this.checkBox2SpotsCompare.AutoSize = true;
             this.checkBox2SpotsCompare.Checked = true;
             this.checkBox2SpotsCompare.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBox2SpotsCompare.Location = new System.Drawing.Point(22, 640);
+            this.checkBox2SpotsCompare.Location = new System.Drawing.Point(22, 633);
             this.checkBox2SpotsCompare.Name = "checkBox2SpotsCompare";
             this.checkBox2SpotsCompare.Size = new System.Drawing.Size(149, 19);
             this.checkBox2SpotsCompare.TabIndex = 120;
-            this.checkBox2SpotsCompare.Text = "2 spots compare";
+            this.checkBox2SpotsCompare.Text = "Compare 2 spots";
             this.checkBox2SpotsCompare.UseVisualStyleBackColor = true;
             this.checkBox2SpotsCompare.CheckedChanged += new System.EventHandler(this.checkBox2SpotsCompare_CheckedChanged);
+            // 
+            // checkBoxShowGameTime
+            // 
+            this.checkBoxShowGameTime.AutoSize = true;
+            this.checkBoxShowGameTime.Checked = true;
+            this.checkBoxShowGameTime.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxShowGameTime.Location = new System.Drawing.Point(22, 673);
+            this.checkBoxShowGameTime.Name = "checkBoxShowGameTime";
+            this.checkBoxShowGameTime.Size = new System.Drawing.Size(141, 19);
+            this.checkBoxShowGameTime.TabIndex = 121;
+            this.checkBoxShowGameTime.Text = "Show game time";
+            this.checkBoxShowGameTime.UseVisualStyleBackColor = true;
+            this.checkBoxShowGameTime.CheckedChanged += new System.EventHandler(this.checkBoxShowGameTime_CheckedChanged);
             // 
             // FormImageViewBossCounting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(528, 759);
+            this.Controls.Add(this.checkBoxShowGameTime);
             this.Controls.Add(this.checkBox2SpotsCompare);
             this.Controls.Add(this.checkBoxOneMode);
             this.Controls.Add(this.buttonStart);
@@ -365,5 +382,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownAutoSliceIntervalSeconds;
         private System.Windows.Forms.CheckBox checkBoxOneMode;
         private System.Windows.Forms.CheckBox checkBox2SpotsCompare;
+        private System.Windows.Forms.CheckBox checkBoxShowGameTime;
     }
 }

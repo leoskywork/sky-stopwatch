@@ -173,8 +173,7 @@ namespace SkyStopwatch
 
             if (this._AutoShowPopupBox)
             {
-                this.ResetTimers();
-                _BossGroups.Reset();
+                this.ResetTimersAndCounts();
                 this.PopupCountingBox();
                 this.RunOnMain(() => this.Hide(), 1);
             };
@@ -195,8 +194,7 @@ namespace SkyStopwatch
 
                 this.pictureBoxOne.Image = null;
 
-                ResetTimers();
-                _BossGroups.Reset();
+                ResetTimersAndCounts();
                 PopupCountingBox();
                 this.Hide();
             }
@@ -206,11 +204,14 @@ namespace SkyStopwatch
             }
         }
 
-        private void ResetTimers()
+        private void ResetTimersAndCounts()
         {
             this._BossCallImageQueue.Clear();
+            this._BossCallImagePairQueue.Clear();
             this._ScanCount = 0;
             this._CompareCount = 0;
+            this._BossGroups.Reset();
+
 
             if (!this.timerScan.Enabled)
             {
@@ -252,6 +253,11 @@ namespace SkyStopwatch
 
             bossCountingBox.Show();
             GlobalData.Default.AddLongLivePopup(bossCountingBox);
+
+            if (GlobalData.Default.EnableBossCountingGameTime)
+            {
+
+            }
         }
 
 
@@ -623,7 +629,27 @@ namespace SkyStopwatch
 
         private void checkBox2SpotsCompare_CheckedChanged(object sender, EventArgs e)
         {
+            try
+            {
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
+        }
 
+        private void checkBoxShowGameTime_CheckedChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                //leotodo, add to config file
+                GlobalData.Default.EnableBossCountingGameTime = this.checkBoxShowGameTime.Checked;
+                this.buttonSave.Enabled= true;
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
         }
     }
 }
