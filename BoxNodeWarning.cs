@@ -39,7 +39,7 @@ namespace SkyStopwatch
         {
             var elapsedTime = DateTime.Now - _CreatedTime;
 
-            if (elapsedTime.TotalSeconds < MainOCR.TimeNodeWarningDurationSeconds)
+            if (elapsedTime.TotalSeconds < GlobalData.TimeNodeWarningDurationSeconds)
             {
                 this.labelMessage.ForeColor = DateTime.Now.Second % 2 == 0 ? Color.DarkGreen : Color.White;
             }

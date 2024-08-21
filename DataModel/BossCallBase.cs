@@ -33,7 +33,7 @@ namespace SkyStopwatch.DataModel
         public bool IsFirstCallImageSameRoundWithUTC(DateTime secondImageTime)
         {
             //return this.FirstMatchTime.AddSeconds(MainOCR.MinBossCallTimeSeconds - this.FirstMatchValue) > secondTime;
-            return this.FirstMatchImageCreateAt.AddSeconds(MainOCR.MinBossCallTimeSeconds) > secondImageTime;
+            return this.FirstMatchImageCreateAt.AddSeconds(GlobalData.MinBossCallTimeSeconds) > secondImageTime;
         }
 
         public bool IsFirstCallImageMatchSecondCountdownWithUTC(DateTime secondImageTime, int secondValue)

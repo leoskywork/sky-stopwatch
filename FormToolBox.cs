@@ -66,8 +66,8 @@ namespace SkyStopwatch
            
 
             this.checkBoxDebugging.Checked = GlobalData.Default.IsDebugging;
-            this.checkBoxPopWarning.Checked = MainOCR.EnableCheckTimeNode;
-            this.textBoxTimeSpanNodes.Text = MainOCR.TimeNodeCheckingList;
+            this.checkBoxPopWarning.Checked = GlobalData.EnableCheckTimeNode;
+            this.textBoxTimeSpanNodes.Text = GlobalData.TimeNodeCheckingList;
 
 
             if (GlobalData.Default.IsDebugging)
@@ -86,7 +86,7 @@ namespace SkyStopwatch
             SetMainOCRBootingArgsAndButtonText();
 
             this.buttonTopMost.Visible = false;
-            this.checkBoxTopMost.Checked = MainOCR.EnableTopMost;
+            this.checkBoxTopMost.Checked = GlobalData.EnableTopMost;
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
@@ -165,7 +165,7 @@ namespace SkyStopwatch
         private void checkBoxPopWarning_CheckedChanged(object sender, EventArgs e)
         {
             this.groupBoxTimeNode.Enabled = this.checkBoxPopWarning.Checked;
-            MainOCR.EnableCheckTimeNode = this.checkBoxPopWarning.Checked;
+            GlobalData.EnableCheckTimeNode = this.checkBoxPopWarning.Checked;
 
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
@@ -203,10 +203,10 @@ namespace SkyStopwatch
             this.buttonSaveTimeNode.Enabled = false;
 
             System.Diagnostics.Debug.WriteLine($"----- buttonSaveTimeNode_Click");
-            System.Diagnostics.Debug.WriteLine($"old: {MainOCR.TimeNodeCheckingList}");
+            System.Diagnostics.Debug.WriteLine($"old: {GlobalData.TimeNodeCheckingList}");
             System.Diagnostics.Debug.WriteLine($"new: {this.textBoxTimeSpanNodes.Text}");
 
-            MainOCR.TimeNodeCheckingList = this.textBoxTimeSpanNodes.Text;
+            GlobalData.TimeNodeCheckingList = this.textBoxTimeSpanNodes.Text;
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 
@@ -218,7 +218,7 @@ namespace SkyStopwatch
 
         private void SetDialogTitle()
         {
-            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {MainOCR.OCRTessdataFolder}" : "Tool box - dialog will auto close";
+            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTessdataFolder}" : "Tool box - dialog will auto close";
             this.Text = $"{prefix} - v{Program.Version}";
         }
 
@@ -306,11 +306,11 @@ namespace SkyStopwatch
             tip.ShowAlways = true;
 
             StringBuilder builder = new StringBuilder();
-            builder.Append($"{nameof(MainOCR.EnableLogToFile)}: {MainOCR.EnableLogToFile}");
+            builder.Append($"{nameof(GlobalData.EnableLogToFile)}: {GlobalData.EnableLogToFile}");
             builder.Append(Environment.NewLine);
 
-            builder.Append($"{nameof(MainOCR.ProcessList)}: ");
-            MainOCR.ProcessList.ForEach(p => builder.Append(p + ","));
+            builder.Append($"{nameof(GlobalData.ProcessList)}: ");
+            GlobalData.ProcessList.ForEach(p => builder.Append(p + ","));
             builder.Remove(builder.Length - 1, 1); //remove the last comma (,)
 
             tip.SetToolTip(this.labelMessage, builder.ToString());

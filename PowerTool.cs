@@ -14,13 +14,13 @@ namespace SkyStopwatch
 
         public static bool AnyAppConfigProcessRunning()
         {
-            if(MainOCR.ProcessList.Count == 0) { return false; }
+            if(GlobalData.ProcessList.Count == 0) { return false; }
 
             var processes = Process.GetProcesses();
             var currentSessionId = Process.GetCurrentProcess().SessionId;
             var currentUserProcesses = processes.Where(p => p.SessionId == currentSessionId).ToList();
 
-            foreach(string processName in MainOCR.ProcessList)
+            foreach(string processName in GlobalData.ProcessList)
             {
                 if(currentUserProcesses.Any(p => p.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase)))
                 {

@@ -100,7 +100,7 @@ namespace SkyStopwatch
 
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            var engine = new Tesseract.TesseractEngine(MainOCR.OCRTessdataFolder, MainOCR.OCRLanguage, Tesseract.EngineMode.Default);
+            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
 
             //in case the number got blocked by other images?? so try to recognise multi digits here ??
             engine.SetVariable("tessedit_char_whitelist", "0123456789oO"); //only look for pre-set chars for speed up

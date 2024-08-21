@@ -253,7 +253,7 @@
             this.checkBoxAutoSlice.TabIndex = 115;
             this.checkBoxAutoSlice.Text = "Auto slice in x seconds";
             this.checkBoxAutoSlice.UseVisualStyleBackColor = true;
-            this.checkBoxAutoSlice.CheckedChanged += new System.EventHandler(this.checkBoxAux1_CheckedChanged);
+            this.checkBoxAutoSlice.CheckedChanged += new System.EventHandler(this.checkBoxAutoSlice_CheckedChanged);
             // 
             // numericUpDownAutoSliceIntervalSeconds
             // 
@@ -277,7 +277,7 @@
             0,
             0,
             0});
-            this.numericUpDownAutoSliceIntervalSeconds.ValueChanged += new System.EventHandler(this.numericUpDownAux1_ValueChanged);
+            this.numericUpDownAutoSliceIntervalSeconds.ValueChanged += new System.EventHandler(this.numericUpDownAutoSlice_ValueChanged);
             // 
             // checkBoxOneMode
             // 

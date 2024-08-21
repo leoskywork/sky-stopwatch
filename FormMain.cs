@@ -262,8 +262,8 @@ namespace SkyStopwatch
 
         private void SyncTopMost()
         {
-            this.TopMost = MainOCR.EnableTopMost;
-            this.buttonToolBox.Text = MainOCR.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+            this.TopMost = GlobalData .EnableTopMost;
+            this.buttonToolBox.Text = GlobalData.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void SetGameStartTime(DateTime newTime, string source)
@@ -275,7 +275,7 @@ namespace SkyStopwatch
             {
                 GlobalData.Default.FireChangeGameStartTime(new ChangeGameStartTimeEventArgs(newTime, source));
                 bool saveScreen = newTime != DateTime.MinValue;
-                this.Log().SaveAsync($"set game start: {newTime.ToString(MainOCR.TimeFormat6Digits)}", source, saveScreen);
+                this.Log().SaveAsync($"set game start: {newTime.ToString(GlobalData.TimeFormat6Digits)}", source, saveScreen);
             }
         }
 
@@ -294,17 +294,17 @@ namespace SkyStopwatch
 
             TimeSpan ocrTimeSpan;
 
-            if (TimeSpan.TryParseExact(ocrDisplayTime, MainOCR.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
+            if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
             {
                 int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
 
-                if (ocrTimeSpan.TotalMinutes > MainOCR.PreRoundGameMinutes)
+                if (ocrTimeSpan.TotalMinutes > GlobalData.PreRoundGameMinutes)
                 {
                     passedSeconds = 0;
                 }
 
                 SetGameStartTime(DateTime.Now.AddSeconds(passedSeconds * -1), $"{source} - StartUIStopwatch, ocr: {ocrDisplayTime}");
-                this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(MainOCR.UIElapsedTimeFormat);
+                this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(GlobalData.UIElapsedTimeFormat);
             }
             else
             {
@@ -466,7 +466,7 @@ namespace SkyStopwatch
             this._AutoOCRTimeOfLastRead = null;
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
-            StartUIStopwatch(TimeSpan.Zero.ToString(MainOCR.TimeSpanFormat), MainOCR.NewGameDelaySeconds, GlobalData.ChangeTimeSourceNewGame);
+            StartUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), MainOCR.NewGameDelaySeconds, GlobalData.ChangeTimeSourceNewGame);
 
             if (!this.timerAutoRefresh.Enabled)
             {
@@ -488,12 +488,12 @@ namespace SkyStopwatch
                 passedTimeWithIncrease = TimeSpan.Zero;
             }
 
-            StartUIStopwatch(passedTimeWithIncrease.ToString(MainOCR.TimeSpanFormat), MainOCR.NoDelay, GlobalData.ChangeTimeSourceAdjustTimeButton);
+            StartUIStopwatch(passedTimeWithIncrease.ToString(GlobalData.TimeSpanFormat), MainOCR.NoDelay, GlobalData.ChangeTimeSourceAdjustTimeButton);
         }
 
         private void OnSwitchTopMost()
         {
-            MainOCR.EnableTopMost = !MainOCR.EnableTopMost;
+            GlobalData.EnableTopMost = !GlobalData.EnableTopMost;
             SyncTopMost();
         }
 
@@ -504,7 +504,7 @@ namespace SkyStopwatch
             {
                 if (this.labelTitle.Visible)
                 {
-                    this.labelTitle.Text = DateTime.Now.ToString(MainOCR.TimeFormatNoSecond);
+                    this.labelTitle.Text = DateTime.Now.ToString(GlobalData.TimeFormatNoSecond);
                     //this.labelTitle.Text = "23:59";
                 }
 
@@ -515,7 +515,7 @@ namespace SkyStopwatch
                     if (_IsUpdatingPassedTime && _TimeAroundGameStart != DateTime.MinValue)
                     {
                         var passed = DateTime.Now - _TimeAroundGameStart;
-                        this.labelTimer.Text = passed.ToString(MainOCR.UIElapsedTimeFormat);
+                        this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
                     }
                 }
             }
@@ -527,12 +527,12 @@ namespace SkyStopwatch
 
         private void CheckTimeNodes()
         {
-            if (!MainOCR.EnableCheckTimeNode) return;
-            if (string.IsNullOrWhiteSpace(MainOCR.TimeNodeCheckingList)) return;
+            if (!GlobalData.EnableCheckTimeNode) return;
+            if (string.IsNullOrWhiteSpace(GlobalData.TimeNodeCheckingList)) return;
             if (_TimeAroundGameStart == DateTime.MinValue) return;
             if (_HasTimeNodeWarningPopped) return;
 
-            var timeNodes = MainOCR.ValidateTimeSpanLines(MainOCR.TimeNodeCheckingList);
+            var timeNodes = MainOCR.ValidateTimeSpanLines(GlobalData.TimeNodeCheckingList);
 
             if (timeNodes == null || timeNodes.Count == 0) return;
 
@@ -540,11 +540,11 @@ namespace SkyStopwatch
 
             timeNodes.ForEach(node =>
             {
-                string fixedLengthNode = node.PadLeft(MainOCR.TImeSpanFormatNoHour.Length - 1, '0');
-                TimeSpan parsedNode = TimeSpan.ParseExact(fixedLengthNode, MainOCR.TImeSpanFormatNoHour, System.Globalization.CultureInfo.InvariantCulture);
+                string fixedLengthNode = node.PadLeft(GlobalData.TImeSpanFormatNoHour.Length - 1, '0');
+                TimeSpan parsedNode = TimeSpan.ParseExact(fixedLengthNode, GlobalData.TImeSpanFormatNoHour, System.Globalization.CultureInfo.InvariantCulture);
                 double remainingSeconds = parsedNode.TotalSeconds - elapsedSeconds;
 
-                if (remainingSeconds > 0 && remainingSeconds < MainOCR.TimeNodeEarlyWarningSeconds)
+                if (remainingSeconds > 0 && remainingSeconds < GlobalData.TimeNodeEarlyWarningSeconds)
                 {
                     var warningBox = new BoxNodeWarning(() => _HasTimeNodeWarningPopped = false);
                     _HasTimeNodeWarningPopped = true;

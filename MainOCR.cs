@@ -40,34 +40,6 @@ namespace SkyStopwatch
         public const int DecrementSeconds = 10;
         public const int IncrementMinutes = 1;
         public const int DecrementMinutes = 1;
-        public const int TmpFileMaxCount = 5;
-        public const int TmpLogFileMaxCount = 200;
-        public const int TimeNodeEarlyWarningSeconds = 15;//20;//30;
-        public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
-        public const int PreRoundGameMinutes = 30; //can not join game after 30 min
-        public const int MaxGameRoundMinutes = 40;
-        public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
-
-        public const string TimeSpanFormat = @"hh\:mm\:ss";
-        public const string TImeSpanFormatNoHour = @"mm\:ss";
-        public const string TimeFormatNoSecond = @"H\:mm";
-        public const string TimeFormat6Digits = @"HH\:mm\:ss";
-        public const string UIElapsedTimeFormat = @"m\:ss";
-
-        public const string OCRLanguage = "eng"; //chi_sim;
-        //public const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
-        public const string OCRTessdataFolder = @"C:\Dev\OCR\";
-
-        //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
-        //public static bool IsDebugging { get; set; } = false; //moved to global data
-        //public static bool ShowSystemClock { get; set; } = true;
-        //does not default this to Empty, since user may clear up the list
-        public static string TimeNodeCheckingList { get; set; } = null;
-        public static bool EnableCheckTimeNode { get; set; } = true;
-        public static bool EnableTopMost { get; set; } = true;//false;
-        public static bool EnableLogToFile { get; set; } = false;
-
-        public static List<string> ProcessList { get; set; } = new List<string>();
       
 
         public static void PrintScreenAsFile(string path)
@@ -98,7 +70,7 @@ namespace SkyStopwatch
                 Directory.CreateDirectory(subFolder);
             }
 
-            if (Directory.GetFiles(subFolder).Length > TmpFileMaxCount)
+            if (Directory.GetFiles(subFolder).Length > GlobalData.TmpFileMaxCount)
             {
                 try
                 {
@@ -278,7 +250,7 @@ namespace SkyStopwatch
 
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            var engine = new Tesseract.TesseractEngine(OCRTessdataFolder, OCRLanguage, Tesseract.EngineMode.Default);
+            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
             engine.SetVariable("tessedit_char_whitelist", "0123456789:oO"); //only look for pre-set chars for speed up
 
             //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly

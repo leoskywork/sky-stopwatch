@@ -52,11 +52,11 @@ namespace SkyStopwatch
         private static void ReadAppConfig()
         {
             GlobalData.Default.BootingArgs = Properties.Settings.Default.BootingArgs;
-            MainOCR.TimeNodeCheckingList = Properties.Settings.Default.TimeNodeCheckingList;
-            MainOCR.TimeNodeCheckingList = LeotodoHackNewLine(MainOCR.TimeNodeCheckingList);
-            MainOCR.EnableTopMost = Properties.Settings.Default.EnableTopMost;
-            MainOCR.EnableLogToFile = Properties.Settings.Default.EnableLogToFile;
-            MainOCR.EnableCheckTimeNode = Properties.Settings.Default.EnableCheckTimeNode;
+            GlobalData.TimeNodeCheckingList = Properties.Settings.Default.TimeNodeCheckingList;
+            GlobalData.TimeNodeCheckingList = LeotodoHackNewLine(GlobalData.TimeNodeCheckingList);
+            GlobalData.EnableTopMost = Properties.Settings.Default.EnableTopMost;
+            GlobalData.EnableLogToFile = Properties.Settings.Default.EnableLogToFile;
+            GlobalData.EnableCheckTimeNode = Properties.Settings.Default.EnableCheckTimeNode;
             GlobalData.Default.IsDebugging = Properties.Settings.Default.EnableDebugging;
             GlobalData.Default.EnableBossCountingOneMode = Properties.Settings.Default.EnableBossCountingOneMode;
 
@@ -92,7 +92,7 @@ namespace SkyStopwatch
             if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ProcessListCSV))
             {
                 var processes = Properties.Settings.Default.ProcessListCSV.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                MainOCR.ProcessList.AddRange(processes);
+                GlobalData.ProcessList.AddRange(processes);
             }
         }
 
@@ -101,10 +101,10 @@ namespace SkyStopwatch
             try
             {
                 Properties.Settings.Default.BootingArgs = GlobalData.Default.BootingArgs;
-                Properties.Settings.Default.TimeNodeCheckingList = MainOCR.TimeNodeCheckingList;
-                Properties.Settings.Default.EnableTopMost = MainOCR.EnableTopMost;
-                Properties.Settings.Default.EnableLogToFile = MainOCR.EnableLogToFile;
-                Properties.Settings.Default.EnableCheckTimeNode = MainOCR.EnableCheckTimeNode;
+                Properties.Settings.Default.TimeNodeCheckingList = GlobalData.TimeNodeCheckingList;
+                Properties.Settings.Default.EnableTopMost = GlobalData.EnableTopMost;
+                Properties.Settings.Default.EnableLogToFile = GlobalData.EnableLogToFile;
+                Properties.Settings.Default.EnableCheckTimeNode = GlobalData.EnableCheckTimeNode;
                 Properties.Settings.Default.EnableDebugging = GlobalData.Default.IsDebugging;
                 Properties.Settings.Default.EnableBossCountingOneMode = GlobalData.Default.EnableBossCountingOneMode;
 
@@ -114,7 +114,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(MainOCRPrice.XPoint, MainOCRPrice.YPoint);
                 Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(MainOCRPrice.BlockWidth, MainOCRPrice.BlockHeight);
 
-                Properties.Settings.Default.ProcessListCSV = MainOCR.ProcessList.Count > 0 ? string.Join(",", MainOCR.ProcessList) : string.Empty;
+                Properties.Settings.Default.ProcessListCSV = GlobalData.ProcessList.Count > 0 ? string.Join(",", GlobalData.ProcessList) : string.Empty;
 
                 Properties.Settings.Default.EnableBossCountingAutoSlice = MainOCRBossCounting.EnableAutoSlice;
                 Properties.Settings.Default.BossCountingAutoSliceSeconds = MainOCRBossCounting.AutoSliceIntervalSeconds;

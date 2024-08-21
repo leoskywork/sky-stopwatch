@@ -144,6 +144,8 @@
       <DependentUpon>FormToolBox.cs</DependentUpon>
     </Compile>
     <Compile Include="ToDo.cs" />
+    <Compile Include="View\IKeyView.cs" />
+    <Compile Include="View\IPopupBox.cs" />
     <EmbeddedResource Include="BoxBossCountingSuccinct.resx">
       <DependentUpon>BoxBossCountingSuccinct.cs</DependentUpon>
     </EmbeddedResource>

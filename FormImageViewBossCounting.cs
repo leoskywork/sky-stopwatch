@@ -1,4 +1,5 @@
 ﻿using SkyStopwatch.DataModel;
+using SkyStopwatch.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,11 +31,6 @@ namespace SkyStopwatch
 
         private DateTime _LastCallSetAsValidTime;
         private bool _AutoShowPopupBox;
-
-        //private bool _GameEndingFlag = false;
-        //private DateTime _GameEndingDetectTime;
-        //private BossCall _GameEndingCall;
-        //private string[] _GameEndingCountdowns = new string[] { "9", "8", "7", "6" };
 
         public FormImageViewBossCounting(bool autoPopup)
         {
@@ -229,7 +225,7 @@ namespace SkyStopwatch
 
         private void PopupCountingBox()
         {
-            Form bossCountingBox;
+            IPopupBox bossCountingBox;
 
             if (GlobalData.Default.EnableBossCountingOneMode)
             {
@@ -237,7 +233,9 @@ namespace SkyStopwatch
             }
             else
             {
-                bossCountingBox = new BoxBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
+                throw new NotImplementedException();
+                //obsolete
+                //bossCountingBox = new BoxBossCounting(_BossGroups, checkBoxAutoSlice.Checked, () => this.Close());
             }
 
 
@@ -253,7 +251,7 @@ namespace SkyStopwatch
             }
 
             bossCountingBox.Show();
-            GlobalData.Default.LongLivePopups.Add(bossCountingBox);
+            GlobalData.Default.AddLongLivePopup(bossCountingBox);
         }
 
 
@@ -262,7 +260,7 @@ namespace SkyStopwatch
             try
             {
                 if (IsWithinBossCallValidWindow()) return;
-                if (IsGameEndingPeriod()) return;
+                if (IsPopupBoxPaused()) return;
 
                 this._ScanCount++;
 
@@ -285,13 +283,18 @@ namespace SkyStopwatch
 
         private bool IsWithinBossCallValidWindow()
         {
-            if (_LastCallSetAsValidTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) > DateTime.Now)
+            if (_LastCallSetAsValidTime.AddSeconds(GlobalData.MinBossCallTimeSeconds) > DateTime.Now)
             {
                 System.Diagnostics.Debug.WriteLine($"boss call {DateTime.Now.ToString("h:mm:ss.fff")} scan: {_ScanCount}, compare: {_CompareCount}");
-                System.Diagnostics.Debug.WriteLine($"boss call check within one round - within: {_LastCallSetAsValidTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) > DateTime.Now}");
+                System.Diagnostics.Debug.WriteLine($"boss call check within one round - within: {_LastCallSetAsValidTime.AddSeconds(GlobalData.MinBossCallTimeSeconds) > DateTime.Now}");
             }
 
-            return _LastCallSetAsValidTime.AddSeconds(MainOCR.MinBossCallTimeSeconds) > DateTime.Now;
+            return _LastCallSetAsValidTime.AddSeconds(GlobalData.MinBossCallTimeSeconds) > DateTime.Now;
+        }
+
+        private bool IsPopupBoxPaused()
+        {
+            return GlobalData.Default.LongLivePopups.Any(p => p.Key == GlobalData.PopupKeyBossCountSuccinct && p.IsPaused);
         }
 
         private void timerCompare_Tick(object sender, EventArgs e)
@@ -301,7 +304,7 @@ namespace SkyStopwatch
                 if (_IsComparing) return;
                 if (_BossCallImageQueue.Count == 0 && _BossCallImagePairQueue.Count == 0) return;
                 if (IsWithinBossCallValidWindow()) return;
-                if (IsGameEndingPeriod()) return;
+                if (IsPopupBoxPaused()) return;
 
                 _IsComparing = true;
                 this._CompareCount++;
@@ -348,15 +351,7 @@ namespace SkyStopwatch
             }
         }
 
-        private bool IsGameEndingPeriod()
-        {
-            //if (_GameEndingFlag)
-            //{
-            //    return _GameEndingDetectTime.AddMinutes(1) > DateTime.Now;
-            //}
-
-            return false;
-        }
+ 
 
         //obsolete
         private void CompareOneSectionMultipleRounds()
@@ -571,7 +566,7 @@ namespace SkyStopwatch
             return false;
         }
 
-        private void checkBoxAux1_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxAutoSlice_CheckedChanged(object sender, EventArgs e)
         {
             try
             {
@@ -586,7 +581,7 @@ namespace SkyStopwatch
 
      
 
-        private void numericUpDownAux1_ValueChanged(object sender, EventArgs e)
+        private void numericUpDownAutoSlice_ValueChanged(object sender, EventArgs e)
         {
             try
             {

@@ -39,7 +39,7 @@ namespace SkyStopwatch
                 Directory.CreateDirectory(subFolder);
             }
 
-            if (Directory.GetFiles(subFolder).Length > MainOCR.TmpLogFileMaxCount)
+            if (Directory.GetFiles(subFolder).Length > GlobalData.TmpLogFileMaxCount)
             {
                 try
                 {
@@ -65,7 +65,7 @@ namespace SkyStopwatch
         {
             Console(message, source);
 
-            if (!MainOCR.EnableLogToFile)
+            if (!GlobalData.EnableLogToFile)
             {
                 System.Diagnostics.Debug.WriteLine($"not going to log to file, switch is off");
                 return;
@@ -116,7 +116,7 @@ namespace SkyStopwatch
         {
             Console(message, source);
 
-            if (!MainOCR.EnableLogToFile)
+            if (!GlobalData.EnableLogToFile)
             {
                 System.Diagnostics.Debug.WriteLine($"not going to log to file, switch is off");
                 return;

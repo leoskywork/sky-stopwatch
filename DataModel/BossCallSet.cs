@@ -51,5 +51,10 @@ namespace SkyStopwatch.DataModel
         {
             return this.Groups.Sum(g => g.GetValidCount());
         }
+
+        public int LastPreCount()
+        {
+            return this.Groups.Last().Calls.Where(c => c.PreCounting).Count();
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SkyStopwatch.DataModel;
+using SkyStopwatch.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,11 +14,16 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxBossCounting : Form
+    public partial class BoxBossCounting : Form, IPopupBox
     {
         private Action _BeforeClose;
         private BossCallSet  _BossCallGroups;
         private bool _AutoSlice;
+
+
+        public DateTime CreateAt { get; } = DateTime.Now;
+        public string Key { get; } = GlobalData.PopupKeyBossCount;
+        public bool IsPaused => throw new NotImplementedException();
 
         public BoxBossCounting(BossCallSet groups, bool autoSlice, Action onClosing)
         {

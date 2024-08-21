@@ -63,7 +63,7 @@ namespace SkyStopwatch
 
         public static Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            var engine = new Tesseract.TesseractEngine(MainOCR.OCRTessdataFolder, MainOCR.OCRLanguage, Tesseract.EngineMode.Default);
+            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
             engine.SetVariable("tessedit_char_whitelist", "0123456789oO"); //only look for pre-set chars for speed up
 
             //to remove "Empty page!!" either debug_file needs to be set for null, or DefaultPageSegMode needs to be set correctly

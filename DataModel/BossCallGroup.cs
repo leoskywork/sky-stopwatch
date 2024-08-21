@@ -26,6 +26,7 @@ namespace SkyStopwatch.DataModel
         {
             return Calls.Sum(c => c.IsValid ? 1 : 0);
         }
+ 
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SkyStopwatch.DataModel;
+using SkyStopwatch.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -13,13 +14,19 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxBossCountingSuccinct : Form
+    public partial class BoxBossCountingSuccinct : Form, IPopupBox
     {
         private Action _BeforeClose;
         private BossCallSet _BossCallGroups;
         private bool _AutoSlice;
         private bool _IsShowingActionBar;
         private DateTime? _BoxLoadTime;
+        private bool _IsPaused;
+
+        public DateTime CreateAt => DateTime.Now;
+        public string Key => GlobalData.PopupKeyBossCountSuccinct;
+
+        public bool IsPaused => _IsPaused;
 
         public BoxBossCountingSuccinct(BossCallSet groups, bool autoSlice, Action onClosing)
         {
@@ -32,8 +39,8 @@ namespace SkyStopwatch
             this.TopMost = true;
 
             //do this at last
-            this.timerClose.Interval = GlobalData.TimerIntervalShowingBossCallMS;
-            this.timerClose.Start();
+            this.timerRefresh.Interval = GlobalData.TimerIntervalShowingBossCallMS;
+            this.timerRefresh.Start();
         }
 
         private void FormNodeBossCounting_Load(object sender, EventArgs e)
@@ -69,8 +76,13 @@ namespace SkyStopwatch
             _BoxLoadTime = DateTime.Now;
         }
 
-        private void timerClose_Tick(object sender, EventArgs e)
+        private void timerRefresh_Tick(object sender, EventArgs e)
         {
+            if(_IsPaused)
+            {
+                return;
+            }
+
             if(_BossCallGroups == null ||  _BossCallGroups.Count == 0)
             {
                 this.labelMessage.Text = DateTime.Now.Second % 2 == 1 ?  "." : "";
@@ -85,7 +97,7 @@ namespace SkyStopwatch
             {
                 _BoxLoadTime = null; //just for fast compare
                 //this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.IsValid).Count().ToString();
-                this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
+                this.labelMessage.Text = _BossCallGroups.LastPreCount().ToString();
             }
         }
 
@@ -232,6 +244,27 @@ namespace SkyStopwatch
                 _IsShowingActionBar = false;
             }, 10 * 1000);
 
+        }
+
+        private void buttonPause_Click(object sender, EventArgs e)
+        {
+            this._IsPaused = !this._IsPaused;
+
+            if (this._IsPaused)
+            {
+                this.timerRefresh.Enabled = false;
+                this.buttonPause.Text = "-><-";
+                this.labelMessage.Text = "P";
+            }
+            else
+            {
+                this.timerRefresh.Enabled = true;
+                this.buttonPause.Text = "-=-";
+                this.labelMessage.Text = _BossCallGroups.LastPreCount().ToString();
+            }
+
+
+            this.DisableButtonShortTime(this.buttonPause);
         }
     }
 }

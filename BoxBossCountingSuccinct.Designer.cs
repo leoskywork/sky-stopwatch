@@ -29,19 +29,20 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.timerClose = new System.Windows.Forms.Timer(this.components);
+            this.timerRefresh = new System.Windows.Forms.Timer(this.components);
             this.labelMessage = new System.Windows.Forms.Label();
             this.buttonKill = new System.Windows.Forms.Button();
             this.buttonReset = new System.Windows.Forms.Button();
             this.tableLayoutPanelRight = new System.Windows.Forms.TableLayoutPanel();
             this.buttonRemove = new System.Windows.Forms.Button();
             this.buttonAdd = new System.Windows.Forms.Button();
+            this.buttonPause = new System.Windows.Forms.Button();
             this.tableLayoutPanelRight.SuspendLayout();
             this.SuspendLayout();
             // 
-            // timerClose
+            // timerRefresh
             // 
-            this.timerClose.Tick += new System.EventHandler(this.timerClose_Tick);
+            this.timerRefresh.Tick += new System.EventHandler(this.timerRefresh_Tick);
             // 
             // labelMessage
             // 
@@ -74,7 +75,7 @@
             this.buttonReset.Location = new System.Drawing.Point(8, 5);
             this.buttonReset.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
             this.buttonReset.Name = "buttonReset";
-            this.buttonReset.Size = new System.Drawing.Size(73, 23);
+            this.buttonReset.Size = new System.Drawing.Size(57, 23);
             this.buttonReset.TabIndex = 3;
             this.buttonReset.Text = "= 0";
             this.buttonReset.UseVisualStyleBackColor = true;
@@ -82,29 +83,31 @@
             // 
             // tableLayoutPanelRight
             // 
-            this.tableLayoutPanelRight.ColumnCount = 3;
-            this.tableLayoutPanelRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tableLayoutPanelRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33F));
-            this.tableLayoutPanelRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 34F));
+            this.tableLayoutPanelRight.ColumnCount = 4;
+            this.tableLayoutPanelRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanelRight.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tableLayoutPanelRight.Controls.Add(this.buttonRemove, 2, 1);
             this.tableLayoutPanelRight.Controls.Add(this.buttonAdd, 1, 1);
             this.tableLayoutPanelRight.Controls.Add(this.buttonReset, 0, 1);
+            this.tableLayoutPanelRight.Controls.Add(this.buttonPause, 3, 1);
             this.tableLayoutPanelRight.Location = new System.Drawing.Point(93, 0);
             this.tableLayoutPanelRight.Name = "tableLayoutPanelRight";
             this.tableLayoutPanelRight.RowCount = 3;
             this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 2F));
             this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 2F));
-            this.tableLayoutPanelRight.Size = new System.Drawing.Size(270, 50);
+            this.tableLayoutPanelRight.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanelRight.Size = new System.Drawing.Size(295, 50);
             this.tableLayoutPanelRight.TabIndex = 4;
             // 
             // buttonRemove
             // 
             this.buttonRemove.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonRemove.Location = new System.Drawing.Point(186, 5);
-            this.buttonRemove.Margin = new System.Windows.Forms.Padding(8, 3, 12, 3);
+            this.buttonRemove.Location = new System.Drawing.Point(154, 5);
+            this.buttonRemove.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
             this.buttonRemove.Name = "buttonRemove";
-            this.buttonRemove.Size = new System.Drawing.Size(72, 23);
+            this.buttonRemove.Size = new System.Drawing.Size(57, 23);
             this.buttonRemove.TabIndex = 5;
             this.buttonRemove.Text = "- 1";
             this.buttonRemove.UseVisualStyleBackColor = true;
@@ -113,21 +116,31 @@
             // buttonAdd
             // 
             this.buttonAdd.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonAdd.Location = new System.Drawing.Point(97, 5);
+            this.buttonAdd.Location = new System.Drawing.Point(81, 5);
             this.buttonAdd.Margin = new System.Windows.Forms.Padding(8, 3, 8, 3);
             this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(73, 23);
+            this.buttonAdd.Size = new System.Drawing.Size(57, 23);
             this.buttonAdd.TabIndex = 4;
             this.buttonAdd.Text = "+ 1";
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
+            // 
+            // buttonPause
+            // 
+            this.buttonPause.Location = new System.Drawing.Point(222, 5);
+            this.buttonPause.Name = "buttonPause";
+            this.buttonPause.Size = new System.Drawing.Size(70, 23);
+            this.buttonPause.TabIndex = 6;
+            this.buttonPause.Text = "-=-";
+            this.buttonPause.UseVisualStyleBackColor = true;
+            this.buttonPause.Click += new System.EventHandler(this.buttonPause_Click);
             // 
             // BoxBossCountingSuccinct
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.ClientSize = new System.Drawing.Size(360, 30);
+            this.ClientSize = new System.Drawing.Size(526, 30);
             this.Controls.Add(this.tableLayoutPanelRight);
             this.Controls.Add(this.buttonKill);
             this.Controls.Add(this.labelMessage);
@@ -143,12 +156,13 @@
 
         #endregion
 
-        private System.Windows.Forms.Timer timerClose;
+        private System.Windows.Forms.Timer timerRefresh;
         private System.Windows.Forms.Label labelMessage;
         private System.Windows.Forms.Button buttonKill;
         private System.Windows.Forms.Button buttonReset;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanelRight;
         private System.Windows.Forms.Button buttonRemove;
         private System.Windows.Forms.Button buttonAdd;
+        private System.Windows.Forms.Button buttonPause;
     }
 }

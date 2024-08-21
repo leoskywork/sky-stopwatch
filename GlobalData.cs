@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.View;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -18,6 +19,19 @@ namespace SkyStopwatch
         public const string ChangeTimeSourceTimerOCR = "AutoTimerOCR";
         public const string ChangeTimeSourcePreWarmUp = "PreWarmUp";
 
+        public const string TimeSpanFormat = @"hh\:mm\:ss";
+        public const string TImeSpanFormatNoHour = @"mm\:ss";
+        public const string TimeFormatNoSecond = @"H\:mm";
+        public const string TimeFormat6Digits = @"HH\:mm\:ss";
+        public const string UIElapsedTimeFormat = @"m\:ss";
+
+        public const string OCRLanguage = "eng"; //chi_sim;
+        //public const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
+        public const string OCRTessdataFolder = @"C:\Dev\OCR\";
+
+        public const string PopupKeyBossCount = "pop-up-boss-call-no";
+        public const string PopupKeyBossCountSuccinct = "pop-up-boss-call-one-mode";
+
         public event EventHandler ChangeTheme;
         public event EventHandler CloseApp;
         public event EventHandler<ChangeAppConfigEventArgs> ChangeAppConfig;
@@ -27,6 +41,14 @@ namespace SkyStopwatch
         public const int TimerIntervalShowingBossCallMS = 50; //10;
         public const int BossCountingScanTimerIntervalMS = 300;//500;
         public const int BossCountingCompareTimerIntervalMS = 50;//100;
+
+        public const int TmpFileMaxCount = 5;
+        public const int TmpLogFileMaxCount = 200;
+        public const int TimeNodeEarlyWarningSeconds = 15;//20;//30;
+        public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
+        public const int PreRoundGameMinutes = 30; //can not join game after 30 min
+        public const int MaxGameRoundMinutes = 40;
+        public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
 
         private static GlobalData _instance;
         public static GlobalData Default
@@ -45,7 +67,7 @@ namespace SkyStopwatch
         public bool IsDebugging { get; set; }
 
         //leotodo, improve this?
-        public List<Form> LongLivePopups { get; } = new List<Form>();
+        public List<IPopupBox> LongLivePopups { get; } = new List<IPopupBox>();
 
         public int BootingArgs { get; set; } = 0;
         public bool EnableBossCountingOneMode { get; set; }
@@ -53,7 +75,16 @@ namespace SkyStopwatch
         public int ScreenShotSeedBossCall { get; set; } = 1;
 
 
+        //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
+        //public static bool IsDebugging { get; set; } = false; //moved to global data
+        //public static bool ShowSystemClock { get; set; } = true;
+        //does not default this to Empty, since user may clear up the list
+        public static string TimeNodeCheckingList { get; set; } = null;
+        public static bool EnableCheckTimeNode { get; set; } = true;
+        public static bool EnableTopMost { get; set; } = true;//false;
+        public static bool EnableLogToFile { get; set; } = false;
 
+        public static List<string> ProcessList { get;} = new List<string>();
 
         private GlobalData() { }
 
@@ -81,6 +112,8 @@ namespace SkyStopwatch
         {
             this.LongLivePopups.ForEach(c =>
             {
+                System.Diagnostics.Debug.WriteLine($"GD - clear popup {c.Key}, life {DateTime.Now - c.CreateAt}");
+
                 if (!c.Disposing && !c.IsDisposed) 
                 { 
                     c.Close();
@@ -88,6 +121,13 @@ namespace SkyStopwatch
             });
 
             this.LongLivePopups.Clear();
+        }
+
+        public void AddLongLivePopup(IPopupBox popup)
+        {
+            if (popup == null) throw new ArgumentNullException(nameof(popup));
+
+            this.LongLivePopups.Add(popup);
         }
     }
 
