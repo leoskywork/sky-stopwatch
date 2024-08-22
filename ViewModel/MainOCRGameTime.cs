@@ -148,17 +148,16 @@ namespace SkyStopwatch
         {
             if (!GlobalData.IsUsingScreenTopTime) return false;
 
-            TimeSpan ocrTimeSpan;
-
-            if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
+            if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out TimeSpan ocrTimeSpan))
             {
                 DateTime now = DateTime.Now;
                 int offsetSeconds = 2;
                 ocrTimeSpan = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + offsetSeconds);
 
-                if (ocrTimeSpan < now - this.TimeAroundGameStart && (now - this.GameTimeLastUpdateTime).TotalSeconds < TimerNapSeconds + 10)
+                if (ocrTimeSpan < now - this.TimeAroundGameStart && (now - this.GameTimeLastUpdateTime).TotalSeconds < TimerNapSeconds + 20)
                 {
-                    System.Diagnostics.Debug.WriteLine($"--> ocr misread time: {ocrDisplayTime}, should NOT smaller than previuse read");
+                    System.Diagnostics.Debug.WriteLine($"--> ocr misread time: {ocrDisplayTime}, should NOT smaller than previuse read: {this.AutoOCRTimeOfLastRead}");
+                    System.Diagnostics.Debug.WriteLine($"--> since game start: {now - this.TimeAroundGameStart}, since last update: {now - this.GameTimeLastUpdateTime}");
                     return true;
                 }
             }

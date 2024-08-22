@@ -58,7 +58,7 @@ namespace SkyStopwatch
             //        this.BeginInvoke(new Action(() => { this.Close(); }));
             //    }
             //});
-            this.timerAutoClose.Interval = 20 * 1000;
+            this.timerAutoClose.Interval = 30 * 1000;
             this.timerAutoClose.Start();
 
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
@@ -219,8 +219,8 @@ namespace SkyStopwatch
 
         private void SetDialogTitle()
         {
-            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTessdataFolder}" : "Tool box - dialog will auto close";
-            this.Text = $"{prefix} - v{Program.Version}";
+            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTessdataFolder}" : $"Auto close in {this.timerAutoClose.Interval/1000}s";
+            this.Text = $"{prefix} - V{GlobalData.Version}";
         }
 
 

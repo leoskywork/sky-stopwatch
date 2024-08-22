@@ -73,7 +73,7 @@ namespace SkyStopwatch
 
             CheckDayRollover();
 
-            string detail = $"{DateTime.Now:H:mm:ss.fff} [{source}]: {message}{(saveScreen ? ", screen shot saved" : null)}";
+            string detail = $"{DateTime.Now:H:mm:ss.fff} [{source}] - {message}{(saveScreen ? ", screen shot saved" : null)}";
             Bitmap screenShot = null;
             Graphics graphics = null;
             DateTime createTime = DateTime.Now;

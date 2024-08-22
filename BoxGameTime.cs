@@ -302,6 +302,7 @@ namespace SkyStopwatch
                     passedSeconds = 0;
                 }
 
+                this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime;
                 SetGameStartTime(DateTime.Now.AddSeconds(passedSeconds * -1), $"{source} - StartUIStopwatch, ocr: {ocrDisplayTime}");
                 this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(GlobalData.UIElapsedTimeFormat);
             }
@@ -669,7 +670,7 @@ namespace SkyStopwatch
                             {
                                 if (this.Model.IsOCRTimeMisread(ocrDisplayTime)) return;
 
-                                this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime;
+                                //this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime; //move the other place
                                 int delaySeconds = GlobalData.IsUsingScreenTopTime ? 1 : MainOCRGameTime.AutoOCRDelaySeconds;
                                 StartUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
                             }

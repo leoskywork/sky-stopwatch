@@ -37,6 +37,8 @@ namespace SkyStopwatch
             _AutoSlice = autoSlice;
 
             this.TopMost = true;
+           
+
 
             //do this at last
             this.timerRefresh.Interval = GlobalData.TimerIntervalShowingBossCallMS;
