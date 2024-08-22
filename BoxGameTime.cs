@@ -27,7 +27,7 @@ namespace SkyStopwatch
         private Tesseract.TesseractEngine _AutoOCREngine;
         private bool _HasTimeNodeWarningPopped = false;
 
-        public MainOCRGameTime Model { get { return ViewModelFactory.Instance.GetGameTime(); } }
+        public OCRGameTime Model { get { return ViewModelFactory.Instance.GetGameTime(); } }
 
         public BoxGameTime(int args)
         {
@@ -43,8 +43,8 @@ namespace SkyStopwatch
         private void InitStopwatch()
         {
             this.labelTimer.Text = "unset";
-            this.timerMain.Interval = 200;
-            this.timerAutoRefresh.Interval = 900;
+            this.timerMain.Interval = OCRGameTime.TimerDisplayUIIntervalMS;
+            this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
 
             //do the following in form_loaded
             //InitGUILayoutV1();
@@ -416,7 +416,7 @@ namespace SkyStopwatch
             Task.Factory.StartNew(() =>
             {
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot");
-                return MainOCR.PrintScreenAsTempFile();
+                return OCRBase.PrintScreenAsTempFile();
             }).ContinueWith(t =>
             {
                 if (this.IsDead()) return;
@@ -444,7 +444,7 @@ namespace SkyStopwatch
                     if (!string.IsNullOrEmpty(ocrDisplayTime))
                     {
                         _IsUpdatingPassedTime = true;
-                        StartUIStopwatch(ocrDisplayTime, MainOCRGameTime.ManualOCRDelaySeconds, source);
+                        StartUIStopwatch(ocrDisplayTime, OCRGameTime.ManualOCRDelaySeconds, source);
                     }
                     else
                     {
@@ -466,7 +466,7 @@ namespace SkyStopwatch
             this.Model.AutoOCRTimeOfLastRead = null;
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
-            StartUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), MainOCRGameTime.NewGameDelaySeconds, GlobalData.ChangeTimeSourceNewGame);
+            StartUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), OCRGameTime.NewGameDelaySeconds, GlobalData.ChangeTimeSourceNewGame);
 
             if (!this.timerAutoRefresh.Enabled)
             {
@@ -488,7 +488,7 @@ namespace SkyStopwatch
                 passedTimeWithIncrease = TimeSpan.Zero;
             }
 
-            StartUIStopwatch(passedTimeWithIncrease.ToString(GlobalData.TimeSpanFormat), MainOCRGameTime.NoDelay, GlobalData.ChangeTimeSourceAdjustTimeButton);
+            StartUIStopwatch(passedTimeWithIncrease.ToString(GlobalData.TimeSpanFormat), OCRGameTime.NoDelay, GlobalData.ChangeTimeSourceAdjustTimeButton);
         }
 
         private void OnSwitchTopMost()
@@ -595,9 +595,9 @@ namespace SkyStopwatch
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
 
-                if (GlobalData.IsUsingScreenTopTime && (DateTime.Now - this.Model.GameTimeLastUpdateTime).TotalSeconds < MainOCRGameTime.TimerNapSeconds)
+                if (GlobalData.IsUsingScreenTopTime && this.Model.IsWithinOneGameRoundOrNap)
                 {
-                    System.Diagnostics.Debug.WriteLine("auto refresh - less than 10s since last update, going to skip");
+                    System.Diagnostics.Debug.WriteLine("auto refresh - within one round/nap, going to skip");
                     _IsAutoRefreshing = false;
                     return;
                 }
@@ -623,15 +623,15 @@ namespace SkyStopwatch
                         _AutoOCREngine = this.Model.GetDefaultOCREngine();
                     }
 
-                    string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
+                    string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     string timeString = this.Model.Find(data);
-
-                    if (GlobalData.Default.IsDebugging)
+                    bool saveImage = !string.IsNullOrWhiteSpace(timeString);
+                    if (GlobalData.Default.IsDebugging || saveImage)
                     {
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
                         System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
-                        string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), screenShotBytes);
-                        System.Diagnostics.Debug.WriteLine($"tmp file: {tmpPath}");
+                        string tmpPath = OCRBase.SaveTmpFile($"game-time-top-{GlobalData.IsUsingScreenTopTime}", screenShotBytes);
+                        System.Diagnostics.Debug.WriteLine($"Tmp file: {tmpPath}");
                     }
 
                     //this bug occurs when run cf in small window mode
@@ -671,7 +671,7 @@ namespace SkyStopwatch
                                 if (this.Model.IsOCRTimeMisread(ocrDisplayTime)) return;
 
                                 //this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime; //move the other place
-                                int delaySeconds = GlobalData.IsUsingScreenTopTime ? 1 : MainOCRGameTime.AutoOCRDelaySeconds;
+                                int delaySeconds = GlobalData.IsUsingScreenTopTime ? 1 : OCRGameTime.AutoOCRDelaySeconds;
                                 StartUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
                             }
                             //else the same, the time of this read is a repeat read, the data is not fresh

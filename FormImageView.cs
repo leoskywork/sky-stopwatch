@@ -20,10 +20,10 @@ namespace SkyStopwatch
 
 
             var screen = Screen.PrimaryScreen.Bounds;
-            this.numericUpDownX.Value = MainOCRGameTime.XPoint;
-            this.numericUpDownY.Value = MainOCRGameTime.YPoint;
-            this.numericUpDownWidth.Value = MainOCRGameTime.BlockWidth;
-            this.numericUpDownHeight.Value = MainOCRGameTime.BlockHeight;
+            this.numericUpDownX.Value = OCRGameTime.XPoint;
+            this.numericUpDownY.Value = OCRGameTime.YPoint;
+            this.numericUpDownWidth.Value = OCRGameTime.BlockWidth;
+            this.numericUpDownHeight.Value = OCRGameTime.BlockHeight;
         }
 
 
@@ -38,14 +38,14 @@ namespace SkyStopwatch
                 int width = (int)this.numericUpDownWidth.Value;
                 int height = (int)this.numericUpDownHeight.Value;
                 
-                MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
+                OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
                 //MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
                 //MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
-                MainOCRGameTime.XPoint = x; 
-                MainOCRGameTime.YPoint = y;
-                MainOCRGameTime.BlockWidth = width;
-                MainOCRGameTime.BlockHeight = height;
+                OCRGameTime.XPoint = x; 
+                OCRGameTime.YPoint = y;
+                OCRGameTime.BlockWidth = width;
+                OCRGameTime.BlockHeight = height;
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
                 this.Close();
             }
@@ -76,7 +76,7 @@ namespace SkyStopwatch
 
                     System.Diagnostics.Debug.WriteLine($"screen: {screenRect}, thread: {System.Threading.Thread.CurrentThread.ManagedThreadId}");
                     System.Diagnostics.Debug.WriteLine($"image block: {x},{y}  {width},{height}");
-                    MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
+                    OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
                     System.Diagnostics.Debug.WriteLine($"image block: {x},{y}  {width},{height} - after safe check");
 
                     //can not use using block here, since we pass the bitmap into a view and show it

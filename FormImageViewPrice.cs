@@ -27,17 +27,17 @@ namespace SkyStopwatch
             InitializeComponent();
 
 
-            this.numericUpDownX.Value = MainOCRPrice.XPoint;
-            this.numericUpDownY.Value = MainOCRPrice.YPoint;
-            this.numericUpDownWidth.Value = MainOCRPrice.BlockWidth;
-            this.numericUpDownHeight.Value = MainOCRPrice.BlockHeight;
+            this.numericUpDownX.Value = OCRPrice.XPoint;
+            this.numericUpDownY.Value = OCRPrice.YPoint;
+            this.numericUpDownWidth.Value = OCRPrice.BlockWidth;
+            this.numericUpDownHeight.Value = OCRPrice.BlockHeight;
 
             this.timerScan.Interval = 300;
             this.timerCompare.Interval = 100;
 
-            this.numericUpDownTargetPrice.Value = MainOCRPrice.TargetPrice;
-            this.numericUpDownAux1.Value = MainOCRPrice.Aux1Price;
-            this.numericUpDownAux2.Value = MainOCRPrice.Aux2Price;
+            this.numericUpDownTargetPrice.Value = OCRPrice.TargetPrice;
+            this.numericUpDownAux1.Value = OCRPrice.Aux1Price;
+            this.numericUpDownAux2.Value = OCRPrice.Aux2Price;
         }
 
 
@@ -52,12 +52,12 @@ namespace SkyStopwatch
                 int width = (int)this.numericUpDownWidth.Value;
                 int height = (int)this.numericUpDownHeight.Value;
 
-                MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
+                OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
-                MainOCRPrice.XPoint = x;
-                MainOCRPrice.YPoint = y;
-                MainOCRPrice.BlockWidth = width;
-                MainOCRPrice.BlockHeight = height;
+                OCRPrice.XPoint = x;
+                OCRPrice.YPoint = y;
+                OCRPrice.BlockWidth = width;
+                OCRPrice.BlockHeight = height;
 
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
             }
@@ -86,7 +86,7 @@ namespace SkyStopwatch
                     int width = (int)this.numericUpDownWidth.Value;
                     int height = (int)this.numericUpDownHeight.Value;
 
-                    MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
+                    OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
                     //can not use using block here, since we pass the bitmap into a view and show it
                     var bitmapBlock = screenShot.Clone(new Rectangle(x, y, width, height), screenShot.PixelFormat);
@@ -234,7 +234,7 @@ namespace SkyStopwatch
                     }
 
                     byte[] priceData = _PriceImageQueue.Dequeue();
-                    string data = MainOCR.ReadImageFromMemory(_AutoOCREngine, priceData);
+                    string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, priceData);
                     //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR done");
 
                     var found = this.GetModels().Price.Find(data, enableAux1, enableAux2);
@@ -245,7 +245,7 @@ namespace SkyStopwatch
                         System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging");
                         System.Diagnostics.Debug.WriteLine($"OCR compare: {found.Item1}");
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
-                        string tmpPath = MainOCR.SaveTmpFile(Guid.NewGuid().ToString(), priceData);
+                        string tmpPath = OCRBase.SaveTmpFile(Guid.NewGuid().ToString(), priceData);
                         System.Diagnostics.Debug.WriteLine($"tmp path: {tmpPath}");
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - debugging end");
                     }
@@ -270,9 +270,9 @@ namespace SkyStopwatch
 
                         if (_FoundTargetPrice)
                         {
-                            string aux1Message = enableAux1 ? "|" + MainOCRPrice.Aux1Price : string.Empty;
-                            string aux2Message = enableAux2 ? "|" + MainOCRPrice.Aux2Price : string.Empty;
-                            this.labelPriceMessage.Text = $"FOUND: {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}, no.{t.Result.Item4 + 1}";
+                            string aux1Message = enableAux1 ? "|" + OCRPrice.Aux1Price : string.Empty;
+                            string aux2Message = enableAux2 ? "|" + OCRPrice.Aux2Price : string.Empty;
+                            this.labelPriceMessage.Text = $"FOUND: {OCRPrice.TargetPrice}{aux1Message}{aux2Message}, no.{t.Result.Item4 + 1}";
                             this.labelPriceMessage.BackColor = Color.Red;
                             this.labelPriceMessage.ForeColor = Color.White;
 
@@ -282,13 +282,13 @@ namespace SkyStopwatch
                             this.textBoxPriceList.Text = lines.Aggregate(string.Empty, (a, b) => a + Environment.NewLine + b);
                             
                             this.pictureBoxOne.Image?.Dispose();
-                            this.pictureBoxOne.Image = MainOCR.BytesToBitmap(t.Result.Item3);
+                            this.pictureBoxOne.Image = OCRBase.BytesToBitmap(t.Result.Item3);
                         }
                         else
                         {
-                            string aux1Message = enableAux1 ? "," + MainOCRPrice.Aux1Price : string.Empty;
-                            string aux2Message = enableAux2 ? "," + MainOCRPrice.Aux2Price : string.Empty;
-                            this.labelPriceMessage.Text = $"checking {MainOCRPrice.TargetPrice}{aux1Message}{aux2Message}...";
+                            string aux1Message = enableAux1 ? "," + OCRPrice.Aux1Price : string.Empty;
+                            string aux2Message = enableAux2 ? "," + OCRPrice.Aux2Price : string.Empty;
+                            this.labelPriceMessage.Text = $"checking {OCRPrice.TargetPrice}{aux1Message}{aux2Message}...";
                             this.labelPriceMessage.BackColor = Color.Transparent;
                             this.labelPriceMessage.ForeColor = Color.Black;
 
@@ -316,9 +316,9 @@ namespace SkyStopwatch
         {
             try
             {
-                int oldValue = MainOCRPrice.TargetPrice;
-                MainOCRPrice.TargetPrice = (int)this.numericUpDownTargetPrice.Value;
-                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} change target price: {oldValue} -> {MainOCRPrice.TargetPrice}");
+                int oldValue = OCRPrice.TargetPrice;
+                OCRPrice.TargetPrice = (int)this.numericUpDownTargetPrice.Value;
+                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} change target price: {oldValue} -> {OCRPrice.TargetPrice}");
             }
             catch (Exception ex)
             {
@@ -354,7 +354,7 @@ namespace SkyStopwatch
         {
             try
             {
-                MainOCRPrice.Aux1Price = (int) this.numericUpDownAux1.Value;
+                OCRPrice.Aux1Price = (int) this.numericUpDownAux1.Value;
             }
             catch (Exception ex)
             {
@@ -366,7 +366,7 @@ namespace SkyStopwatch
         {
             try
             {
-                MainOCRPrice.Aux2Price = (int) this.numericUpDownAux2.Value;
+                OCRPrice.Aux2Price = (int) this.numericUpDownAux2.Value;
             }
             catch (Exception ex)
             {

@@ -63,11 +63,11 @@ namespace SkyStopwatch
 
         public void SaveAsync(string message, string source = null, bool saveScreen = false)
         {
-            Console(message, source);
+            System.Diagnostics.Debug.WriteLine($"{source} - {message}");
 
             if (!GlobalData.EnableLogToFile)
             {
-                System.Diagnostics.Debug.WriteLine($"not going to log to file, switch is off");
+                System.Diagnostics.Debug.WriteLine($"Not going to log to file, switch is off");
                 return;
             }
 
@@ -133,7 +133,7 @@ namespace SkyStopwatch
                 string imageName = $"{Path.GetFileNameWithoutExtension(_Path)}-bytes-before-{createTime.ToString("HHmmss")}.bmp";
                 string imagePath = Path.Combine(_Folder, imageName);
 
-                using (Bitmap image = MainOCR.BytesToBitmap(imageData))
+                using (Bitmap image = OCRBase.BytesToBitmap(imageData))
                 {
                     image.Save(imagePath);
                 }

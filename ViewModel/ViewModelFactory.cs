@@ -17,16 +17,16 @@ namespace SkyStopwatch.ViewModel
 
 
         //leotodo, put theme here for now, not a good practice
-        private MainOCRGameTime GameTime { get; } = new MainOCRGameTime();
+        private OCRGameTime GameTime { get; } = new OCRGameTime();
 
-        public MainOCRGameTime GetGameTime()
+        public OCRGameTime GetGameTime()
         {
             return GameTime;
         }
 
-        public MainOCRBossCounting BossCounting { get; } = new MainOCRBossCounting();
+        public OCRBossCounting BossCounting { get; } = new OCRBossCounting();
 
-        public MainOCRPrice Price { get; } = new MainOCRPrice();
+        public OCRPrice Price { get; } = new OCRPrice();
 
 
 

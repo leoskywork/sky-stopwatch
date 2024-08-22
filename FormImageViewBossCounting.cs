@@ -37,12 +37,12 @@ namespace SkyStopwatch
             InitializeComponent();
 
 
-            this.numericUpDownX.Value = MainOCRBossCounting.XPoint;
-            this.numericUpDownY.Value = MainOCRBossCounting.YPoint;
-            this.numericUpDownWidth.Value = MainOCRBossCounting.BlockWidth;
-            this.numericUpDownHeight.Value = MainOCRBossCounting.BlockHeight;
-            this.checkBoxAutoSlice.Checked = MainOCRBossCounting.EnableAutoSlice;
-            this.numericUpDownAutoSliceIntervalSeconds.Value = MainOCRBossCounting.AutoSliceIntervalSeconds;
+            this.numericUpDownX.Value = OCRBossCounting.XPoint;
+            this.numericUpDownY.Value = OCRBossCounting.YPoint;
+            this.numericUpDownWidth.Value = OCRBossCounting.BlockWidth;
+            this.numericUpDownHeight.Value = OCRBossCounting.BlockHeight;
+            this.checkBoxAutoSlice.Checked = OCRBossCounting.EnableAutoSlice;
+            this.numericUpDownAutoSliceIntervalSeconds.Value = OCRBossCounting.AutoSliceIntervalSeconds;
             this._AutoShowPopupBox = autoPopup;
 
             if (this._AutoShowPopupBox)
@@ -81,14 +81,14 @@ namespace SkyStopwatch
                 int width = (int)this.numericUpDownWidth.Value;
                 int height = (int)this.numericUpDownHeight.Value;
 
-                MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
+                OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
-                MainOCRBossCounting.XPoint = x;
-                MainOCRBossCounting.YPoint = y;
-                MainOCRBossCounting.BlockWidth = width;
-                MainOCRBossCounting.BlockHeight = height;
-                MainOCRBossCounting.EnableAutoSlice = this.checkBoxAutoSlice.Checked;
-                MainOCRBossCounting.AutoSliceIntervalSeconds = (int)this.numericUpDownAutoSliceIntervalSeconds.Value;
+                OCRBossCounting.XPoint = x;
+                OCRBossCounting.YPoint = y;
+                OCRBossCounting.BlockWidth = width;
+                OCRBossCounting.BlockHeight = height;
+                OCRBossCounting.EnableAutoSlice = this.checkBoxAutoSlice.Checked;
+                OCRBossCounting.AutoSliceIntervalSeconds = (int)this.numericUpDownAutoSliceIntervalSeconds.Value;
 
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
 
@@ -120,7 +120,7 @@ namespace SkyStopwatch
                     int width = (int)this.numericUpDownWidth.Value;
                     int height = (int)this.numericUpDownHeight.Value;
 
-                    MainOCR.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
+                    OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
 
                     //can not use using block here, since we pass the bitmap into a view and show it
                     var bitmapBlock = screenShot.Clone(new Rectangle(x, y, width, height), screenShot.PixelFormat);
@@ -366,7 +366,7 @@ namespace SkyStopwatch
         private void CompareOneSectionMultipleRounds()
         {
             var rawData = _BossCallImageQueue.Dequeue();
-            var ocrProcessedData = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawData);
+            var ocrProcessedData = OCRBase.ReadImageFromMemory(_AutoOCREngine, rawData);
             var lastBossCall = _BossGroups.LastCallOrDefault<BossCall>();
             int ocrMatchDigit = 5;
 
@@ -429,7 +429,7 @@ namespace SkyStopwatch
 
             if (GlobalData.Default.IsDebugging || result.IsSuccess)
             {
-                string tmpPath = MainOCR.SaveTmpFile($"boss-call-{result.IsSuccess}-{result.Info}-within-1-{IsWithinBossCallValidWindow()}", rawData);
+                string tmpPath = OCRBase.SaveTmpFile($"boss-call-{result.IsSuccess}-{result.Info}-within-1-{IsWithinBossCallValidWindow()}", rawData);
                 System.Diagnostics.Debug.WriteLine($"OCR compare: {result.IsSuccess}, OCR data: {ocrProcessedData}, tmp path: {tmpPath}");
             }
 
@@ -464,7 +464,7 @@ namespace SkyStopwatch
 
             var rawDataPair = _BossCallImagePairQueue.Dequeue();
             rawDataPair.ConsumeAt = DateTime.UtcNow;
-            var ocrProcessedMaster = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.Data);
+            var ocrProcessedMaster = OCRBase.ReadImageFromMemory(_AutoOCREngine, rawDataPair.Data);
             var lastCall = _BossGroups.LastCallOrDefault<BossCallDualSection>();
             int candidateMax = 5;
             const int candidateMin = 1;
@@ -474,7 +474,7 @@ namespace SkyStopwatch
                 resultMaster = this.GetModels().BossCounting.FindPair(ocrProcessedMaster, candidateMax, candidateMin);
                 if (resultMaster.IsSuccess) //compare 1-1
                 {
-                    var ocrProcessedAUX = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.AUXData);
+                    var ocrProcessedAUX = OCRBase.ReadImageFromMemory(_AutoOCREngine, rawDataPair.AUXData);
                     resultAUX = this.GetModels().BossCounting.FindPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
 
                     if (resultAUX.IsSuccess) //compare 1-2
@@ -500,7 +500,7 @@ namespace SkyStopwatch
                         lastCallWithinLifeCycle = lastCall.IsImageTimeSameRoundUTC(rawDataPair.CreateAt, resultMaster.CompareTarget);
                         if (lastCallWithinLifeCycle)
                         {
-                            var ocrProcessedAUX = MainOCR.ReadImageFromMemory(_AutoOCREngine, rawDataPair.AUXData);
+                            var ocrProcessedAUX = OCRBase.ReadImageFromMemory(_AutoOCREngine, rawDataPair.AUXData);
                             resultAUX = this.GetModels().BossCounting.FindPair(ocrProcessedAUX, resultMaster.CompareTarget, resultMaster.CompareTarget);
 
                             if (resultAUX.IsSuccess && IsValidCandidatesOneAndOne(lastCall, candidateMax, rawDataPair)) //compare 2-2
@@ -529,8 +529,8 @@ namespace SkyStopwatch
             //saveImg = false;
             if (GlobalData.Default.IsDebugging || testSaveImg)
             {
-                string tmpPath = MainOCR.SaveTmpFile($"pair-{resultMaster.IsSuccess}-{resultMaster.Info}-id-{testId}", rawDataPair.Data);
-                string tmpPath2 = MainOCR.SaveTmpFile($"pair-{resultAUX?.IsSuccess ?? false}-{resultAUX?.Info}-id-{testId}-aux", rawDataPair.AUXData);
+                string tmpPath = OCRBase.SaveTmpFile($"pair-{resultMaster.IsSuccess}-{resultMaster.Info}-id-{testId}", rawDataPair.Data);
+                string tmpPath2 = OCRBase.SaveTmpFile($"pair-{resultAUX?.IsSuccess ?? false}-{resultAUX?.Info}-id-{testId}-aux", rawDataPair.AUXData);
                 System.Diagnostics.Debug.WriteLine($"OCR compare: {resultMaster.IsSuccess}, OCR data master: {ocrProcessedMaster}, file: {tmpPath}");
                 System.Diagnostics.Debug.WriteLine($"OCR compare aux: {resultAUX?.IsSuccess ?? false}, file: {tmpPath2}");
             }
@@ -594,7 +594,7 @@ namespace SkyStopwatch
         {
             try
             {
-                MainOCRBossCounting.AutoSliceIntervalSeconds = (int) this.numericUpDownAutoSliceIntervalSeconds.Value;
+                OCRBossCounting.AutoSliceIntervalSeconds = (int) this.numericUpDownAutoSliceIntervalSeconds.Value;
                 this.buttonSave.Enabled = true;
             }
             catch (Exception ex)

@@ -16,7 +16,7 @@ using System.Security.Cryptography;
 
 namespace SkyStopwatch
 {
-    public abstract class MainOCR
+    public abstract class OCRBase
     {
         public const int IncrementSeconds = 10;
         public const int DecrementSeconds = 10;
@@ -100,14 +100,14 @@ namespace SkyStopwatch
 
                 using (Bitmap cloneBitmap = bitPic.Clone(rect, bitPic.PixelFormat))
                 {
-                    masterImage = MainOCR.BitmapToBytes(cloneBitmap);
+                    masterImage = OCRBase.BitmapToBytes(cloneBitmap);
                 }
 
                 if (rectAUX.HasValue)
                 {
                     using (Bitmap cloneBitmap = bitPic.Clone(rectAUX.Value, bitPic.PixelFormat))
                     {
-                        auxImage = MainOCR.BitmapToBytes(cloneBitmap);
+                        auxImage = OCRBase.BitmapToBytes(cloneBitmap);
                     }
                 }
 
@@ -149,7 +149,7 @@ namespace SkyStopwatch
             using (Bitmap bitmap = new Bitmap(imgPath))
             using (Bitmap cloneBitmap = bitmap.Clone(rect, bitmap.PixelFormat))
             {
-                byte[] bytes = MainOCR.BitmapToBytes(cloneBitmap);
+                byte[] bytes = OCRBase.BitmapToBytes(cloneBitmap);
 
                 using (var img = Tesseract.Pix.LoadFromMemory(bytes))
                 {
@@ -238,16 +238,16 @@ namespace SkyStopwatch
             int safeWidth = Math.Min(width, screenRect.Width - x);
             int safeHeight = Math.Min(height, screenRect.Height - y);
 
-            if (safeWidth < MainOCR.MinBlockWidth)
+            if (safeWidth < OCRBase.MinBlockWidth)
             {
-                safeWidth = MainOCR.MinBlockWidth;
-                x = screenRect.Width - MainOCR.MinBlockWidth;
+                safeWidth = OCRBase.MinBlockWidth;
+                x = screenRect.Width - OCRBase.MinBlockWidth;
             }
 
-            if (safeHeight < MainOCR.MinBlockHeight)
+            if (safeHeight < OCRBase.MinBlockHeight)
             {
-                safeHeight = MainOCR.MinBlockHeight;
-                y = screenRect.Height - MainOCR.MinBlockHeight;
+                safeHeight = OCRBase.MinBlockHeight;
+                y = screenRect.Height - OCRBase.MinBlockHeight;
             }
 
             width = safeWidth;

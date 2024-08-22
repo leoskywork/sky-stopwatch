@@ -59,33 +59,33 @@ namespace SkyStopwatch
             GlobalData.Default.EnableBossCountingOneMode = Properties.Settings.Default.EnableBossCountingOneMode;
 
 
-            MainOCRGameTime.XPoint = Properties.Settings.Default.TimeViewPoint.X;
-            MainOCRGameTime.YPoint = Properties.Settings.Default.TimeViewPoint.Y;
-            MainOCRGameTime.BlockWidth = Properties.Settings.Default.TimeViewSize.Width;
-            MainOCRGameTime.BlockHeight = Properties.Settings.Default.TimeViewSize.Height;
+            OCRGameTime.XPoint = Properties.Settings.Default.TimeViewPoint.X;
+            OCRGameTime.YPoint = Properties.Settings.Default.TimeViewPoint.Y;
+            OCRGameTime.BlockWidth = Properties.Settings.Default.TimeViewSize.Width;
+            OCRGameTime.BlockHeight = Properties.Settings.Default.TimeViewSize.Height;
 
-            MainOCRPrice.XPoint = Properties.Settings.Default.PriceViewPoint.X;
-            MainOCRPrice.YPoint = Properties.Settings.Default.PriceViewPoint.Y;
-            MainOCRPrice.BlockWidth = Properties.Settings.Default.PriceViewSize.Width;
-            MainOCRPrice.BlockHeight = Properties.Settings.Default.PriceViewSize.Height;
+            OCRPrice.XPoint = Properties.Settings.Default.PriceViewPoint.X;
+            OCRPrice.YPoint = Properties.Settings.Default.PriceViewPoint.Y;
+            OCRPrice.BlockWidth = Properties.Settings.Default.PriceViewSize.Width;
+            OCRPrice.BlockHeight = Properties.Settings.Default.PriceViewSize.Height;
 
 
-            MainOCRBossCounting.EnableAutoSlice = Properties.Settings.Default.EnableBossCountingAutoSlice;
-            MainOCRBossCounting.AutoSliceIntervalSeconds = Properties.Settings.Default.BossCountingAutoSliceSeconds;
-            MainOCRBossCounting.XPoint = Properties.Settings.Default.BossCountingViewPoint.X;
-            MainOCRBossCounting.YPoint = Properties.Settings.Default.BossCountingViewPoint.Y;
-            MainOCRBossCounting.BlockWidth = Properties.Settings.Default.BossCountingViewSize.Width;
-            MainOCRBossCounting.BlockHeight = Properties.Settings.Default.BossCountingViewSize.Height;
+            OCRBossCounting.EnableAutoSlice = Properties.Settings.Default.EnableBossCountingAutoSlice;
+            OCRBossCounting.AutoSliceIntervalSeconds = Properties.Settings.Default.BossCountingAutoSliceSeconds;
+            OCRBossCounting.XPoint = Properties.Settings.Default.BossCountingViewPoint.X;
+            OCRBossCounting.YPoint = Properties.Settings.Default.BossCountingViewPoint.Y;
+            OCRBossCounting.BlockWidth = Properties.Settings.Default.BossCountingViewSize.Width;
+            OCRBossCounting.BlockHeight = Properties.Settings.Default.BossCountingViewSize.Height;
 
 
             //safe check
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
-            MainOCRGameTime.XPoint = Math.Min(MainOCRGameTime.XPoint, screenRect.Width - MainOCRGameTime.BlockWidth);
-            MainOCRGameTime.YPoint = Math.Min(MainOCRGameTime.YPoint, screenRect.Height - MainOCRGameTime.BlockHeight);
-            MainOCRPrice.XPoint = Math.Min(MainOCRPrice.XPoint, screenRect.Width - MainOCRPrice.BlockWidth);
-            MainOCRPrice.YPoint = Math.Min(MainOCRPrice.YPoint, screenRect.Height - MainOCRPrice.BlockHeight);
-            MainOCRBossCounting.XPoint = Math.Min(MainOCRBossCounting.XPoint, screenRect.Width - MainOCRBossCounting.BlockWidth);
-            MainOCRBossCounting.YPoint = Math.Min(MainOCRBossCounting.YPoint, screenRect.Height - MainOCRBossCounting.BlockHeight);
+            OCRGameTime.XPoint = Math.Min(OCRGameTime.XPoint, screenRect.Width - OCRGameTime.BlockWidth);
+            OCRGameTime.YPoint = Math.Min(OCRGameTime.YPoint, screenRect.Height - OCRGameTime.BlockHeight);
+            OCRPrice.XPoint = Math.Min(OCRPrice.XPoint, screenRect.Width - OCRPrice.BlockWidth);
+            OCRPrice.YPoint = Math.Min(OCRPrice.YPoint, screenRect.Height - OCRPrice.BlockHeight);
+            OCRBossCounting.XPoint = Math.Min(OCRBossCounting.XPoint, screenRect.Width - OCRBossCounting.BlockWidth);
+            OCRBossCounting.YPoint = Math.Min(OCRBossCounting.YPoint, screenRect.Height - OCRBossCounting.BlockHeight);
 
             if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ProcessListCSV))
             {
@@ -106,18 +106,18 @@ namespace SkyStopwatch
                 Properties.Settings.Default.EnableDebugging = GlobalData.Default.IsDebugging;
                 Properties.Settings.Default.EnableBossCountingOneMode = GlobalData.Default.EnableBossCountingOneMode;
 
-                Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(MainOCRGameTime.XPoint, MainOCRGameTime.YPoint);
-                Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(MainOCRGameTime.BlockWidth, MainOCRGameTime.BlockHeight);
+                Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(OCRGameTime.XPoint, OCRGameTime.YPoint);
+                Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
 
-                Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(MainOCRPrice.XPoint, MainOCRPrice.YPoint);
-                Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(MainOCRPrice.BlockWidth, MainOCRPrice.BlockHeight);
+                Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(OCRPrice.XPoint, OCRPrice.YPoint);
+                Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(OCRPrice.BlockWidth, OCRPrice.BlockHeight);
 
                 Properties.Settings.Default.ProcessListCSV = GlobalData.ProcessList.Count > 0 ? string.Join(",", GlobalData.ProcessList) : string.Empty;
 
-                Properties.Settings.Default.EnableBossCountingAutoSlice = MainOCRBossCounting.EnableAutoSlice;
-                Properties.Settings.Default.BossCountingAutoSliceSeconds = MainOCRBossCounting.AutoSliceIntervalSeconds;
-                Properties.Settings.Default.BossCountingViewPoint = new System.Drawing.Point(MainOCRBossCounting.XPoint, MainOCRBossCounting.YPoint);
-                Properties.Settings.Default.BossCountingViewSize = new System.Drawing.Size(MainOCRBossCounting.BlockWidth, MainOCRBossCounting.BlockHeight);
+                Properties.Settings.Default.EnableBossCountingAutoSlice = OCRBossCounting.EnableAutoSlice;
+                Properties.Settings.Default.BossCountingAutoSliceSeconds = OCRBossCounting.AutoSliceIntervalSeconds;
+                Properties.Settings.Default.BossCountingViewPoint = new System.Drawing.Point(OCRBossCounting.XPoint, OCRBossCounting.YPoint);
+                Properties.Settings.Default.BossCountingViewSize = new System.Drawing.Size(OCRBossCounting.BlockWidth, OCRBossCounting.BlockHeight);
 
                 Properties.Settings.Default.Save();
             }

@@ -13,7 +13,7 @@ using Tesseract;
 
 namespace SkyStopwatch
 {
-    public class MainOCRBossCounting : MainOCR
+    public class OCRBossCounting : OCRBase
     {
         //big screen (pc-pro) ----- 1470, 240, 160, 740
         public static int XPoint = 1470;
@@ -39,14 +39,14 @@ namespace SkyStopwatch
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            return MainOCR.GetOCREngine("0123456789oO"); //only look for pre-set chars for speed up
+            return OCRBase.GetOCREngine("0123456789oO"); //only look for pre-set chars for speed up
         }
 
         public TinyScreenShotBossCall GetFixedLocationImageDataPair(bool includeAUX)
         {
             var rect = GetScreenBlock();
             var rectAUX = GetScreenBlockAUX();
-            var bytes = MainOCR.PrintScreenAsBytes(rect, rectAUX);
+            var bytes = OCRBase.PrintScreenAsBytes(rect, rectAUX);
 
             return new TinyScreenShotBossCall(bytes.Item1, bytes.Item2);
         }

@@ -39,6 +39,7 @@
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonImageView = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxReadTopTime = new System.Windows.Forms.CheckBox();
             this.buttonReduceMinute = new System.Windows.Forms.Button();
             this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
@@ -56,7 +57,6 @@
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
-            this.checkBoxReadTopTime = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -179,6 +179,20 @@
             this.groupBox1.TabIndex = 402;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OCR";
+            // 
+            // checkBoxReadTopTime
+            // 
+            this.checkBoxReadTopTime.AutoSize = true;
+            this.checkBoxReadTopTime.Checked = true;
+            this.checkBoxReadTopTime.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxReadTopTime.Location = new System.Drawing.Point(9, 294);
+            this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
+            this.checkBoxReadTopTime.Size = new System.Drawing.Size(133, 19);
+            this.checkBoxReadTopTime.TabIndex = 409;
+            this.checkBoxReadTopTime.Text = "Mini top time";
+            this.checkBoxReadTopTime.UseVisualStyleBackColor = true;
+            this.checkBoxReadTopTime.CheckedChanged += new System.EventHandler(this.checkBoxReadTopTime_CheckedChanged);
             // 
             // buttonReduceMinute
             // 
@@ -398,20 +412,6 @@
             this.pictureBoxOne.Size = new System.Drawing.Size(400, 300);
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
-            // 
-            // checkBoxReadTopTime
-            // 
-            this.checkBoxReadTopTime.AutoSize = true;
-            this.checkBoxReadTopTime.Checked = true;
-            this.checkBoxReadTopTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxReadTopTime.Location = new System.Drawing.Point(9, 294);
-            this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
-            this.checkBoxReadTopTime.Size = new System.Drawing.Size(149, 19);
-            this.checkBoxReadTopTime.TabIndex = 409;
-            this.checkBoxReadTopTime.Text = "Screen top time";
-            this.checkBoxReadTopTime.UseVisualStyleBackColor = true;
-            this.checkBoxReadTopTime.CheckedChanged += new System.EventHandler(this.checkBoxReadTopTime_CheckedChanged);
             // 
             // FormBootSetting
             // 

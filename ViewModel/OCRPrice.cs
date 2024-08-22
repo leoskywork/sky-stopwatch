@@ -11,7 +11,7 @@ using Tesseract;
 
 namespace SkyStopwatch
 {
-    public class MainOCRPrice : MainOCR
+    public class OCRPrice : OCRBase
     {
         //big screen (pc-pro) ----- 1470, 240, 160, 740
         public static int XPoint = 1470;
@@ -26,7 +26,7 @@ namespace SkyStopwatch
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            return MainOCR.GetOCREngine("0123456789oO"); //only look for pre-set chars for speed up
+            return OCRBase.GetOCREngine("0123456789oO"); //only look for pre-set chars for speed up
         }
 
 
@@ -41,8 +41,8 @@ namespace SkyStopwatch
             string[] zeroAlikeArray = new[] { "o", "O" };
            
             string targetPriceString = TargetPrice.ToString();
-            string aux1String = enableAux1 ? MainOCRPrice.Aux1Price.ToString() : "-1";
-            string aux2String = enableAux2 ? MainOCRPrice.Aux2Price.ToString() : "-1";
+            string aux1String = enableAux1 ? OCRPrice.Aux1Price.ToString() : "-1";
+            string aux2String = enableAux2 ? OCRPrice.Aux2Price.ToString() : "-1";
             //the coin icon at the last position, sometimes treat as 9, sometimes 5, 1, 0
             //just remove the last char
             //bool allEndWithZero = true;

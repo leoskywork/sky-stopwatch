@@ -11,7 +11,7 @@ using Tesseract;
 
 namespace SkyStopwatch
 {
-    public class MainOCRGameTime : MainOCR
+    public class OCRGameTime : OCRBase
     {
         //public const int XPercent = 32;
         //public const int YPercent = 68;
@@ -29,7 +29,12 @@ namespace SkyStopwatch
         public const int AutoOCRDelaySeconds = 2;
         public const int NewGameDelaySeconds = 1;//10;
         public const int NoDelay = 0;
+
         public const int TimerNapSeconds = 10;
+        public const int TimerDisplayUIIntervalMS = 100;
+        public const int TimerAutoOCRFastIntervalMS = 600;
+        public const int TimerAutoOCRSlowIntervalMS = 30 * 1000;
+
 
          
         public int BootingArgs { get; set; } = 0;
@@ -37,11 +42,21 @@ namespace SkyStopwatch
         public DateTime TimeAroundGameStart { get; set; } = DateTime.MinValue;
         public DateTime GameTimeLastUpdateTime { get; set; }
 
+        private int _SuccessAutoOCRTimeCount = 0;
+        public bool IsWithinOneGameRoundOrNap
+        {
+            get
+            {
+                DateTime now = DateTime.Now;
+                return _SuccessAutoOCRTimeCount >= 3 || (now - this.GameTimeLastUpdateTime).TotalSeconds < TimerNapSeconds;
+            }
+        }
+
 
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            return MainOCR.GetOCREngine("0123456789:oO");
+            return OCRBase.GetOCREngine("0123456789:oO");
         }
 
         public override Rectangle GetScreenBlock()
@@ -58,7 +73,7 @@ namespace SkyStopwatch
         {
             using (var engine = GetDefaultOCREngine())
             {
-               return MainOCR.ReadImageFromFile(engine, imgPath, GetScreenBlock());
+               return OCRBase.ReadImageFromFile(engine, imgPath, GetScreenBlock());
             }
         }
 
@@ -156,14 +171,20 @@ namespace SkyStopwatch
 
                 if (ocrTimeSpan < now - this.TimeAroundGameStart && (now - this.GameTimeLastUpdateTime).TotalSeconds < TimerNapSeconds + 20)
                 {
-                    System.Diagnostics.Debug.WriteLine($"--> ocr misread time: {ocrDisplayTime}, should NOT smaller than previuse read: {this.AutoOCRTimeOfLastRead}");
+                    System.Diagnostics.Debug.WriteLine($"--> ocr misread time: {ocrDisplayTime}, should NOT smaller than previuse: {this.AutoOCRTimeOfLastRead}");
                     System.Diagnostics.Debug.WriteLine($"--> since game start: {now - this.TimeAroundGameStart}, since last update: {now - this.GameTimeLastUpdateTime}");
                     return true;
+                }
+                else
+                {
+                    _SuccessAutoOCRTimeCount++;
+                    System.Diagnostics.Debug.WriteLine($"Success count: {_SuccessAutoOCRTimeCount}, ocr time: {ocrDisplayTime}");
                 }
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("failed to parse time：" + ocrDisplayTime);
+                _SuccessAutoOCRTimeCount = 0;
+                System.Diagnostics.Debug.WriteLine("Reset success count, failed to parse：" + ocrDisplayTime);
             }
 
             return false;
