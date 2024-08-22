@@ -256,7 +256,7 @@ namespace SkyStopwatch
             {
                 this.timerRefresh.Enabled = false;
                 this.buttonPause.Text = "-><-";
-                this.labelMessage.Text = "P";
+                this.labelMessage.Text = ">";
             }
             else
             {
