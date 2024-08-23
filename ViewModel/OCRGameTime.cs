@@ -36,9 +36,9 @@ namespace SkyStopwatch
         public const int TimerAutoOCRFastIntervalMS = 800; // this value x 3 should less than 1000 (1 second)
         public const int TimerAutoOCRSlowIntervalMS = 10 * 1000;
 
-        public const int SuccessLimit = 10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
+        public const int SuccessLimit = 8;//10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
         public const int EmptyLimit = 30;
-        public const int FailParseLimit = 4;
+        public const int FailParseLimit = 3;
          
         public int BootingArgs { get; set; } = 0;
         public string AutoOCRTimeOfLastRead { get; set; }
@@ -70,9 +70,12 @@ namespace SkyStopwatch
                 }
 
                 var sinceLastUpdate = DateTime.Now - _GameTimeLastUpdateTime;
-                if (sinceLastUpdate.TotalSeconds >= _GameRemainingSeconds)//600)//10)// 120) //leotodo, issue here, just manual reset after game end
+                //leotodo, issue here, just manual reset after game end/manual exit game
+                if (sinceLastUpdate.TotalSeconds >= _GameRemainingSeconds)//600)//10)// 120)
                 {
                     _AutoOCRSuccessCount = 0;
+                    _AutoOCREmptyInARowCount = 0;
+                    _AutoOCRFailParseInARowCount = 0;
                     return false;
                 }
 
@@ -197,7 +200,9 @@ namespace SkyStopwatch
                 this._AutoOCRFailParseInARowCount = 0;
                 if (_AutoOCREmptyInARowCount > EmptyLimit) 
                 {
+                    System.Diagnostics.Debug.WriteLine($"reset counts, too many empty: {_AutoOCREmptyInARowCount}");
                     _AutoOCRSuccessCount = 0;
+                    _AutoOCREmptyInARowCount = 0;
                 }
                 return false;
             }
@@ -232,7 +237,7 @@ namespace SkyStopwatch
 
                 if (ocrTimeSpanAdjust < sinceGameStart && (_AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < napSecondsAdjust))
                 {
-                    System.Diagnostics.Debug.WriteLine($"--> misread ocr time: {ocrDisplayTime}, should NOT < {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
+                    System.Diagnostics.Debug.WriteLine($"--> misread ocr time: {ocrDisplayTime}, should NOT less than {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
                     System.Diagnostics.Debug.WriteLine($"--> since game start: {sinceGameStart}, since last update: {sinceLastUpdate}");
                     return true;
                 }
@@ -255,6 +260,18 @@ namespace SkyStopwatch
             }
 
             return false;
+        }
+
+        public void ResetAutoOCR()
+        {
+            this.AutoOCRTimeOfLastRead = null;
+            _TimeAroundGameStart = DateTime.MinValue;
+            _GameTimeLastUpdateTime = DateTime.MinValue;
+            _GameRemainingSeconds = 0;
+
+            _AutoOCRSuccessCount = 0;
+            _AutoOCREmptyInARowCount = 0;
+            _AutoOCRFailParseInARowCount = 0;
         }
 
     }

@@ -462,7 +462,7 @@ namespace SkyStopwatch
 
             //reset flags/history values
             //flag 1
-            this.Model.AutoOCRTimeOfLastRead = null;
+            this.Model.ResetAutoOCR();
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
             var source = auto ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGame;
@@ -572,7 +572,7 @@ namespace SkyStopwatch
                 _IsUpdatingPassedTime = false;
                 SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton);
                 _IsAutoRefreshing = false;
-                this.Model.AutoOCRTimeOfLastRead = string.Empty;
+                this.Model.ResetAutoOCR();
 
 
                 this.labelTimer.Text = "--";
