@@ -39,10 +39,6 @@
             this.buttonCloseOverlay = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // buttonOCR
-            // 
-     
-            // 
             // buttonToolBox
             // 
             this.buttonToolBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -108,7 +104,7 @@
             this.buttonCloseOverlay.UseVisualStyleBackColor = true;
             this.buttonCloseOverlay.Click += new System.EventHandler(this.buttonCloseOverlay_Click);
             // 
-            // FormMain
+            // BoxGameTime
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -122,7 +118,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
-            this.Name = "FormMain";
+            this.Name = "BoxGameTime";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "LEO";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
