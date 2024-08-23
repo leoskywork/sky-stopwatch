@@ -243,6 +243,8 @@ namespace SkyStopwatch
             if (this._AutoShowPopupBox)
             {
                 //leotodo, improve this, just center it now
+                //can not do it by binding Location to app config file property
+                //cause issue when show 2 popup box(boss counting and game time) at the same time
                 bossCountingBox.StartPosition = FormStartPosition.CenterScreen;
             }
             else
