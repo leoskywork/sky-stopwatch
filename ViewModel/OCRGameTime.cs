@@ -231,11 +231,9 @@ namespace SkyStopwatch
                     }
                 }
 
-                int napSecondsAdjust = TimerNapSeconds + 20;
+                //int napSecondsAdjust = TimerNapSeconds + 20;
                 var ocrTimeSpanAdjust = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + AutoOCRDelaySeconds + 3);
-               
-
-                if (ocrTimeSpanAdjust < sinceGameStart && (_AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < napSecondsAdjust))
+                if (ocrTimeSpanAdjust < sinceGameStart && (_AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < _GameRemainingSeconds))// sinceLastUpdate.TotalSeconds < napSecondsAdjust))
                 {
                     System.Diagnostics.Debug.WriteLine($"--> misread ocr time: {ocrDisplayTime}, should NOT less than {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
                     System.Diagnostics.Debug.WriteLine($"--> since game start: {sinceGameStart}, since last update: {sinceLastUpdate}");

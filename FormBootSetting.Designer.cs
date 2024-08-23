@@ -185,7 +185,7 @@
             this.checkBoxReadTopTime.AutoSize = true;
             this.checkBoxReadTopTime.Checked = true;
             this.checkBoxReadTopTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxReadTopTime.Location = new System.Drawing.Point(9, 294);
+            this.checkBoxReadTopTime.Location = new System.Drawing.Point(15, 294);
             this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
             this.checkBoxReadTopTime.Size = new System.Drawing.Size(133, 19);
