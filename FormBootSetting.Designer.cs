@@ -157,7 +157,7 @@
             this.buttonImageView.Name = "buttonImageView";
             this.buttonImageView.Size = new System.Drawing.Size(95, 30);
             this.buttonImageView.TabIndex = 401;
-            this.buttonImageView.Text = "Image...";
+            this.buttonImageView.Text = "Time...";
             this.buttonImageView.UseVisualStyleBackColor = true;
             this.buttonImageView.Click += new System.EventHandler(this.buttonImageView_Click);
             // 
