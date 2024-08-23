@@ -34,6 +34,7 @@ namespace SkyStopwatch
 
         public const string PopupKeyBossCount = "pop-up-boss-call-no";
         public const string PopupKeyBossCountSuccinct = "pop-up-boss-call-one-mode";
+        public const string PopupKeyGameTime = "pop-up-game-time";
 
         public event EventHandler ChangeTheme;
         public event EventHandler CloseApp;

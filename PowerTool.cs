@@ -303,6 +303,11 @@ namespace SkyStopwatch
 
         public static void DisableButtonShortTime(this Form form, Button control)
         {
+            DisableButtonWithTime(form, control, 300);
+        }
+
+        public static void DisableButtonWithTime(this Form form, Button control, int intervalMS)
+        {
             var oldForeColor = control.ForeColor;
             var oldBackColor = control.BackColor;
 
@@ -321,7 +326,7 @@ namespace SkyStopwatch
                 control.ForeColor = oldForeColor;
                 control.BackColor = oldBackColor;
                 control.Enabled = true;
-            }, 300);
+            }, intervalMS);
         }
 
         public static ViewModelFactory GetModels(this Form form)

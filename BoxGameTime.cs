@@ -1,4 +1,5 @@
-﻿using SkyStopwatch.ViewModel;
+﻿using SkyStopwatch.View;
+using SkyStopwatch.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +17,7 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxGameTime : Form
+    public partial class BoxGameTime : Form, IPopupBox
     {
         private bool _IsUpdatingPassedTime = false;
 
@@ -26,6 +27,13 @@ namespace SkyStopwatch
         private bool _IsAutoRefreshing = false;
         private Tesseract.TesseractEngine _AutoOCREngine;
         private bool _HasTimeNodeWarningPopped = false;
+
+
+        public DateTime CreateAt => DateTime.Now;
+        public string Key => GlobalData.PopupKeyGameTime;
+
+        private bool _IsPaused;
+        public bool IsPaused => _IsPaused;
 
         public OCRGameTime Model { get { return ViewModelFactory.Instance.GetGameTime(); } }
 
@@ -332,8 +340,9 @@ namespace SkyStopwatch
 
 
                 ShowToolBox();
-
-                buttonToolBox.Enabled = true;
+                //buttonToolBox.Enabled = true;
+                //this.DisableButtonShortTime(buttonToolBox);
+                this.DisableButtonWithTime(buttonToolBox, 1000);
             }
             catch (Exception ex)
             {

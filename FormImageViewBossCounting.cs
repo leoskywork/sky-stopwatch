@@ -32,7 +32,7 @@ namespace SkyStopwatch
         private DateTime _LastCallSetAsValidTime;
         private bool _AutoShowPopupBox;
 
-        public FormImageViewBossCounting(bool autoPopup)
+        public FormImageViewBossCounting(bool autoPopupBox)
         {
             InitializeComponent();
 
@@ -43,7 +43,7 @@ namespace SkyStopwatch
             this.numericUpDownHeight.Value = OCRBossCounting.BlockHeight;
             this.checkBoxAutoSlice.Checked = OCRBossCounting.EnableAutoSlice;
             this.numericUpDownAutoSliceIntervalSeconds.Value = OCRBossCounting.AutoSliceIntervalSeconds;
-            this._AutoShowPopupBox = autoPopup;
+            this._AutoShowPopupBox = autoPopupBox;
 
             if (this._AutoShowPopupBox)
             {
@@ -260,6 +260,7 @@ namespace SkyStopwatch
                 gameTime.StartPosition = FormStartPosition.Manual;
                 gameTime.Location = new Point(bossCountingBox.Location.X, bossCountingBox.Location.Y + 40);
                 gameTime.Show();
+                GlobalData.Default.AddLongLivePopup(gameTime);
             }
         }
 
