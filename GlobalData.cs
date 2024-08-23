@@ -16,6 +16,7 @@ namespace SkyStopwatch
         public const string ChangeTimeSourceClearButton = "OnClearOCR";
         public const string ChangeTimeSourceManualOCRButton = "ManualOCR";
         public const string ChangeTimeSourceNewGame = "NewGame";
+        public const string ChangeTimeSourceNewGameAuto = "NewGame-AutoReset";
         public const string ChangeTimeSourceAdjustTimeButton = "ManualAdjustButtons";
         public const string ChangeTimeSourceTimerOCR = "AutoTimerOCR";
         public const string ChangeTimeSourcePreWarmUp = "PreWarmUp";
@@ -49,6 +50,7 @@ namespace SkyStopwatch
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
         public const int PreRoundGameMinutes = 39;//38;//(join game first, then open this app)30; //can not join game after 30 min
         public const int MaxGameRoundMinutes = 40;
+        public const int MaxScreenTopGameMinute = 38;
         public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
 
         private static GlobalData _instance;

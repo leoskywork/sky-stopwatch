@@ -268,7 +268,6 @@ namespace SkyStopwatch
         {
             DateTime oldTime = this.Model.TimeAroundGameStart;
             this.Model.TimeAroundGameStart = newTime;
-            this.Model.GameTimeLastUpdateTime = DateTime.Now;
 
             if (oldTime != newTime)
             {
@@ -370,7 +369,7 @@ namespace SkyStopwatch
             FormBootSetting tool = new FormBootSetting(bitmap,
                                (_, __) => { this.OnInitToolBox(_, __); },
                                () => { this.OnRunOCR(null, GlobalData.ChangeTimeSourceManualOCRButton); },
-                               () => { this.OnNewGameStart(); },
+                               () => { this.OnNewGameStart(false); },
                                () => { this.OnSwitchTopMost(); },
                                () => { this.OnClearOCR(); },
                                (_) => { this.OnAddSeconds(_); },
@@ -456,7 +455,7 @@ namespace SkyStopwatch
             });
         }
 
-        private void OnNewGameStart()
+        private void OnNewGameStart(bool auto)
         {
             _IsUpdatingPassedTime = true;
             //this.buttonOCR.Enabled = false;
@@ -466,7 +465,8 @@ namespace SkyStopwatch
             this.Model.AutoOCRTimeOfLastRead = null;
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
-            StartUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), OCRGameTime.NewGameDelaySeconds, GlobalData.ChangeTimeSourceNewGame);
+            var source = auto ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGame;
+            StartUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), OCRGameTime.NewGameDelaySeconds, source);
 
             if (!this.timerAutoRefresh.Enabled)
             {
@@ -515,7 +515,14 @@ namespace SkyStopwatch
                     if (_IsUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
                     {
                         var passed = DateTime.Now - this.Model.TimeAroundGameStart;
-                        this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
+                        if (passed.TotalMinutes < GlobalData.MaxGameRoundMinutes)
+                        {
+                            this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
+                        }
+                        else
+                        {
+                            this.OnNewGameStart(true);
+                        }
                     }
                 }
             }
@@ -591,7 +598,7 @@ namespace SkyStopwatch
         {
             try
             {
-                //if (!labelTimer.Visible) return;
+                if (!labelTimer.Visible) return;
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
 
@@ -599,7 +606,12 @@ namespace SkyStopwatch
                 {
                     System.Diagnostics.Debug.WriteLine("auto refresh - within one round/nap, going to skip");
                     _IsAutoRefreshing = false;
+                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
                     return;
+                }
+                else
+                {
+                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
                 }
 
                 Task.Factory.StartNew(() =>
@@ -611,7 +623,6 @@ namespace SkyStopwatch
                     }
 
                     byte[] screenShotBytes = this.Model.GetImageBytes();
-
                     if (screenShotBytes == null)
                     {
                         System.Diagnostics.Debug.WriteLine("screenShotBytes is null");
@@ -625,7 +636,7 @@ namespace SkyStopwatch
 
                     string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     string timeString = this.Model.Find(data);
-                    bool saveImage = !string.IsNullOrWhiteSpace(timeString);
+                    bool saveImage = false;// !string.IsNullOrWhiteSpace(timeString); //false;
                     if (GlobalData.Default.IsDebugging || saveImage)
                     {
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
@@ -658,6 +669,8 @@ namespace SkyStopwatch
                     this.RunOnMain(() =>
                     {
                         string ocrDisplayTime = t.Result;
+                        System.Diagnostics.Debug.WriteLine($"ocr - [{ocrDisplayTime}]");
+                        if (this.Model.IsOCRTimeMisread(ocrDisplayTime)) return;
 
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
@@ -668,13 +681,9 @@ namespace SkyStopwatch
                             }
                             else if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
                             {
-                                if (this.Model.IsOCRTimeMisread(ocrDisplayTime)) return;
-
-                                //this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime; //move the other place
-                                int delaySeconds = GlobalData.IsUsingScreenTopTime ? 1 : OCRGameTime.AutoOCRDelaySeconds;
-                                StartUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
+                                StartUIStopwatch(ocrDisplayTime, OCRGameTime.AutoOCRDelaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
                             }
-                            //else the same, the time of this read is a repeat read, the data is not fresh
+                            //else the same, the time of this read is a repeat read, no need to update
                         }
                         else if (this.Model.TimeAroundGameStart == DateTime.MinValue)
                         {

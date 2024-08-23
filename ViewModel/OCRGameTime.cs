@@ -32,23 +32,51 @@ namespace SkyStopwatch
 
         public const int TimerNapSeconds = 10;
         public const int TimerDisplayUIIntervalMS = 100;
-        public const int TimerAutoOCRFastIntervalMS = 600;
-        public const int TimerAutoOCRSlowIntervalMS = 30 * 1000;
 
+        public const int TimerAutoOCRFastIntervalMS = 800; // this value x 3 should less than 1000 (1 second)
+        public const int TimerAutoOCRSlowIntervalMS = 10 * 1000;
 
+        public const int SuccessLimit = 10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
+        public const int EmptyLimit = 30;
+        public const int FailParseLimit = 4;
          
         public int BootingArgs { get; set; } = 0;
         public string AutoOCRTimeOfLastRead { get; set; }
-        public DateTime TimeAroundGameStart { get; set; } = DateTime.MinValue;
-        public DateTime GameTimeLastUpdateTime { get; set; }
 
-        private int _SuccessAutoOCRTimeCount = 0;
+        private DateTime _TimeAroundGameStart;
+        public DateTime TimeAroundGameStart
+        {
+            get { return _TimeAroundGameStart; }
+            set
+            {
+                _TimeAroundGameStart = value;
+                _GameTimeLastUpdateTime = DateTime.Now;
+                _GameRemainingSeconds = (int)(_TimeAroundGameStart.AddMinutes(GlobalData.MaxScreenTopGameMinute) - _GameTimeLastUpdateTime).TotalSeconds;
+            }
+        }
+        private DateTime _GameTimeLastUpdateTime;
+        private int _GameRemainingSeconds;
+
+        private int _AutoOCRSuccessCount = 0;
+        private int _AutoOCREmptyInARowCount = 0;
+        private int _AutoOCRFailParseInARowCount = 0;
         public bool IsWithinOneGameRoundOrNap
         {
             get
             {
-                DateTime now = DateTime.Now;
-                return _SuccessAutoOCRTimeCount >= 3 || (now - this.GameTimeLastUpdateTime).TotalSeconds < TimerNapSeconds;
+                if (_AutoOCREmptyInARowCount > EmptyLimit) //total = 20 x auto-timer-fast-interval
+                {
+                    return false;
+                }
+
+                var sinceLastUpdate = DateTime.Now - _GameTimeLastUpdateTime;
+                if (sinceLastUpdate.TotalSeconds >= _GameRemainingSeconds)//600)//10)// 120) //leotodo, issue here, just manual reset after game end
+                {
+                    _AutoOCRSuccessCount = 0;
+                    return false;
+                }
+
+                return _AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < TimerNapSeconds;
             }
         }
 
@@ -63,7 +91,7 @@ namespace SkyStopwatch
         {
             if (GlobalData.IsUsingScreenTopTime)
             {
-                return new Rectangle(976, 210, 60, 60);
+                return new Rectangle(976, 216, 60, 60);
             }
 
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
@@ -121,8 +149,8 @@ namespace SkyStopwatch
                         //    timePartAdjust = "12" + timePartAdjust.Substring(2);
                         //}
 
-                        System.Diagnostics.Debug.WriteLine("regex line");
-                        System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        //System.Diagnostics.Debug.WriteLine("regex line");
+                        System.Diagnostics.Debug.WriteLine("-------------find------------");
                         System.Diagnostics.Debug.WriteLine(line);
                         System.Diagnostics.Debug.WriteLine(line6TimeParts);
                         System.Diagnostics.Debug.WriteLine(line6TimePartsAdjust);
@@ -163,28 +191,67 @@ namespace SkyStopwatch
         {
             if (!GlobalData.IsUsingScreenTopTime) return false;
 
+            if (string.IsNullOrWhiteSpace(ocrDisplayTime))
+            {
+                this._AutoOCREmptyInARowCount++;
+                this._AutoOCRFailParseInARowCount = 0;
+                if (_AutoOCREmptyInARowCount > EmptyLimit) 
+                {
+                    _AutoOCRSuccessCount = 0;
+                }
+                return false;
+            }
+
+            bool wasFoundEmptyOCR = _AutoOCREmptyInARowCount > 0;
+            this._AutoOCREmptyInARowCount = 0;
+             
+
             if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out TimeSpan ocrTimeSpan))
             {
-                DateTime now = DateTime.Now;
-                int offsetSeconds = 2;
-                ocrTimeSpan = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + offsetSeconds);
-
-                if (ocrTimeSpan < now - this.TimeAroundGameStart && (now - this.GameTimeLastUpdateTime).TotalSeconds < TimerNapSeconds + 20)
+                if (ocrTimeSpan.Minutes >= GlobalData.MaxGameRoundMinutes)
                 {
-                    System.Diagnostics.Debug.WriteLine($"--> ocr misread time: {ocrDisplayTime}, should NOT smaller than previuse: {this.AutoOCRTimeOfLastRead}");
-                    System.Diagnostics.Debug.WriteLine($"--> since game start: {now - this.TimeAroundGameStart}, since last update: {now - this.GameTimeLastUpdateTime}");
+                    return true;
+                }
+
+                var now = DateTime.Now;
+                var sinceGameStart = now - this._TimeAroundGameStart;
+                var sinceLastUpdate = now - this._GameTimeLastUpdateTime;
+
+                //coner case: sometimes, treat '2x' as '1x'(e.g. 23 as 13), ignore it
+                if (ocrTimeSpan.Minutes >= 10 && ocrTimeSpan.Minutes <= 19)
+                {
+                    if (sinceGameStart.Minutes >= 20 && wasFoundEmptyOCR)
+                    {
+                        return true;
+                    }
+                }
+
+                int napSecondsAdjust = TimerNapSeconds + 20;
+                var ocrTimeSpanAdjust = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + AutoOCRDelaySeconds + 3);
+               
+
+                if (ocrTimeSpanAdjust < sinceGameStart && (_AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < napSecondsAdjust))
+                {
+                    System.Diagnostics.Debug.WriteLine($"--> misread ocr time: {ocrDisplayTime}, should NOT < {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
+                    System.Diagnostics.Debug.WriteLine($"--> since game start: {sinceGameStart}, since last update: {sinceLastUpdate}");
                     return true;
                 }
                 else
                 {
-                    _SuccessAutoOCRTimeCount++;
-                    System.Diagnostics.Debug.WriteLine($"Success count: {_SuccessAutoOCRTimeCount}, ocr time: {ocrDisplayTime}");
+                    _AutoOCRSuccessCount++;
+                    System.Diagnostics.Debug.WriteLine($"success count: {_AutoOCRSuccessCount}, ocr time: {ocrDisplayTime}");
                 }
+
+                _AutoOCRFailParseInARowCount = 0;
             }
             else
             {
-                _SuccessAutoOCRTimeCount = 0;
-                System.Diagnostics.Debug.WriteLine("Reset success count, failed to parse：" + ocrDisplayTime);
+                _AutoOCRFailParseInARowCount++;
+                if (_AutoOCRFailParseInARowCount >= FailParseLimit)
+                {
+                    _AutoOCRSuccessCount = 0;
+                    System.Diagnostics.Debug.WriteLine("reset success count, failed to parse：" + ocrDisplayTime);
+                }
             }
 
             return false;
