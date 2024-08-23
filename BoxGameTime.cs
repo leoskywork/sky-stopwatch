@@ -602,7 +602,7 @@ namespace SkyStopwatch
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
 
-                if (GlobalData.IsUsingScreenTopTime && this.Model.IsWithinOneGameRoundOrNap)
+                if (GlobalData.Default.IsUsingScreenTopTime && this.Model.IsWithinOneGameRoundOrNap)
                 {
                     System.Diagnostics.Debug.WriteLine("auto refresh - within one round/nap, going to skip");
                     _IsAutoRefreshing = false;
@@ -641,7 +641,7 @@ namespace SkyStopwatch
                     {
                         System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
                         System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
-                        string tmpPath = OCRBase.SaveTmpFile($"game-time-top-{GlobalData.IsUsingScreenTopTime}", screenShotBytes);
+                        string tmpPath = OCRBase.SaveTmpFile($"game-time-top-{GlobalData.Default.IsUsingScreenTopTime}", screenShotBytes);
                         System.Diagnostics.Debug.WriteLine($"Tmp file: {tmpPath}");
                     }
 

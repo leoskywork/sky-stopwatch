@@ -65,10 +65,10 @@ namespace SkyStopwatch
 
            
 
-            this.checkBoxDebugging.Checked = GlobalData.Default.IsDebugging;
             this.checkBoxPopWarning.Checked = GlobalData.EnableCheckTimeNode;
             this.textBoxTimeSpanNodes.Text = GlobalData.TimeNodeCheckingList;
-            this.checkBoxReadTopTime.Checked = GlobalData.IsUsingScreenTopTime;
+            this.checkBoxDebugging.Checked = GlobalData.Default.IsDebugging;
+            this.checkBoxReadTopTime.Checked = GlobalData.Default.IsUsingScreenTopTime;
 
 
             if (GlobalData.Default.IsDebugging)
@@ -333,7 +333,7 @@ namespace SkyStopwatch
 
         private void checkBoxReadTopTime_CheckedChanged(object sender, EventArgs e)
         {
-            GlobalData.IsUsingScreenTopTime = this.checkBoxReadTopTime.Checked;
+            GlobalData.Default.IsUsingScreenTopTime = this.checkBoxReadTopTime.Checked;
         }
     }
 }

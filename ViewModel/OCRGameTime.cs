@@ -92,7 +92,7 @@ namespace SkyStopwatch
 
         public override Rectangle GetScreenBlock()
         {
-            if (GlobalData.IsUsingScreenTopTime)
+            if (GlobalData.Default.IsUsingScreenTopTime)
             {
                 return new Rectangle(976, 216, 60, 60);
             }
@@ -114,7 +114,7 @@ namespace SkyStopwatch
             if(string.IsNullOrWhiteSpace(data)) return string.Empty;
 
             //leotodo, a tmp fix, screen top time has 4 digits(not 6)
-            if (GlobalData.IsUsingScreenTopTime)
+            if (GlobalData.Default.IsUsingScreenTopTime)
             {
                 data = "00:" + data;
             }
@@ -192,7 +192,7 @@ namespace SkyStopwatch
 
         public bool IsOCRTimeMisread(string ocrDisplayTime)
         {
-            if (!GlobalData.IsUsingScreenTopTime) return false;
+            if (!GlobalData.Default.IsUsingScreenTopTime) return false;
 
             if (string.IsNullOrWhiteSpace(ocrDisplayTime))
             {

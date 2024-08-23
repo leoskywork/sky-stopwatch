@@ -214,5 +214,17 @@ namespace SkyStopwatch.Properties {
                 this["EnableBossCountingOneMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsUsingScreenTopTime {
+            get {
+                return ((bool)(this["IsUsingScreenTopTime"]));
+            }
+            set {
+                this["IsUsingScreenTopTime"] = value;
+            }
+        }
     }
 }

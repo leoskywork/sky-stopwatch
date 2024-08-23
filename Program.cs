@@ -57,6 +57,7 @@ namespace SkyStopwatch
             GlobalData.EnableCheckTimeNode = Properties.Settings.Default.EnableCheckTimeNode;
             GlobalData.Default.IsDebugging = Properties.Settings.Default.EnableDebugging;
             GlobalData.Default.EnableBossCountingOneMode = Properties.Settings.Default.EnableBossCountingOneMode;
+            GlobalData.Default.IsUsingScreenTopTime = Properties.Settings.Default.IsUsingScreenTopTime;
 
 
             OCRGameTime.XPoint = Properties.Settings.Default.TimeViewPoint.X;
@@ -105,6 +106,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.EnableCheckTimeNode = GlobalData.EnableCheckTimeNode;
                 Properties.Settings.Default.EnableDebugging = GlobalData.Default.IsDebugging;
                 Properties.Settings.Default.EnableBossCountingOneMode = GlobalData.Default.EnableBossCountingOneMode;
+                Properties.Settings.Default.IsUsingScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(OCRGameTime.XPoint, OCRGameTime.YPoint);
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);

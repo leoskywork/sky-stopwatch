@@ -80,6 +80,8 @@ namespace SkyStopwatch
 
         public int ScreenShotSeedBossCall { get; set; } = 1;
 
+        public bool IsUsingScreenTopTime { get; set; } = true;
+
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
         //public static bool IsDebugging { get; set; } = false; //moved to global data
@@ -92,7 +94,6 @@ namespace SkyStopwatch
 
         public static List<string> ProcessList { get;} = new List<string>();
 
-        public static bool IsUsingScreenTopTime { get; set; } = true;
 
         private GlobalData() { }
 
