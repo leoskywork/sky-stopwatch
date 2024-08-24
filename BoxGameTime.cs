@@ -305,9 +305,23 @@ namespace SkyStopwatch
             {
                 int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
 
-                if (ocrTimeSpan.TotalMinutes > GlobalData.PreRoundGameMinutes)
+                if (GlobalData.Default.IsUsingScreenTopTime)
                 {
-                    passedSeconds = 0;
+                    if (ocrTimeSpan.TotalMinutes > GlobalData.MaxScreenTopGameMinute)
+                    {
+                        passedSeconds = 0;
+                    }
+                }
+                else
+                {
+                    if (ocrTimeSpan.TotalMinutes > GlobalData.PreRoundGameMinutes)
+                    {
+                        passedSeconds = 0;
+                    }
+                    else
+                    {
+                        passedSeconds -= 18;
+                    }
                 }
 
                 this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime;
