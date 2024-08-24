@@ -53,6 +53,7 @@ namespace SkyStopwatch
             this.labelTimer.Text = "unset";
             this.timerMain.Interval = OCRGameTime.TimerDisplayUIIntervalMS;
             this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
+            this.Text = $"SSW-V{GlobalData.Version}";
 
             //do the following in form_loaded
             //InitGUILayoutV1();
