@@ -30,15 +30,16 @@ namespace SkyStopwatch
         public const int NewGameDelaySeconds = 1;//10;
         public const int NoDelay = 0;
 
-        public const int TimerNapSeconds = 10;
         public const int TimerDisplayUIIntervalMS = 100;
 
         public const int TimerAutoOCRFastIntervalMS = 800; // this value x 3 should less than 1000 (1 second)
         public const int TimerAutoOCRSlowIntervalMS = 10 * 1000;
 
-        public const int SuccessLimit = 8;//10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
+        public const int TimerNapSeconds = 2;//10; //ensure nap x successlimit > 1 minute
+        public const int SuccessLimit = 20;//8;//10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
         public const int EmptyLimit = 30;
         public const int FailParseLimit = 3;
+        public const int MisreadLimit = 50;
          
         public int BootingArgs { get; set; } = 0;
         public string AutoOCRTimeOfLastRead { get; set; }
@@ -57,9 +58,11 @@ namespace SkyStopwatch
         private DateTime _GameTimeLastUpdateTime;
         private int _GameRemainingSeconds;
 
+        //leotodo, a better way to do this is using enum instead of 4 countsl
         private int _AutoOCRSuccessCount = 0;
         private int _AutoOCREmptyInARowCount = 0;
         private int _AutoOCRFailParseInARowCount = 0;
+        private int _AutoOCRMisreadInARowCount = 0;
         public bool IsWithinOneGameRoundOrNap
         {
             get
@@ -190,6 +193,7 @@ namespace SkyStopwatch
         }
 
 
+        //leotodo, a better way to do this is using enum instead of 4 counts
         public bool IsOCRTimeMisread(string ocrDisplayTime)
         {
             if (!GlobalData.Default.IsUsingScreenTopTime) return false;
@@ -237,11 +241,23 @@ namespace SkyStopwatch
                 {
                     System.Diagnostics.Debug.WriteLine($"--> misread ocr time: {ocrDisplayTime}, should NOT less than {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
                     System.Diagnostics.Debug.WriteLine($"--> since game start: {sinceGameStart}, since last update: {sinceLastUpdate}");
-                    return true;
+                    _AutoOCRMisreadInARowCount++;
+
+                    if(_AutoOCRMisreadInARowCount < MisreadLimit)
+                    {
+                        return true;
+                    }
+                    else //so manny misread, possiblily a correct read, and the last success read is a misread
+                    {
+                        _AutoOCRMisreadInARowCount = 0;
+                        _AutoOCRSuccessCount = 0;
+                        _GameRemainingSeconds = 0;
+                    }
                 }
                 else
                 {
                     _AutoOCRSuccessCount++;
+                    _AutoOCRMisreadInARowCount = 0;
                     System.Diagnostics.Debug.WriteLine($"success count: {_AutoOCRSuccessCount}, ocr time: {ocrDisplayTime}");
                 }
 
@@ -270,6 +286,7 @@ namespace SkyStopwatch
             _AutoOCRSuccessCount = 0;
             _AutoOCREmptyInARowCount = 0;
             _AutoOCRFailParseInARowCount = 0;
+            _AutoOCRMisreadInARowCount= 0;
         }
 
     }

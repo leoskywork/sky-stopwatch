@@ -245,7 +245,11 @@ namespace SkyStopwatch
                 //leotodo, improve this, just center it now
                 //can not do it by binding Location to app config file property
                 //cause issue when show 2 popup box(boss counting and game time) at the same time
-                bossCountingBox.StartPosition = FormStartPosition.CenterScreen;
+                //bossCountingBox.StartPosition = FormStartPosition.CenterScreen;
+
+                var center = new Point(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
+                bossCountingBox.StartPosition = FormStartPosition.Manual;
+                bossCountingBox.Location = new Point(center.X + 200, center.Y - 350);
             }
             else
             {
