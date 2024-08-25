@@ -36,7 +36,7 @@ namespace SkyStopwatch
         public const int TimerAutoOCRSlowIntervalMS = 10 * 1000;
 
         public const int TimerAutoOCRPreGameFastIntervalMS = 1000;
-        public const int TimerAutoOCRPreGameSlowIntervalMS = 3000;
+        public const int TimerAutoOCRPreGameSlowIntervalMS = 4 * 1000;//3000;
 
         public const int TimerNapSeconds = 2;//10; //ensure nap x successlimit > 1 minute
         public const int SuccessLimit = 20;//8;//10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row

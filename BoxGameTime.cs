@@ -720,7 +720,11 @@ namespace SkyStopwatch
                             {
                                 StartUIStopwatch(ocrDisplayTime, OCRGameTime.AutoOCRDelaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
                             }
-                            //else the same, the time of this read is a repeat read, no need to update
+                            else
+                            {
+                                //the same, the time of this read is a repeat read, no need to update
+                                System.Diagnostics.Debug.WriteLine($"same as last: {ocrDisplayTime}");
+                            }
                         }
                         else if (this.Model.TimeAroundGameStart == DateTime.MinValue)
                         {
