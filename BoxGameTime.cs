@@ -331,15 +331,17 @@ namespace SkyStopwatch
                 }
                 else
                 {
-                    const int magicSeconds = 20;
-
                     if (ocrTimeSpan.TotalMinutes > GlobalData.PreRoundGameMinutes)
                     {
                         passedSeconds = 0;
                     }
-                    else if(passedSeconds > magicSeconds)
+                    else if (source == GlobalData.ChangeTimeSourceTimerOCR)
                     {
-                        passedSeconds -= magicSeconds - OCRGameTime.AutoOCRDelaySeconds;
+                        const int magicSeconds = 20 - OCRGameTime.AutoOCRDelaySeconds;
+                        if (passedSeconds > magicSeconds)
+                        {
+                            passedSeconds -= magicSeconds;
+                        }
                     }
                 }
 
