@@ -123,6 +123,7 @@
       <DependentUpon>BoxPhaseBossWarning.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
+    <Compile Include="ViewModel\OCRGameTimeTimerKind.cs" />
     <Compile Include="ViewModel\ViewModelFactory.cs" />
     <Compile Include="ViewModel\OCRBase.cs" />
     <Compile Include="BoxGameTime.cs">

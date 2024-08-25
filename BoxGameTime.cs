@@ -85,6 +85,23 @@ namespace SkyStopwatch
             });
         }
 
+        public void SetDefaultLocation(IPopupBox parent)
+        {
+            this.StartPosition = FormStartPosition.Manual;
+
+            if (parent != null)
+            {
+                this.Location = new Point(parent.Location.X, parent.Location.Y + 40);
+            }
+            else
+            {
+                var center = new Point(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
+                //this.Location = new Point(center.X - 240, center.Y - 370); //right blow top mini time
+                //this.Location = new Point(center.X - 356, center.Y - 398); //ahead top mini time
+                this.Location = new Point(center.X + 256, center.Y - 390); //tail top mini time
+            }
+        }
+
         private void InitGUILayoutV1()
         {
             //shrink width when hide ocr button
@@ -314,13 +331,15 @@ namespace SkyStopwatch
                 }
                 else
                 {
+                    const int magicSeconds = 20;
+
                     if (ocrTimeSpan.TotalMinutes > GlobalData.PreRoundGameMinutes)
                     {
                         passedSeconds = 0;
                     }
-                    else
+                    else if(passedSeconds > magicSeconds)
                     {
-                        passedSeconds -= 18;
+                        passedSeconds -= magicSeconds - OCRGameTime.AutoOCRDelaySeconds;
                     }
                 }
 
@@ -626,16 +645,10 @@ namespace SkyStopwatch
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
 
-                if (GlobalData.Default.IsUsingScreenTopTime && this.Model.IsWithinOneGameRoundOrNap)
-                {
-                    System.Diagnostics.Debug.WriteLine("auto refresh - within one round/nap, going to skip");
+                var intervalKind = SetTimerInterval();
+                if (intervalKind  == OCRGameTimeTimerKind.InGameMiniTopTimeSlow){
                     _IsAutoRefreshing = false;
-                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
                     return;
-                }
-                else
-                {
-                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
                 }
 
                 Task.Factory.StartNew(() =>
@@ -724,6 +737,51 @@ namespace SkyStopwatch
             {
                 this.OnError(ex);
                 //buttonOCR.Enabled = true;
+            }
+        }
+
+        private OCRGameTimeTimerKind SetTimerInterval()
+        {
+            if (GlobalData.Default.IsUsingScreenTopTime)
+            {
+                if (this.Model.IsWithinOneGameRoundOrNap)
+                {
+                    System.Diagnostics.Debug.WriteLine("auto refresh - within one round/nap, going to skip");
+                    _IsAutoRefreshing = false;
+                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
+                    return OCRGameTimeTimerKind.InGameMiniTopTimeSlow;
+                }
+                else
+                {
+                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
+                    return OCRGameTimeTimerKind.InGameMiniTopTimeFast;
+                }
+            }
+            else
+            {
+                bool fastPreGame = false;
+
+                if (this.Model.TimeAroundGameStart == DateTime.MinValue || this.Model.GameRemainingSeconds < 60 * 4)
+                {
+                    fastPreGame = true;
+                }
+                else
+                {
+                    var passed = DateTime.Now - this.Model.TimeAroundGameStart;
+                    if (passed.Minutes >= 10 && passed.Minutes <= 13 || passed.Minutes >= 20 && passed.Minutes <= 23)
+                    {
+                        fastPreGame = true;
+                    }
+                }
+
+                if (fastPreGame)
+                {
+                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRPreGameFastIntervalMS;
+                    return OCRGameTimeTimerKind.PreGameTimeFast;
+                }
+
+                this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRPreGameSlowIntervalMS;
+                return OCRGameTimeTimerKind.PreGameTimeSlow;
             }
         }
 

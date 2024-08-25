@@ -35,6 +35,9 @@ namespace SkyStopwatch
         public const int TimerAutoOCRFastIntervalMS = 800; // this value x 3 should less than 1000 (1 second)
         public const int TimerAutoOCRSlowIntervalMS = 10 * 1000;
 
+        public const int TimerAutoOCRPreGameFastIntervalMS = 1000;
+        public const int TimerAutoOCRPreGameSlowIntervalMS = 3000;
+
         public const int TimerNapSeconds = 2;//10; //ensure nap x successlimit > 1 minute
         public const int SuccessLimit = 20;//8;//10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
         public const int EmptyLimit = 30;
@@ -57,6 +60,7 @@ namespace SkyStopwatch
         }
         private DateTime _GameTimeLastUpdateTime;
         private int _GameRemainingSeconds;
+        public int GameRemainingSeconds {  get { return _GameRemainingSeconds; } }
 
         //leotodo, a better way to do this is using enum instead of 4 countsl
         private int _AutoOCRSuccessCount = 0;

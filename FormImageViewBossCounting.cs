@@ -263,10 +263,9 @@ namespace SkyStopwatch
             if (GlobalData.Default.EnableBossCountingGameTime)
             {
                 var gameTime = new BoxGameTime((int)PopupBoxTheme.ThinOCRTime);
-                gameTime.StartPosition = FormStartPosition.Manual;
-                gameTime.Location = new Point(bossCountingBox.Location.X, bossCountingBox.Location.Y + 40);
-                gameTime.Show();
+                gameTime.SetDefaultLocation(bossCountingBox);
                 GlobalData.Default.AddLongLivePopup(gameTime);
+                gameTime.Show();
             }
         }
 
