@@ -11,8 +11,8 @@ namespace SkyStopwatch
 {
     public class GlobalData
     {
-        public const string Version = "1.6";//"4.2.1.240808";
-        public const string Subversion = "1.240825";
+        public const string Version = "1.7";
+        public const string Subversion = "1.240827";
         public const string ChangeTimeSourceOCRTimeIsNegativeOne = "ocrDisplayTime is -1";
         public const string ChangeTimeSourceClearButton = "OnClearOCR";
         public const string ChangeTimeSourceManualOCRButton = "ManualOCR";
