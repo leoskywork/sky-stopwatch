@@ -337,10 +337,11 @@ namespace SkyStopwatch
                     }
                     else if (source == GlobalData.ChangeTimeSourceTimerOCR)
                     {
-                        const int magicSeconds = 20 - OCRGameTime.AutoOCRDelaySeconds;
-                        if (passedSeconds > magicSeconds)
+                        const int magicSecond = 20 - OCRGameTime.AutoOCRDelaySeconds;
+                        const int magicSecondLimit = 5;
+                        if (passedSeconds > magicSecondLimit)
                         {
-                            passedSeconds -= magicSeconds;
+                            passedSeconds -= magicSecond;
                         }
                     }
                 }
