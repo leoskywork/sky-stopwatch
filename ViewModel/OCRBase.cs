@@ -269,13 +269,15 @@ namespace SkyStopwatch
 
                     string exePath = Assembly.GetExecutingAssembly().Location;
                     string exeDirectory = Path.GetDirectoryName(exePath);
-                    string subFolder = Path.Combine(exeDirectory, "config");
+                    string subFolder = Path.Combine(exeDirectory, "ocr");
 
                     if (Directory.Exists(subFolder))
                     {
                         _ocrConfigFolder = subFolder;
                     }
                 }
+
+                System.Diagnostics.Debug.WriteLine($"--> going to use ocr config file in {_ocrConfigFolder}");
             }
 
             var engine = new Tesseract.TesseractEngine(_ocrConfigFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
