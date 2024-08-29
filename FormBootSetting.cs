@@ -219,7 +219,7 @@ namespace SkyStopwatch
 
         private void SetDialogTitle()
         {
-            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTessdataFolder}" : $"Auto close in {this.timerAutoClose.Interval/1000}s";
+            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {this.timerAutoClose.Interval/1000}s";
             this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion}";
         }
 

@@ -94,7 +94,7 @@ namespace SkyStopwatch
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            return OCRBase.GetOCREngine("0123456789:oO");
+            return GetOCREngineWith("0123456789:oO");
         }
 
         public override Rectangle GetScreenBlock()

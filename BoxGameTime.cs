@@ -82,6 +82,12 @@ namespace SkyStopwatch
                         }
                     }, GlobalData.ChangeTimeSourcePreWarmUp);
                 }));
+            }).ContinueWith(task =>
+            {
+                if (task.IsFaulted)
+                {
+                    this.OnError(task.Exception);
+                }
             });
         }
 

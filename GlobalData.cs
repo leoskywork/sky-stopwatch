@@ -30,7 +30,7 @@ namespace SkyStopwatch
 
         public const string OCRLanguage = "eng"; //chi_sim;
         //public const string tessdataFolder = @"C:\Dev\VS2022\SkyStopwatch\Tesseract-OCR\tessdata\";
-        public const string OCRTessdataFolder = @"C:\Dev\OCR\";
+        public const string OCRTesseractDataFolder = @"C:\Dev\OCR\";
 
         public const string PopupKeyBossCount = "pop-up-boss-call-no";
         public const string PopupKeyBossCountSuccinct = "pop-up-boss-call-one-mode";

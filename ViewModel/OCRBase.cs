@@ -26,6 +26,8 @@ namespace SkyStopwatch
         public const int MinBlockWidth = 10;
         public const int MinBlockHeight = 10;
 
+        private string _ocrConfigFolder;
+
         public static void PrintScreenAsFile(string path)
         {
             if (string.IsNullOrWhiteSpace(path)) throw new ArgumentNullException("path");
@@ -255,9 +257,28 @@ namespace SkyStopwatch
         }
 
 
-        public static Tesseract.TesseractEngine GetOCREngine(string allowChars)
+        public Tesseract.TesseractEngine GetOCREngineWith(string allowChars)
         {
-            var engine = new Tesseract.TesseractEngine(GlobalData.OCRTessdataFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
+            if (string.IsNullOrEmpty(_ocrConfigFolder))
+            {
+                _ocrConfigFolder = GlobalData.OCRTesseractDataFolder;
+
+                if (!Directory.Exists(_ocrConfigFolder) || Directory.GetFiles(_ocrConfigFolder, "*", SearchOption.AllDirectories).Length == 0)
+                {
+                    //check the exe file folder if no config file found in the preset folder
+
+                    string exePath = Assembly.GetExecutingAssembly().Location;
+                    string exeDirectory = Path.GetDirectoryName(exePath);
+                    string subFolder = Path.Combine(exeDirectory, "config");
+
+                    if (Directory.Exists(subFolder))
+                    {
+                        _ocrConfigFolder = subFolder;
+                    }
+                }
+            }
+
+            var engine = new Tesseract.TesseractEngine(_ocrConfigFolder, GlobalData.OCRLanguage, Tesseract.EngineMode.Default);
 
             //in case the number got blocked by other images?? so try to recognise multi digits here ??
             engine.SetVariable("tessedit_char_whitelist", allowChars); //only look for pre-set chars for speed up

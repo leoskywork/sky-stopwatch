@@ -207,19 +207,36 @@ namespace SkyStopwatch
     {
         public static void OnError(this Form form, Exception e)
         {
-            System.Diagnostics.Debug.WriteLine(e.ToString());
+            string message;
 
             if (GlobalData.Default.IsDebugging)
             {
-                MessageBox.Show(e.ToString());
+                message = GetAggregateMessage(e, true);
+                System.Diagnostics.Debug.WriteLine(e.ToString());
             }
             else
             {
-                MessageBox.Show(e.Message);
+                message = GetAggregateMessage(e, false);
+            }
 
-                form.RunOnMain(() => GlobalData.Default.FireCloseApp());
+            form.RunOnMain(() => MessageBox.Show(message));
+            form.RunOnMain(() => GlobalData.Default.FireCloseApp(), 1000);
+        }
+
+        public static string GetAggregateMessage(Exception e, bool hasDetail)
+        {
+            var ae = e as AggregateException;
+
+            if (ae != null)
+            {
+                return $"Multi errors: {(hasDetail ? string.Join(",", ae.InnerExceptions) : string.Join(",", ae.InnerExceptions.Select(aei => aei.Message)))}";
+            }
+            else
+            {
+                return hasDetail ? e.ToString() : e.Message;
             }
         }
+       
 
         public static bool IsDead(this Form form)
         {

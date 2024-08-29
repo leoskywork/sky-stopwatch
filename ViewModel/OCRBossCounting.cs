@@ -39,7 +39,7 @@ namespace SkyStopwatch
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
-            return OCRBase.GetOCREngine("0123456789oO"); //only look for pre-set chars for speed up
+            return GetOCREngineWith("0123456789oO"); //only look for pre-set chars for speed up
         }
 
         public TinyScreenShotBossCall GetFixedLocationImageDataPair(bool includeAUX)
