@@ -325,7 +325,7 @@
             // 
             this.labelTip.AutoSize = true;
             this.labelTip.ForeColor = System.Drawing.Color.Red;
-            this.labelTip.Location = new System.Drawing.Point(622, 320);
+            this.labelTip.Location = new System.Drawing.Point(626, 318);
             this.labelTip.Name = "labelTip";
             this.labelTip.Size = new System.Drawing.Size(319, 15);
             this.labelTip.TabIndex = 113;
