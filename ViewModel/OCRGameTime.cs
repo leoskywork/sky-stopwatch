@@ -25,6 +25,17 @@ namespace SkyStopwatch
         public static int BlockWidth = 140;
         public static int BlockHeight = 30;
 
+        public static int Preset1XPoint = 0;
+        public static int Preset1YPoint = 0;
+        public static int Preset1BlockWidth = 100;
+        public static int Preset1BlockHeight = 100;
+
+        public static int Preset2XPoint = 0;
+        public static int Preset2YPoint = 0;
+        public static int Preset2BlockWidth = 100;
+        public static int Preset2BlockHeight = 100;
+
+
         public const int ManualOCRDelaySeconds = 10;
         public const int AutoOCRDelaySeconds = 2;
         public const int NewGameDelaySeconds = 1;//10;

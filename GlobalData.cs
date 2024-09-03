@@ -144,12 +144,15 @@ namespace SkyStopwatch
     public class ChangeAppConfigEventArgs : EventArgs
     {
         public string Source { get; set; }
+
+        public string Detail { get; set; }
         public bool SaveRightNow { get; set; }
 
-        public ChangeAppConfigEventArgs(string source, bool saveRightNow)
+        public ChangeAppConfigEventArgs(string source, bool saveRightNow, string detail)
         {
             this.Source = source;
             this.SaveRightNow = saveRightNow;
+            this.Detail = detail;
         }
     }
 

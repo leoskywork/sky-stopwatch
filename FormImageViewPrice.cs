@@ -59,7 +59,7 @@ namespace SkyStopwatch
                 OCRPrice.BlockWidth = width;
                 OCRPrice.BlockHeight = height;
 
-                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save"));
             }
             catch (Exception ex)
             {

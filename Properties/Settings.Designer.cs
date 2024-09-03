@@ -226,5 +226,53 @@ namespace SkyStopwatch.Properties {
                 this["IsUsingScreenTopTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10, 10")]
+        public global::System.Drawing.Point TimeViewPreset1Point {
+            get {
+                return ((global::System.Drawing.Point)(this["TimeViewPreset1Point"]));
+            }
+            set {
+                this["TimeViewPreset1Point"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size TimeViewPreset1Size {
+            get {
+                return ((global::System.Drawing.Size)(this["TimeViewPreset1Size"]));
+            }
+            set {
+                this["TimeViewPreset1Size"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20, 20")]
+        public global::System.Drawing.Point TimeViewPreset2Point {
+            get {
+                return ((global::System.Drawing.Point)(this["TimeViewPreset2Point"]));
+            }
+            set {
+                this["TimeViewPreset2Point"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100, 100")]
+        public global::System.Drawing.Size TimeViewPreset2Size {
+            get {
+                return ((global::System.Drawing.Size)(this["TimeViewPreset2Size"]));
+            }
+            set {
+                this["TimeViewPreset2Size"] = value;
+            }
+        }
     }
 }

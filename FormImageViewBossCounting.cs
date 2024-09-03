@@ -90,7 +90,7 @@ namespace SkyStopwatch
                 OCRBossCounting.EnableAutoSlice = this.checkBoxAutoSlice.Checked;
                 OCRBossCounting.AutoSliceIntervalSeconds = (int)this.numericUpDownAutoSliceIntervalSeconds.Value;
 
-                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save"));
 
                 this.buttonStart.Enabled = true;
             }

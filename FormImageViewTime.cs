@@ -18,12 +18,29 @@ namespace SkyStopwatch
         {
             InitializeComponent();
 
+            ReadPreviewArgsFromViewModel();
+            ReadPresetsFromViewModel(true, true);
+        }
 
-            var screen = Screen.PrimaryScreen.Bounds;
+        private void ReadPreviewArgsFromViewModel()
+        {
             this.numericUpDownX.Value = OCRGameTime.XPoint;
             this.numericUpDownY.Value = OCRGameTime.YPoint;
             this.numericUpDownWidth.Value = OCRGameTime.BlockWidth;
             this.numericUpDownHeight.Value = OCRGameTime.BlockHeight;
+        }
+
+        private void ReadPresetsFromViewModel(bool preset1, bool preset2)
+        {
+            if (preset1)
+            {
+                this.labelPreset1.Text = $"({OCRGameTime.Preset1XPoint},{OCRGameTime.Preset1YPoint}) {OCRGameTime.Preset1BlockWidth}*{OCRGameTime.Preset1BlockHeight}";
+            }
+
+            if (preset2)
+            {
+                this.labelPreset2.Text = $"({OCRGameTime.Preset2XPoint},{OCRGameTime.Preset2YPoint}) {OCRGameTime.Preset2BlockWidth}*{OCRGameTime.Preset2BlockHeight}";
+            }
         }
 
 
@@ -33,20 +50,14 @@ namespace SkyStopwatch
             {
                 this.buttonSave.Enabled = false;
 
-                int x = (int)this.numericUpDownX.Value;
-                int y = (int)this.numericUpDownY.Value;
-                int width = (int)this.numericUpDownWidth.Value;
-                int height = (int)this.numericUpDownHeight.Value;
-                
-                OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
-
+                ReadInputArgs(out int x, out int y, out int width, out int height);
                 //MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
                 //MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
                 OCRGameTime.XPoint = x; 
                 OCRGameTime.YPoint = y;
                 OCRGameTime.BlockWidth = width;
                 OCRGameTime.BlockHeight = height;
-                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true));
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save"));
                 this.Close();
             }
             catch (Exception ex)
@@ -131,5 +142,77 @@ namespace SkyStopwatch
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
 
         }
+
+        private void buttonApplyPreset1_Click(object sender, EventArgs e)
+        {
+            this.DisableButtonShortTime(this.buttonApplyPreset1);
+            this.numericUpDownX.Value = OCRGameTime.Preset1XPoint;
+            this.numericUpDownY.Value = OCRGameTime.Preset1YPoint;
+            this.numericUpDownWidth.Value = OCRGameTime.Preset1BlockWidth;
+            this.numericUpDownHeight.Value = OCRGameTime.Preset1BlockHeight;
+            this.TryUpdateImage(nameof(buttonApplyPreset1_Click));
+        }
+
+        private void buttonApplyPreset2_Click(object sender, EventArgs e)
+        {
+            this.DisableButtonShortTime(this.buttonApplyPreset2);
+            this.numericUpDownX.Value = OCRGameTime.Preset2XPoint;
+            this.numericUpDownY.Value = OCRGameTime.Preset2YPoint;
+            this.numericUpDownWidth.Value = OCRGameTime.Preset2BlockWidth;
+            this.numericUpDownHeight.Value = OCRGameTime.Preset2BlockHeight;
+            this.TryUpdateImage(nameof(buttonApplyPreset2_Click));
+        }
+
+        private void buttonSetAsPreset1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.DisableButtonShortTime(this.buttonSetAsPreset1);
+
+                ReadInputArgs(out int x, out int y, out int width, out int height);
+                OCRGameTime.Preset1XPoint = x;
+                OCRGameTime.Preset1YPoint = y;
+                OCRGameTime.Preset1BlockWidth = width;
+                OCRGameTime.Preset1BlockHeight = height;
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save as preset 1"));
+                ReadPresetsFromViewModel(true, false);
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
+        }
+
+        private void buttonSetAsPreset2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.DisableButtonShortTime(this.buttonSetAsPreset2);
+
+                ReadInputArgs(out int x, out int y, out int width, out int height);
+                OCRGameTime.Preset2XPoint = x;
+                OCRGameTime.Preset2YPoint = y;
+                OCRGameTime.Preset2BlockWidth = width;
+                OCRGameTime.Preset2BlockHeight = height;
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save as preset 2"));
+                ReadPresetsFromViewModel(false, true);
+            }
+            catch (Exception ex)
+            {
+                this.OnError(ex);
+            }
+        }
+
+
+        private void ReadInputArgs(out int x, out int y, out int width, out int height)
+        {
+            x = (int)this.numericUpDownX.Value;
+            y = (int)this.numericUpDownY.Value;
+            width = (int)this.numericUpDownWidth.Value;
+            height = (int)this.numericUpDownHeight.Value;
+
+            OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
+        }
+
     }
 }

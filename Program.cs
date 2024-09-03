@@ -36,7 +36,7 @@ namespace SkyStopwatch
                 if (e.SaveRightNow)
                 {
                     SaveAppConfig();
-                    System.Diagnostics.Debug.WriteLine($"saved app.config for {e.Source}");
+                    System.Diagnostics.Debug.WriteLine($"saved app.config for {e.Source}, detail: {e.Detail}");
                 }
             };
 
@@ -65,6 +65,18 @@ namespace SkyStopwatch
             OCRGameTime.BlockWidth = Properties.Settings.Default.TimeViewSize.Width;
             OCRGameTime.BlockHeight = Properties.Settings.Default.TimeViewSize.Height;
 
+            OCRGameTime.Preset1XPoint = Properties.Settings.Default.TimeViewPreset1Point.X;
+            OCRGameTime.Preset1YPoint = Properties.Settings.Default.TimeViewPreset1Point.Y;
+            OCRGameTime.Preset1BlockWidth = Properties.Settings.Default.TimeViewPreset1Size.Width;
+            OCRGameTime.Preset1BlockHeight = Properties.Settings.Default.TimeViewPreset1Size.Height;
+
+            OCRGameTime.Preset2XPoint = Properties.Settings.Default.TimeViewPreset2Point.X;
+            OCRGameTime.Preset2YPoint = Properties.Settings.Default.TimeViewPreset2Point.Y;
+            OCRGameTime.Preset2BlockWidth = Properties.Settings.Default.TimeViewPreset2Size.Width;
+            OCRGameTime.Preset2BlockHeight = Properties.Settings.Default.TimeViewPreset2Size.Height;
+
+
+
             OCRPrice.XPoint = Properties.Settings.Default.PriceViewPoint.X;
             OCRPrice.YPoint = Properties.Settings.Default.PriceViewPoint.Y;
             OCRPrice.BlockWidth = Properties.Settings.Default.PriceViewSize.Width;
@@ -83,8 +95,14 @@ namespace SkyStopwatch
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
             OCRGameTime.XPoint = Math.Min(OCRGameTime.XPoint, screenRect.Width - OCRGameTime.BlockWidth);
             OCRGameTime.YPoint = Math.Min(OCRGameTime.YPoint, screenRect.Height - OCRGameTime.BlockHeight);
+            OCRGameTime.Preset1XPoint = Math.Min(OCRGameTime.Preset1XPoint, screenRect.Width - OCRGameTime.Preset1BlockWidth);
+            OCRGameTime.Preset1YPoint = Math.Min(OCRGameTime.Preset1YPoint, screenRect.Height - OCRGameTime.Preset1BlockHeight);
+            OCRGameTime.Preset2XPoint = Math.Min(OCRGameTime.Preset2XPoint, screenRect.Width - OCRGameTime.Preset2BlockWidth);
+            OCRGameTime.Preset2YPoint = Math.Min(OCRGameTime.Preset2YPoint, screenRect.Height - OCRGameTime.Preset2BlockHeight);
+
             OCRPrice.XPoint = Math.Min(OCRPrice.XPoint, screenRect.Width - OCRPrice.BlockWidth);
             OCRPrice.YPoint = Math.Min(OCRPrice.YPoint, screenRect.Height - OCRPrice.BlockHeight);
+
             OCRBossCounting.XPoint = Math.Min(OCRBossCounting.XPoint, screenRect.Width - OCRBossCounting.BlockWidth);
             OCRBossCounting.YPoint = Math.Min(OCRBossCounting.YPoint, screenRect.Height - OCRBossCounting.BlockHeight);
 
@@ -110,6 +128,10 @@ namespace SkyStopwatch
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(OCRGameTime.XPoint, OCRGameTime.YPoint);
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
+                Properties.Settings.Default.TimeViewPreset1Point = new System.Drawing.Point(OCRGameTime.Preset1XPoint, OCRGameTime.Preset1YPoint);
+                Properties.Settings.Default.TimeViewPreset1Size = new System.Drawing.Size(OCRGameTime.Preset1BlockWidth, OCRGameTime.Preset1BlockHeight);
+                Properties.Settings.Default.TimeViewPreset2Point = new System.Drawing.Point(OCRGameTime.Preset2XPoint, OCRGameTime.Preset2YPoint);
+                Properties.Settings.Default.TimeViewPreset2Size = new System.Drawing.Size(OCRGameTime.Preset2BlockWidth, OCRGameTime.Preset2BlockHeight);
 
                 Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(OCRPrice.XPoint, OCRPrice.YPoint);
                 Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(OCRPrice.BlockWidth, OCRPrice.BlockHeight);

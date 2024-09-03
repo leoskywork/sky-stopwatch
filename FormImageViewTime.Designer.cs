@@ -41,11 +41,21 @@
             this.labelHeight = new System.Windows.Forms.Label();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.groupBoxPresetLocation = new System.Windows.Forms.GroupBox();
+            this.buttonApplyPreset2 = new System.Windows.Forms.Button();
+            this.buttonApplyPreset1 = new System.Windows.Forms.Button();
+            this.labelPreset2 = new System.Windows.Forms.Label();
+            this.labelPreset1 = new System.Windows.Forms.Label();
+            this.labelPreset2Title = new System.Windows.Forms.Label();
+            this.labelPreset1Title = new System.Windows.Forms.Label();
+            this.buttonSetAsPreset1 = new System.Windows.Forms.Button();
+            this.buttonSetAsPreset2 = new System.Windows.Forms.Button();
+            this.labelTip = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
+            this.groupBoxPresetLocation.SuspendLayout();
             this.SuspendLayout();
             // 
             // labelSize
@@ -70,7 +80,7 @@
             // 
             this.buttonSave.Enabled = false;
             this.buttonSave.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonSave.Location = new System.Drawing.Point(630, 694);
+            this.buttonSave.Location = new System.Drawing.Point(625, 694);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(80, 30);
             this.buttonSave.TabIndex = 20;
@@ -218,18 +228,117 @@
             // 
             // groupBoxPresetLocation
             // 
-            this.groupBoxPresetLocation.Location = new System.Drawing.Point(639, 67);
+            this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset2);
+            this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset1);
+            this.groupBoxPresetLocation.Controls.Add(this.labelPreset2);
+            this.groupBoxPresetLocation.Controls.Add(this.labelPreset1);
+            this.groupBoxPresetLocation.Controls.Add(this.labelPreset2Title);
+            this.groupBoxPresetLocation.Controls.Add(this.labelPreset1Title);
+            this.groupBoxPresetLocation.Location = new System.Drawing.Point(625, 67);
             this.groupBoxPresetLocation.Name = "groupBoxPresetLocation";
-            this.groupBoxPresetLocation.Size = new System.Drawing.Size(311, 290);
+            this.groupBoxPresetLocation.Size = new System.Drawing.Size(345, 237);
             this.groupBoxPresetLocation.TabIndex = 109;
             this.groupBoxPresetLocation.TabStop = false;
-            this.groupBoxPresetLocation.Text = "Locations";
+            this.groupBoxPresetLocation.Text = "Location Presets";
             // 
-            // FormImageView
+            // buttonApplyPreset2
+            // 
+            this.buttonApplyPreset2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonApplyPreset2.Location = new System.Drawing.Point(219, 176);
+            this.buttonApplyPreset2.Name = "buttonApplyPreset2";
+            this.buttonApplyPreset2.Size = new System.Drawing.Size(103, 30);
+            this.buttonApplyPreset2.TabIndex = 112;
+            this.buttonApplyPreset2.Text = "Apply";
+            this.buttonApplyPreset2.UseVisualStyleBackColor = true;
+            this.buttonApplyPreset2.Click += new System.EventHandler(this.buttonApplyPreset2_Click);
+            // 
+            // buttonApplyPreset1
+            // 
+            this.buttonApplyPreset1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonApplyPreset1.Location = new System.Drawing.Point(219, 82);
+            this.buttonApplyPreset1.Name = "buttonApplyPreset1";
+            this.buttonApplyPreset1.Size = new System.Drawing.Size(103, 30);
+            this.buttonApplyPreset1.TabIndex = 111;
+            this.buttonApplyPreset1.Text = "Apply";
+            this.buttonApplyPreset1.UseVisualStyleBackColor = true;
+            this.buttonApplyPreset1.Click += new System.EventHandler(this.buttonApplyPreset1_Click);
+            // 
+            // labelPreset2
+            // 
+            this.labelPreset2.AutoSize = true;
+            this.labelPreset2.Location = new System.Drawing.Point(16, 184);
+            this.labelPreset2.Name = "labelPreset2";
+            this.labelPreset2.Size = new System.Drawing.Size(111, 15);
+            this.labelPreset2.TabIndex = 4;
+            this.labelPreset2.Text = "20,20,100,100";
+            // 
+            // labelPreset1
+            // 
+            this.labelPreset1.AutoSize = true;
+            this.labelPreset1.Location = new System.Drawing.Point(16, 90);
+            this.labelPreset1.Name = "labelPreset1";
+            this.labelPreset1.Size = new System.Drawing.Size(111, 15);
+            this.labelPreset1.TabIndex = 3;
+            this.labelPreset1.Text = "10,10,100,100";
+            // 
+            // labelPreset2Title
+            // 
+            this.labelPreset2Title.AutoSize = true;
+            this.labelPreset2Title.Location = new System.Drawing.Point(16, 137);
+            this.labelPreset2Title.Name = "labelPreset2Title";
+            this.labelPreset2Title.Size = new System.Drawing.Size(71, 15);
+            this.labelPreset2Title.TabIndex = 1;
+            this.labelPreset2Title.Text = "Preset 2";
+            // 
+            // labelPreset1Title
+            // 
+            this.labelPreset1Title.AutoSize = true;
+            this.labelPreset1Title.Location = new System.Drawing.Point(16, 43);
+            this.labelPreset1Title.Name = "labelPreset1Title";
+            this.labelPreset1Title.Size = new System.Drawing.Size(71, 15);
+            this.labelPreset1Title.TabIndex = 0;
+            this.labelPreset1Title.Text = "Preset 1";
+            // 
+            // buttonSetAsPreset1
+            // 
+            this.buttonSetAsPreset1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonSetAsPreset1.Location = new System.Drawing.Point(714, 694);
+            this.buttonSetAsPreset1.Name = "buttonSetAsPreset1";
+            this.buttonSetAsPreset1.Size = new System.Drawing.Size(126, 30);
+            this.buttonSetAsPreset1.TabIndex = 110;
+            this.buttonSetAsPreset1.Text = "As Preset 1";
+            this.buttonSetAsPreset1.UseVisualStyleBackColor = true;
+            this.buttonSetAsPreset1.Click += new System.EventHandler(this.buttonSetAsPreset1_Click);
+            // 
+            // buttonSetAsPreset2
+            // 
+            this.buttonSetAsPreset2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonSetAsPreset2.Location = new System.Drawing.Point(849, 694);
+            this.buttonSetAsPreset2.Name = "buttonSetAsPreset2";
+            this.buttonSetAsPreset2.Size = new System.Drawing.Size(126, 30);
+            this.buttonSetAsPreset2.TabIndex = 111;
+            this.buttonSetAsPreset2.Text = "As Preset 2";
+            this.buttonSetAsPreset2.UseVisualStyleBackColor = true;
+            this.buttonSetAsPreset2.Click += new System.EventHandler(this.buttonSetAsPreset2_Click);
+            // 
+            // labelTip
+            // 
+            this.labelTip.AutoSize = true;
+            this.labelTip.ForeColor = System.Drawing.Color.Red;
+            this.labelTip.Location = new System.Drawing.Point(622, 320);
+            this.labelTip.Name = "labelTip";
+            this.labelTip.Size = new System.Drawing.Size(319, 15);
+            this.labelTip.TabIndex = 113;
+            this.labelTip.Text = "Click *Save* button after apply preest.";
+            // 
+            // FormImageViewTime
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(982, 753);
+            this.Controls.Add(this.labelTip);
+            this.Controls.Add(this.buttonSetAsPreset2);
+            this.Controls.Add(this.buttonSetAsPreset1);
             this.Controls.Add(this.groupBoxPresetLocation);
             this.Controls.Add(this.labelHeight);
             this.Controls.Add(this.labelWidth);
@@ -244,8 +353,9 @@
             this.Controls.Add(this.labelSize);
             this.Controls.Add(this.pictureBoxOne);
             this.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.ForeColor = System.Drawing.SystemColors.ControlText;
             this.MaximizeBox = false;
-            this.Name = "FormImageView";
+            this.Name = "FormImageViewTime";
             this.Text = "Image view";
             this.Load += new System.EventHandler(this.FormImageView_Load);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).EndInit();
@@ -253,6 +363,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
+            this.groupBoxPresetLocation.ResumeLayout(false);
+            this.groupBoxPresetLocation.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -273,5 +385,14 @@
         private System.Windows.Forms.Label labelWidth;
         private System.Windows.Forms.Label labelHeight;
         private System.Windows.Forms.GroupBox groupBoxPresetLocation;
+        private System.Windows.Forms.Button buttonSetAsPreset1;
+        private System.Windows.Forms.Label labelPreset1Title;
+        private System.Windows.Forms.Label labelPreset2;
+        private System.Windows.Forms.Label labelPreset1;
+        private System.Windows.Forms.Label labelPreset2Title;
+        private System.Windows.Forms.Button buttonApplyPreset2;
+        private System.Windows.Forms.Button buttonApplyPreset1;
+        private System.Windows.Forms.Button buttonSetAsPreset2;
+        private System.Windows.Forms.Label labelTip;
     }
 }
