@@ -45,7 +45,7 @@ namespace SkyStopwatch
             this.timerRefresh.Start();
         }
 
-        private void FormNodeBossCounting_Load(object sender, EventArgs e)
+        private void Form_Load(object sender, EventArgs e)
         {
             this.labelMessage.Text = "-";
 
@@ -103,11 +103,13 @@ namespace SkyStopwatch
             }
         }
 
-        private void FormNodeWarning_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_FormClosing(object sender, FormClosingEventArgs e)
         {
             _BeforeClose?.Invoke();
             _BeforeClose = null;
             _BossCallGroups = null;
+
+
         }
 
 
@@ -206,7 +208,7 @@ namespace SkyStopwatch
         {
             if (_BossCallGroups.Count == 0) _BossCallGroups.Add(new BossCallGroup());
 
-            _BossCallGroups.Last().Add(new BossCall()
+            _BossCallGroups.Last.Add(new BossCall()
             {
                 Id = -1,
                 IsValid = true,
@@ -223,9 +225,9 @@ namespace SkyStopwatch
 
         private void buttonRemove_Click(object sender, EventArgs e)
         {
-            if (_BossCallGroups == null || _BossCallGroups.Count == 0 || _BossCallGroups.Last().Calls.Count == 0) return;
+            if (_BossCallGroups == null || _BossCallGroups.Count == 0 || _BossCallGroups.Last.Calls.Count == 0) return;
 
-            _BossCallGroups.Last().Calls.RemoveAt(_BossCallGroups.Last().Calls.Count - 1);
+            _BossCallGroups.Last.Calls.RemoveAt(_BossCallGroups.Last.Calls.Count - 1);
 
             this.DisableButtonShortTime(this.buttonRemove);
         }

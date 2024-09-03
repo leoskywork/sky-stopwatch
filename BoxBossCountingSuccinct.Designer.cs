@@ -147,8 +147,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "BoxBossCountingSuccinct";
             this.TransparencyKey = System.Drawing.SystemColors.ControlLight;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormNodeWarning_FormClosing);
-            this.Load += new System.EventHandler(this.FormNodeBossCounting_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form_FormClosing);
+            this.Load += new System.EventHandler(this.Form_Load);
             this.tableLayoutPanelRight.ResumeLayout(false);
             this.ResumeLayout(false);
 

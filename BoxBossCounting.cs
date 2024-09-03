@@ -50,7 +50,7 @@ namespace SkyStopwatch
             {
                 for (int i = 0; i < 999; i++)
                 {
-                    _BossCallGroups.Last().Calls.Add(new BossCall() { PreCounting = true });
+                    _BossCallGroups.Last.Calls.Add(new BossCall() { PreCounting = true });
                 }
             };
 
@@ -116,7 +116,7 @@ namespace SkyStopwatch
                 return;
             }
 
-            this.labelMessage.Text = _BossCallGroups.Last().Calls.Where(c => c.PreCounting).Count().ToString();
+            this.labelMessage.Text = _BossCallGroups.Last.Calls.Where(c => c.PreCounting).Count().ToString();
             this.labelTotal.Text = $"{this._BossCallGroups.Sum(g => g.Calls.Where(c => c.IsValid).Count())}-P{this._BossCallGroups.Count}";
         }
 
@@ -236,7 +236,7 @@ namespace SkyStopwatch
             if (_BossCallGroups == null) return;
             if (_BossCallGroups.Count == 0) _BossCallGroups.Add(new BossCallGroup());
 
-            _BossCallGroups.Last().Calls.Add(new BossCall()
+            _BossCallGroups.Last.Calls.Add(new BossCall()
             {
                 Id = -1,
                 IsValid = true,
@@ -256,9 +256,9 @@ namespace SkyStopwatch
 
         private void labelRemoveBossCall_Click(object sender, EventArgs e)
         {
-            if (_BossCallGroups == null || _BossCallGroups.Count == 0 || _BossCallGroups.Last().Calls.Count == 0) return;
+            if (_BossCallGroups == null || _BossCallGroups.Count == 0 || _BossCallGroups.Last.Calls.Count == 0) return;
 
-            _BossCallGroups.Last().Calls.RemoveAt(_BossCallGroups.Last().Calls.Count - 1);
+            _BossCallGroups.Last.Calls.RemoveAt(_BossCallGroups.Last.Calls.Count - 1);
 
             this.DisableButtonShortTime(this.labelRemoveBossCall);
         }

@@ -1,6 +1,6 @@
 ﻿namespace SkyStopwatch
 {
-    partial class FormImageView
+    partial class FormImageViewTime
     {
         /// <summary>
         /// Required designer variable.
@@ -40,6 +40,7 @@
             this.labelWidth = new System.Windows.Forms.Label();
             this.labelHeight = new System.Windows.Forms.Label();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
+            this.groupBoxPresetLocation = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -69,7 +70,7 @@
             // 
             this.buttonSave.Enabled = false;
             this.buttonSave.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonSave.Location = new System.Drawing.Point(682, 696);
+            this.buttonSave.Location = new System.Drawing.Point(630, 694);
             this.buttonSave.Name = "buttonSave";
             this.buttonSave.Size = new System.Drawing.Size(80, 30);
             this.buttonSave.TabIndex = 20;
@@ -84,7 +85,7 @@
             0,
             0,
             0});
-            this.numericUpDownX.Location = new System.Drawing.Point(56, 697);
+            this.numericUpDownX.Location = new System.Drawing.Point(28, 697);
             this.numericUpDownX.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -102,7 +103,7 @@
             0,
             0,
             0});
-            this.numericUpDownY.Location = new System.Drawing.Point(209, 697);
+            this.numericUpDownY.Location = new System.Drawing.Point(181, 697);
             this.numericUpDownY.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -120,7 +121,7 @@
             0,
             0,
             0});
-            this.numericUpDownWidth.Location = new System.Drawing.Point(361, 697);
+            this.numericUpDownWidth.Location = new System.Drawing.Point(333, 697);
             this.numericUpDownWidth.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -148,7 +149,7 @@
             0,
             0,
             0});
-            this.numericUpDownHeight.Location = new System.Drawing.Point(512, 697);
+            this.numericUpDownHeight.Location = new System.Drawing.Point(484, 697);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             10000,
             0,
@@ -172,7 +173,7 @@
             // labelX
             // 
             this.labelX.AutoSize = true;
-            this.labelX.Location = new System.Drawing.Point(53, 660);
+            this.labelX.Location = new System.Drawing.Point(25, 660);
             this.labelX.Name = "labelX";
             this.labelX.Size = new System.Drawing.Size(23, 15);
             this.labelX.TabIndex = 105;
@@ -181,7 +182,7 @@
             // labelY
             // 
             this.labelY.AutoSize = true;
-            this.labelY.Location = new System.Drawing.Point(206, 660);
+            this.labelY.Location = new System.Drawing.Point(178, 660);
             this.labelY.Name = "labelY";
             this.labelY.Size = new System.Drawing.Size(23, 15);
             this.labelY.TabIndex = 106;
@@ -190,7 +191,7 @@
             // labelWidth
             // 
             this.labelWidth.AutoSize = true;
-            this.labelWidth.Location = new System.Drawing.Point(358, 660);
+            this.labelWidth.Location = new System.Drawing.Point(330, 660);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(55, 15);
             this.labelWidth.TabIndex = 107;
@@ -199,7 +200,7 @@
             // labelHeight
             // 
             this.labelHeight.AutoSize = true;
-            this.labelHeight.Location = new System.Drawing.Point(509, 660);
+            this.labelHeight.Location = new System.Drawing.Point(481, 660);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(63, 15);
             this.labelHeight.TabIndex = 108;
@@ -209,17 +210,27 @@
             // 
             this.pictureBoxOne.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.pictureBoxOne.BackColor = System.Drawing.Color.LightGray;
-            this.pictureBoxOne.Location = new System.Drawing.Point(34, 75);
+            this.pictureBoxOne.Location = new System.Drawing.Point(31, 75);
             this.pictureBoxOne.Name = "pictureBoxOne";
-            this.pictureBoxOne.Size = new System.Drawing.Size(901, 549);
+            this.pictureBoxOne.Size = new System.Drawing.Size(573, 549);
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
+            // 
+            // groupBoxPresetLocation
+            // 
+            this.groupBoxPresetLocation.Location = new System.Drawing.Point(639, 67);
+            this.groupBoxPresetLocation.Name = "groupBoxPresetLocation";
+            this.groupBoxPresetLocation.Size = new System.Drawing.Size(311, 290);
+            this.groupBoxPresetLocation.TabIndex = 109;
+            this.groupBoxPresetLocation.TabStop = false;
+            this.groupBoxPresetLocation.Text = "Locations";
             // 
             // FormImageView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(982, 753);
+            this.Controls.Add(this.groupBoxPresetLocation);
             this.Controls.Add(this.labelHeight);
             this.Controls.Add(this.labelWidth);
             this.Controls.Add(this.labelY);
@@ -261,5 +272,6 @@
         private System.Windows.Forms.Label labelY;
         private System.Windows.Forms.Label labelWidth;
         private System.Windows.Forms.Label labelHeight;
+        private System.Windows.Forms.GroupBox groupBoxPresetLocation;
     }
 }

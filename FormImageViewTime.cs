@@ -11,10 +11,10 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class FormImageView : Form
+    public partial class FormImageViewTime : Form
     {
 
-        public FormImageView()
+        public FormImageViewTime()
         {
             InitializeComponent();
 

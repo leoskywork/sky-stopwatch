@@ -13,6 +13,14 @@ namespace SkyStopwatch.DataModel
 
         public int Count { get { return this.Groups.Count; } }
 
+        public BossCallGroup Last
+        {
+            get
+            {
+                return this.Groups.Last();
+            }
+        }
+
         public BossCallSet()
         {
             
@@ -27,14 +35,11 @@ namespace SkyStopwatch.DataModel
             this.Groups.Add(new BossCallGroup() { Name = "player-default"});
         }
 
-        public BossCallGroup Last()
-        {
-            return this.Groups.Last();
-        }
+      
 
         public T LastCallOrDefault<T>() where T: class
         {
-            return this.Last().Calls.LastOrDefault() as T;
+            return this.Last.Calls.LastOrDefault() as T;
         }
 
         public void Add(BossCallGroup group)

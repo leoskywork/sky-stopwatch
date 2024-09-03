@@ -396,7 +396,7 @@ namespace SkyStopwatch
                         OCRLastMatch = result.CompareTarget,
                         PreCounting = true
                     };
-                    _BossGroups.Last().Add(bossCall);
+                    _BossGroups.Last.Add(bossCall);
                 }
                 else
                 {
@@ -413,7 +413,7 @@ namespace SkyStopwatch
                     else //not the same call, remove old and add new
                     {
                         lastBossCall.PreCounting = false;
-                        _BossGroups.Last().Remove(lastBossCall);
+                        _BossGroups.Last.Remove(lastBossCall);
                         var bossCall = new BossCall
                         {
                             FirstMatchTime = DateTime.Now,
@@ -421,7 +421,7 @@ namespace SkyStopwatch
                             OCRLastMatch = result.CompareTarget,
                             PreCounting = true
                         };
-                        _BossGroups.Last().Add(bossCall);
+                        _BossGroups.Last.Add(bossCall);
                     }
                 }
             }
@@ -486,7 +486,7 @@ namespace SkyStopwatch
                     if (resultAUX.IsSuccess) //compare 1-2
                     {
                         var newCall = GetBossCallForPairOneSuccess(resultMaster.CompareTarget, rawDataPair, lastCall);
-                        _BossGroups.Last().Add(newCall);
+                        _BossGroups.Last.Add(newCall);
                         testSaveImg = true;
                         testId = "p1-" + newCall.Id;
                     }
@@ -528,7 +528,7 @@ namespace SkyStopwatch
                 if (!lastCallWithinLifeCycle)
                 {
                     lastCall.Previous = null;
-                    _BossGroups.Last().Remove(lastCall);
+                    _BossGroups.Last.Remove(lastCall);
                 }
             }
 
@@ -609,13 +609,15 @@ namespace SkyStopwatch
             }
         }
 
-        private void FormImageViewCounting_FormClosing(object sender, FormClosingEventArgs e)
+        private void Form_Closing(object sender, FormClosingEventArgs e)
         {
             try
             {
                 this.timerScan.Stop();
                 this.timerCompare.Stop();
                 GlobalData.Default.ChangeGameStartTime -= OnChangeGameStartTime;
+
+                _AutoOCREngine = null;
             }
             catch (Exception ex)
             {

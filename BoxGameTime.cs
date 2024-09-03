@@ -642,6 +642,7 @@ namespace SkyStopwatch
                 if (_AutoOCREngine != null)
                 {
                     //_AutoOCREngine.Dispose(); //get error ?
+                    _AutoOCREngine.Dispose();
                     _AutoOCREngine = null;
                 }
 

@@ -104,11 +104,11 @@
     <Compile Include="FormImageViewPrice.Designer.cs">
       <DependentUpon>FormImageViewPrice.cs</DependentUpon>
     </Compile>
-    <Compile Include="FormImageView.cs">
+    <Compile Include="FormImageViewTime.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FormImageView.Designer.cs">
-      <DependentUpon>FormImageView.cs</DependentUpon>
+    <Compile Include="FormImageViewTime.Designer.cs">
+      <DependentUpon>FormImageViewTime.cs</DependentUpon>
     </Compile>
     <Compile Include="BoxBossCounting.cs">
       <SubType>Form</SubType>
@@ -164,8 +164,8 @@
     <EmbeddedResource Include="BoxGameTime.resx">
       <DependentUpon>BoxGameTime.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FormImageView.resx">
-      <DependentUpon>FormImageView.cs</DependentUpon>
+    <EmbeddedResource Include="FormImageViewTime.resx">
+      <DependentUpon>FormImageViewTime.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="BoxBossCounting.resx">
       <DependentUpon>BoxBossCounting.cs</DependentUpon>

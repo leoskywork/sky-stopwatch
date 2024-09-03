@@ -155,7 +155,7 @@ namespace SkyStopwatch
 
         private void buttonImageView_Click(object sender, EventArgs e)
         {
-            var imageView = new FormImageView();
+            var imageView = new FormImageViewTime();
             imageView.Show();
             this.Close();
         }
