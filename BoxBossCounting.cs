@@ -14,6 +14,8 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
+
+    [Obsolete]
     public partial class BoxBossCounting : Form, IPopupBox
     {
         private Action _BeforeClose;

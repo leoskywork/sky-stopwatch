@@ -14,7 +14,7 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxBossCountingSuccinct : Form, IPopupBox
+    public partial class BoxBossCountingSuccinct : Form, IPopupBox, ITopForm
     {
         private Action _BeforeClose;
         private BossCallSet _BossCallGroups;
@@ -28,9 +28,12 @@ namespace SkyStopwatch
 
         public bool IsPaused => _IsPaused;
 
+        public bool IsPermanent => true;
+
         public BoxBossCountingSuccinct(BossCallSet groups, bool autoSlice, Action onClosing)
         {
             InitializeComponent();
+            this.InitBase();
 
             _BossCallGroups = groups;
             _BeforeClose = onClosing;
@@ -269,6 +272,11 @@ namespace SkyStopwatch
 
 
             this.DisableButtonShortTime(this.buttonPause);
+        }
+
+        public void SetUserFriendlyTitle()
+        {
+            this.SetVersion();
         }
     }
 }

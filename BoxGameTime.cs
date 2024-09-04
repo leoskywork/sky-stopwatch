@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxGameTime : Form, IPopupBox
+    public partial class BoxGameTime : Form, IPopupBox, ITopForm
     {
         private bool _IsUpdatingPassedTime = false;
 
@@ -37,9 +37,12 @@ namespace SkyStopwatch
 
         public OCRGameTime Model { get { return ViewModelFactory.Instance.GetGameTime(); } }
 
+        public bool IsPermanent => true;
+
         public BoxGameTime(int args)
         {
             InitializeComponent();
+            this.InitBase();
 
             this.Model.BootingArgs = args;
 
@@ -53,7 +56,6 @@ namespace SkyStopwatch
             this.labelTimer.Text = "unset";
             this.timerMain.Interval = OCRGameTime.TimerDisplayUIIntervalMS;
             this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
-            this.Text = $"SSW-V{GlobalData.Version}";
 
             //do the following in form_loaded
             //InitGUILayoutV1();
@@ -930,6 +932,11 @@ namespace SkyStopwatch
             Rectangle rect = new Rectangle(0, 0, this.Width, this.Height);
             System.Drawing.Drawing2D.GraphicsPath formPath = GetRoundedRectPath(rect, roundRadius);
             this.Region = new Region(formPath);
+        }
+
+        public void SetUserFriendlyTitle()
+        {
+            this.SetVersion();
         }
     }
 }

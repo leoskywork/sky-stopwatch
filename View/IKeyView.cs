@@ -13,7 +13,7 @@ namespace SkyStopwatch.View
         string Key { get; }
     }
 
-    public interface ISkyForm : IKeyView
+    public interface ISkyView : IKeyView
     {
         bool Disposing { get; }
         bool IsDisposed { get; }

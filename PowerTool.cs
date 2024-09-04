@@ -1,4 +1,5 @@
-﻿using SkyStopwatch.ViewModel;
+﻿using SkyStopwatch.View;
+using SkyStopwatch.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -349,6 +350,20 @@ namespace SkyStopwatch
         public static ViewModelFactory GetModels(this Form form)
         {
             return ViewModelFactory.Instance;
+        }
+
+        public static void InitBase(this Form form)
+        {
+            if (form is ITopForm top && top.IsPermanent)
+            {
+                top.SetUserFriendlyTitle();
+            }
+        }
+
+        public static void SetVersion(this Form form)
+        {
+            form.Text = $"SSW-V{GlobalData.Version}.{GlobalData.Subversion.Split('.')[0]}";
+
         }
 
     }

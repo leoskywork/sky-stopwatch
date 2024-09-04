@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.View;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -11,14 +12,17 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxPhaseBossWarning : Form
+    public partial class BoxPhaseBossWarning : Form, ITopForm
     {
         private DateTime _CreatedTime = DateTime.Now;
         private Action _BeforeClose;
 
+        public bool IsPermanent => false;
+
         public BoxPhaseBossWarning(Action onClosing)
         {
             InitializeComponent();
+            this.InitBase();
 
             _BeforeClose = onClosing;
 
@@ -95,5 +99,9 @@ namespace SkyStopwatch
             this.Region = new Region(formPath);
         }
 
+        public void SetUserFriendlyTitle()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
