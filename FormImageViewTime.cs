@@ -34,12 +34,16 @@ namespace SkyStopwatch
         {
             if (preset1)
             {
-                this.labelPreset1.Text = $"({OCRGameTime.Preset1XPoint},{OCRGameTime.Preset1YPoint}) {OCRGameTime.Preset1BlockWidth}*{OCRGameTime.Preset1BlockHeight}";
+                bool unset = OCRGameTime.Preset1XPoint == 0 && OCRGameTime.Preset1YPoint == 0 && OCRGameTime.Preset1BlockWidth == 0 && OCRGameTime.Preset1BlockHeight == 0;
+                this.buttonApplyPreset1.Enabled = !unset;
+                this.labelPreset1.Text = unset ? "--" : $"({OCRGameTime.Preset1XPoint},{OCRGameTime.Preset1YPoint}) {OCRGameTime.Preset1BlockWidth}*{OCRGameTime.Preset1BlockHeight}";
             }
 
             if (preset2)
             {
-                this.labelPreset2.Text = $"({OCRGameTime.Preset2XPoint},{OCRGameTime.Preset2YPoint}) {OCRGameTime.Preset2BlockWidth}*{OCRGameTime.Preset2BlockHeight}";
+                bool unset = OCRGameTime.Preset2XPoint == 0 && OCRGameTime.Preset2YPoint == 0 && OCRGameTime.Preset2BlockWidth == 0 && OCRGameTime.Preset2BlockHeight == 0;
+                this.buttonApplyPreset2.Enabled = !unset;
+                this.labelPreset2.Text = unset ? "--" : $"({OCRGameTime.Preset2XPoint},{OCRGameTime.Preset2YPoint}) {OCRGameTime.Preset2BlockWidth}*{OCRGameTime.Preset2BlockHeight}";
             }
         }
 
