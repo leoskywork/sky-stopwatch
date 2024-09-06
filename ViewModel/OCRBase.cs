@@ -86,6 +86,7 @@ namespace SkyStopwatch
             using (Graphics gra = Graphics.FromImage(bitPic))
             {
                 //leotodo - improve this, CopyFromScreen(...) throws Win32Exception sometimes, not sure why? happened when press ctrl + tab ?
+                //happens when start app and UAC triggered(screen gray out)
                 //just ignore for now
                 try
                 {
@@ -300,7 +301,8 @@ namespace SkyStopwatch
 
         public virtual byte[] GetImageBytes() 
         {
-            return PrintScreenAsBytes(GetScreenBlock()).Item1;
+            var pair = PrintScreenAsBytes(GetScreenBlock());
+            return pair?.Item1;
         }
     }
 }
