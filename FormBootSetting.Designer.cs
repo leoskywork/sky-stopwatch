@@ -190,7 +190,7 @@
             this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
             this.checkBoxReadTopTime.Size = new System.Drawing.Size(133, 19);
             this.checkBoxReadTopTime.TabIndex = 409;
-            this.checkBoxReadTopTime.Text = "Mini top time";
+            this.checkBoxReadTopTime.Text = "Scan top time";
             this.checkBoxReadTopTime.UseVisualStyleBackColor = true;
             this.checkBoxReadTopTime.CheckedChanged += new System.EventHandler(this.checkBoxReadTopTime_CheckedChanged);
             // 
