@@ -362,8 +362,7 @@ namespace SkyStopwatch
 
         public static void SetVersion(this Form form)
         {
-            form.Text = $"SSW-V{GlobalData.Version}.{GlobalData.Subversion.Split('.')[0]}";
-
+            form.Text = $"SSW-V{GlobalData.Version}.{GlobalData.Subversion}";
         }
 
     }

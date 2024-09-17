@@ -65,5 +65,8 @@
     <Setting Name="TimeViewPreset2Size" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
+    <Setting Name="TimeViewScanMiddleDelaySecond" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">18</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

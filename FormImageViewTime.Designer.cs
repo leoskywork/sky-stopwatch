@@ -41,6 +41,7 @@
             this.labelHeight = new System.Windows.Forms.Label();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.groupBoxPresetLocation = new System.Windows.Forms.GroupBox();
+            this.labelTip = new System.Windows.Forms.Label();
             this.buttonApplyPreset2 = new System.Windows.Forms.Button();
             this.buttonApplyPreset1 = new System.Windows.Forms.Button();
             this.labelPreset2 = new System.Windows.Forms.Label();
@@ -49,13 +50,19 @@
             this.labelPreset1Title = new System.Windows.Forms.Label();
             this.buttonSetAsPreset1 = new System.Windows.Forms.Button();
             this.buttonSetAsPreset2 = new System.Windows.Forms.Button();
-            this.labelTip = new System.Windows.Forms.Label();
+            this.groupBoxSetting = new System.Windows.Forms.GroupBox();
+            this.checkBoxReadTopTime = new System.Windows.Forms.CheckBox();
+            this.buttonSaveSetting = new System.Windows.Forms.Button();
+            this.numericUpDownDelaySecond = new System.Windows.Forms.NumericUpDown();
+            this.labelScanMiddleDelay = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).BeginInit();
             this.groupBoxPresetLocation.SuspendLayout();
+            this.groupBoxSetting.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelaySecond)).BeginInit();
             this.SuspendLayout();
             // 
             // labelSize
@@ -228,18 +235,29 @@
             // 
             // groupBoxPresetLocation
             // 
+            this.groupBoxPresetLocation.Controls.Add(this.labelTip);
             this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset2);
             this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset1);
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset2);
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset1);
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset2Title);
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset1Title);
-            this.groupBoxPresetLocation.Location = new System.Drawing.Point(625, 67);
+            this.groupBoxPresetLocation.Location = new System.Drawing.Point(632, 67);
             this.groupBoxPresetLocation.Name = "groupBoxPresetLocation";
-            this.groupBoxPresetLocation.Size = new System.Drawing.Size(345, 237);
+            this.groupBoxPresetLocation.Size = new System.Drawing.Size(345, 275);
             this.groupBoxPresetLocation.TabIndex = 109;
             this.groupBoxPresetLocation.TabStop = false;
             this.groupBoxPresetLocation.Text = "Location Presets";
+            // 
+            // labelTip
+            // 
+            this.labelTip.AutoSize = true;
+            this.labelTip.ForeColor = System.Drawing.Color.Red;
+            this.labelTip.Location = new System.Drawing.Point(16, 233);
+            this.labelTip.Name = "labelTip";
+            this.labelTip.Size = new System.Drawing.Size(319, 15);
+            this.labelTip.TabIndex = 113;
+            this.labelTip.Text = "Click *Save* button after apply preest.";
             // 
             // buttonApplyPreset2
             // 
@@ -321,22 +339,78 @@
             this.buttonSetAsPreset2.UseVisualStyleBackColor = true;
             this.buttonSetAsPreset2.Click += new System.EventHandler(this.buttonSetAsPreset2_Click);
             // 
-            // labelTip
+            // groupBoxSetting
             // 
-            this.labelTip.AutoSize = true;
-            this.labelTip.ForeColor = System.Drawing.Color.Red;
-            this.labelTip.Location = new System.Drawing.Point(626, 318);
-            this.labelTip.Name = "labelTip";
-            this.labelTip.Size = new System.Drawing.Size(319, 15);
-            this.labelTip.TabIndex = 113;
-            this.labelTip.Text = "Click *Save* button after apply preest.";
+            this.groupBoxSetting.Controls.Add(this.checkBoxReadTopTime);
+            this.groupBoxSetting.Controls.Add(this.buttonSaveSetting);
+            this.groupBoxSetting.Controls.Add(this.numericUpDownDelaySecond);
+            this.groupBoxSetting.Controls.Add(this.labelScanMiddleDelay);
+            this.groupBoxSetting.Location = new System.Drawing.Point(632, 359);
+            this.groupBoxSetting.Name = "groupBoxSetting";
+            this.groupBoxSetting.Size = new System.Drawing.Size(345, 265);
+            this.groupBoxSetting.TabIndex = 112;
+            this.groupBoxSetting.TabStop = false;
+            this.groupBoxSetting.Text = "Settings";
+            // 
+            // checkBoxReadTopTime
+            // 
+            this.checkBoxReadTopTime.AutoSize = true;
+            this.checkBoxReadTopTime.Checked = true;
+            this.checkBoxReadTopTime.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxReadTopTime.Location = new System.Drawing.Point(19, 95);
+            this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
+            this.checkBoxReadTopTime.Size = new System.Drawing.Size(133, 19);
+            this.checkBoxReadTopTime.TabIndex = 410;
+            this.checkBoxReadTopTime.Text = "Scan top time";
+            this.checkBoxReadTopTime.UseVisualStyleBackColor = true;
+            this.checkBoxReadTopTime.CheckedChanged += new System.EventHandler(this.checkBoxReadTopTime_CheckedChanged);
+            // 
+            // buttonSaveSetting
+            // 
+            this.buttonSaveSetting.Enabled = false;
+            this.buttonSaveSetting.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonSaveSetting.Location = new System.Drawing.Point(242, 218);
+            this.buttonSaveSetting.Name = "buttonSaveSetting";
+            this.buttonSaveSetting.Size = new System.Drawing.Size(80, 30);
+            this.buttonSaveSetting.TabIndex = 104;
+            this.buttonSaveSetting.Text = "Save";
+            this.buttonSaveSetting.UseVisualStyleBackColor = true;
+            this.buttonSaveSetting.Click += new System.EventHandler(this.buttonSaveSetting_Click);
+            // 
+            // numericUpDownDelaySecond
+            // 
+            this.numericUpDownDelaySecond.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericUpDownDelaySecond.Location = new System.Drawing.Point(241, 38);
+            this.numericUpDownDelaySecond.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.numericUpDownDelaySecond.Name = "numericUpDownDelaySecond";
+            this.numericUpDownDelaySecond.Size = new System.Drawing.Size(81, 25);
+            this.numericUpDownDelaySecond.TabIndex = 103;
+            this.numericUpDownDelaySecond.ValueChanged += new System.EventHandler(this.numericUpDownDelaySecond_ValueChanged);
+            // 
+            // labelScanMiddleDelay
+            // 
+            this.labelScanMiddleDelay.AutoSize = true;
+            this.labelScanMiddleDelay.Location = new System.Drawing.Point(16, 43);
+            this.labelScanMiddleDelay.Name = "labelScanMiddleDelay";
+            this.labelScanMiddleDelay.Size = new System.Drawing.Size(215, 15);
+            this.labelScanMiddleDelay.TabIndex = 3;
+            this.labelScanMiddleDelay.Text = "Scan middle delay seconds:";
             // 
             // FormImageViewTime
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(982, 753);
-            this.Controls.Add(this.labelTip);
+            this.ClientSize = new System.Drawing.Size(1011, 753);
+            this.Controls.Add(this.groupBoxSetting);
             this.Controls.Add(this.buttonSetAsPreset2);
             this.Controls.Add(this.buttonSetAsPreset1);
             this.Controls.Add(this.groupBoxPresetLocation);
@@ -365,6 +439,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxOne)).EndInit();
             this.groupBoxPresetLocation.ResumeLayout(false);
             this.groupBoxPresetLocation.PerformLayout();
+            this.groupBoxSetting.ResumeLayout(false);
+            this.groupBoxSetting.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelaySecond)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -394,5 +471,10 @@
         private System.Windows.Forms.Button buttonApplyPreset1;
         private System.Windows.Forms.Button buttonSetAsPreset2;
         private System.Windows.Forms.Label labelTip;
+        private System.Windows.Forms.GroupBox groupBoxSetting;
+        private System.Windows.Forms.Label labelScanMiddleDelay;
+        private System.Windows.Forms.Button buttonSaveSetting;
+        private System.Windows.Forms.NumericUpDown numericUpDownDelaySecond;
+        private System.Windows.Forms.CheckBox checkBoxReadTopTime;
     }
 }

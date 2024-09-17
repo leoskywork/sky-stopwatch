@@ -39,7 +39,6 @@
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonImageView = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.checkBoxReadTopTime = new System.Windows.Forms.CheckBox();
             this.buttonReduceMinute = new System.Windows.Forms.Button();
             this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
@@ -163,7 +162,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.checkBoxReadTopTime);
             this.groupBox1.Controls.Add(this.buttonReduceMinute);
             this.groupBox1.Controls.Add(this.buttonAddMinute);
             this.groupBox1.Controls.Add(this.buttonReduceSeconds);
@@ -179,20 +177,6 @@
             this.groupBox1.TabIndex = 402;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OCR";
-            // 
-            // checkBoxReadTopTime
-            // 
-            this.checkBoxReadTopTime.AutoSize = true;
-            this.checkBoxReadTopTime.Checked = true;
-            this.checkBoxReadTopTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxReadTopTime.Location = new System.Drawing.Point(15, 294);
-            this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
-            this.checkBoxReadTopTime.Size = new System.Drawing.Size(133, 19);
-            this.checkBoxReadTopTime.TabIndex = 409;
-            this.checkBoxReadTopTime.Text = "Scan top time";
-            this.checkBoxReadTopTime.UseVisualStyleBackColor = true;
-            this.checkBoxReadTopTime.CheckedChanged += new System.EventHandler(this.checkBoxReadTopTime_CheckedChanged);
             // 
             // buttonReduceMinute
             // 
@@ -432,7 +416,6 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
             this.Load += new System.EventHandler(this.FormToolBox_Load);
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -474,6 +457,5 @@
         private System.Windows.Forms.CheckBox checkBoxTopMost;
         private System.Windows.Forms.Button buttonCount;
         private System.Windows.Forms.Button buttonCountRun;
-        private System.Windows.Forms.CheckBox checkBoxReadTopTime;
     }
 }

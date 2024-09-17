@@ -13,6 +13,8 @@ namespace SkyStopwatch
 {
     public partial class FormImageViewTime : Form
     {
+        private bool _EnableScreenTopTime;
+        private int _ScanMiddleDelaySecond;
 
         public FormImageViewTime()
         {
@@ -28,6 +30,11 @@ namespace SkyStopwatch
             this.numericUpDownY.Value = OCRGameTime.YPoint;
             this.numericUpDownWidth.Value = OCRGameTime.BlockWidth;
             this.numericUpDownHeight.Value = OCRGameTime.BlockHeight;
+
+            this._EnableScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
+            this._ScanMiddleDelaySecond = GlobalData.Default.TimeViewScanMiddleDelaySecond;
+            this.checkBoxReadTopTime.Checked = _EnableScreenTopTime;
+            this.numericUpDownDelaySecond.Value = _ScanMiddleDelaySecond;
         }
 
         private void ReadPresetsFromViewModel(bool preset1, bool preset2)
@@ -217,6 +224,44 @@ namespace SkyStopwatch
 
             OCRBase.SafeCheckImageBlock(ref x, ref y, ref width, ref height);
         }
+
+        private void checkBoxReadTopTime_CheckedChanged(object sender, EventArgs e)
+        {
+            _EnableScreenTopTime = this.checkBoxReadTopTime.Checked;
+            SetButtonSaveSettingState();
+        }
+
+        private void numericUpDownDelaySecond_ValueChanged(object sender, EventArgs e)
+        {
+            _ScanMiddleDelaySecond = (int)this.numericUpDownDelaySecond.Value;
+            SetButtonSaveSettingState();
+        }
+
+        private void SetButtonSaveSettingState()
+        {
+            bool diffTopTimeState = GlobalData.Default.IsUsingScreenTopTime != _EnableScreenTopTime;
+            bool diffDelay = GlobalData.Default.TimeViewScanMiddleDelaySecond != _ScanMiddleDelaySecond;
+
+            this.buttonSaveSetting.Enabled = diffTopTimeState || diffDelay;
+        }
+
+        private void buttonSaveSetting_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                this.buttonSaveSetting.Enabled = false;
+
+                GlobalData.Default.IsUsingScreenTopTime = _EnableScreenTopTime;
+                GlobalData.Default.TimeViewScanMiddleDelaySecond = _ScanMiddleDelaySecond;
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save setting"));
+            }
+            catch (Exception ex)
+            {
+                this.buttonSaveSetting.Enabled = true;
+                this.OnError(ex);
+            }
+        }
+
 
     }
 }

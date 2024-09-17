@@ -274,5 +274,17 @@ namespace SkyStopwatch.Properties {
                 this["TimeViewPreset2Size"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("18")]
+        public int TimeViewScanMiddleDelaySecond {
+            get {
+                return ((int)(this["TimeViewScanMiddleDelaySecond"]));
+            }
+            set {
+                this["TimeViewScanMiddleDelaySecond"] = value;
+            }
+        }
     }
 }

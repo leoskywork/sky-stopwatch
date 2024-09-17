@@ -323,10 +323,7 @@ namespace SkyStopwatch
                 this.timerMain.Start();
             }
 
-
-            TimeSpan ocrTimeSpan;
-
-            if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out ocrTimeSpan))
+            if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out TimeSpan ocrTimeSpan))
             {
                 int passedSeconds = (int)ocrTimeSpan.TotalSeconds + kickOffDelaySeconds;
 
@@ -341,8 +338,9 @@ namespace SkyStopwatch
                 {
                     if (source == GlobalData.ChangeTimeSourceTimerOCR)
                     {
-                        const int magicSecond = 20 - OCRGameTime.AutoOCRDelaySeconds;
-                        const int magicSecondLimit = 5;
+                        int magicSecond = GlobalData.Default.TimeViewScanMiddleDelaySecond - OCRGameTime.AutoOCRDelaySeconds;
+                        int magicSecondLimit = 5;
+
                         if (passedSeconds > magicSecondLimit)
                         {
                             passedSeconds -= magicSecond;

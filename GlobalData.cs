@@ -85,6 +85,8 @@ namespace SkyStopwatch
 
         public bool IsUsingScreenTopTime { get; set; } = true;
 
+        public int TimeViewScanMiddleDelaySecond { get; set; }
+
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
         //public static bool IsDebugging { get; set; } = false; //moved to global data
