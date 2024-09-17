@@ -219,8 +219,15 @@ namespace SkyStopwatch
 
         private void SetDialogTitle()
         {
+            if (GlobalData.ExeCreateDate == DateTime.MinValue)
+            {
+                string assemblyPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                GlobalData.ExeCreateDate = System.IO.File.GetCreationTime(assemblyPath);
+                GlobalData.ExeUpdateDate = System.IO.File.GetLastWriteTime(assemblyPath);
+            }
+
             string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {this.timerAutoClose.Interval/1000}s";
-            this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion}";
+            this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion} - {GlobalData.ExeUpdateDate.ToString("yyyy.MMdd.HHmm")}";
         }
 
 
