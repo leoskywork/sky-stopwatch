@@ -35,13 +35,14 @@
             this.timerAutoClose = new System.Windows.Forms.Timer(this.components);
             this.buttonTopMost = new System.Windows.Forms.Button();
             this.buttonClear = new System.Windows.Forms.Button();
-            this.buttonAddSeconds = new System.Windows.Forms.Button();
+            this.buttonAddFewSeconds = new System.Windows.Forms.Button();
             this.buttonOCR = new System.Windows.Forms.Button();
             this.buttonImageView = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.buttonLockTime = new System.Windows.Forms.Button();
             this.buttonReduceMinute = new System.Windows.Forms.Button();
             this.buttonAddMinute = new System.Windows.Forms.Button();
-            this.buttonReduceSeconds = new System.Windows.Forms.Button();
+            this.buttonAddSeconds = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.buttonCountRun = new System.Windows.Forms.Button();
             this.buttonCount = new System.Windows.Forms.Button();
@@ -56,7 +57,6 @@
             this.textBoxTimeSpanNodes = new System.Windows.Forms.TextBox();
             this.checkBoxPopWarning = new System.Windows.Forms.CheckBox();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
-            this.buttonLockTime = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -123,17 +123,17 @@
             this.buttonClear.UseVisualStyleBackColor = true;
             this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
             // 
-            // buttonAddSeconds
+            // buttonAddFewSeconds
             // 
-            this.buttonAddSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonAddSeconds.Location = new System.Drawing.Point(21, 181);
-            this.buttonAddSeconds.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonAddSeconds.Name = "buttonAddSeconds";
-            this.buttonAddSeconds.Size = new System.Drawing.Size(53, 30);
-            this.buttonAddSeconds.TabIndex = 300;
-            this.buttonAddSeconds.Text = "+10s";
-            this.buttonAddSeconds.UseVisualStyleBackColor = true;
-            this.buttonAddSeconds.Click += new System.EventHandler(this.buttonAddSeconds_Click);
+            this.buttonAddFewSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonAddFewSeconds.Location = new System.Drawing.Point(21, 181);
+            this.buttonAddFewSeconds.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonAddFewSeconds.Name = "buttonAddFewSeconds";
+            this.buttonAddFewSeconds.Size = new System.Drawing.Size(53, 30);
+            this.buttonAddFewSeconds.TabIndex = 300;
+            this.buttonAddFewSeconds.Text = "+2s";
+            this.buttonAddFewSeconds.UseVisualStyleBackColor = true;
+            this.buttonAddFewSeconds.Click += new System.EventHandler(this.buttonAddFewSeconds_Click);
             // 
             // buttonOCR
             // 
@@ -166,10 +166,10 @@
             this.groupBox1.Controls.Add(this.buttonLockTime);
             this.groupBox1.Controls.Add(this.buttonReduceMinute);
             this.groupBox1.Controls.Add(this.buttonAddMinute);
-            this.groupBox1.Controls.Add(this.buttonReduceSeconds);
+            this.groupBox1.Controls.Add(this.buttonAddSeconds);
             this.groupBox1.Controls.Add(this.buttonOCR);
             this.groupBox1.Controls.Add(this.buttonClear);
-            this.groupBox1.Controls.Add(this.buttonAddSeconds);
+            this.groupBox1.Controls.Add(this.buttonAddFewSeconds);
             this.groupBox1.Controls.Add(this.buttonNewGame);
             this.groupBox1.Location = new System.Drawing.Point(480, 34);
             this.groupBox1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -179,6 +179,18 @@
             this.groupBox1.TabIndex = 402;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "OCR";
+            // 
+            // buttonLockTime
+            // 
+            this.buttonLockTime.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonLockTime.Location = new System.Drawing.Point(21, 274);
+            this.buttonLockTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonLockTime.Name = "buttonLockTime";
+            this.buttonLockTime.Size = new System.Drawing.Size(120, 30);
+            this.buttonLockTime.TabIndex = 304;
+            this.buttonLockTime.Text = "Lock";
+            this.buttonLockTime.UseVisualStyleBackColor = true;
+            this.buttonLockTime.Click += new System.EventHandler(this.buttonLockTime_Click);
             // 
             // buttonReduceMinute
             // 
@@ -204,17 +216,17 @@
             this.buttonAddMinute.UseVisualStyleBackColor = true;
             this.buttonAddMinute.Click += new System.EventHandler(this.buttonAddMinute_Click);
             // 
-            // buttonReduceSeconds
+            // buttonAddSeconds
             // 
-            this.buttonReduceSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonReduceSeconds.Location = new System.Drawing.Point(87, 181);
-            this.buttonReduceSeconds.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonReduceSeconds.Name = "buttonReduceSeconds";
-            this.buttonReduceSeconds.Size = new System.Drawing.Size(53, 30);
-            this.buttonReduceSeconds.TabIndex = 301;
-            this.buttonReduceSeconds.Text = "-10s";
-            this.buttonReduceSeconds.UseVisualStyleBackColor = true;
-            this.buttonReduceSeconds.Click += new System.EventHandler(this.buttonReduceSeconds_Click);
+            this.buttonAddSeconds.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonAddSeconds.Location = new System.Drawing.Point(87, 181);
+            this.buttonAddSeconds.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonAddSeconds.Name = "buttonAddSeconds";
+            this.buttonAddSeconds.Size = new System.Drawing.Size(53, 30);
+            this.buttonAddSeconds.TabIndex = 301;
+            this.buttonAddSeconds.Text = "+10s";
+            this.buttonAddSeconds.UseVisualStyleBackColor = true;
+            this.buttonAddSeconds.Click += new System.EventHandler(this.buttonAddSeconds_Click);
             // 
             // groupBox2
             // 
@@ -399,18 +411,6 @@
             this.pictureBoxOne.TabIndex = 0;
             this.pictureBoxOne.TabStop = false;
             // 
-            // buttonLockTime
-            // 
-            this.buttonLockTime.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonLockTime.Location = new System.Drawing.Point(21, 274);
-            this.buttonLockTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonLockTime.Name = "buttonLockTime";
-            this.buttonLockTime.Size = new System.Drawing.Size(120, 30);
-            this.buttonLockTime.TabIndex = 304;
-            this.buttonLockTime.Text = "Lock";
-            this.buttonLockTime.UseVisualStyleBackColor = true;
-            this.buttonLockTime.Click += new System.EventHandler(this.buttonLockTime_Click);
-            // 
             // FormBootSetting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -451,13 +451,13 @@
         private System.Windows.Forms.Timer timerAutoClose;
         private System.Windows.Forms.Button buttonTopMost;
         private System.Windows.Forms.Button buttonClear;
-        private System.Windows.Forms.Button buttonAddSeconds;
+        private System.Windows.Forms.Button buttonAddFewSeconds;
         private System.Windows.Forms.Button buttonOCR;
         private System.Windows.Forms.Button buttonImageView;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button buttonReduceSeconds;
+        private System.Windows.Forms.Button buttonAddSeconds;
         private System.Windows.Forms.CheckBox checkBoxPopWarning;
         private System.Windows.Forms.TextBox textBoxTimeSpanNodes;
         private System.Windows.Forms.Button buttonSaveTimeNode;

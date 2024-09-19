@@ -145,17 +145,17 @@ namespace SkyStopwatch
             this.Close();
         }
 
-        private void buttonAddSeconds_Click(object sender, EventArgs e)
+        private void buttonAddFewSeconds_Click(object sender, EventArgs e)
         {
             buttonClear.Enabled = false;
-            _AddSecondsClick?.Invoke(OCRBase.IncrementSeconds);
+            _AddSecondsClick?.Invoke(OCRBase.Increment2Seconds);
             buttonClear.Enabled = true;
         }
 
-        private void buttonReduceSeconds_Click(object sender, EventArgs e)
+        private void buttonAddSeconds_Click(object sender, EventArgs e)
         {
             buttonClear.Enabled = false;
-            _AddSecondsClick?.Invoke(OCRBase.DecrementSeconds * -1);
+            _AddSecondsClick?.Invoke(OCRBase.Increment10Seconds);
             buttonClear.Enabled = true;
         }
 

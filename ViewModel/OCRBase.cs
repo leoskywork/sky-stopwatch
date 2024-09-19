@@ -18,8 +18,8 @@ namespace SkyStopwatch
 {
     public abstract class OCRBase
     {
-        public const int IncrementSeconds = 10;
-        public const int DecrementSeconds = 10;
+        public const int Increment2Seconds = 2;
+        public const int Increment10Seconds = 10;
         public const int IncrementMinutes = 1;
         public const int DecrementMinutes = 1;
 

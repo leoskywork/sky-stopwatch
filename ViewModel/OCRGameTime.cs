@@ -86,6 +86,7 @@ namespace SkyStopwatch
         private int _AutoOCREmptyInARowCount = 0;
         private int _AutoOCRFailParseInARowCount = 0;
         private int _AutoOCRMisreadInARowCount = 0;
+        private bool _HackMisread2xAs1x = false;
         public bool IsWithinOneGameRoundOrNap
         {
             get
@@ -105,7 +106,7 @@ namespace SkyStopwatch
                     return false;
                 }
 
-                return _AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < TimerNapSeconds;
+                return _HackMisread2xAs1x || _AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < TimerNapSeconds;
             }
         }
 
@@ -237,7 +238,7 @@ namespace SkyStopwatch
                 return false;
             }
 
-            bool wasFoundEmptyOCR = _AutoOCREmptyInARowCount > 0;
+            //bool wasFoundEmptyOCR = _AutoOCREmptyInARowCount > 0;
             this._AutoOCREmptyInARowCount = 0;
              
 
@@ -255,12 +256,16 @@ namespace SkyStopwatch
                 //coner case: sometimes, treat '2x' as '1x'(e.g. 23 as 13), ignore it
                 if (ocrTimeSpan.Minutes >= 10 && ocrTimeSpan.Minutes <= 19)
                 {
-                    if (sinceGameStart.Minutes >= 20 && wasFoundEmptyOCR)
+                    //if (sinceGameStart.Minutes >= 20 && wasFoundEmptyOCR)
+                    if (sinceGameStart.Minutes >= 20 && sinceGameStart.Minutes <= 29)
                     {
                         System.Diagnostics.Debug.WriteLine($"--> misread 2x as 1x: {ocrDisplayTime}");
+                        _HackMisread2xAs1x = true;
                         return true;
                     }
                 }
+
+                _HackMisread2xAs1x = false;
 
                 //int napSecondsAdjust = TimerNapSeconds + 20;
                 var ocrTimeSpanAdjust = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + AutoOCRDelaySeconds + 3);
@@ -317,6 +322,7 @@ namespace SkyStopwatch
 
             this.IsTimeLocked = false;
             this.LockSource = source;
+            _HackMisread2xAs1x = false;
         }
 
         public void ResetAutoLockArgs(TimeLocKSource source)
@@ -324,6 +330,7 @@ namespace SkyStopwatch
             _AutoOCRSuccessCount = 0;
             this.IsTimeLocked = false;
             this.LockSource = source;
+            _HackMisread2xAs1x= false;
         }
 
         public bool ShouldAutoLock()

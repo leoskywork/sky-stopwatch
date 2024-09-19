@@ -596,8 +596,8 @@ namespace SkyStopwatch
             {
                 if (this.labelTitle.Visible)
                 {
-                    this.labelTitle.Text = DateTime.Now.ToString(GlobalData.TimeFormatNoSecond);
                     //this.labelTitle.Text = "23:59";
+                    this.labelTitle.Text = DateTime.Now.ToString(GlobalData.TimeFormatNoSecond);
                 }
 
                 if (this.labelTimer.Visible)
@@ -607,7 +607,7 @@ namespace SkyStopwatch
                     if (_IsUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
                     {
                         var passed = DateTime.Now - this.Model.TimeAroundGameStart;
-                        if (passed.TotalMinutes < GlobalData.MaxGameRoundMinutes)
+                        if (passed.TotalMinutes <= GlobalData.MaxGameRoundMinutes)
                         {
                             this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
                             this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
@@ -693,15 +693,12 @@ namespace SkyStopwatch
             try
             {
                 if (!labelTimer.Visible) return;
-                if (this.IsTimeLocked && !TryAutoUnlockTime()) return;
                 if (_IsAutoRefreshing) return;
-                _IsAutoRefreshing = true;
+                if (this.IsTimeLocked && !TryAutoUnlockTime()) return;
 
                 var intervalKind = SetTimerInterval();
-                if (intervalKind  == OCRGameTimeTimerKind.InGameMiniTopTimeSlow){
-                    _IsAutoRefreshing = false;
-                    return;
-                }
+                if (intervalKind == OCRGameTimeTimerKind.InGameMiniTopTimeSlow) return;
+                _IsAutoRefreshing = true;
 
                 Task.Factory.StartNew(() =>
                 {
@@ -807,6 +804,7 @@ namespace SkyStopwatch
                 this.IsTimeLocked = true;
                 this.Model.LockSource = DataModel.TimeLocKSource.AppAutoLock;
                 this.RunOnMainAsync(() => BoxMessage.Show("Going to lock time", this));
+                this.SetTimerInterval();
                 return true;
             }
 
@@ -831,7 +829,7 @@ namespace SkyStopwatch
         {
             if (GlobalData.Default.IsUsingScreenTopTime)
             {
-                if (this.Model.IsWithinOneGameRoundOrNap)
+                if (this.IsTimeLocked || this.Model.IsWithinOneGameRoundOrNap)
                 {
                     System.Diagnostics.Debug.WriteLine("auto refresh - within one round/nap, going to skip");
                     _IsAutoRefreshing = false;
