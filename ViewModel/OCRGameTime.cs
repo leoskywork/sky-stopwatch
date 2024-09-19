@@ -54,7 +54,7 @@ namespace SkyStopwatch
         public const int SuccessLimit = 20;//8;//10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
         public const int EmptyLimit = 30;
         public const int FailParseLimit = 3;
-        public const int MisreadLimit = 50;
+        public const int MisreadLimit = 70;// 50;
          
         public int BootingArgs { get; set; } = 0;
         public string AutoOCRTimeOfLastRead { get; set; }
@@ -67,12 +67,19 @@ namespace SkyStopwatch
             {
                 _TimeAroundGameStart = value;
                 _GameTimeLastUpdateTime = DateTime.Now;
-                _GameRemainingSeconds = (int)(_TimeAroundGameStart.AddMinutes(GlobalData.MaxScreenTopGameMinute) - _GameTimeLastUpdateTime).TotalSeconds;
             }
         }
         private DateTime _GameTimeLastUpdateTime;
         private int _GameRemainingSeconds;
-        public int GameRemainingSeconds {  get { return _GameRemainingSeconds; } }
+        public int GameRemainingSeconds
+        {
+            get
+            {
+                _GameRemainingSeconds = (int)(_TimeAroundGameStart.AddMinutes(GlobalData.MaxScreenTopGameMinute) - DateTime.Now).TotalSeconds;
+
+                return _GameRemainingSeconds;
+            }
+        }
 
         //leotodo, a better way to do this is using enum instead of 4 countsl
         private int _AutoOCRSuccessCount = 0;
@@ -90,7 +97,7 @@ namespace SkyStopwatch
 
                 var sinceLastUpdate = DateTime.Now - _GameTimeLastUpdateTime;
                 //leotodo, issue here, just manual reset after game end/manual exit game
-                if (sinceLastUpdate.TotalSeconds >= _GameRemainingSeconds)//600)//10)// 120)
+                if (sinceLastUpdate.TotalSeconds >= this.GameRemainingSeconds)//600)//10)// 120)
                 {
                     _AutoOCRSuccessCount = 0;
                     _AutoOCREmptyInARowCount = 0;
@@ -105,7 +112,7 @@ namespace SkyStopwatch
 
         public bool IsTimeLocked { get; set; }
 
-        public TimeLocKSource LockSource { get; set; } = TimeLocKSource.AppAutoLock;
+        public TimeLocKSource LockSource { get; set; } = TimeLocKSource.None;
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
@@ -250,13 +257,14 @@ namespace SkyStopwatch
                 {
                     if (sinceGameStart.Minutes >= 20 && wasFoundEmptyOCR)
                     {
+                        System.Diagnostics.Debug.WriteLine($"--> misread 2x as 1x: {ocrDisplayTime}");
                         return true;
                     }
                 }
 
                 //int napSecondsAdjust = TimerNapSeconds + 20;
                 var ocrTimeSpanAdjust = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + AutoOCRDelaySeconds + 3);
-                if (ocrTimeSpanAdjust < sinceGameStart && (_AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < _GameRemainingSeconds))// sinceLastUpdate.TotalSeconds < napSecondsAdjust))
+                if (ocrTimeSpanAdjust < sinceGameStart && (_AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < this.GameRemainingSeconds))// sinceLastUpdate.TotalSeconds < napSecondsAdjust))
                 {
                     _AutoOCRMisreadInARowCount++;
                     System.Diagnostics.Debug.WriteLine($"--> misread #{_AutoOCRMisreadInARowCount}: {ocrDisplayTime}, should NOT less than {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
@@ -295,7 +303,7 @@ namespace SkyStopwatch
             return false;
         }
 
-        public void ResetAutoOCR()
+        public void ResetAutoOCR(TimeLocKSource source)
         {
             this.AutoOCRTimeOfLastRead = null;
             _TimeAroundGameStart = DateTime.MinValue;
@@ -306,11 +314,26 @@ namespace SkyStopwatch
             _AutoOCREmptyInARowCount = 0;
             _AutoOCRFailParseInARowCount = 0;
             _AutoOCRMisreadInARowCount= 0;
+
+            this.IsTimeLocked = false;
+            this.LockSource = source;
+        }
+
+        public void ResetAutoLockArgs(TimeLocKSource source)
+        {
+            _AutoOCRSuccessCount = 0;
+            this.IsTimeLocked = false;
+            this.LockSource = source;
         }
 
         public bool ShouldAutoLock()
         {
-            if (_AutoOCRSuccessCount >= 3 && _GameRemainingSeconds >= 60)
+            if (this.ShouldAutoUnlock())
+            {
+                return false;
+            }
+
+            if (_AutoOCRSuccessCount >= 4 && this.GameRemainingSeconds >= 60)
             {
                 return true;
             }
@@ -320,7 +343,25 @@ namespace SkyStopwatch
 
         public bool ShouldAutoUnlock()
         {
-            if(_GameRemainingSeconds < 60)
+            int remaining = this.GameRemainingSeconds;
+            System.Diagnostics.Debug.WriteLine($"remaining：{remaining/60}:{remaining % 60}");
+
+            //1st phase boss
+            int phase1Low = 26 * 60 + 30;
+            if (remaining > phase1Low && remaining < phase1Low + 60)
+            {
+                return true;
+            }
+
+            //2nd phase boss
+            int phase2Low = 16 * 60 + 20;
+            if (remaining > phase2Low && remaining < phase2Low + 120)
+            {
+                return true;
+            }
+
+            //game end
+            if (remaining < 10)
             {
                 return true;
             }

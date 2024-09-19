@@ -8,6 +8,7 @@ namespace SkyStopwatch.DataModel
 {
     public enum TimeLocKSource
     {
+        None = 0,
         AppAutoLock,
         UserClick
     }

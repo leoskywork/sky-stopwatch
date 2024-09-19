@@ -126,5 +126,11 @@ namespace SkyStopwatch
 
             this.Show();
         }
+
+        public static void Show(string message, Control parent)
+        {
+            var box = new BoxMessage(message, false, null);
+            box.ShowAside(parent);
+        }
     }
 }

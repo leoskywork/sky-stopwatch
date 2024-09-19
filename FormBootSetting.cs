@@ -241,7 +241,7 @@ namespace SkyStopwatch
 
             string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {this.timerAutoClose.Interval/1000}s";
             string exeTime = GlobalData.ExeUpdateDate.ToString("yyyy.MMdd.HHmm");
-            string suffix = $"Time locked: {this._Args.IsTimeLocked}";
+            string suffix = $"Time locked: {this._Args.IsTimeLocked}_{this._Args.LockSource}";
             this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion} - {exeTime} - {suffix}";
         }
 

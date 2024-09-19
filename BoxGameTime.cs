@@ -1,4 +1,5 @@
-﻿using SkyStopwatch.View;
+﻿using SkyStopwatch.DataModel;
+using SkyStopwatch.View;
 using SkyStopwatch.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -45,12 +46,6 @@ namespace SkyStopwatch
             set
             {
                 this.Model.IsTimeLocked = value;
-
-                this.RunOnMainAsync(() =>
-                {
-                    this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
-                });
-
                 System.Diagnostics.Debug.WriteLine($"set locked: {value}");
             }
         }
@@ -444,6 +439,7 @@ namespace SkyStopwatch
             {
                 Image = bitmap,
                 IsTimeLocked = this.IsTimeLocked,
+                LockSource = this.Model.LockSource,
                 EnableLockButton = this.Model.TimeAroundGameStart != DateTime.MinValue,
             };
 
@@ -484,7 +480,7 @@ namespace SkyStopwatch
                 toolBoxButtonOCR.Cursor = Cursors.No;
             }
 
-            System.Diagnostics.Debug.WriteLine($"----- OnInitToolBox, {nameof(initialTimeNodes)}: {initialTimeNodes}");
+            //System.Diagnostics.Debug.WriteLine($"----- OnInitToolBox, {nameof(initialTimeNodes)}: {initialTimeNodes}");
             //System.Diagnostics.Debug.WriteLine($"old: {this._TimeNodeCheckingList}");
             //do not do this, causing bug
             //this._TimeNodeCheckingList = initialTimeNodes;
@@ -545,7 +541,7 @@ namespace SkyStopwatch
 
             //reset flags/history values
             //flag 1
-            this.Model.ResetAutoOCR();
+            this.Model.ResetAutoOCR(autoRestart ? TimeLocKSource.AppAutoLock : TimeLocKSource.UserClick);
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
             var source = autoRestart ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGame;
@@ -583,7 +579,15 @@ namespace SkyStopwatch
         private void OnSwitchTimeLockState()
         {
             this.IsTimeLocked = !this.IsTimeLocked;
-            this.Model.LockSource = DataModel.TimeLocKSource.UserClick;
+
+            if (this.IsTimeLocked)
+            {
+                this.Model.LockSource = DataModel.TimeLocKSource.UserClick;
+            }
+            else
+            {
+                this.Model.ResetAutoLockArgs(TimeLocKSource.UserClick);
+            }
         }
 
         private void timerMain_Tick(object sender, EventArgs e)
@@ -603,9 +607,10 @@ namespace SkyStopwatch
                     if (_IsUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
                     {
                         var passed = DateTime.Now - this.Model.TimeAroundGameStart;
-                        if (passed.TotalMinutes < GlobalData.MaxGameRoundMinutes)
+                        if (passed.TotalMinutes <= GlobalData.MaxGameRoundMinutes)
                         {
                             this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
+                            this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
                         }
                         else
                         {
@@ -660,7 +665,7 @@ namespace SkyStopwatch
                 _IsUpdatingPassedTime = false;
                 SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton);
                 _IsAutoRefreshing = false;
-                this.Model.ResetAutoOCR();
+                this.Model.ResetAutoOCR(TimeLocKSource.UserClick);
 
 
                 this.labelTimer.Text = "--";
@@ -688,7 +693,7 @@ namespace SkyStopwatch
             try
             {
                 if (!labelTimer.Visible) return;
-                if (this.IsTimeLocked) return;
+                if (this.IsTimeLocked && !TryAutoUnlockTime()) return;
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
 
@@ -765,7 +770,8 @@ namespace SkyStopwatch
                             }
                             else if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
                             {
-                                StartUIStopwatch(ocrDisplayTime, OCRGameTime.AutoOCRDelaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
+                                int delaySeconds = GlobalData.Default.IsUsingScreenTopTime ? 1 : OCRGameTime.AutoOCRDelaySeconds;
+                                StartUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
                                 TryAutoLockTime();
                             }
                             else
@@ -792,31 +798,33 @@ namespace SkyStopwatch
             }
         }
 
-        private void TryAutoLockTime()
+        private bool TryAutoLockTime()
         {
-            if (this.IsTimeLocked) return;
+            if (this.IsTimeLocked) return false;
 
             if (this.Model.ShouldAutoLock())
             {
                 this.IsTimeLocked = true;
                 this.Model.LockSource = DataModel.TimeLocKSource.AppAutoLock;
-                this.RunOnMainAsync(() =>
-                {
-                    var message = new BoxMessage("Going to lock time", false, null);
-                    message.ShowAside(this);
-                });
+                this.RunOnMainAsync(() => BoxMessage.Show("Going to lock time", this));
+                return true;
             }
+
+            return false;
         }
 
-        private void TryUnlockTime()
+        private bool TryAutoUnlockTime()
         {
-            if (!this.IsTimeLocked) return;
+            if (!this.IsTimeLocked) return false;
 
             if (this.Model.ShouldAutoUnlock())
             {
-                this.IsTimeLocked = false;
-                this.Model.LockSource = DataModel.TimeLocKSource.AppAutoLock;
+                this.Model.ResetAutoLockArgs(TimeLocKSource.AppAutoLock);
+                System.Diagnostics.Debug.WriteLine($"auto unlock, remain: {this.Model.GameRemainingSeconds / 60}");
+                return true;
             }
+
+            return false;
         }
 
         private OCRGameTimeTimerKind SetTimerInterval()

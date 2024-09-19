@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.DataModel;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace SkyStopwatch.ViewModel
         public Bitmap Image { get; set; }
 
         public bool IsTimeLocked { get; set; }
+
+        public TimeLocKSource LockSource { get; set; }
 
         public bool EnableLockButton { get; set; }
 
