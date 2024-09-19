@@ -11,8 +11,8 @@ namespace SkyStopwatch
 {
     public class GlobalData
     {
-        public const string Version = "1.7";
-        public const string Subversion = "917.1";//"1.240829";
+        public const string Version = "1.8";
+        public const string Subversion = "920.1";//"1.240829";
         public static DateTime ExeCreateDate = DateTime.MinValue;
         public static DateTime ExeUpdateDate = DateTime.MinValue;
         public const string ChangeTimeSourceOCRTimeIsNegativeOne = "ocrDisplayTime is -1";
@@ -54,7 +54,7 @@ namespace SkyStopwatch
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
         public const int MessageBoxDisplaySeconds = 10;//20;
         public const int PreRoundGameMinutes = 30;//39;//38;//(join game first, then open this app)30; //can not join game after 30 min
-        public const int MaxGameRoundMinutes = 40;
+        public const int MaxGameRoundMinutes = 39;
         public const int MaxScreenTopGameMinute = 38;
         public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
 

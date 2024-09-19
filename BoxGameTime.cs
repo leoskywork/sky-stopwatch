@@ -607,7 +607,7 @@ namespace SkyStopwatch
                     if (_IsUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
                     {
                         var passed = DateTime.Now - this.Model.TimeAroundGameStart;
-                        if (passed.TotalMinutes <= GlobalData.MaxGameRoundMinutes)
+                        if (passed.TotalMinutes < GlobalData.MaxGameRoundMinutes)
                         {
                             this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
                             this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
