@@ -58,6 +58,7 @@ namespace SkyStopwatch
             GlobalData.Default.IsDebugging = Properties.Settings.Default.EnableDebugging;
             GlobalData.Default.EnableBossCountingOneMode = Properties.Settings.Default.EnableBossCountingOneMode;
             GlobalData.Default.IsUsingScreenTopTime = Properties.Settings.Default.IsUsingScreenTopTime;
+            GlobalData.Default.EnableScreenTopTimeAutoLock = Properties.Settings.Default.EnableScreenTopTimeAutoLock;
             GlobalData.Default.TimeViewScanMiddleDelaySecond = Properties.Settings.Default.TimeViewScanMiddleDelaySecond;
 
 
@@ -126,6 +127,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.EnableDebugging = GlobalData.Default.IsDebugging;
                 Properties.Settings.Default.EnableBossCountingOneMode = GlobalData.Default.EnableBossCountingOneMode;
                 Properties.Settings.Default.IsUsingScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
+                Properties.Settings.Default.EnableScreenTopTimeAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock;
                 Properties.Settings.Default.TimeViewScanMiddleDelaySecond = GlobalData.Default.TimeViewScanMiddleDelaySecond;
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(OCRGameTime.XPoint, OCRGameTime.YPoint);

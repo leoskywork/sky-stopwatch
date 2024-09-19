@@ -14,7 +14,9 @@ namespace SkyStopwatch
     public partial class FormImageViewTime : Form
     {
         private bool _EnableScreenTopTime;
+        private bool _EnableAutoLock;
         private int _ScanMiddleDelaySecond;
+
 
         public FormImageViewTime()
         {
@@ -32,8 +34,11 @@ namespace SkyStopwatch
             this.numericUpDownHeight.Value = OCRGameTime.BlockHeight;
 
             this._EnableScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
+            this._EnableAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock;
             this._ScanMiddleDelaySecond = GlobalData.Default.TimeViewScanMiddleDelaySecond;
+
             this.checkBoxReadTopTime.Checked = _EnableScreenTopTime;
+            this.checkBoxAutoLock.Checked = _EnableAutoLock;
             this.numericUpDownDelaySecond.Value = _ScanMiddleDelaySecond;
         }
 
@@ -228,6 +233,7 @@ namespace SkyStopwatch
         private void checkBoxReadTopTime_CheckedChanged(object sender, EventArgs e)
         {
             _EnableScreenTopTime = this.checkBoxReadTopTime.Checked;
+            checkBoxAutoLock.Enabled = this.checkBoxReadTopTime.Checked;
             SetButtonSaveSettingState();
         }
 
@@ -240,9 +246,10 @@ namespace SkyStopwatch
         private void SetButtonSaveSettingState()
         {
             bool diffTopTimeState = GlobalData.Default.IsUsingScreenTopTime != _EnableScreenTopTime;
+            bool diffAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock != _EnableAutoLock;
             bool diffDelay = GlobalData.Default.TimeViewScanMiddleDelaySecond != _ScanMiddleDelaySecond;
 
-            this.buttonSaveSetting.Enabled = diffTopTimeState || diffDelay;
+            this.buttonSaveSetting.Enabled = diffTopTimeState || diffAutoLock || diffDelay;
         }
 
         private void buttonSaveSetting_Click(object sender, EventArgs e)
@@ -252,6 +259,7 @@ namespace SkyStopwatch
                 this.buttonSaveSetting.Enabled = false;
 
                 GlobalData.Default.IsUsingScreenTopTime = _EnableScreenTopTime;
+                GlobalData.Default.EnableScreenTopTimeAutoLock = _EnableAutoLock;
                 GlobalData.Default.TimeViewScanMiddleDelaySecond = _ScanMiddleDelaySecond;
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save setting"));
             }
@@ -262,6 +270,10 @@ namespace SkyStopwatch
             }
         }
 
-
+        private void checkBoxAutoLock_CheckedChanged(object sender, EventArgs e)
+        {
+            _EnableAutoLock = checkBoxAutoLock.Checked;
+            SetButtonSaveSettingState();
+        }
     }
 }

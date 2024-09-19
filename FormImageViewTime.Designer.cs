@@ -55,6 +55,7 @@
             this.buttonSaveSetting = new System.Windows.Forms.Button();
             this.numericUpDownDelaySecond = new System.Windows.Forms.NumericUpDown();
             this.labelScanMiddleDelay = new System.Windows.Forms.Label();
+            this.checkBoxAutoLock = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -341,6 +342,7 @@
             // 
             // groupBoxSetting
             // 
+            this.groupBoxSetting.Controls.Add(this.checkBoxAutoLock);
             this.groupBoxSetting.Controls.Add(this.checkBoxReadTopTime);
             this.groupBoxSetting.Controls.Add(this.buttonSaveSetting);
             this.groupBoxSetting.Controls.Add(this.numericUpDownDelaySecond);
@@ -357,7 +359,7 @@
             this.checkBoxReadTopTime.AutoSize = true;
             this.checkBoxReadTopTime.Checked = true;
             this.checkBoxReadTopTime.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxReadTopTime.Location = new System.Drawing.Point(19, 95);
+            this.checkBoxReadTopTime.Location = new System.Drawing.Point(19, 84);
             this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
             this.checkBoxReadTopTime.Size = new System.Drawing.Size(133, 19);
@@ -404,6 +406,18 @@
             this.labelScanMiddleDelay.Size = new System.Drawing.Size(215, 15);
             this.labelScanMiddleDelay.TabIndex = 3;
             this.labelScanMiddleDelay.Text = "Scan middle delay seconds:";
+            // 
+            // checkBoxAutoLock
+            // 
+            this.checkBoxAutoLock.AutoSize = true;
+            this.checkBoxAutoLock.Location = new System.Drawing.Point(19, 122);
+            this.checkBoxAutoLock.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkBoxAutoLock.Name = "checkBoxAutoLock";
+            this.checkBoxAutoLock.Size = new System.Drawing.Size(173, 19);
+            this.checkBoxAutoLock.TabIndex = 411;
+            this.checkBoxAutoLock.Text = "Top time auto lock";
+            this.checkBoxAutoLock.UseVisualStyleBackColor = true;
+            this.checkBoxAutoLock.CheckedChanged += new System.EventHandler(this.checkBoxAutoLock_CheckedChanged);
             // 
             // FormImageViewTime
             // 
@@ -476,5 +490,6 @@
         private System.Windows.Forms.Button buttonSaveSetting;
         private System.Windows.Forms.NumericUpDown numericUpDownDelaySecond;
         private System.Windows.Forms.CheckBox checkBoxReadTopTime;
+        private System.Windows.Forms.CheckBox checkBoxAutoLock;
     }
 }

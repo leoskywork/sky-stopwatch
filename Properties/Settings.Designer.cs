@@ -286,5 +286,17 @@ namespace SkyStopwatch.Properties {
                 this["TimeViewScanMiddleDelaySecond"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableScreenTopTimeAutoLock {
+            get {
+                return ((bool)(this["EnableScreenTopTimeAutoLock"]));
+            }
+            set {
+                this["EnableScreenTopTimeAutoLock"] = value;
+            }
+        }
     }
 }

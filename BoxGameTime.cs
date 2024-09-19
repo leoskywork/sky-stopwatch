@@ -39,6 +39,22 @@ namespace SkyStopwatch
 
         public bool IsPermanent => true;
 
+        public bool IsTimeLocked
+        {
+            get { return this.Model.IsTimeLocked; }
+            set
+            {
+                this.Model.IsTimeLocked = value;
+
+                this.RunOnMainAsync(() =>
+                {
+                    this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
+                });
+
+                System.Diagnostics.Debug.WriteLine($"set locked: {value}");
+            }
+        }
+
         public BoxGameTime(int args)
         {
             InitializeComponent();
@@ -54,6 +70,7 @@ namespace SkyStopwatch
         private void InitStopwatch()
         {
             this.labelTimer.Text = "unset";
+            this.IsTimeLocked = false;
             this.timerMain.Interval = OCRGameTime.TimerDisplayUIIntervalMS;
             this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
 
@@ -408,7 +425,6 @@ namespace SkyStopwatch
             using (Bitmap bitPic = new Bitmap(screenRect.Width, screenRect.Height))
             using (Graphics gra = Graphics.FromImage(bitPic))
             {
-
                 gra.CopyFromScreen(0, 0, 0, 0, bitPic.Size);
                 gra.DrawImage(bitPic, 0, 0, screenRect, GraphicsUnit.Pixel);
 
@@ -416,8 +432,7 @@ namespace SkyStopwatch
                 Bitmap cloneBitmap = bitPic.Clone(this.Model.GetScreenBlock(), bitPic.PixelFormat);
 
                 FormBootSetting tool = CreateToolBox(cloneBitmap);
-                tool.StartPosition = FormStartPosition.Manual;
-                tool.Location = new Point(this.Location.X - tool.Width + this.Width + 10, this.Location.Y + this.Size.Height + 30);
+                tool.SetLocation(this);
                 tool.Show();
                 return tool;
             }
@@ -425,14 +440,23 @@ namespace SkyStopwatch
 
         private FormBootSetting CreateToolBox(Bitmap bitmap)
         {
-            FormBootSetting tool = new FormBootSetting(bitmap,
+            var args = new BootSettingArgs()
+            {
+                Image = bitmap,
+                IsTimeLocked = this.IsTimeLocked,
+                EnableLockButton = this.Model.TimeAroundGameStart != DateTime.MinValue,
+            };
+
+
+            FormBootSetting tool = new FormBootSetting(args,
                                (_, __) => { this.OnInitToolBox(_, __); },
                                () => { this.OnRunOCR(null, GlobalData.ChangeTimeSourceManualOCRButton); },
                                () => { this.OnNewGameStart(false); },
                                () => { this.OnSwitchTopMost(); },
                                () => { this.OnClearOCR(); },
                                (_) => { this.OnAddSeconds(_); },
-                               (_) => { this.OnChangeTimeNodes(_); });
+                               (_) => { this.OnChangeTimeNodes(_); },
+                               () => { this.OnSwitchTimeLockState(); } );
 
             return tool;
         }
@@ -514,7 +538,7 @@ namespace SkyStopwatch
             });
         }
 
-        private void OnNewGameStart(bool auto)
+        private void OnNewGameStart(bool autoRestart)
         {
             _IsUpdatingPassedTime = true;
             //this.buttonOCR.Enabled = false;
@@ -524,7 +548,7 @@ namespace SkyStopwatch
             this.Model.ResetAutoOCR();
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
-            var source = auto ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGame;
+            var source = autoRestart ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGame;
             StartUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), OCRGameTime.NewGameDelaySeconds, source);
 
             if (!this.timerAutoRefresh.Enabled)
@@ -556,6 +580,11 @@ namespace SkyStopwatch
             SyncTopMost();
         }
 
+        private void OnSwitchTimeLockState()
+        {
+            this.IsTimeLocked = !this.IsTimeLocked;
+            this.Model.LockSource = DataModel.TimeLocKSource.UserClick;
+        }
 
         private void timerMain_Tick(object sender, EventArgs e)
         {
@@ -659,6 +688,7 @@ namespace SkyStopwatch
             try
             {
                 if (!labelTimer.Visible) return;
+                if (this.IsTimeLocked) return;
                 if (_IsAutoRefreshing) return;
                 _IsAutoRefreshing = true;
 
@@ -736,6 +766,7 @@ namespace SkyStopwatch
                             else if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
                             {
                                 StartUIStopwatch(ocrDisplayTime, OCRGameTime.AutoOCRDelaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
+                                TryAutoLockTime();
                             }
                             else
                             {
@@ -758,6 +789,33 @@ namespace SkyStopwatch
             {
                 this.OnError(ex);
                 //buttonOCR.Enabled = true;
+            }
+        }
+
+        private void TryAutoLockTime()
+        {
+            if (this.IsTimeLocked) return;
+
+            if (this.Model.ShouldAutoLock())
+            {
+                this.IsTimeLocked = true;
+                this.Model.LockSource = DataModel.TimeLocKSource.AppAutoLock;
+                this.RunOnMainAsync(() =>
+                {
+                    var message = new BoxMessage("Going to lock time", false, null);
+                    message.ShowAside(this);
+                });
+            }
+        }
+
+        private void TryUnlockTime()
+        {
+            if (!this.IsTimeLocked) return;
+
+            if (this.Model.ShouldAutoUnlock())
+            {
+                this.IsTimeLocked = false;
+                this.Model.LockSource = DataModel.TimeLocKSource.AppAutoLock;
             }
         }
 

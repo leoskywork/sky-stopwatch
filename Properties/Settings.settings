@@ -68,5 +68,8 @@
     <Setting Name="TimeViewScanMiddleDelaySecond" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">18</Value>
     </Setting>
+    <Setting Name="EnableScreenTopTimeAutoLock" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

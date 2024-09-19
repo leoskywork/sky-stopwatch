@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.DataModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -41,7 +42,7 @@ namespace SkyStopwatch
         public const int NewGameDelaySeconds = 1;//10;
         public const int NoDelay = 0;
 
-        public const int TimerDisplayUIIntervalMS = 100;
+        public const int TimerDisplayUIIntervalMS = 200;//100;
 
         public const int TimerAutoOCRFastIntervalMS = 800; // this value x 3 should less than 1000 (1 second)
         public const int TimerAutoOCRSlowIntervalMS = 10 * 1000;
@@ -102,6 +103,9 @@ namespace SkyStopwatch
         }
 
 
+        public bool IsTimeLocked { get; set; }
+
+        public TimeLocKSource LockSource { get; set; } = TimeLocKSource.AppAutoLock;
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
         {
@@ -254,9 +258,9 @@ namespace SkyStopwatch
                 var ocrTimeSpanAdjust = TimeSpan.FromSeconds(ocrTimeSpan.TotalSeconds + AutoOCRDelaySeconds + 3);
                 if (ocrTimeSpanAdjust < sinceGameStart && (_AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < _GameRemainingSeconds))// sinceLastUpdate.TotalSeconds < napSecondsAdjust))
                 {
-                    System.Diagnostics.Debug.WriteLine($"--> misread ocr time: {ocrDisplayTime}, should NOT less than {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
-                    System.Diagnostics.Debug.WriteLine($"--> since game start: {sinceGameStart}, since last update: {sinceLastUpdate}");
                     _AutoOCRMisreadInARowCount++;
+                    System.Diagnostics.Debug.WriteLine($"--> misread #{_AutoOCRMisreadInARowCount}: {ocrDisplayTime}, should NOT less than {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
+                    System.Diagnostics.Debug.WriteLine($"--> since game start: {sinceGameStart}, since last update: {sinceLastUpdate}");
 
                     if(_AutoOCRMisreadInARowCount < MisreadLimit)
                     {
@@ -273,7 +277,7 @@ namespace SkyStopwatch
                 {
                     _AutoOCRSuccessCount++;
                     _AutoOCRMisreadInARowCount = 0;
-                    System.Diagnostics.Debug.WriteLine($"success count: {_AutoOCRSuccessCount}, ocr time: {ocrDisplayTime}");
+                    System.Diagnostics.Debug.WriteLine($"success #{_AutoOCRSuccessCount} ocr: {ocrDisplayTime}");
                 }
 
                 _AutoOCRFailParseInARowCount = 0;
@@ -284,7 +288,7 @@ namespace SkyStopwatch
                 if (_AutoOCRFailParseInARowCount >= FailParseLimit)
                 {
                     _AutoOCRSuccessCount = 0;
-                    System.Diagnostics.Debug.WriteLine("reset success count, failed to parse：" + ocrDisplayTime);
+                    System.Diagnostics.Debug.WriteLine("reset success #, failed to parse：" + ocrDisplayTime);
                 }
             }
 
@@ -304,5 +308,24 @@ namespace SkyStopwatch
             _AutoOCRMisreadInARowCount= 0;
         }
 
+        public bool ShouldAutoLock()
+        {
+            if (_AutoOCRSuccessCount >= 3 && _GameRemainingSeconds >= 60)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool ShouldAutoUnlock()
+        {
+            if(_GameRemainingSeconds < 60)
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

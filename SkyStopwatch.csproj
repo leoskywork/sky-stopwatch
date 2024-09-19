@@ -77,6 +77,12 @@
     <Compile Include="BoxBossCountingSuccinct.Designer.cs">
       <DependentUpon>BoxBossCountingSuccinct.cs</DependentUpon>
     </Compile>
+    <Compile Include="BoxMessage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BoxMessage.Designer.cs">
+      <DependentUpon>BoxMessage.cs</DependentUpon>
+    </Compile>
     <Compile Include="DataModel\BossCall.cs" />
     <Compile Include="DataModel\BossCallDualSection.cs" />
     <Compile Include="DataModel\BossCallGroup.cs" />
@@ -84,6 +90,7 @@
     <Compile Include="DataModel\BossCallBase.cs" />
     <Compile Include="DataModel\IBossCall.cs" />
     <Compile Include="DataModel\OCRCompareResult.cs" />
+    <Compile Include="DataModel\TimeLocKSource.cs" />
     <Compile Include="DataModel\TinyScreenShot.cs" />
     <Compile Include="DataModel\TinyScreenShotBossCall.cs" />
     <Compile Include="FormBoot.cs">
@@ -123,6 +130,7 @@
       <DependentUpon>BoxPhaseBossWarning.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalData.cs" />
+    <Compile Include="ViewModel\BootSettingArgs.cs" />
     <Compile Include="ViewModel\OCRGameTimeTimerKind.cs" />
     <Compile Include="ViewModel\ViewModelFactory.cs" />
     <Compile Include="ViewModel\OCRBase.cs" />
@@ -152,6 +160,9 @@
     <Compile Include="View\ITopForm.cs" />
     <EmbeddedResource Include="BoxBossCountingSuccinct.resx">
       <DependentUpon>BoxBossCountingSuccinct.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BoxMessage.resx">
+      <DependentUpon>BoxMessage.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FormBoot.resx">
       <DependentUpon>FormBoot.cs</DependentUpon>

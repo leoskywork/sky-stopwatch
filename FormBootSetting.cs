@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkyStopwatch.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,28 +20,33 @@ namespace SkyStopwatch
         private Action _ClearClick;
         private Action<int> _AddSecondsClick;
         private Action<string> _ChangeTimeNodes;
+        private Action _LockClick;
 
         private string _OriginalTimeNodes;
-        private int _BootingArgs = 0; //0 = default theme
+        private BootSettingArgs _Args;
 
         private FormBootSetting()
         {
             InitializeComponent();
         }
 
-        public FormBootSetting(Bitmap image,
-            Action<Button, string> onInit = null,
-            Action runOCR = null,
-            Action onNewGame = null,
-            Action topMost = null,
-            Action clear = null,
-            Action<int> addSeconds = null,
-            Action<string> changeTimeNodes = null
+        public FormBootSetting(BootSettingArgs args,
+            Action<Button, string> onInit,
+            Action runOCR,
+            Action onNewGame,
+            Action topMost,
+            Action clear,
+            Action<int> addSeconds,
+            Action<string> changeTimeNodes,
+            Action lockTime
             ) : this()
         {
-
-            this.pictureBoxOne.Image = image;
+            this._Args = args ?? throw new ArgumentNullException("args");
+            this.pictureBoxOne.Image = args.Image;
+            args.Image = null;
             this.labelMessage.Text = "<hover to show config>";
+            this.buttonLockTime.Text = args.IsTimeLocked ? "Unlock" : "Lock";
+            this.buttonLockTime.Enabled = args.EnableLockButton;
 
             _RunOCR = runOCR;
             _NewGameClick = onNewGame;
@@ -48,6 +54,7 @@ namespace SkyStopwatch
             _ClearClick = clear;
             _AddSecondsClick = addSeconds;
             _ChangeTimeNodes = changeTimeNodes;
+            _LockClick = lockTime;
 
             //got error when call this.close(), cross threads issue, thus use ui control timer instead
             //Task.Factory.StartNew(() =>
@@ -81,8 +88,7 @@ namespace SkyStopwatch
 
             SetDialogTitle();
 
-            this._BootingArgs = GlobalData.Default.BootingArgs;
-            //this.buttonChangeTheme.Text = $"Change theme {_BootingArgs}";
+            this._Args.ThemeArgs = GlobalData.Default.BootingArgs;
             SetMainOCRBootingArgsAndButtonText();
 
             this.buttonTopMost.Visible = false;
@@ -93,7 +99,15 @@ namespace SkyStopwatch
             onInit?.Invoke(this.buttonOCR, _OriginalTimeNodes);
         }
 
-  
+
+        public void SetLocation(Control parent)
+        {
+            if (parent != null)
+            {
+                this.StartPosition = FormStartPosition.Manual;
+                this.Location = new Point(parent.Location.X - this.Width + parent.Width + 10, parent.Location.Y + parent.Size.Height + 30);
+            }
+        }
 
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
@@ -226,7 +240,9 @@ namespace SkyStopwatch
             }
 
             string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {this.timerAutoClose.Interval/1000}s";
-            this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion} - {GlobalData.ExeUpdateDate.ToString("yyyy.MMdd.HHmm")}";
+            string exeTime = GlobalData.ExeUpdateDate.ToString("yyyy.MMdd.HHmm");
+            string suffix = $"Time locked: {this._Args.IsTimeLocked}";
+            this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion} - {exeTime} - {suffix}";
         }
 
 
@@ -238,7 +254,7 @@ namespace SkyStopwatch
         private void buttonChangeTheme_Click(object sender, EventArgs e)
         {
             this.buttonChangeTheme.Enabled = false;
-            this._BootingArgs++;
+            this._Args.ThemeArgs++;
             SetMainOCRBootingArgsAndButtonText();
 
           
@@ -260,7 +276,7 @@ namespace SkyStopwatch
         private void SetMainOCRBootingArgsAndButtonText()
         {
             int themeCount = Enum.GetNames(typeof(PopupBoxTheme)).Length - 1;
-            GlobalData.Default.BootingArgs = this._BootingArgs % themeCount;
+            GlobalData.Default.BootingArgs = this._Args.ThemeArgs % themeCount;
 
             //lazy way to do it, error when theme count >= 10
             string prefix = ""; //this.buttonChangeTheme.Text.Substring(0, this.buttonChangeTheme.Text.Length - 2);
@@ -292,8 +308,6 @@ namespace SkyStopwatch
         {
             var view = new FormImageViewPrice();
             view.Show();
-
-
             this.Close();
         }
 
@@ -337,6 +351,10 @@ namespace SkyStopwatch
             this.Close();
         }
 
-       
+        private void buttonLockTime_Click(object sender, EventArgs e)
+        {
+            _LockClick();
+            this.Close();
+        }
     }
 }
