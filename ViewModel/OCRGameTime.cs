@@ -350,6 +350,8 @@ namespace SkyStopwatch
 
         public bool ShouldAutoUnlock()
         {
+            if(this.IsTimeLocked && this.LockSource == TimeLocKSource.UserClick) { return false; }
+
             int remaining = this.GameRemainingSeconds;
             System.Diagnostics.Debug.WriteLine($"remaining：{remaining/60}:{remaining % 60}");
 
