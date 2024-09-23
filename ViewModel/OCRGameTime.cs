@@ -267,7 +267,7 @@ namespace SkyStopwatch
                 }
 
                 //do not tread as misread when game just start
-                if (ocrTimeSpan.Minutes <= 1)
+                if (ocrTimeSpan.TotalSeconds < 60)
                 {
                     System.Diagnostics.Debug.WriteLine($"--> not a misread, game just start");
                     return TimeMisreadKind.None;
@@ -375,18 +375,18 @@ namespace SkyStopwatch
             }
 
             //do not lock when game just start
-            if (this.GameRemainingSeconds >= 37 * 60)
+            if (this.GameRemainingSeconds > 37 * 60)
             {
                 return false;
             }
 
             //early lock when game start less than 10 min
-            if (_AutoOCRSuccessCount >= 2 && this.GameRemainingSeconds >= 28 * 60)
+            if (_AutoOCRSuccessCount > 1 && this.GameRemainingSeconds > 28 * 60)
             {
                 return true;
             }
 
-            if (_AutoOCRSuccessCount >= 4 && this.GameRemainingSeconds >= 60)
+            if (_AutoOCRSuccessCount > 3 && this.GameRemainingSeconds > 60)
             {
                 return true;
             }
