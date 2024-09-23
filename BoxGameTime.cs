@@ -118,7 +118,8 @@ namespace SkyStopwatch
                 var center = new Point(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
                 //this.Location = new Point(center.X - 240, center.Y - 370); //right blow top mini time
                 //this.Location = new Point(center.X - 356, center.Y - 398); //ahead top mini time
-                this.Location = new Point(center.X + 360, center.Y - 390); //tail top mini time
+                this.Location = new Point(center.X - 400, center.Y - 398); //ahead top mini time 2 - larger space
+                //this.Location = new Point(center.X + 360, center.Y - 390); //tail top mini time
             }
         }
 
@@ -649,7 +650,7 @@ namespace SkyStopwatch
                     var warningBox = new BoxPhaseBossWarning(() => _HasTimeNodeWarningPopped = false);
                     _HasTimeNodeWarningPopped = true;
                     warningBox.StartPosition = FormStartPosition.Manual;
-                    warningBox.Location = new Point(this.Location.X, this.Location.Y + this.Size.Height + 10);
+                    warningBox.Location = new Point(this.Location.X, this.Location.Y + this.Size.Height + GlobalData.MessageBoxVerticalGap);
                     warningBox.Show();
                     return;
                 }

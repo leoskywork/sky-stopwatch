@@ -57,6 +57,7 @@ namespace SkyStopwatch
         public const int MaxGameRoundMinutes = 38;//39;
         public const int MaxScreenTopGameMinute = 38;
         public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
+        public const int MessageBoxVerticalGap = 10;
 
         private static GlobalData _instance;
         public static GlobalData Default

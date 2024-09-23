@@ -105,7 +105,11 @@ namespace SkyStopwatch
             if (parent != null)
             {
                 this.StartPosition = FormStartPosition.Manual;
-                this.Location = new Point(parent.Location.X - this.Width + parent.Width + 10, parent.Location.Y + parent.Size.Height + 30);
+                //align right
+                //this.Location = new Point(parent.Location.X - this.Width + parent.Width + 10, parent.Location.Y + parent.Size.Height + 30);
+
+                //align left
+                this.Location = new Point(parent.Location.X - 8, parent.Location.Y + parent.Size.Height + 30);
             }
         }
 

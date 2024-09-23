@@ -121,7 +121,11 @@ namespace SkyStopwatch
             if (parent != null)
             {
                 this.StartPosition = FormStartPosition.Manual;
-                this.Location = new Point(parent.Location.X + parent.Width + 10, parent.Location.Y - 2);//parent.Location.Y + parent.Size.Height + 30);
+                //msg tailing parent
+                //this.Location = new Point(parent.Location.X + parent.Width + 10, parent.Location.Y - 2);
+
+                //msg below parnet
+                this.Location = new Point(parent.Location.X - 2, parent.Location.Y + parent.Height + GlobalData.MessageBoxVerticalGap);
             }
 
             this.Show();
