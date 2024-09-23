@@ -356,14 +356,14 @@ namespace SkyStopwatch
             System.Diagnostics.Debug.WriteLine($"remaining：{remaining/60}:{remaining % 60}");
 
             //1st phase boss
-            int phase1Low = 27 * 60;//26 * 60 + 30;
+            int phase1Low = 26 * 60 + 40;//27 * 60;//26 * 60 + 30;
             if (remaining > phase1Low && remaining < phase1Low + 60)
             {
                 return true;
             }
 
             //2nd phase boss
-            int phase2Low = 16 * 60 + 20;
+            int phase2Low = 16 * 60; //16 * 60 + 20;
             if (remaining > phase2Low && remaining < phase2Low + 120)
             {
                 return true;
