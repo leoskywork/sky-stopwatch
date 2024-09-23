@@ -75,7 +75,10 @@ namespace SkyStopwatch
         {
             get
             {
-                _GameRemainingSeconds = (int)(_TimeAroundGameStart.AddMinutes(GlobalData.MaxScreenTopGameMinute) - DateTime.Now).TotalSeconds;
+                const int magicSeconds = 10;
+                DateTime gameEndTime = _TimeAroundGameStart.AddMinutes(GlobalData.MaxScreenTopGameMinute).AddSeconds(magicSeconds);
+
+                _GameRemainingSeconds = (int)(gameEndTime - DateTime.Now).TotalSeconds;
 
                 return _GameRemainingSeconds;
             }
@@ -370,7 +373,7 @@ namespace SkyStopwatch
             }
 
             //game end
-            if (remaining < 10)
+            if (remaining <= 0)
             {
                 return true;
             }

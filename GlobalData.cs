@@ -52,7 +52,7 @@ namespace SkyStopwatch
         public const int TmpLogFileMaxCount = 200;
         public const int TimeNodeEarlyWarningSeconds = 15;//20;//30;
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
-        public const int MessageBoxDisplaySeconds = 10;//20;
+        public const int MessageBoxDisplaySeconds = 5;//10;//20;
         public const int PreRoundGameMinutes = 30;//39;//38;//(join game first, then open this app)30; //can not join game after 30 min
         public const int MaxGameRoundMinutes = 38;//39;
         public const int MaxScreenTopGameMinute = 38;
