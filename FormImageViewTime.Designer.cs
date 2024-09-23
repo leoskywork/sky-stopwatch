@@ -51,11 +51,12 @@
             this.buttonSetAsPreset1 = new System.Windows.Forms.Button();
             this.buttonSetAsPreset2 = new System.Windows.Forms.Button();
             this.groupBoxSetting = new System.Windows.Forms.GroupBox();
+            this.checkBoxAutoLock = new System.Windows.Forms.CheckBox();
             this.checkBoxReadTopTime = new System.Windows.Forms.CheckBox();
             this.buttonSaveSetting = new System.Windows.Forms.Button();
             this.numericUpDownDelaySecond = new System.Windows.Forms.NumericUpDown();
             this.labelScanMiddleDelay = new System.Windows.Forms.Label();
-            this.checkBoxAutoLock = new System.Windows.Forms.CheckBox();
+            this.buttonResetTopTimeLocation = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -342,6 +343,7 @@
             // 
             // groupBoxSetting
             // 
+            this.groupBoxSetting.Controls.Add(this.buttonResetTopTimeLocation);
             this.groupBoxSetting.Controls.Add(this.checkBoxAutoLock);
             this.groupBoxSetting.Controls.Add(this.checkBoxReadTopTime);
             this.groupBoxSetting.Controls.Add(this.buttonSaveSetting);
@@ -353,6 +355,18 @@
             this.groupBoxSetting.TabIndex = 112;
             this.groupBoxSetting.TabStop = false;
             this.groupBoxSetting.Text = "Settings";
+            // 
+            // checkBoxAutoLock
+            // 
+            this.checkBoxAutoLock.AutoSize = true;
+            this.checkBoxAutoLock.Location = new System.Drawing.Point(19, 122);
+            this.checkBoxAutoLock.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkBoxAutoLock.Name = "checkBoxAutoLock";
+            this.checkBoxAutoLock.Size = new System.Drawing.Size(173, 19);
+            this.checkBoxAutoLock.TabIndex = 411;
+            this.checkBoxAutoLock.Text = "Top time auto lock";
+            this.checkBoxAutoLock.UseVisualStyleBackColor = true;
+            this.checkBoxAutoLock.CheckedChanged += new System.EventHandler(this.checkBoxAutoLock_CheckedChanged);
             // 
             // checkBoxReadTopTime
             // 
@@ -407,17 +421,17 @@
             this.labelScanMiddleDelay.TabIndex = 3;
             this.labelScanMiddleDelay.Text = "Scan middle delay seconds:";
             // 
-            // checkBoxAutoLock
+            // buttonResetTopTimeLocation
             // 
-            this.checkBoxAutoLock.AutoSize = true;
-            this.checkBoxAutoLock.Location = new System.Drawing.Point(19, 122);
-            this.checkBoxAutoLock.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.checkBoxAutoLock.Name = "checkBoxAutoLock";
-            this.checkBoxAutoLock.Size = new System.Drawing.Size(173, 19);
-            this.checkBoxAutoLock.TabIndex = 411;
-            this.checkBoxAutoLock.Text = "Top time auto lock";
-            this.checkBoxAutoLock.UseVisualStyleBackColor = true;
-            this.checkBoxAutoLock.CheckedChanged += new System.EventHandler(this.checkBoxAutoLock_CheckedChanged);
+            this.buttonResetTopTimeLocation.Enabled = false;
+            this.buttonResetTopTimeLocation.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonResetTopTimeLocation.Location = new System.Drawing.Point(19, 163);
+            this.buttonResetTopTimeLocation.Name = "buttonResetTopTimeLocation";
+            this.buttonResetTopTimeLocation.Size = new System.Drawing.Size(303, 30);
+            this.buttonResetTopTimeLocation.TabIndex = 412;
+            this.buttonResetTopTimeLocation.Text = "Reset top time location";
+            this.buttonResetTopTimeLocation.UseVisualStyleBackColor = true;
+            this.buttonResetTopTimeLocation.Click += new System.EventHandler(this.buttonResetTopTimeLocation_Click);
             // 
             // FormImageViewTime
             // 
@@ -491,5 +505,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownDelaySecond;
         private System.Windows.Forms.CheckBox checkBoxReadTopTime;
         private System.Windows.Forms.CheckBox checkBoxAutoLock;
+        private System.Windows.Forms.Button buttonResetTopTimeLocation;
     }
 }

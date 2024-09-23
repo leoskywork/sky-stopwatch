@@ -266,6 +266,13 @@ namespace SkyStopwatch
                     return TimeMisreadKind.GreaterThanMaxMinute;
                 }
 
+                //do not tread as misread when game just start
+                if (ocrTimeSpan.Minutes <= 1)
+                {
+                    System.Diagnostics.Debug.WriteLine($"--> not a misread, game just start");
+                    return TimeMisreadKind.None;
+                }
+
                 //do not treat as misread when ocr min < 10 and last read near exit point
                 if (ocrTimeSpan.Minutes < 10 && IsNearPhaseBossesTime())
                 {
@@ -367,6 +374,12 @@ namespace SkyStopwatch
                 return false;
             }
 
+            //do not lock when game just start
+            if (this.GameRemainingSeconds >= 37 * 60)
+            {
+                return false;
+            }
+
             //early lock when game start less than 10 min
             if (_AutoOCRSuccessCount >= 2 && this.GameRemainingSeconds >= 28 * 60)
             {
@@ -407,14 +420,14 @@ namespace SkyStopwatch
             int remaining = this.GameRemainingSeconds;
 
             //1st phase boss
-            int phase1Low = GlobalData.GameRoundAdjustSeconds + 26 * 60 + 10;
+            int phase1Low = GlobalData.GameRoundAdjustSeconds + 27 * 60;
             if (remaining > phase1Low && remaining < phase1Low + 60)
             {
                 return true;
             }
 
             //2nd phase boss
-            int phase2Low = GlobalData.GameRoundAdjustSeconds + 16 * 60 + 30;
+            int phase2Low = GlobalData.GameRoundAdjustSeconds + 16 * 60;
             if (remaining > phase2Low && remaining < phase2Low + 120)
             {
                 return true;

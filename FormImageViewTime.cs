@@ -24,6 +24,15 @@ namespace SkyStopwatch
 
             ReadPreviewArgsFromViewModel();
             ReadPresetsFromViewModel(true, true);
+
+            if(GlobalData.Default.IsUsingScreenTopTime)
+            {
+                this.buttonSetAsPreset1.Visible = false;
+                this.buttonSetAsPreset2.Visible = false;
+                this.groupBoxPresetLocation.Enabled = false;
+                this.labelMessage.Text = "Some settings are disabled when scan mini top time";
+                this.labelMessage.ForeColor = Color.Red;
+            }
         }
 
         private void ReadPreviewArgsFromViewModel()
@@ -39,6 +48,8 @@ namespace SkyStopwatch
 
             this.checkBoxReadTopTime.Checked = _EnableScreenTopTime;
             this.checkBoxAutoLock.Checked = _EnableAutoLock;
+            this.checkBoxAutoLock.Enabled = _EnableScreenTopTime;
+            this.buttonResetTopTimeLocation.Enabled = _EnableScreenTopTime;
             this.numericUpDownDelaySecond.Value = _ScanMiddleDelaySecond;
         }
 
@@ -233,7 +244,8 @@ namespace SkyStopwatch
         private void checkBoxReadTopTime_CheckedChanged(object sender, EventArgs e)
         {
             _EnableScreenTopTime = this.checkBoxReadTopTime.Checked;
-            checkBoxAutoLock.Enabled = this.checkBoxReadTopTime.Checked;
+            checkBoxAutoLock.Enabled = _EnableScreenTopTime;
+            buttonResetTopTimeLocation.Enabled = _EnableScreenTopTime;
             SetButtonSaveSettingState();
         }
 
@@ -262,6 +274,7 @@ namespace SkyStopwatch
                 GlobalData.Default.EnableScreenTopTimeAutoLock = _EnableAutoLock;
                 GlobalData.Default.TimeViewScanMiddleDelaySecond = _ScanMiddleDelaySecond;
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save setting"));
+                this.Close();
             }
             catch (Exception ex)
             {
@@ -274,6 +287,11 @@ namespace SkyStopwatch
         {
             _EnableAutoLock = checkBoxAutoLock.Checked;
             SetButtonSaveSettingState();
+        }
+
+        private void buttonResetTopTimeLocation_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
