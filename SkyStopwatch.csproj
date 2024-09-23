@@ -90,7 +90,7 @@
     <Compile Include="DataModel\BossCallBase.cs" />
     <Compile Include="DataModel\IBossCall.cs" />
     <Compile Include="DataModel\OCRCompareResult.cs" />
-    <Compile Include="DataModel\TimeLocKSource.cs" />
+    <Compile Include="ViewModel\TimeLocKSource.cs" />
     <Compile Include="DataModel\TinyScreenShot.cs" />
     <Compile Include="DataModel\TinyScreenShotBossCall.cs" />
     <Compile Include="FormBoot.cs">
@@ -131,7 +131,9 @@
     </Compile>
     <Compile Include="GlobalData.cs" />
     <Compile Include="ViewModel\BootSettingArgs.cs" />
-    <Compile Include="ViewModel\OCRGameTimeTimerKind.cs" />
+    <Compile Include="ViewModel\OCRTimerSpeed.cs" />
+    <Compile Include="ViewModel\TimeMisreadKind.cs" />
+    <Compile Include="ViewModel\TimeChangeSource.cs" />
     <Compile Include="ViewModel\ViewModelFactory.cs" />
     <Compile Include="ViewModel\OCRBase.cs" />
     <Compile Include="BoxGameTime.cs">

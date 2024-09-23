@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace SkyStopwatch.ViewModel
 {
-    public enum OCRGameTimeTimerKind
+    public enum TimeChangeSource
     {
-        PreGameTimeFast,
-        PreGameTimeSlow,
-        InGameMiniTopTimeFast,
-        InGameMiniTopTimeSlow,
+        Unset,
+        AppAutoRestart,
+        AppAutoUpdate,
+        UserClickNewGame
     }
 }

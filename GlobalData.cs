@@ -15,10 +15,11 @@ namespace SkyStopwatch
         public const string Subversion = "920.1";//"1.240829";
         public static DateTime ExeCreateDate = DateTime.MinValue;
         public static DateTime ExeUpdateDate = DateTime.MinValue;
+
         public const string ChangeTimeSourceOCRTimeIsNegativeOne = "ocrDisplayTime is -1";
         public const string ChangeTimeSourceClearButton = "OnClearOCR";
         public const string ChangeTimeSourceManualOCRButton = "ManualOCR";
-        public const string ChangeTimeSourceNewGame = "NewGame";
+        public const string ChangeTimeSourceNewGameButton = "NewGame";
         public const string ChangeTimeSourceNewGameAuto = "NewGame-AutoReset";
         public const string ChangeTimeSourceAdjustTimeButton = "ManualAdjustButtons";
         public const string ChangeTimeSourceTimerOCR = "AutoTimerOCR";
@@ -54,8 +55,8 @@ namespace SkyStopwatch
         public const int TimeNodeWarningDurationSeconds = 30;//60;//40;//90;
         public const int MessageBoxDisplaySeconds = 5;//10;//20;
         public const int PreRoundGameMinutes = 30;//39;//38;//(join game first, then open this app)30; //can not join game after 30 min
-        public const int MaxGameRoundMinutes = 38;//39;
-        public const int MaxScreenTopGameMinute = 38;
+        public const int GameRoundMaxMinute = 38;//39;
+        public const int GameRoundAdjustSeconds = 30;
         public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
         public const int MessageBoxVerticalGap = 10;
 

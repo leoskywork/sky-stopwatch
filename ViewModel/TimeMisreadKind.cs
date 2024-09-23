@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkyStopwatch.DataModel
+namespace SkyStopwatch.ViewModel
 {
-    public enum TimeLocKSource
+    public enum TimeMisreadKind
     {
         None = 0,
-        AppAutoLock,
-        UserClick
+        GreaterThanMaxMinute,
+        Treat2xAs1x,
+        LessThanLastRead
+
     }
 }

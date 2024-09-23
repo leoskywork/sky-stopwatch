@@ -71,7 +71,7 @@ namespace SkyStopwatch
             }
 
             var box = new BoxGameTime(GlobalData.Default.BootingArgs);
-            box.SetDefaultLocation(null);
+            box.SetDefaultLocation();
             _LastTheme = box;
             _LastTheme.Show();
         }
