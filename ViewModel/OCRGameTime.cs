@@ -20,6 +20,11 @@ namespace SkyStopwatch
         public static int BlockWidth = 140;
         public static int BlockHeight = 30;
 
+        public static int TopXPoint = 0;
+        public static int TopYPoint = 0;
+        public static int TopBlockWidth = 100;
+        public static int TopBlockHeight = 100;
+
         public static int Preset1XPoint = 0;
         public static int Preset1YPoint = 0;
         public static int Preset1BlockWidth = 100;
@@ -129,10 +134,15 @@ namespace SkyStopwatch
         {
             if (GlobalData.Default.IsUsingScreenTopTime)
             {
-                return new Rectangle(976, 216, 60, 60);
+                return new Rectangle(TopXPoint, TopYPoint, TopBlockWidth, TopBlockHeight); 
             }
 
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
+        }
+
+        public static Rectangle GetDefaultTopMiniTimeBlock()
+        {
+            return new Rectangle(976, 216, 60, 60);
         }
 
         public string ReadImageFromFile(string imgPath)
@@ -277,6 +287,12 @@ namespace SkyStopwatch
                 if (ocrTimeSpan.Minutes < 10 && IsNearPhaseBossesTime())
                 {
                     System.Diagnostics.Debug.WriteLine($"--> not a misread, last read near exit point");
+                    return TimeMisreadKind.None;
+                }
+
+                if (this._TimeAroundGameStart == DateTime.MinValue)
+                {
+                    System.Diagnostics.Debug.WriteLine($"--> first read: {ocrDisplayTime}");
                     return TimeMisreadKind.None;
                 }
 

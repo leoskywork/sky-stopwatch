@@ -92,6 +92,8 @@ namespace SkyStopwatch
 
         public int TimeViewScanMiddleDelaySecond { get; set; }
 
+        public bool EnableTopMost { get; set; } = true;//false;
+
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
         //public static bool IsDebugging { get; set; } = false; //moved to global data
@@ -99,7 +101,6 @@ namespace SkyStopwatch
         //does not default this to Empty, since user may clear up the list
         public static string TimeNodeCheckingList { get; set; } = null;
         public static bool EnableCheckTimeNode { get; set; } = true;
-        public static bool EnableTopMost { get; set; } = true;//false;
         public static bool EnableLogToFile { get; set; } = false;
 
         public static List<string> ProcessCheckingList { get;} = new List<string>();

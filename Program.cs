@@ -50,9 +50,9 @@ namespace SkyStopwatch
         private static void ReadAppConfig()
         {
             GlobalData.Default.BootingArgs = Properties.Settings.Default.BootingArgs;
+            GlobalData.Default.EnableTopMost = Properties.Settings.Default.EnableTopMost;
             GlobalData.TimeNodeCheckingList = Properties.Settings.Default.TimeNodeCheckingList;
             GlobalData.TimeNodeCheckingList = LeotodoHackNewLine(GlobalData.TimeNodeCheckingList);
-            GlobalData.EnableTopMost = Properties.Settings.Default.EnableTopMost;
             GlobalData.EnableLogToFile = Properties.Settings.Default.EnableLogToFile;
             GlobalData.EnableCheckTimeNode = Properties.Settings.Default.EnableCheckTimeNode;
             GlobalData.Default.IsDebugging = Properties.Settings.Default.EnableDebugging;
@@ -66,6 +66,11 @@ namespace SkyStopwatch
             OCRGameTime.YPoint = Properties.Settings.Default.TimeViewPoint.Y;
             OCRGameTime.BlockWidth = Properties.Settings.Default.TimeViewSize.Width;
             OCRGameTime.BlockHeight = Properties.Settings.Default.TimeViewSize.Height;
+
+            OCRGameTime.TopXPoint = Properties.Settings.Default.TimeViewTopPoint.X;
+            OCRGameTime.TopYPoint = Properties.Settings.Default.TimeViewTopPoint.Y;
+            OCRGameTime.TopBlockWidth = Properties.Settings.Default.TimeViewTopSize.Width;
+            OCRGameTime.TopBlockHeight = Properties.Settings.Default.TimeViewTopSize.Height;
 
             OCRGameTime.Preset1XPoint = Properties.Settings.Default.TimeViewPreset1Point.X;
             OCRGameTime.Preset1YPoint = Properties.Settings.Default.TimeViewPreset1Point.Y;
@@ -95,8 +100,12 @@ namespace SkyStopwatch
 
             //safe check
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
+
             OCRGameTime.XPoint = Math.Min(OCRGameTime.XPoint, screenRect.Width - OCRGameTime.BlockWidth);
             OCRGameTime.YPoint = Math.Min(OCRGameTime.YPoint, screenRect.Height - OCRGameTime.BlockHeight);
+            OCRGameTime.TopXPoint = Math.Min(OCRGameTime.TopXPoint, screenRect.Width - OCRGameTime.TopBlockWidth);
+            OCRGameTime.TopYPoint = Math.Min(OCRGameTime.TopYPoint, screenRect.Height - OCRGameTime.TopBlockHeight);
+
             OCRGameTime.Preset1XPoint = Math.Min(OCRGameTime.Preset1XPoint, screenRect.Width - OCRGameTime.Preset1BlockWidth);
             OCRGameTime.Preset1YPoint = Math.Min(OCRGameTime.Preset1YPoint, screenRect.Height - OCRGameTime.Preset1BlockHeight);
             OCRGameTime.Preset2XPoint = Math.Min(OCRGameTime.Preset2XPoint, screenRect.Width - OCRGameTime.Preset2BlockWidth);
@@ -120,8 +129,8 @@ namespace SkyStopwatch
             try
             {
                 Properties.Settings.Default.BootingArgs = GlobalData.Default.BootingArgs;
+                Properties.Settings.Default.EnableTopMost = GlobalData.Default.EnableTopMost;
                 Properties.Settings.Default.TimeNodeCheckingList = GlobalData.TimeNodeCheckingList;
-                Properties.Settings.Default.EnableTopMost = GlobalData.EnableTopMost;
                 Properties.Settings.Default.EnableLogToFile = GlobalData.EnableLogToFile;
                 Properties.Settings.Default.EnableCheckTimeNode = GlobalData.EnableCheckTimeNode;
                 Properties.Settings.Default.EnableDebugging = GlobalData.Default.IsDebugging;
@@ -132,6 +141,8 @@ namespace SkyStopwatch
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(OCRGameTime.XPoint, OCRGameTime.YPoint);
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
+                Properties.Settings.Default.TimeViewTopPoint = new System.Drawing.Point(OCRGameTime.TopXPoint, OCRGameTime.TopYPoint);
+                Properties.Settings.Default.TimeViewTopSize = new System.Drawing.Size(OCRGameTime.TopBlockWidth, OCRGameTime.TopBlockHeight);
                 Properties.Settings.Default.TimeViewPreset1Point = new System.Drawing.Point(OCRGameTime.Preset1XPoint, OCRGameTime.Preset1YPoint);
                 Properties.Settings.Default.TimeViewPreset1Size = new System.Drawing.Size(OCRGameTime.Preset1BlockWidth, OCRGameTime.Preset1BlockHeight);
                 Properties.Settings.Default.TimeViewPreset2Point = new System.Drawing.Point(OCRGameTime.Preset2XPoint, OCRGameTime.Preset2YPoint);

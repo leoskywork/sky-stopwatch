@@ -92,7 +92,7 @@ namespace SkyStopwatch
             SetMainOCRBootingArgsAndButtonText();
 
             this.buttonTopMost.Visible = false;
-            this.checkBoxTopMost.Checked = GlobalData.EnableTopMost;
+            this.checkBoxTopMost.Checked = GlobalData.Default.EnableTopMost;
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;

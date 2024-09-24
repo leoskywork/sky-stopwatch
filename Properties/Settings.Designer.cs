@@ -109,18 +109,6 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("crossfire,overwatch2,csgo,devenv")]
-        public string ProcessListCSV {
-            get {
-                return ((string)(this["ProcessListCSV"]));
-            }
-            set {
-                this["ProcessListCSV"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool EnableLogToFile {
             get {
@@ -296,6 +284,42 @@ namespace SkyStopwatch.Properties {
             }
             set {
                 this["EnableScreenTopTimeAutoLock"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("crossfire,overwatch2,csgo")]
+        public string ProcessListCSV {
+            get {
+                return ((string)(this["ProcessListCSV"]));
+            }
+            set {
+                this["ProcessListCSV"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("976, 216")]
+        public global::System.Drawing.Point TimeViewTopPoint {
+            get {
+                return ((global::System.Drawing.Point)(this["TimeViewTopPoint"]));
+            }
+            set {
+                this["TimeViewTopPoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60, 60")]
+        public global::System.Drawing.Size TimeViewTopSize {
+            get {
+                return ((global::System.Drawing.Size)(this["TimeViewTopSize"]));
+            }
+            set {
+                this["TimeViewTopSize"] = value;
             }
         }
     }

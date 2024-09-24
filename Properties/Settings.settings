@@ -23,9 +23,6 @@
     <Setting Name="TimeNodeCheckingList" Type="System.String" Scope="User">
       <Value Profile="(Default)">10:30\r\n20:30\r\n35:00</Value>
     </Setting>
-    <Setting Name="ProcessListCSV" Type="System.String" Scope="User">
-      <Value Profile="(Default)">crossfire,overwatch2,csgo,devenv</Value>
-    </Setting>
     <Setting Name="EnableLogToFile" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
@@ -70,6 +67,15 @@
     </Setting>
     <Setting Name="EnableScreenTopTimeAutoLock" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ProcessListCSV" Type="System.String" Scope="User">
+      <Value Profile="(Default)">crossfire,overwatch2,csgo</Value>
+    </Setting>
+    <Setting Name="TimeViewTopPoint" Type="System.Drawing.Point" Scope="User">
+      <Value Profile="(Default)">976, 216</Value>
+    </Setting>
+    <Setting Name="TimeViewTopSize" Type="System.Drawing.Size" Scope="User">
+      <Value Profile="(Default)">60, 60</Value>
     </Setting>
   </Settings>
 </SettingsFile>

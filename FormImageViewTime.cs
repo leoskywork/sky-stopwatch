@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace SkyStopwatch
             ReadPreviewArgsFromViewModel();
             ReadPresetsFromViewModel(true, true);
 
-            if(GlobalData.Default.IsUsingScreenTopTime)
+            if (GlobalData.Default.IsUsingScreenTopTime)
             {
                 this.buttonSetAsPreset1.Visible = false;
                 this.buttonSetAsPreset2.Visible = false;
@@ -37,10 +38,11 @@ namespace SkyStopwatch
 
         private void ReadPreviewArgsFromViewModel()
         {
-            this.numericUpDownX.Value = OCRGameTime.XPoint;
-            this.numericUpDownY.Value = OCRGameTime.YPoint;
-            this.numericUpDownWidth.Value = OCRGameTime.BlockWidth;
-            this.numericUpDownHeight.Value = OCRGameTime.BlockHeight;
+            var defaultArgs = GetPreviewArgs();
+            this.numericUpDownX.Value = defaultArgs.X;
+            this.numericUpDownY.Value = defaultArgs.Y;
+            this.numericUpDownWidth.Value = defaultArgs.Width;
+            this.numericUpDownHeight.Value = defaultArgs.Height;
 
             this._EnableScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
             this._EnableAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock;
@@ -51,6 +53,16 @@ namespace SkyStopwatch
             this.checkBoxAutoLock.Enabled = _EnableScreenTopTime;
             this.buttonResetTopTimeLocation.Enabled = _EnableScreenTopTime;
             this.numericUpDownDelaySecond.Value = _ScanMiddleDelaySecond;
+        }
+
+        private Rectangle GetPreviewArgs()
+        {
+            if (GlobalData.Default.IsUsingScreenTopTime)
+            {
+                return new Rectangle(OCRGameTime.TopXPoint, OCRGameTime.TopYPoint, OCRGameTime.TopBlockWidth, OCRGameTime.TopBlockHeight);
+            }
+
+            return new Rectangle(OCRGameTime.XPoint, OCRGameTime.YPoint, OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
         }
 
         private void ReadPresetsFromViewModel(bool preset1, bool preset2)
@@ -80,10 +92,22 @@ namespace SkyStopwatch
                 ReadInputArgs(out int x, out int y, out int width, out int height);
                 //MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
                 //MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
-                OCRGameTime.XPoint = x; 
-                OCRGameTime.YPoint = y;
-                OCRGameTime.BlockWidth = width;
-                OCRGameTime.BlockHeight = height;
+
+                if (GlobalData.Default.IsUsingScreenTopTime)
+                {
+                    OCRGameTime.TopXPoint = x;
+                    OCRGameTime.TopYPoint = y;
+                    OCRGameTime.TopBlockWidth = width;
+                    OCRGameTime.TopBlockHeight = height;
+                }
+                else
+                {
+                    OCRGameTime.XPoint = x;
+                    OCRGameTime.YPoint = y;
+                    OCRGameTime.BlockWidth = width;
+                    OCRGameTime.BlockHeight = height;
+                }
+
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save"));
                 this.Close();
             }
@@ -291,7 +315,15 @@ namespace SkyStopwatch
 
         private void buttonResetTopTimeLocation_Click(object sender, EventArgs e)
         {
+            this.DisableButtonShortTime(this.buttonResetTopTimeLocation);
 
+            var defaultArgs = OCRGameTime.GetDefaultTopMiniTimeBlock();         
+            this.numericUpDownX.Value = defaultArgs.X;
+            this.numericUpDownY.Value = defaultArgs.Y;
+            this.numericUpDownWidth.Value = defaultArgs.Width;
+            this.numericUpDownHeight.Value = defaultArgs.Height;
+
+            TryUpdateImage(nameof(buttonResetTopTimeLocation_Click));
         }
     }
 }

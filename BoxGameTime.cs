@@ -309,8 +309,8 @@ namespace SkyStopwatch
 
         private void SyncTopMost()
         {
-            this.TopMost = GlobalData.EnableTopMost;
-            this.buttonToolBox.Text = GlobalData.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+            this.TopMost = GlobalData.Default.EnableTopMost;
+            this.buttonToolBox.Text = GlobalData.Default.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
         }
 
         private void SetGameStartTime(DateTime newTime, string source, string detail)
@@ -593,7 +593,7 @@ namespace SkyStopwatch
 
         private void OnSwitchTopMost()
         {
-            GlobalData.EnableTopMost = !GlobalData.EnableTopMost;
+            GlobalData.Default.EnableTopMost = !GlobalData.Default.EnableTopMost;
             SyncTopMost();
         }
 
@@ -643,19 +643,17 @@ namespace SkyStopwatch
                 {
                     object checkedSign = "-checked";
                     if (this.labelTimer.Tag == checkedSign) return;
-                    
-                    if (!PowerTool.AnyTargetProcessRunning())
+
+                    bool isTargetRunning = PowerTool.AnyTargetProcessRunning();
+                    this.TopMost = isTargetRunning;
+                    GlobalData.Default.EnableTopMost = isTargetRunning;
+                    _HasTargetProcessExit = !isTargetRunning;
+
+                    if (!isTargetRunning)
                     {
-                        System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
-                        _HasTargetProcessExit = true;
-                        this.TopMost = false;
                         this.labelTimer.Text = "--";
                         SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target process exit");
-                    }
-                    else
-                    {
-                        _HasTargetProcessExit = false;
-                        this.TopMost = true;
+                        System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
                     }
 
                     this.labelTimer.Tag = checkedSign;
