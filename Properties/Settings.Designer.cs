@@ -322,5 +322,17 @@ namespace SkyStopwatch.Properties {
                 this["TimeViewTopSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableTimeView2Blocks {
+            get {
+                return ((bool)(this["EnableTimeView2Blocks"]));
+            }
+            set {
+                this["EnableTimeView2Blocks"] = value;
+            }
+        }
     }
 }

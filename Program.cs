@@ -60,6 +60,7 @@ namespace SkyStopwatch
             GlobalData.Default.IsUsingScreenTopTime = Properties.Settings.Default.IsUsingScreenTopTime;
             GlobalData.Default.EnableScreenTopTimeAutoLock = Properties.Settings.Default.EnableScreenTopTimeAutoLock;
             GlobalData.Default.TimeViewScanMiddleDelaySecond = Properties.Settings.Default.TimeViewScanMiddleDelaySecond;
+            GlobalData.Default.EnableTimeViewMiddleAsSecondary = Properties.Settings.Default.EnableTimeView2Blocks;
 
 
             OCRGameTime.XPoint = Properties.Settings.Default.TimeViewPoint.X;
@@ -138,6 +139,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.IsUsingScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
                 Properties.Settings.Default.EnableScreenTopTimeAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock;
                 Properties.Settings.Default.TimeViewScanMiddleDelaySecond = GlobalData.Default.TimeViewScanMiddleDelaySecond;
+                Properties.Settings.Default.EnableTimeView2Blocks = GlobalData.Default.EnableTimeViewMiddleAsSecondary;
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(OCRGameTime.XPoint, OCRGameTime.YPoint);
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);

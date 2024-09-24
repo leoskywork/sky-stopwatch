@@ -51,14 +51,16 @@
             this.buttonSetAsPreset1 = new System.Windows.Forms.Button();
             this.buttonSetAsPreset2 = new System.Windows.Forms.Button();
             this.groupBoxSetting = new System.Windows.Forms.GroupBox();
-            this.buttonResetTopTimeLocation = new System.Windows.Forms.Button();
+            this.checkBoxScanBothLocations = new System.Windows.Forms.CheckBox();
             this.checkBoxAutoLock = new System.Windows.Forms.CheckBox();
             this.checkBoxReadTopTime = new System.Windows.Forms.CheckBox();
             this.buttonSaveSetting = new System.Windows.Forms.Button();
             this.numericUpDownDelaySecond = new System.Windows.Forms.NumericUpDown();
             this.labelScanMiddleDelay = new System.Windows.Forms.Label();
+            this.buttonResetTopTimeLocation = new System.Windows.Forms.Button();
             this.buttonResetMiddleTimeLocation = new System.Windows.Forms.Button();
-            this.checkBoxScanBothLocations = new System.Windows.Forms.CheckBox();
+            this.labelChooseMiddle = new System.Windows.Forms.Label();
+            this.labelChooseTop = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -239,7 +241,11 @@
             // 
             // groupBoxPresetLocation
             // 
+            this.groupBoxPresetLocation.Controls.Add(this.labelChooseTop);
+            this.groupBoxPresetLocation.Controls.Add(this.labelChooseMiddle);
+            this.groupBoxPresetLocation.Controls.Add(this.buttonResetMiddleTimeLocation);
             this.groupBoxPresetLocation.Controls.Add(this.labelTip);
+            this.groupBoxPresetLocation.Controls.Add(this.buttonResetTopTimeLocation);
             this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset2);
             this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset1);
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset2);
@@ -248,7 +254,7 @@
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset1Title);
             this.groupBoxPresetLocation.Location = new System.Drawing.Point(630, 339);
             this.groupBoxPresetLocation.Name = "groupBoxPresetLocation";
-            this.groupBoxPresetLocation.Size = new System.Drawing.Size(345, 181);
+            this.groupBoxPresetLocation.Size = new System.Drawing.Size(345, 336);
             this.groupBoxPresetLocation.TabIndex = 109;
             this.groupBoxPresetLocation.TabStop = false;
             this.groupBoxPresetLocation.Text = "Location Presets";
@@ -257,7 +263,7 @@
             // 
             this.labelTip.AutoSize = true;
             this.labelTip.ForeColor = System.Drawing.Color.Red;
-            this.labelTip.Location = new System.Drawing.Point(16, 136);
+            this.labelTip.Location = new System.Drawing.Point(16, 187);
             this.labelTip.Name = "labelTip";
             this.labelTip.Size = new System.Drawing.Size(311, 15);
             this.labelTip.TabIndex = 113;
@@ -266,7 +272,7 @@
             // buttonApplyPreset2
             // 
             this.buttonApplyPreset2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonApplyPreset2.Location = new System.Drawing.Point(217, 82);
+            this.buttonApplyPreset2.Location = new System.Drawing.Point(217, 133);
             this.buttonApplyPreset2.Name = "buttonApplyPreset2";
             this.buttonApplyPreset2.Size = new System.Drawing.Size(103, 30);
             this.buttonApplyPreset2.TabIndex = 112;
@@ -277,7 +283,7 @@
             // buttonApplyPreset1
             // 
             this.buttonApplyPreset1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonApplyPreset1.Location = new System.Drawing.Point(217, 35);
+            this.buttonApplyPreset1.Location = new System.Drawing.Point(217, 86);
             this.buttonApplyPreset1.Name = "buttonApplyPreset1";
             this.buttonApplyPreset1.Size = new System.Drawing.Size(103, 30);
             this.buttonApplyPreset1.TabIndex = 111;
@@ -288,7 +294,7 @@
             // labelPreset2
             // 
             this.labelPreset2.AutoSize = true;
-            this.labelPreset2.Location = new System.Drawing.Point(66, 90);
+            this.labelPreset2.Location = new System.Drawing.Point(66, 141);
             this.labelPreset2.Name = "labelPreset2";
             this.labelPreset2.Size = new System.Drawing.Size(111, 15);
             this.labelPreset2.TabIndex = 4;
@@ -297,7 +303,7 @@
             // labelPreset1
             // 
             this.labelPreset1.AutoSize = true;
-            this.labelPreset1.Location = new System.Drawing.Point(66, 43);
+            this.labelPreset1.Location = new System.Drawing.Point(66, 94);
             this.labelPreset1.Name = "labelPreset1";
             this.labelPreset1.Size = new System.Drawing.Size(111, 15);
             this.labelPreset1.TabIndex = 3;
@@ -306,7 +312,7 @@
             // labelPreset2Title
             // 
             this.labelPreset2Title.AutoSize = true;
-            this.labelPreset2Title.Location = new System.Drawing.Point(16, 90);
+            this.labelPreset2Title.Location = new System.Drawing.Point(16, 141);
             this.labelPreset2Title.Name = "labelPreset2Title";
             this.labelPreset2Title.Size = new System.Drawing.Size(23, 15);
             this.labelPreset2Title.TabIndex = 1;
@@ -315,7 +321,7 @@
             // labelPreset1Title
             // 
             this.labelPreset1Title.AutoSize = true;
-            this.labelPreset1Title.Location = new System.Drawing.Point(16, 43);
+            this.labelPreset1Title.Location = new System.Drawing.Point(16, 94);
             this.labelPreset1Title.Name = "labelPreset1Title";
             this.labelPreset1Title.Size = new System.Drawing.Size(23, 15);
             this.labelPreset1Title.TabIndex = 0;
@@ -353,22 +359,22 @@
             this.groupBoxSetting.Controls.Add(this.labelScanMiddleDelay);
             this.groupBoxSetting.Location = new System.Drawing.Point(630, 75);
             this.groupBoxSetting.Name = "groupBoxSetting";
-            this.groupBoxSetting.Size = new System.Drawing.Size(345, 249);
+            this.groupBoxSetting.Size = new System.Drawing.Size(345, 233);
             this.groupBoxSetting.TabIndex = 112;
             this.groupBoxSetting.TabStop = false;
             this.groupBoxSetting.Text = "Settings";
             // 
-            // buttonResetTopTimeLocation
+            // checkBoxScanBothLocations
             // 
-            this.buttonResetTopTimeLocation.Enabled = false;
-            this.buttonResetTopTimeLocation.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonResetTopTimeLocation.Location = new System.Drawing.Point(651, 546);
-            this.buttonResetTopTimeLocation.Name = "buttonResetTopTimeLocation";
-            this.buttonResetTopTimeLocation.Size = new System.Drawing.Size(303, 30);
-            this.buttonResetTopTimeLocation.TabIndex = 412;
-            this.buttonResetTopTimeLocation.Text = "Reset top time location";
-            this.buttonResetTopTimeLocation.UseVisualStyleBackColor = true;
-            this.buttonResetTopTimeLocation.Click += new System.EventHandler(this.buttonResetTopTimeLocation_Click);
+            this.checkBoxScanBothLocations.AutoSize = true;
+            this.checkBoxScanBothLocations.Location = new System.Drawing.Point(19, 161);
+            this.checkBoxScanBothLocations.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkBoxScanBothLocations.Name = "checkBoxScanBothLocations";
+            this.checkBoxScanBothLocations.Size = new System.Drawing.Size(237, 19);
+            this.checkBoxScanBothLocations.TabIndex = 412;
+            this.checkBoxScanBothLocations.Text = "Scan middle as a secondary";
+            this.checkBoxScanBothLocations.UseVisualStyleBackColor = true;
+            this.checkBoxScanBothLocations.CheckedChanged += new System.EventHandler(this.checkBoxScanBothLocations_CheckedChanged);
             // 
             // checkBoxAutoLock
             // 
@@ -392,9 +398,9 @@
             this.checkBoxReadTopTime.Location = new System.Drawing.Point(19, 84);
             this.checkBoxReadTopTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxReadTopTime.Name = "checkBoxReadTopTime";
-            this.checkBoxReadTopTime.Size = new System.Drawing.Size(173, 19);
+            this.checkBoxReadTopTime.Size = new System.Drawing.Size(133, 19);
             this.checkBoxReadTopTime.TabIndex = 410;
-            this.checkBoxReadTopTime.Text = "Scan top time only";
+            this.checkBoxReadTopTime.Text = "Scan top time";
             this.checkBoxReadTopTime.UseVisualStyleBackColor = true;
             this.checkBoxReadTopTime.CheckedChanged += new System.EventHandler(this.checkBoxReadTopTime_CheckedChanged);
             // 
@@ -403,7 +409,7 @@
             this.buttonSaveSetting.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonSaveSetting.Enabled = false;
             this.buttonSaveSetting.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonSaveSetting.Location = new System.Drawing.Point(240, 196);
+            this.buttonSaveSetting.Location = new System.Drawing.Point(240, 192);
             this.buttonSaveSetting.Name = "buttonSaveSetting";
             this.buttonSaveSetting.Size = new System.Drawing.Size(80, 30);
             this.buttonSaveSetting.TabIndex = 104;
@@ -438,11 +444,23 @@
             this.labelScanMiddleDelay.TabIndex = 3;
             this.labelScanMiddleDelay.Text = "Scan middle delay seconds:";
             // 
+            // buttonResetTopTimeLocation
+            // 
+            this.buttonResetTopTimeLocation.Enabled = false;
+            this.buttonResetTopTimeLocation.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonResetTopTimeLocation.Location = new System.Drawing.Point(19, 286);
+            this.buttonResetTopTimeLocation.Name = "buttonResetTopTimeLocation";
+            this.buttonResetTopTimeLocation.Size = new System.Drawing.Size(303, 30);
+            this.buttonResetTopTimeLocation.TabIndex = 412;
+            this.buttonResetTopTimeLocation.Text = "Reset top time location";
+            this.buttonResetTopTimeLocation.UseVisualStyleBackColor = true;
+            this.buttonResetTopTimeLocation.Click += new System.EventHandler(this.buttonResetTopTimeLocation_Click);
+            // 
             // buttonResetMiddleTimeLocation
             // 
             this.buttonResetMiddleTimeLocation.Enabled = false;
             this.buttonResetMiddleTimeLocation.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonResetMiddleTimeLocation.Location = new System.Drawing.Point(651, 594);
+            this.buttonResetMiddleTimeLocation.Location = new System.Drawing.Point(19, 238);
             this.buttonResetMiddleTimeLocation.Name = "buttonResetMiddleTimeLocation";
             this.buttonResetMiddleTimeLocation.Size = new System.Drawing.Size(303, 30);
             this.buttonResetMiddleTimeLocation.TabIndex = 413;
@@ -450,25 +468,41 @@
             this.buttonResetMiddleTimeLocation.UseVisualStyleBackColor = true;
             this.buttonResetMiddleTimeLocation.Click += new System.EventHandler(this.buttonResetMiddleTimeLocation_Click);
             // 
-            // checkBoxScanBothLocations
+            // labelChooseMiddle
             // 
-            this.checkBoxScanBothLocations.AutoSize = true;
-            this.checkBoxScanBothLocations.Location = new System.Drawing.Point(19, 161);
-            this.checkBoxScanBothLocations.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.checkBoxScanBothLocations.Name = "checkBoxScanBothLocations";
-            this.checkBoxScanBothLocations.Size = new System.Drawing.Size(149, 19);
-            this.checkBoxScanBothLocations.TabIndex = 412;
-            this.checkBoxScanBothLocations.Text = "Scan both times";
-            this.checkBoxScanBothLocations.UseVisualStyleBackColor = true;
-            this.checkBoxScanBothLocations.CheckedChanged += new System.EventHandler(this.checkBoxScanBothLocations_CheckedChanged);
+            this.labelChooseMiddle.AutoSize = true;
+            this.labelChooseMiddle.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.labelChooseMiddle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.labelChooseMiddle.ForeColor = System.Drawing.Color.White;
+            this.labelChooseMiddle.Location = new System.Drawing.Point(16, 39);
+            this.labelChooseMiddle.Margin = new System.Windows.Forms.Padding(0);
+            this.labelChooseMiddle.Name = "labelChooseMiddle";
+            this.labelChooseMiddle.Padding = new System.Windows.Forms.Padding(4);
+            this.labelChooseMiddle.Size = new System.Drawing.Size(111, 23);
+            this.labelChooseMiddle.TabIndex = 413;
+            this.labelChooseMiddle.Text = "Middle time ";
+            this.labelChooseMiddle.Click += new System.EventHandler(this.labelChooseMiddle_Click);
+            // 
+            // labelChooseTop
+            // 
+            this.labelChooseTop.AutoSize = true;
+            this.labelChooseTop.BackColor = System.Drawing.SystemColors.Control;
+            this.labelChooseTop.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.labelChooseTop.ForeColor = System.Drawing.Color.Black;
+            this.labelChooseTop.Location = new System.Drawing.Point(127, 39);
+            this.labelChooseTop.Margin = new System.Windows.Forms.Padding(0);
+            this.labelChooseTop.Name = "labelChooseTop";
+            this.labelChooseTop.Padding = new System.Windows.Forms.Padding(4);
+            this.labelChooseTop.Size = new System.Drawing.Size(119, 23);
+            this.labelChooseTop.TabIndex = 414;
+            this.labelChooseTop.Text = "Top mini time";
+            this.labelChooseTop.Click += new System.EventHandler(this.labelChooseTop_Click);
             // 
             // FormImageViewTime
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1011, 753);
-            this.Controls.Add(this.buttonResetMiddleTimeLocation);
-            this.Controls.Add(this.buttonResetTopTimeLocation);
             this.Controls.Add(this.groupBoxSetting);
             this.Controls.Add(this.buttonSetAsPreset2);
             this.Controls.Add(this.buttonSetAsPreset1);
@@ -539,5 +573,7 @@
         private System.Windows.Forms.Button buttonResetTopTimeLocation;
         private System.Windows.Forms.Button buttonResetMiddleTimeLocation;
         private System.Windows.Forms.CheckBox checkBoxScanBothLocations;
+        private System.Windows.Forms.Label labelChooseMiddle;
+        private System.Windows.Forms.Label labelChooseTop;
     }
 }

@@ -17,6 +17,7 @@ namespace SkyStopwatch
         private bool _EnableScreenTopTime;
         private bool _EnableAutoLock;
         private int _ScanMiddleDelaySecond;
+        private bool _EnableMiddleAsSecondary;
 
 
         public FormImageViewTime()
@@ -26,24 +27,22 @@ namespace SkyStopwatch
             ReadPreviewArgsFromViewModel();
             ReadPresetsFromViewModel(true, true);
 
-            if (GlobalData.Default.IsUsingScreenTopTime)
+            SetPresetLocationsControlState(GlobalData.Default.IsUsingScreenTopTime);
+        }
+
+        private void SetPresetLocationsControlState(bool usingTop)
+        {
+            if (usingTop)
             {
-                //this.groupBoxPresetLocation.Enabled = false;
-                //this.labelMessage.Text = "Some settings are disabled when scan mini top time";
-                //this.labelMessage.ForeColor = Color.Red;
-                this.buttonSetAsPreset1.Visible = false;
-                this.labelPreset1.Visible = false;
-                this.labelPreset1Title.Visible = false;
-                this.buttonApplyPreset1.Visible = false;
-                this.buttonResetMiddleTimeLocation.Visible = false;
+                SetMiddleTimeEnableValue(false);
+                SetTopTimeEnableValue(true);
+                this.RunOnMainAsync(() => SetLableSelected(labelChooseTop, labelChooseMiddle), FormLEOExt.SelectControlDelayMS);
             }
             else
             {
-                this.buttonSetAsPreset2.Visible = false;
-                this.labelPreset2.Visible = false;  
-                this.labelPreset2Title.Visible = false;
-                this.buttonApplyPreset2.Visible = false;
-                this.buttonResetTopTimeLocation.Visible = false;    
+                SetMiddleTimeEnableValue(true);
+                SetTopTimeEnableValue(false);
+                this.RunOnMainAsync(() => SetLableSelected(labelChooseMiddle, labelChooseTop), FormLEOExt.SelectControlDelayMS);
             }
         }
 
@@ -58,6 +57,7 @@ namespace SkyStopwatch
             this._EnableScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
             this._EnableAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock;
             this._ScanMiddleDelaySecond = GlobalData.Default.TimeViewScanMiddleDelaySecond;
+            this._EnableMiddleAsSecondary = GlobalData.Default.EnableTimeViewMiddleAsSecondary;
 
             this.checkBoxReadTopTime.Checked = _EnableScreenTopTime;
             this.checkBoxAutoLock.Checked = _EnableAutoLock;
@@ -65,6 +65,7 @@ namespace SkyStopwatch
             this.buttonResetTopTimeLocation.Enabled = _EnableScreenTopTime;
             this.buttonResetMiddleTimeLocation.Enabled = !_EnableScreenTopTime;
             this.numericUpDownDelaySecond.Value = _ScanMiddleDelaySecond;
+            this.checkBoxScanBothLocations.Checked = _EnableMiddleAsSecondary;
         }
 
         private Rectangle GetPreviewArgs()
@@ -292,7 +293,8 @@ namespace SkyStopwatch
         {
             _EnableScreenTopTime = this.checkBoxReadTopTime.Checked;
             checkBoxAutoLock.Enabled = _EnableScreenTopTime;
-            buttonResetTopTimeLocation.Enabled = _EnableScreenTopTime;
+            checkBoxScanBothLocations.Enabled = _EnableScreenTopTime;
+            SetPresetLocationsControlState(_EnableScreenTopTime);
             SetButtonSaveSettingState();
         }
 
@@ -307,8 +309,9 @@ namespace SkyStopwatch
             bool diffTopTimeState = GlobalData.Default.IsUsingScreenTopTime != _EnableScreenTopTime;
             bool diffAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock != _EnableAutoLock;
             bool diffDelay = GlobalData.Default.TimeViewScanMiddleDelaySecond != _ScanMiddleDelaySecond;
+            bool diff2Blocks = GlobalData.Default.EnableTimeViewMiddleAsSecondary != _EnableMiddleAsSecondary;
 
-            this.buttonSaveSetting.Enabled = diffTopTimeState || diffAutoLock || diffDelay;
+            this.buttonSaveSetting.Enabled = diffTopTimeState || diffAutoLock || diffDelay || diff2Blocks;
         }
 
         private void buttonSaveSetting_Click(object sender, EventArgs e)
@@ -320,6 +323,7 @@ namespace SkyStopwatch
                 GlobalData.Default.IsUsingScreenTopTime = _EnableScreenTopTime;
                 GlobalData.Default.EnableScreenTopTimeAutoLock = _EnableAutoLock;
                 GlobalData.Default.TimeViewScanMiddleDelaySecond = _ScanMiddleDelaySecond;
+                GlobalData.Default.EnableTimeViewMiddleAsSecondary = _EnableMiddleAsSecondary;
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save setting"));
                 this.Close();
             }
@@ -364,8 +368,51 @@ namespace SkyStopwatch
 
         private void checkBoxScanBothLocations_CheckedChanged(object sender, EventArgs e)
         {
-            MessageBox.Show("not support yet");
-            this.checkBoxScanBothLocations.Enabled = false;
+            _EnableMiddleAsSecondary = checkBoxScanBothLocations.Checked;
+            SetButtonSaveSettingState();
+        }
+
+        private void labelChooseMiddle_Click(object sender, EventArgs e)
+        {
+            this.DisableLabelShortTime(this.labelChooseMiddle);
+            SetMiddleTimeEnableValue(true);
+            SetTopTimeEnableValue(false);
+            this.RunOnMainAsync(() => SetLableSelected(labelChooseMiddle, labelChooseTop), FormLEOExt.SelectControlDelayMS);
+        }
+
+        private void labelChooseTop_Click(object sender, EventArgs e)
+        {
+            this.DisableLabelShortTime(this.labelChooseTop);
+            SetMiddleTimeEnableValue(false);
+            SetTopTimeEnableValue(true);
+            this.RunOnMainAsync(() => SetLableSelected(labelChooseTop, labelChooseMiddle), FormLEOExt.SelectControlDelayMS);
+        }
+
+        private static void SetLableSelected(Label selected, Label unselected)
+        {
+            selected.ForeColor = Color.White;
+            selected.BackColor = Color.MediumSlateBlue;
+
+            unselected.ForeColor = Color.Black;
+            unselected.BackColor = Color.White;
+        }
+
+        private void SetTopTimeEnableValue(bool enable)
+        {
+            this.buttonSetAsPreset2.Enabled = enable;
+            this.labelPreset2.Enabled = enable;
+            this.labelPreset2Title.Enabled = enable;
+            this.buttonApplyPreset2.Enabled = enable;
+            this.buttonResetTopTimeLocation.Enabled = enable;
+        }
+
+        private void SetMiddleTimeEnableValue(bool enable)
+        {
+            this.buttonSetAsPreset1.Enabled = enable;
+            this.labelPreset1.Enabled = enable;
+            this.labelPreset1Title.Enabled = enable;
+            this.buttonApplyPreset1.Enabled = enable;
+            this.buttonResetMiddleTimeLocation.Enabled = enable;
         }
     }
 }

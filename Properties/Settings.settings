@@ -77,5 +77,8 @@
     <Setting Name="TimeViewTopSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">60, 60</Value>
     </Setting>
+    <Setting Name="EnableTimeView2Blocks" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

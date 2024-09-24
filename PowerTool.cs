@@ -204,8 +204,11 @@ namespace SkyStopwatch
     }
 
 
-    public static class FormLeoExt
+    public static class FormLEOExt
     {
+        public const int DisableControlDelayMS = 300;
+        public const int SelectControlDelayMS = DisableControlDelayMS + 20;
+
         public static void OnError(this Form form, Exception e)
         {
             string message;
@@ -316,12 +319,12 @@ namespace SkyStopwatch
                 control.ForeColor = oldForeColor;
                 control.BackColor = oldBackColor;
                 control.Enabled = true;
-            }, 300);
+            }, DisableControlDelayMS);
         }
 
         public static void DisableButtonShortTime(this Form form, Button control)
         {
-            DisableButtonWithTime(form, control, 300);
+            DisableButtonWithTime(form, control, DisableControlDelayMS);
         }
 
         public static void DisableButtonWithTime(this Form form, Button control, int intervalMS)
