@@ -41,7 +41,7 @@ namespace SkyStopwatch
         public const int NewGameDelaySeconds = 1;//10;
         public const int NoDelay = 0;
 
-        public const int TimerDisplayUIIntervalMS = 200;//100;
+        public const int TimerDisplayUIIntervalMS = 200;//100; //this need less than 1000, otherwise the app exit logic will be broken
 
         public const int TimerAutoOCRFastIntervalMS = 800; // this value x 3 should less than 1000 (1 second)
         public const int TimerAutoOCRSlowIntervalMS = 10 * 1000;
