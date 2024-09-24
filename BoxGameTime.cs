@@ -863,10 +863,16 @@ namespace SkyStopwatch
             {
                 if (this.IsTimeLocked || this.Model.IsWithinOneGameRoundOrNap)
                 {
-                    System.Diagnostics.Debug.WriteLine("auto refresh - within one round/nap, going to skip");
+                    System.Diagnostics.Debug.WriteLine("within one round/nap/locked, going to skip");
                     _IsAutoRefreshing = false;
+
                     this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
                     return OCRTimerSpeed.InGameMiniTopTimeSlow;
+                }
+                else if (this.Model.IsEmptyReadTooMany)
+                {
+                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
+                    return OCRTimerSpeed.InGameMiniTopTimeSlowByTooManyEmpty;
                 }
                 else
                 {

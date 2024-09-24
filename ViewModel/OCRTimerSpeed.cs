@@ -12,5 +12,6 @@ namespace SkyStopwatch.ViewModel
         PreGameTimeSlow,
         InGameMiniTopTimeFast,
         InGameMiniTopTimeSlow,
+        InGameMiniTopTimeSlowByTooManyEmpty
     }
 }

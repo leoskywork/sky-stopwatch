@@ -51,7 +51,7 @@ namespace SkyStopwatch
 
         public const int TimerNapSeconds = 2;//10; //ensure nap x successlimit > 1 minute
         public const int SuccessLimit = 20;//8;//10;//120 * 1000 / TimerAutoOCRSlowIntervalMS;//3; //success 2 minutes in a row
-        public const int EmptyLimit = 30;
+        public const int EmptyLimit = 15;//30;
         public const int FailParseLimit = 3;
         public const int MisreadLimit = 70;// 50;
          
@@ -100,18 +100,30 @@ namespace SkyStopwatch
                     return false;
                 }
 
-                var sinceLastUpdate = DateTime.Now - _GameTimeLastUpdateTime;
-                //leotodo, issue here, just manual reset after game end/manual exit game
-                if (sinceLastUpdate.TotalSeconds >= this.GameRemainingSeconds)//600)//10)// 120)
+                bool withinOneNap = false;
+
+                if (_TimeAroundGameStart != DateTime.MinValue)
                 {
-                    _AutoOCRSuccessCount = 0;
-                    _AutoOCREmptyInARowCount = 0;
-                    _AutoOCRFailParseInARowCount = 0;
-                    return false;
+                    var sinceLastUpdate = DateTime.Now - _GameTimeLastUpdateTime;
+                    //leotodo, issue here, just manual reset after game end/manual exit game
+                    if (sinceLastUpdate.TotalSeconds >= this.GameRemainingSeconds)//600)//10)// 120)
+                    {
+                        _AutoOCRSuccessCount = 0;
+                        _AutoOCREmptyInARowCount = 0;
+                        _AutoOCRFailParseInARowCount = 0;
+                        return false;
+                    }
+
+                    withinOneNap = sinceLastUpdate.TotalSeconds < TimerNapSeconds;
                 }
 
-                return _HackMisread2xAs1xAndPauseReading || _AutoOCRSuccessCount >= SuccessLimit || sinceLastUpdate.TotalSeconds < TimerNapSeconds;
+                return _HackMisread2xAs1xAndPauseReading || _AutoOCRSuccessCount >= SuccessLimit || withinOneNap;
             }
+        }
+
+        public bool IsEmptyReadTooMany
+        {
+            get { return _AutoOCREmptyInARowCount > EmptyLimit / 3; }
         }
 
         public bool IsTimeLocked { get; set; }
