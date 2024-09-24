@@ -623,19 +623,26 @@ namespace SkyStopwatch
 
                 if (!this.labelTimer.Visible) return;
 
-                if (_ShouldUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
+                if (_ShouldUpdatingPassedTime)
                 {
-                    this.CheckTimeNodes();
+                    if (this.Model.TimeAroundGameStart != DateTime.MinValue)
+                    {
+                        this.CheckTimeNodes();
 
-                    var passed = DateTime.Now - this.Model.TimeAroundGameStart;
-                    if (passed <= TimeSpan.FromSeconds(GlobalData.GameRoundMaxMinute * 60 + GlobalData.GameRoundAdjustSeconds))
-                    {
-                        this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
-                        this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
+                        var passed = DateTime.Now - this.Model.TimeAroundGameStart;
+                        if (passed <= TimeSpan.FromSeconds(GlobalData.GameRoundMaxMinute * 60 + GlobalData.GameRoundAdjustSeconds))
+                        {
+                            this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
+                            this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
+                        }
+                        else
+                        {
+                            this.OnNewGameStart(true);
+                        }
                     }
-                    else
+                    else if(DateTime.Now.Millisecond > 700)
                     {
-                        this.OnNewGameStart(true);
+                        this.labelTimer.Text = DateTime.Now.Second % 2 == 0 ? null : ".";
                     }
                 }
 
@@ -782,12 +789,7 @@ namespace SkyStopwatch
                 {
                     if (this.IsDead()) return;
                     _IsAutoRefreshing = false;
-
-                    if (t.IsFaulted)
-                    {
-                        this.OnError(t.Exception);
-                        return;
-                    }
+                    if (t.IsFaulted){ this.OnError(t.Exception); return;}
 
                     this.RunOnMain(() =>
                     {
@@ -808,22 +810,13 @@ namespace SkyStopwatch
                                 //the same, the time of this read is a repeat read, no need to update
                                 System.Diagnostics.Debug.WriteLine($"same as last: {ocrDisplayTime}");
                             }
-                        }
-                        else if (this.Model.TimeAroundGameStart == DateTime.MinValue)
-                        {
-                            int second = DateTime.Now.Second;
-                            this.labelTimer.Text = second % 2 == 0 ? null : ".";
-                            //this.labelTimer.Text = second % 3 == 0 ? "." : (second % 3 == 1 ? ".." : "...");
-                        }
-                        //else auto refresh failed, just use last result
-                        //buttonOCR.Enabled = true; //makes ui blink, so disable it
+                        }//else just use last result
                     });
                 });
             }
             catch (Exception ex)
             {
                 this.OnError(ex);
-                //buttonOCR.Enabled = true;
             }
         }
 

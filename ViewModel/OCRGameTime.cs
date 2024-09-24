@@ -152,9 +152,14 @@ namespace SkyStopwatch
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
         }
 
-        public static Rectangle GetDefaultTopMiniTimeBlock()
+        public static Rectangle GetDefaultTimeBlock(bool isMiniTopTime)
         {
-            return new Rectangle(976, 216, 60, 60);
+            if (isMiniTopTime)
+            {
+                return new Rectangle(976, 216, 60, 60);
+            }
+
+            return new Rectangle(1394, 800, 130, 34);
         }
 
         public string ReadImageFromFile(string imgPath)
@@ -405,6 +410,7 @@ namespace SkyStopwatch
             //do not lock when game just start
             if (this.GameRemainingSeconds > 37 * 60)
             {
+                _AutoOCRSuccessCount = 0; //also not count as one success
                 return false;
             }
 

@@ -28,11 +28,22 @@ namespace SkyStopwatch
 
             if (GlobalData.Default.IsUsingScreenTopTime)
             {
+                //this.groupBoxPresetLocation.Enabled = false;
+                //this.labelMessage.Text = "Some settings are disabled when scan mini top time";
+                //this.labelMessage.ForeColor = Color.Red;
                 this.buttonSetAsPreset1.Visible = false;
+                this.labelPreset1.Visible = false;
+                this.labelPreset1Title.Visible = false;
+                this.buttonApplyPreset1.Visible = false;
+                this.buttonResetMiddleTimeLocation.Visible = false;
+            }
+            else
+            {
                 this.buttonSetAsPreset2.Visible = false;
-                this.groupBoxPresetLocation.Enabled = false;
-                this.labelMessage.Text = "Some settings are disabled when scan mini top time";
-                this.labelMessage.ForeColor = Color.Red;
+                this.labelPreset2.Visible = false;  
+                this.labelPreset2Title.Visible = false;
+                this.buttonApplyPreset2.Visible = false;
+                this.buttonResetTopTimeLocation.Visible = false;    
             }
         }
 
@@ -52,6 +63,7 @@ namespace SkyStopwatch
             this.checkBoxAutoLock.Checked = _EnableAutoLock;
             this.checkBoxAutoLock.Enabled = _EnableScreenTopTime;
             this.buttonResetTopTimeLocation.Enabled = _EnableScreenTopTime;
+            this.buttonResetMiddleTimeLocation.Enabled = !_EnableScreenTopTime;
             this.numericUpDownDelaySecond.Value = _ScanMiddleDelaySecond;
         }
 
@@ -122,6 +134,8 @@ namespace SkyStopwatch
             try
             {
                 this.buttonSave.Enabled = true;
+                //this.buttonSetAsPreset1.Enabled= true;
+                //this.buttonSetAsPreset2.Enabled= true;
 
                 var screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
@@ -197,6 +211,7 @@ namespace SkyStopwatch
         private void buttonApplyPreset1_Click(object sender, EventArgs e)
         {
             this.DisableButtonShortTime(this.buttonApplyPreset1);
+            this.buttonSetAsPreset1.Enabled = false;
             this.numericUpDownX.Value = OCRGameTime.Preset1XPoint;
             this.numericUpDownY.Value = OCRGameTime.Preset1YPoint;
             this.numericUpDownWidth.Value = OCRGameTime.Preset1BlockWidth;
@@ -207,6 +222,7 @@ namespace SkyStopwatch
         private void buttonApplyPreset2_Click(object sender, EventArgs e)
         {
             this.DisableButtonShortTime(this.buttonApplyPreset2);
+            this.buttonSetAsPreset2.Enabled = false;
             this.numericUpDownX.Value = OCRGameTime.Preset2XPoint;
             this.numericUpDownY.Value = OCRGameTime.Preset2YPoint;
             this.numericUpDownWidth.Value = OCRGameTime.Preset2BlockWidth;
@@ -218,6 +234,8 @@ namespace SkyStopwatch
         {
             try
             {
+                this.labelMessage.Text = null;
+                this.DisableLabelShortTime(this.labelMessage);
                 this.DisableButtonShortTime(this.buttonSetAsPreset1);
 
                 ReadInputArgs(out int x, out int y, out int width, out int height);
@@ -227,6 +245,7 @@ namespace SkyStopwatch
                 OCRGameTime.Preset1BlockHeight = height;
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save as preset 1"));
                 ReadPresetsFromViewModel(true, false);
+                this.RunOnMain(() => this.labelMessage.Text = "set as P1 done", 500);
             }
             catch (Exception ex)
             {
@@ -238,6 +257,8 @@ namespace SkyStopwatch
         {
             try
             {
+                this.labelMessage.Text = null;
+                this.DisableLabelShortTime(this.labelMessage);
                 this.DisableButtonShortTime(this.buttonSetAsPreset2);
 
                 ReadInputArgs(out int x, out int y, out int width, out int height);
@@ -247,6 +268,8 @@ namespace SkyStopwatch
                 OCRGameTime.Preset2BlockHeight = height;
                 GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save as preset 2"));
                 ReadPresetsFromViewModel(false, true);
+                this.RunOnMain(() => this.labelMessage.Text = "set as P2 done", 500);
+                
             }
             catch (Exception ex)
             {
@@ -317,13 +340,32 @@ namespace SkyStopwatch
         {
             this.DisableButtonShortTime(this.buttonResetTopTimeLocation);
 
-            var defaultArgs = OCRGameTime.GetDefaultTopMiniTimeBlock();         
+            var defaultArgs = OCRGameTime.GetDefaultTimeBlock(true);         
             this.numericUpDownX.Value = defaultArgs.X;
             this.numericUpDownY.Value = defaultArgs.Y;
             this.numericUpDownWidth.Value = defaultArgs.Width;
             this.numericUpDownHeight.Value = defaultArgs.Height;
 
             TryUpdateImage(nameof(buttonResetTopTimeLocation_Click));
+        }
+
+        private void buttonResetMiddleTimeLocation_Click(object sender, EventArgs e)
+        {
+            this.DisableButtonShortTime(this.buttonResetMiddleTimeLocation);
+
+            var defaultArgs = OCRGameTime.GetDefaultTimeBlock(false);
+            this.numericUpDownX.Value = defaultArgs.X;
+            this.numericUpDownY.Value = defaultArgs.Y;
+            this.numericUpDownWidth.Value = defaultArgs.Width;
+            this.numericUpDownHeight.Value = defaultArgs.Height;
+
+            TryUpdateImage(nameof(buttonResetMiddleTimeLocation_Click));
+        }
+
+        private void checkBoxScanBothLocations_CheckedChanged(object sender, EventArgs e)
+        {
+            MessageBox.Show("not support yet");
+            this.checkBoxScanBothLocations.Enabled = false;
         }
     }
 }

@@ -301,7 +301,7 @@ namespace SkyStopwatch
             return PowerLog.One;
         }
 
-        public static void DisableButtonShortTime(this Form form, Label control)
+        public static void DisableLabelShortTime(this Form form, Label control)
         {
             var oldForeColor = control.ForeColor;
             var oldBackColor = control.BackColor;

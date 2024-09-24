@@ -224,7 +224,7 @@ namespace SkyStopwatch
             _BossCallGroups.Add(new BossCallGroup());
 
 
-            this.DisableButtonShortTime(this.labelAddGroup);
+            this.DisableLabelShortTime(this.labelAddGroup);
         }
  
 
@@ -250,7 +250,7 @@ namespace SkyStopwatch
                 PreCounting = true
             });
 
-            this.DisableButtonShortTime(this.labelAddBossCall);
+            this.DisableLabelShortTime(this.labelAddBossCall);
           
         }
 
@@ -262,7 +262,7 @@ namespace SkyStopwatch
 
             _BossCallGroups.Last.Calls.RemoveAt(_BossCallGroups.Last.Calls.Count - 1);
 
-            this.DisableButtonShortTime(this.labelRemoveBossCall);
+            this.DisableLabelShortTime(this.labelRemoveBossCall);
         }
 
 
