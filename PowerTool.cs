@@ -16,15 +16,15 @@ namespace SkyStopwatch
 {
     public static class PowerTool
     {
-        public static bool AnyAppConfigProcessRunning()
+        public static bool AnyTargetProcessRunning()
         {
-            if(GlobalData.ProcessList.Count == 0) { return false; }
+            if(GlobalData.ProcessCheckingList.Count == 0) { return false; }
 
             var processes = Process.GetProcesses();
             var currentSessionId = Process.GetCurrentProcess().SessionId;
             var currentUserProcesses = processes.Where(p => p.SessionId == currentSessionId).ToList();
 
-            foreach(string processName in GlobalData.ProcessList)
+            foreach(string processName in GlobalData.ProcessCheckingList)
             {
                 if(currentUserProcesses.Any(p => p.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase)))
                 {

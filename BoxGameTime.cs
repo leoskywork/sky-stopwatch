@@ -20,7 +20,7 @@ namespace SkyStopwatch
 {
     public partial class BoxGameTime : Form, IPopupBox, ITopForm
     {
-        private bool _IsUpdatingPassedTime = false;
+        private bool _ShouldUpdatingPassedTime = false;
 
         /// <summary>
         /// only the first time matter, the time does not auto update on the game label
@@ -28,6 +28,7 @@ namespace SkyStopwatch
         private bool _IsAutoRefreshing = false;
         private Tesseract.TesseractEngine _AutoOCREngine;
         private bool _HasTimeNodeWarningPopped = false;
+        private bool _HasTargetProcessExit = false;
 
 
         public DateTime CreateAt => DateTime.Now;
@@ -99,7 +100,7 @@ namespace SkyStopwatch
 
         private void WarmUpEndSequence()
         {
-            _IsUpdatingPassedTime = true;
+            _ShouldUpdatingPassedTime = true;
             if (!this.timerAutoRefresh.Enabled)
             {
                 this.timerAutoRefresh.Start();
@@ -348,7 +349,7 @@ namespace SkyStopwatch
         private void SetUIStopwatch(string ocrDisplayTime, int kickOffDelaySeconds, string source)
         {
             if (string.IsNullOrEmpty(ocrDisplayTime)) return;
-            if (!_IsUpdatingPassedTime) return;
+            if (!_ShouldUpdatingPassedTime) return;
 
             if (!this.timerMain.Enabled)
             {
@@ -484,7 +485,7 @@ namespace SkyStopwatch
 
         private void OnInitToolBox(Button toolBoxButtonOCR, string initialTimeNodes)
         {
-            toolBoxButtonOCR.Enabled = !_IsUpdatingPassedTime;
+            toolBoxButtonOCR.Enabled = !_ShouldUpdatingPassedTime;
 
             if (toolBoxButtonOCR.Enabled)
             {
@@ -508,7 +509,7 @@ namespace SkyStopwatch
 
         private void OnRunOCR(Action afterDone, string source)
         {
-            _IsUpdatingPassedTime = false;
+            _ShouldUpdatingPassedTime = false;
             //labelTimer.Text = "ocr";
 
             Task.Factory.StartNew(() =>
@@ -541,7 +542,7 @@ namespace SkyStopwatch
                 {
                     if (!string.IsNullOrEmpty(ocrDisplayTime))
                     {
-                        _IsUpdatingPassedTime = true;
+                        _ShouldUpdatingPassedTime = true;
                         SetUIStopwatch(ocrDisplayTime, OCRGameTime.ManualOCRDelaySeconds, source);
                     }
                     else
@@ -556,7 +557,7 @@ namespace SkyStopwatch
 
         private void OnNewGameStart(bool autoRestart)
         {
-            _IsUpdatingPassedTime = true;
+            _ShouldUpdatingPassedTime = true;
             //this.buttonOCR.Enabled = false;
 
             //reset flags/history values
@@ -577,7 +578,7 @@ namespace SkyStopwatch
         {
             if (this.Model.TimeAroundGameStart == DateTime.MinValue) return;
 
-            _IsUpdatingPassedTime = true;
+            _ShouldUpdatingPassedTime = true;
             //this.buttonOCR.Enabled = false;
 
             TimeSpan passedTimeWithIncrease = DateTime.Now.AddSeconds(seconds) - this.Model.TimeAroundGameStart;
@@ -620,23 +621,50 @@ namespace SkyStopwatch
                     this.labelTitle.Text = DateTime.Now.ToString(GlobalData.TimeFormatNoSecond);
                 }
 
-                if (this.labelTimer.Visible)
+                if (!this.labelTimer.Visible) return;
+
+                if (_ShouldUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
                 {
                     this.CheckTimeNodes();
 
-                    if (_IsUpdatingPassedTime && this.Model.TimeAroundGameStart != DateTime.MinValue)
+                    var passed = DateTime.Now - this.Model.TimeAroundGameStart;
+                    if (passed <= TimeSpan.FromSeconds(GlobalData.GameRoundMaxMinute * 60 + GlobalData.GameRoundAdjustSeconds))
                     {
-                        var passed = DateTime.Now - this.Model.TimeAroundGameStart;
-                        if (passed <= TimeSpan.FromSeconds(GlobalData.GameRoundMaxMinute * 60 + GlobalData.GameRoundAdjustSeconds))
-                        {
-                            this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
-                            this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
-                        }
-                        else
-                        {
-                            this.OnNewGameStart(true);
-                        }
+                        this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
+                        this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
                     }
+                    else
+                    {
+                        this.OnNewGameStart(true);
+                    }
+                }
+
+                if (DateTime.Now.Second % 20 == 0)
+                {
+                    object checkedSign = "-checked";
+                    if (this.labelTimer.Tag == checkedSign)
+                    {
+                        return;
+                    }
+
+                    if (PowerTool.AnyTargetProcessRunning())
+                    {
+                        _HasTargetProcessExit = false;
+                        this.labelTimer.Tag = checkedSign;
+                    }
+                    else
+                    {
+                        _HasTargetProcessExit = true;
+                        this.labelTimer.Tag = checkedSign;
+                        this.labelTimer.Text = "--";
+                        SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target process exit");
+                        System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
+                        return;
+                    }
+                }
+                else
+                {
+                    this.labelTimer.Tag = null;
                 }
             }
             catch (Exception ex)
@@ -653,16 +681,15 @@ namespace SkyStopwatch
             if (_HasTimeNodeWarningPopped) return;
 
             var timeNodes = PowerTool.ValidateTimeSpanLines(GlobalData.TimeNodeCheckingList);
-
             if (timeNodes == null || timeNodes.Count == 0) return;
 
             var elapsedSeconds = (DateTime.Now - this.Model.TimeAroundGameStart).TotalSeconds;
 
             timeNodes.ForEach(node =>
             {
-                string fixedLengthNode = node.PadLeft(GlobalData.TImeSpanFormatNoHour.Length - 1, '0');
-                TimeSpan parsedNode = TimeSpan.ParseExact(fixedLengthNode, GlobalData.TImeSpanFormatNoHour, System.Globalization.CultureInfo.InvariantCulture);
-                double remainingSeconds = parsedNode.TotalSeconds - elapsedSeconds;
+                var fixedLengthNode = node.PadLeft(GlobalData.TImeSpanFormatNoHour.Length - 1, '0');
+                var parsedNode = TimeSpan.ParseExact(fixedLengthNode, GlobalData.TImeSpanFormatNoHour, System.Globalization.CultureInfo.InvariantCulture);
+                var remainingSeconds = parsedNode.TotalSeconds - elapsedSeconds;
 
                 if (remainingSeconds > 0 && remainingSeconds < GlobalData.TimeNodeEarlyWarningSeconds)
                 {
@@ -682,7 +709,7 @@ namespace SkyStopwatch
             {
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} clear");
 
-                _IsUpdatingPassedTime = false;
+                _ShouldUpdatingPassedTime = false;
                 SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton, "user clear");
                 _IsAutoRefreshing = false;
                 this.Model.ResetAutoOCR(TimeLocKSource.UserClick);
@@ -712,6 +739,7 @@ namespace SkyStopwatch
         {
             try
             {
+                if (_HasTargetProcessExit) return;
                 if (!labelTimer.Visible) return;
                 if (_IsAutoRefreshing) return;
                 if (this.IsTimeLocked && !TryAutoUnlockTime()) return;
@@ -722,12 +750,6 @@ namespace SkyStopwatch
 
                 Task.Factory.StartNew(() =>
                 {
-                    if (!PowerTool.AnyAppConfigProcessRunning())
-                    {
-                        System.Diagnostics.Debug.WriteLine($"AnyAppConfigProcessRunning is false, process list: {string.Join(",", GlobalData.ProcessList)}");
-                        return "-1";
-                    }
-
                     byte[] screenShotBytes = this.Model.GetImageBytes();
                     if (screenShotBytes == null)
                     {
@@ -780,12 +802,7 @@ namespace SkyStopwatch
 
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
-                            if (ocrDisplayTime == "-1")
-                            {
-                                this.labelTimer.Text = "--";
-                                SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "??? seems obsolete");
-                            }
-                            else if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
+                            if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
                             {
                                 int delaySeconds = GlobalData.Default.IsUsingScreenTopTime ? 1 : OCRGameTime.AutoOCRDelaySeconds;
                                 SetUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);

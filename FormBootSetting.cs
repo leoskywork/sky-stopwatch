@@ -334,8 +334,8 @@ namespace SkyStopwatch
             builder.Append($"{nameof(GlobalData.EnableLogToFile)}: {GlobalData.EnableLogToFile}");
             builder.Append(Environment.NewLine);
 
-            builder.Append($"{nameof(GlobalData.ProcessList)}: ");
-            GlobalData.ProcessList.ForEach(p => builder.Append(p + ","));
+            builder.Append($"{nameof(GlobalData.ProcessCheckingList)}: ");
+            GlobalData.ProcessCheckingList.ForEach(p => builder.Append(p + ","));
             builder.Remove(builder.Length - 1, 1); //remove the last comma (,)
 
             tip.SetToolTip(this.labelMessage, builder.ToString());

@@ -111,7 +111,7 @@ namespace SkyStopwatch
             if (!string.IsNullOrWhiteSpace(Properties.Settings.Default.ProcessListCSV))
             {
                 var processes = Properties.Settings.Default.ProcessListCSV.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                GlobalData.ProcessList.AddRange(processes);
+                GlobalData.ProcessCheckingList.AddRange(processes);
             }
         }
 
@@ -140,7 +140,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.PriceViewPoint = new System.Drawing.Point(OCRPrice.XPoint, OCRPrice.YPoint);
                 Properties.Settings.Default.PriceViewSize = new System.Drawing.Size(OCRPrice.BlockWidth, OCRPrice.BlockHeight);
 
-                Properties.Settings.Default.ProcessListCSV = GlobalData.ProcessList.Count > 0 ? string.Join(",", GlobalData.ProcessList) : string.Empty;
+                Properties.Settings.Default.ProcessListCSV = GlobalData.ProcessCheckingList.Count > 0 ? string.Join(",", GlobalData.ProcessCheckingList) : string.Empty;
 
                 Properties.Settings.Default.EnableBossCountingAutoSlice = OCRBossCounting.EnableAutoSlice;
                 Properties.Settings.Default.BossCountingAutoSliceSeconds = OCRBossCounting.AutoSliceIntervalSeconds;

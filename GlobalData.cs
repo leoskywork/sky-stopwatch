@@ -102,7 +102,7 @@ namespace SkyStopwatch
         public static bool EnableTopMost { get; set; } = true;//false;
         public static bool EnableLogToFile { get; set; } = false;
 
-        public static List<string> ProcessList { get;} = new List<string>();
+        public static List<string> ProcessCheckingList { get;} = new List<string>();
 
 
         private GlobalData() { }
