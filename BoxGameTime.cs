@@ -642,30 +642,27 @@ namespace SkyStopwatch
                 if (DateTime.Now.Second % 20 == 0)
                 {
                     object checkedSign = "-checked";
-                    if (this.labelTimer.Tag == checkedSign)
+                    if (this.labelTimer.Tag == checkedSign) return;
+                    
+                    if (!PowerTool.AnyTargetProcessRunning())
                     {
-                        return;
-                    }
-
-                    if (PowerTool.AnyTargetProcessRunning())
-                    {
-                        _HasTargetProcessExit = false;
-                        this.labelTimer.Tag = checkedSign;
+                        System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
+                        _HasTargetProcessExit = true;
+                        this.TopMost = false;
+                        this.labelTimer.Text = "--";
+                        SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target process exit");
                     }
                     else
                     {
-                        _HasTargetProcessExit = true;
-                        this.labelTimer.Tag = checkedSign;
-                        this.labelTimer.Text = "--";
-                        SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target process exit");
-                        System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
-                        return;
+                        _HasTargetProcessExit = false;
+                        this.TopMost = true;
                     }
+
+                    this.labelTimer.Tag = checkedSign;
+                    return;
                 }
-                else
-                {
-                    this.labelTimer.Tag = null;
-                }
+
+                this.labelTimer.Tag = null;
             }
             catch (Exception ex)
             {
