@@ -12,7 +12,7 @@ namespace SkyStopwatch
     public class GlobalData
     {
         public const string Version = "1.9";
-        public const string Subversion = "1";//"920.1";//"1.240829";
+        public const string Subversion = "2";//"920.1";//"1.240829";
         public static DateTime ExeCreateDate = DateTime.MinValue;
         public static DateTime ExeUpdateDate = DateTime.MinValue;
 
