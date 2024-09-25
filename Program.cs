@@ -74,6 +74,11 @@ namespace SkyStopwatch
             OCRGameTime.TopBlockWidth = Properties.Settings.Default.TimeViewTopSize.Width;
             OCRGameTime.TopBlockHeight = Properties.Settings.Default.TimeViewTopSize.Height;
 
+            OCRGameTime.InGameFlagXPoint = Properties.Settings.Default.TimeViewInGameFlagPoint.X;
+            OCRGameTime.InGameFlagYPoint = Properties.Settings.Default.TimeViewInGameFlagPoint.Y;
+            OCRGameTime.InGameFlagBlockWidth = Properties.Settings.Default.TimeViewInGameFlagSize.Width;
+            OCRGameTime.InGameFlagBlockHeight = Properties.Settings.Default.TimeViewInGameFlagSize.Height;
+
             OCRGameTime.Preset1XPoint = Properties.Settings.Default.TimeViewPreset1Point.X;
             OCRGameTime.Preset1YPoint = Properties.Settings.Default.TimeViewPreset1Point.Y;
             OCRGameTime.Preset1BlockWidth = Properties.Settings.Default.TimeViewPreset1Size.Width;
@@ -100,13 +105,15 @@ namespace SkyStopwatch
             OCRBossCounting.BlockHeight = Properties.Settings.Default.BossCountingViewSize.Height;
 
 
-            //safe check
+            //safe check //InGameFlag
             Rectangle screenRect = new Rectangle(0, 0, width: Screen.PrimaryScreen.Bounds.Width, height: Screen.PrimaryScreen.Bounds.Height);
 
             OCRGameTime.XPoint = Math.Min(OCRGameTime.XPoint, screenRect.Width - OCRGameTime.BlockWidth);
             OCRGameTime.YPoint = Math.Min(OCRGameTime.YPoint, screenRect.Height - OCRGameTime.BlockHeight);
             OCRGameTime.TopXPoint = Math.Min(OCRGameTime.TopXPoint, screenRect.Width - OCRGameTime.TopBlockWidth);
             OCRGameTime.TopYPoint = Math.Min(OCRGameTime.TopYPoint, screenRect.Height - OCRGameTime.TopBlockHeight);
+            OCRGameTime.InGameFlagXPoint = Math.Min(OCRGameTime.InGameFlagXPoint, screenRect.Width - OCRGameTime.InGameFlagBlockWidth);
+            OCRGameTime.InGameFlagYPoint = Math.Min(OCRGameTime.InGameFlagYPoint, screenRect.Height - OCRGameTime.InGameFlagBlockHeight);
 
             OCRGameTime.Preset1XPoint = Math.Min(OCRGameTime.Preset1XPoint, screenRect.Width - OCRGameTime.Preset1BlockWidth);
             OCRGameTime.Preset1YPoint = Math.Min(OCRGameTime.Preset1YPoint, screenRect.Height - OCRGameTime.Preset1BlockHeight);
@@ -152,6 +159,9 @@ namespace SkyStopwatch
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
                 Properties.Settings.Default.TimeViewTopPoint = new System.Drawing.Point(OCRGameTime.TopXPoint, OCRGameTime.TopYPoint);
                 Properties.Settings.Default.TimeViewTopSize = new System.Drawing.Size(OCRGameTime.TopBlockWidth, OCRGameTime.TopBlockHeight);
+                Properties.Settings.Default.TimeViewInGameFlagPoint = new System.Drawing.Point(OCRGameTime.InGameFlagXPoint, OCRGameTime.InGameFlagYPoint);
+                Properties.Settings.Default.TimeViewInGameFlagSize = new System.Drawing.Size(OCRGameTime.InGameFlagBlockWidth, OCRGameTime.InGameFlagBlockHeight);
+
                 Properties.Settings.Default.TimeViewPreset1Point = new System.Drawing.Point(OCRGameTime.Preset1XPoint, OCRGameTime.Preset1YPoint);
                 Properties.Settings.Default.TimeViewPreset1Size = new System.Drawing.Size(OCRGameTime.Preset1BlockWidth, OCRGameTime.Preset1BlockHeight);
                 Properties.Settings.Default.TimeViewPreset2Point = new System.Drawing.Point(OCRGameTime.Preset2XPoint, OCRGameTime.Preset2YPoint);

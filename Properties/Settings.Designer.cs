@@ -337,13 +337,37 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("200, 200")]
+        [global::System.Configuration.DefaultSettingValueAttribute("200, 100")]
         public global::System.Drawing.Point BoxTimeLastCloseLocation {
             get {
                 return ((global::System.Drawing.Point)(this["BoxTimeLastCloseLocation"]));
             }
             set {
                 this["BoxTimeLastCloseLocation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1522, 250")]
+        public global::System.Drawing.Point TimeViewInGameFlagPoint {
+            get {
+                return ((global::System.Drawing.Point)(this["TimeViewInGameFlagPoint"]));
+            }
+            set {
+                this["TimeViewInGameFlagPoint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("24, 20")]
+        public global::System.Drawing.Size TimeViewInGameFlagSize {
+            get {
+                return ((global::System.Drawing.Size)(this["TimeViewInGameFlagSize"]));
+            }
+            set {
+                this["TimeViewInGameFlagSize"] = value;
             }
         }
     }

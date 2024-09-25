@@ -797,7 +797,7 @@ namespace SkyStopwatch
 
                     string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     string ocrTime = this.Model.Find(data);
-                    System.Diagnostics.Debug.WriteLine($"primary: [{ocrTime}] - empty #{this.Model.EmptyCount}");
+                    System.Diagnostics.Debug.WriteLine($"ocr1: [{ocrTime}] - empty #{this.Model.EmptyCount}");
                     bool saveImage = false;// !string.IsNullOrWhiteSpace(ocrTime);
 
                     if (GlobalData.Default.IsDebugging || saveImage)
@@ -819,7 +819,7 @@ namespace SkyStopwatch
                         var middleImageBytes = this.Model.GetImageBytesMiddle();
                         var middleData = OCRBase.ReadImageFromMemory(_AutoOCREngine, middleImageBytes);
                         var middleTime = this.Model.Find(middleData);
-                        System.Diagnostics.Debug.WriteLine($"middle: [{middleTime}]");
+                        System.Diagnostics.Debug.WriteLine($"ocr2: [{middleTime}]");
                         return Tuple.Create(middleTime, 2);
                     }
 

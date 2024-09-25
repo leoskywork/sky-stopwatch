@@ -134,6 +134,7 @@
     <Compile Include="ViewModel\OCRTimerSpeed.cs" />
     <Compile Include="ViewModel\TimeMisreadKind.cs" />
     <Compile Include="ViewModel\TimeChangeSource.cs" />
+    <Compile Include="ViewModel\TimeScanKind.cs" />
     <Compile Include="ViewModel\ViewModelFactory.cs" />
     <Compile Include="ViewModel\OCRBase.cs" />
     <Compile Include="BoxGameTime.cs">

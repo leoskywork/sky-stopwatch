@@ -41,6 +41,10 @@
             this.labelHeight = new System.Windows.Forms.Label();
             this.pictureBoxOne = new System.Windows.Forms.PictureBox();
             this.groupBoxPresetLocation = new System.Windows.Forms.GroupBox();
+            this.labelChooseInGameFlag = new System.Windows.Forms.Label();
+            this.labelChooseTop = new System.Windows.Forms.Label();
+            this.labelChooseMiddle = new System.Windows.Forms.Label();
+            this.buttonResetLocation = new System.Windows.Forms.Button();
             this.labelTip = new System.Windows.Forms.Label();
             this.buttonApplyPreset2 = new System.Windows.Forms.Button();
             this.buttonApplyPreset1 = new System.Windows.Forms.Button();
@@ -57,10 +61,6 @@
             this.buttonSaveSetting = new System.Windows.Forms.Button();
             this.numericUpDownDelaySecond = new System.Windows.Forms.NumericUpDown();
             this.labelScanMiddleDelay = new System.Windows.Forms.Label();
-            this.buttonResetTopTimeLocation = new System.Windows.Forms.Button();
-            this.buttonResetMiddleTimeLocation = new System.Windows.Forms.Button();
-            this.labelChooseMiddle = new System.Windows.Forms.Label();
-            this.labelChooseTop = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWidth)).BeginInit();
@@ -95,9 +95,9 @@
             this.buttonSave.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonSave.Location = new System.Drawing.Point(625, 694);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(80, 30);
+            this.buttonSave.Size = new System.Drawing.Size(211, 30);
             this.buttonSave.TabIndex = 20;
-            this.buttonSave.Text = "Save";
+            this.buttonSave.Text = "Save x";
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
@@ -241,11 +241,11 @@
             // 
             // groupBoxPresetLocation
             // 
+            this.groupBoxPresetLocation.Controls.Add(this.labelChooseInGameFlag);
             this.groupBoxPresetLocation.Controls.Add(this.labelChooseTop);
             this.groupBoxPresetLocation.Controls.Add(this.labelChooseMiddle);
-            this.groupBoxPresetLocation.Controls.Add(this.buttonResetMiddleTimeLocation);
+            this.groupBoxPresetLocation.Controls.Add(this.buttonResetLocation);
             this.groupBoxPresetLocation.Controls.Add(this.labelTip);
-            this.groupBoxPresetLocation.Controls.Add(this.buttonResetTopTimeLocation);
             this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset2);
             this.groupBoxPresetLocation.Controls.Add(this.buttonApplyPreset1);
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset2);
@@ -254,16 +254,72 @@
             this.groupBoxPresetLocation.Controls.Add(this.labelPreset1Title);
             this.groupBoxPresetLocation.Location = new System.Drawing.Point(630, 339);
             this.groupBoxPresetLocation.Name = "groupBoxPresetLocation";
-            this.groupBoxPresetLocation.Size = new System.Drawing.Size(345, 336);
+            this.groupBoxPresetLocation.Size = new System.Drawing.Size(345, 285);
             this.groupBoxPresetLocation.TabIndex = 109;
             this.groupBoxPresetLocation.TabStop = false;
             this.groupBoxPresetLocation.Text = "Location Presets";
+            // 
+            // labelChooseInGameFlag
+            // 
+            this.labelChooseInGameFlag.AutoSize = true;
+            this.labelChooseInGameFlag.BackColor = System.Drawing.SystemColors.Control;
+            this.labelChooseInGameFlag.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.labelChooseInGameFlag.ForeColor = System.Drawing.Color.Black;
+            this.labelChooseInGameFlag.Location = new System.Drawing.Point(204, 39);
+            this.labelChooseInGameFlag.Margin = new System.Windows.Forms.Padding(0);
+            this.labelChooseInGameFlag.Name = "labelChooseInGameFlag";
+            this.labelChooseInGameFlag.Padding = new System.Windows.Forms.Padding(4);
+            this.labelChooseInGameFlag.Size = new System.Drawing.Size(111, 23);
+            this.labelChooseInGameFlag.TabIndex = 415;
+            this.labelChooseInGameFlag.Text = "In game flag";
+            this.labelChooseInGameFlag.Click += new System.EventHandler(this.labelInGameFlag_Click);
+            // 
+            // labelChooseTop
+            // 
+            this.labelChooseTop.AutoSize = true;
+            this.labelChooseTop.BackColor = System.Drawing.SystemColors.Control;
+            this.labelChooseTop.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.labelChooseTop.ForeColor = System.Drawing.Color.Black;
+            this.labelChooseTop.Location = new System.Drawing.Point(127, 39);
+            this.labelChooseTop.Margin = new System.Windows.Forms.Padding(0);
+            this.labelChooseTop.Name = "labelChooseTop";
+            this.labelChooseTop.Padding = new System.Windows.Forms.Padding(4);
+            this.labelChooseTop.Size = new System.Drawing.Size(79, 23);
+            this.labelChooseTop.TabIndex = 414;
+            this.labelChooseTop.Text = "Top time";
+            this.labelChooseTop.Click += new System.EventHandler(this.labelChooseTop_Click);
+            // 
+            // labelChooseMiddle
+            // 
+            this.labelChooseMiddle.AutoSize = true;
+            this.labelChooseMiddle.BackColor = System.Drawing.SystemColors.HotTrack;
+            this.labelChooseMiddle.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.labelChooseMiddle.ForeColor = System.Drawing.Color.White;
+            this.labelChooseMiddle.Location = new System.Drawing.Point(16, 39);
+            this.labelChooseMiddle.Margin = new System.Windows.Forms.Padding(0);
+            this.labelChooseMiddle.Name = "labelChooseMiddle";
+            this.labelChooseMiddle.Padding = new System.Windows.Forms.Padding(4);
+            this.labelChooseMiddle.Size = new System.Drawing.Size(111, 23);
+            this.labelChooseMiddle.TabIndex = 413;
+            this.labelChooseMiddle.Text = "Middle time ";
+            this.labelChooseMiddle.Click += new System.EventHandler(this.labelChooseMiddle_Click);
+            // 
+            // buttonResetLocation
+            // 
+            this.buttonResetLocation.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonResetLocation.Location = new System.Drawing.Point(24, 236);
+            this.buttonResetLocation.Name = "buttonResetLocation";
+            this.buttonResetLocation.Size = new System.Drawing.Size(303, 30);
+            this.buttonResetLocation.TabIndex = 413;
+            this.buttonResetLocation.Text = "Reset x location";
+            this.buttonResetLocation.UseVisualStyleBackColor = true;
+            this.buttonResetLocation.Click += new System.EventHandler(this.buttonResetLocation_Click);
             // 
             // labelTip
             // 
             this.labelTip.AutoSize = true;
             this.labelTip.ForeColor = System.Drawing.Color.Red;
-            this.labelTip.Location = new System.Drawing.Point(16, 187);
+            this.labelTip.Location = new System.Drawing.Point(16, 179);
             this.labelTip.Name = "labelTip";
             this.labelTip.Size = new System.Drawing.Size(311, 15);
             this.labelTip.TabIndex = 113;
@@ -330,22 +386,22 @@
             // buttonSetAsPreset1
             // 
             this.buttonSetAsPreset1.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonSetAsPreset1.Location = new System.Drawing.Point(714, 694);
+            this.buttonSetAsPreset1.Location = new System.Drawing.Point(845, 694);
             this.buttonSetAsPreset1.Name = "buttonSetAsPreset1";
-            this.buttonSetAsPreset1.Size = new System.Drawing.Size(126, 30);
+            this.buttonSetAsPreset1.Size = new System.Drawing.Size(60, 30);
             this.buttonSetAsPreset1.TabIndex = 110;
-            this.buttonSetAsPreset1.Text = "As Preset 1";
+            this.buttonSetAsPreset1.Text = "As P1";
             this.buttonSetAsPreset1.UseVisualStyleBackColor = true;
             this.buttonSetAsPreset1.Click += new System.EventHandler(this.buttonSetAsPreset1_Click);
             // 
             // buttonSetAsPreset2
             // 
             this.buttonSetAsPreset2.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonSetAsPreset2.Location = new System.Drawing.Point(849, 694);
+            this.buttonSetAsPreset2.Location = new System.Drawing.Point(914, 694);
             this.buttonSetAsPreset2.Name = "buttonSetAsPreset2";
-            this.buttonSetAsPreset2.Size = new System.Drawing.Size(126, 30);
+            this.buttonSetAsPreset2.Size = new System.Drawing.Size(60, 30);
             this.buttonSetAsPreset2.TabIndex = 111;
-            this.buttonSetAsPreset2.Text = "As Preset 2";
+            this.buttonSetAsPreset2.Text = "As P2";
             this.buttonSetAsPreset2.UseVisualStyleBackColor = true;
             this.buttonSetAsPreset2.Click += new System.EventHandler(this.buttonSetAsPreset2_Click);
             // 
@@ -444,60 +500,6 @@
             this.labelScanMiddleDelay.TabIndex = 3;
             this.labelScanMiddleDelay.Text = "Scan middle delay seconds:";
             // 
-            // buttonResetTopTimeLocation
-            // 
-            this.buttonResetTopTimeLocation.Enabled = false;
-            this.buttonResetTopTimeLocation.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonResetTopTimeLocation.Location = new System.Drawing.Point(19, 286);
-            this.buttonResetTopTimeLocation.Name = "buttonResetTopTimeLocation";
-            this.buttonResetTopTimeLocation.Size = new System.Drawing.Size(303, 30);
-            this.buttonResetTopTimeLocation.TabIndex = 412;
-            this.buttonResetTopTimeLocation.Text = "Reset top time location";
-            this.buttonResetTopTimeLocation.UseVisualStyleBackColor = true;
-            this.buttonResetTopTimeLocation.Click += new System.EventHandler(this.buttonResetTopTimeLocation_Click);
-            // 
-            // buttonResetMiddleTimeLocation
-            // 
-            this.buttonResetMiddleTimeLocation.Enabled = false;
-            this.buttonResetMiddleTimeLocation.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonResetMiddleTimeLocation.Location = new System.Drawing.Point(19, 238);
-            this.buttonResetMiddleTimeLocation.Name = "buttonResetMiddleTimeLocation";
-            this.buttonResetMiddleTimeLocation.Size = new System.Drawing.Size(303, 30);
-            this.buttonResetMiddleTimeLocation.TabIndex = 413;
-            this.buttonResetMiddleTimeLocation.Text = "Reset middle location";
-            this.buttonResetMiddleTimeLocation.UseVisualStyleBackColor = true;
-            this.buttonResetMiddleTimeLocation.Click += new System.EventHandler(this.buttonResetMiddleTimeLocation_Click);
-            // 
-            // labelChooseMiddle
-            // 
-            this.labelChooseMiddle.AutoSize = true;
-            this.labelChooseMiddle.BackColor = System.Drawing.SystemColors.HotTrack;
-            this.labelChooseMiddle.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.labelChooseMiddle.ForeColor = System.Drawing.Color.White;
-            this.labelChooseMiddle.Location = new System.Drawing.Point(16, 39);
-            this.labelChooseMiddle.Margin = new System.Windows.Forms.Padding(0);
-            this.labelChooseMiddle.Name = "labelChooseMiddle";
-            this.labelChooseMiddle.Padding = new System.Windows.Forms.Padding(4);
-            this.labelChooseMiddle.Size = new System.Drawing.Size(111, 23);
-            this.labelChooseMiddle.TabIndex = 413;
-            this.labelChooseMiddle.Text = "Middle time ";
-            this.labelChooseMiddle.Click += new System.EventHandler(this.labelChooseMiddle_Click);
-            // 
-            // labelChooseTop
-            // 
-            this.labelChooseTop.AutoSize = true;
-            this.labelChooseTop.BackColor = System.Drawing.SystemColors.Control;
-            this.labelChooseTop.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.labelChooseTop.ForeColor = System.Drawing.Color.Black;
-            this.labelChooseTop.Location = new System.Drawing.Point(127, 39);
-            this.labelChooseTop.Margin = new System.Windows.Forms.Padding(0);
-            this.labelChooseTop.Name = "labelChooseTop";
-            this.labelChooseTop.Padding = new System.Windows.Forms.Padding(4);
-            this.labelChooseTop.Size = new System.Drawing.Size(119, 23);
-            this.labelChooseTop.TabIndex = 414;
-            this.labelChooseTop.Text = "Top mini time";
-            this.labelChooseTop.Click += new System.EventHandler(this.labelChooseTop_Click);
-            // 
             // FormImageViewTime
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -570,10 +572,10 @@
         private System.Windows.Forms.NumericUpDown numericUpDownDelaySecond;
         private System.Windows.Forms.CheckBox checkBoxReadTopTime;
         private System.Windows.Forms.CheckBox checkBoxAutoLock;
-        private System.Windows.Forms.Button buttonResetTopTimeLocation;
-        private System.Windows.Forms.Button buttonResetMiddleTimeLocation;
+        private System.Windows.Forms.Button buttonResetLocation;
         private System.Windows.Forms.CheckBox checkBoxScanBothLocations;
         private System.Windows.Forms.Label labelChooseMiddle;
         private System.Windows.Forms.Label labelChooseTop;
+        private System.Windows.Forms.Label labelChooseInGameFlag;
     }
 }

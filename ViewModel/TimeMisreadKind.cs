@@ -12,7 +12,8 @@ namespace SkyStopwatch.ViewModel
         GreaterThanMaxMinute,
         Treat2xAs1x,
         LessThanLastRead,
-        GreaterThanJoinGameMaxMinute
+        GreaterThanJoinGameMaxMinute,
+        Treat0xOr1xAs3x
 
     }
 }

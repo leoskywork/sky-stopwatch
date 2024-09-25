@@ -25,6 +25,11 @@ namespace SkyStopwatch
         public static int TopBlockWidth = 100;
         public static int TopBlockHeight = 100;
 
+        public static int InGameFlagXPoint = 0;
+        public static int InGameFlagYPoint = 0;
+        public static int InGameFlagBlockWidth = 100;
+        public static int InGameFlagBlockHeight = 100;
+
         public static int Preset1XPoint = 0;
         public static int Preset1YPoint = 0;
         public static int Preset1BlockWidth = 100;
@@ -162,14 +167,19 @@ namespace SkyStopwatch
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
         }
 
-        public static Rectangle GetDefaultTimeBlock(bool isMiniTopTime)
+        public static Rectangle GetDefaultTimeBlock(TimeScanKind scanKind)
         {
-            if (isMiniTopTime)
+            if (scanKind == TimeScanKind.TopMiniTime)
             {
                 return new Rectangle(976, 216, 60, 60);
             }
 
-            return new Rectangle(1394, 800, 130, 34);
+            if (scanKind == TimeScanKind.InGameFlag)
+            {
+                return new Rectangle(1522, 250, 24, 24);
+            }
+
+            return new Rectangle(1080, 980, 140, 30);
         }
 
         public string ReadImageFromFile(string imgPath)
@@ -224,12 +234,14 @@ namespace SkyStopwatch
                         //    timePartAdjust = "12" + timePartAdjust.Substring(2);
                         //}
 
-                        //System.Diagnostics.Debug.WriteLine("regex line");
-                        System.Diagnostics.Debug.WriteLine("-------------find------------");
-                        System.Diagnostics.Debug.WriteLine(line);
-                        System.Diagnostics.Debug.WriteLine(line6TimeParts);
-                        System.Diagnostics.Debug.WriteLine(line6TimePartsAdjust);
-                        System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        if (GlobalData.Default.IsDebugging)
+                        {
+                            System.Diagnostics.Debug.WriteLine("-------------find------------");
+                            System.Diagnostics.Debug.WriteLine(line);
+                            System.Diagnostics.Debug.WriteLine(line6TimeParts);
+                            System.Diagnostics.Debug.WriteLine(line6TimePartsAdjust);
+                            System.Diagnostics.Debug.WriteLine("-----------------------------");
+                        }
 
                         return line6TimePartsAdjust;
                     }
@@ -327,7 +339,7 @@ namespace SkyStopwatch
 
                 if (this.TimeChangeSource == TimeChangeSource.AppAutoUpdateBySecondary)
                 {
-                    if ((sinceGameStart - ocrTimeSpan).TotalSeconds < 60)
+                    if ((sinceGameStart - ocrTimeSpan).TotalSeconds < 60 * 2)
                     {
                         System.Diagnostics.Debug.WriteLine($"--> first top read, replacing middle");
                         return TimeMisreadKind.None;
@@ -337,6 +349,12 @@ namespace SkyStopwatch
                     {
                         return TimeMisreadKind.GreaterThanJoinGameMaxMinute;
                     }
+                }
+
+                //treat 0x/1x as 3x
+                if (ocrTimeSpan.Minutes >= 30 && sinceGameStart.Minutes <= 19)
+                {
+                    return TimeMisreadKind.Treat0xOr1xAs3x;
                 }
 
                 //coner case: sometimes, treat '2x' as '1x'(e.g. 23 as 13), ignore it
