@@ -21,8 +21,9 @@ namespace SkyStopwatch
     {
         public const int Increment2Seconds = 2;
         public const int Increment10Seconds = 10;
-        public const int IncrementMinutes = 1;
-        public const int DecrementMinutes = 1;
+        public const int IncrementMinute = 1;
+        public const int DecrementMinute = 1;
+        public const int Decrement10Seconds = 10;
 
         public const int MinBlockWidth = 10;
         public const int MinBlockHeight = 10;

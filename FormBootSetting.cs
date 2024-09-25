@@ -290,7 +290,7 @@ namespace SkyStopwatch
         private void buttonAddMinute_Click(object sender, EventArgs e)
         {
             this.buttonAddMinute.Enabled = false;
-            _AddSecondsClick?.Invoke(OCRBase.IncrementMinutes * 60);
+            _AddSecondsClick?.Invoke(OCRBase.IncrementMinute * 60);
             this.buttonAddMinute.Enabled = true;
         }
 
@@ -298,7 +298,7 @@ namespace SkyStopwatch
         {
             this.buttonReduceMinute.Enabled = false;
 
-            _AddSecondsClick?.Invoke(OCRBase.DecrementMinutes * -60);
+            _AddSecondsClick?.Invoke(OCRBase.DecrementMinute * -60);
             this.buttonReduceMinute.Enabled = true;
         }
 
@@ -359,6 +359,12 @@ namespace SkyStopwatch
         {
             _LockClick();
             this.Close();
+        }
+
+        private void buttonReduceSeconds_Click(object sender, EventArgs e)
+        {
+            this.DisableButtonWithTime(this.buttonReduceSeconds, 10);
+            _AddSecondsClick?.Invoke(OCRBase.Decrement10Seconds * -1);
         }
     }
 }
