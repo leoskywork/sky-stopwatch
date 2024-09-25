@@ -337,7 +337,7 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("200, 200")]
         public global::System.Drawing.Point BoxTimeLastCloseLocation {
             get {
                 return ((global::System.Drawing.Point)(this["BoxTimeLastCloseLocation"]));
