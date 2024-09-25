@@ -24,6 +24,7 @@ namespace SkyStopwatch
 
         private string _OriginalTimeNodes;
         private BootSettingArgs _Args;
+        private bool _IsFirstAssign = true;
 
         private FormBootSetting()
         {
@@ -324,6 +325,13 @@ namespace SkyStopwatch
 
         private void checkBoxTopMost_CheckedChanged(object sender, EventArgs e)
         {
+            if (_IsFirstAssign) //avoid recursive invoke
+            {
+                _IsFirstAssign = false;
+                return;
+            }
+          
+
             System.Diagnostics.Debug.WriteLine($"----- checkBoxTopMost_CheckedChanged, checked: {this.checkBoxTopMost.Checked}");
             _TopMostClick?.Invoke();
         }

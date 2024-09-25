@@ -123,6 +123,11 @@ namespace SkyStopwatch
             {
                 var processes = Properties.Settings.Default.ProcessListCSV.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 GlobalData.ProcessCheckingList.AddRange(processes);
+
+                if (Environment.MachineName == "LEO-PC-PRO")
+                {
+                    GlobalData.ProcessCheckingList.Remove("devenv");
+                }
             }
         }
 

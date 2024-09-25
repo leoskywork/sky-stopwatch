@@ -19,7 +19,7 @@ namespace SkyStopwatch
         public static bool AnyTargetProcessRunning()
         {
             if(GlobalData.ProcessCheckingList.Count == 0) { return false; }
-
+          
             var processes = Process.GetProcesses();
             var currentSessionId = Process.GetCurrentProcess().SessionId;
             var currentUserProcesses = processes.Where(p => p.SessionId == currentSessionId).ToList();
