@@ -332,6 +332,11 @@ namespace SkyStopwatch
                         System.Diagnostics.Debug.WriteLine($"--> first top read, replacing middle");
                         return TimeMisreadKind.None;
                     }
+
+                    if (ocrTimeSpan.Minutes > 30)
+                    {
+                        return TimeMisreadKind.GreaterThanJoinGameMaxMinute;
+                    }
                 }
 
                 //coner case: sometimes, treat '2x' as '1x'(e.g. 23 as 13), ignore it
