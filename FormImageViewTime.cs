@@ -423,6 +423,10 @@ namespace SkyStopwatch
             this.labelPreset2.Enabled = enable;
             this.labelPreset2Title.Enabled = enable;
             this.buttonApplyPreset2.Enabled = enable;
+            if (enable)
+            {
+                ReadPresetsFromViewModel(false, true);
+            }
             this.buttonResetTopTimeLocation.Enabled = enable;
         }
 
@@ -432,6 +436,10 @@ namespace SkyStopwatch
             this.labelPreset1.Enabled = enable;
             this.labelPreset1Title.Enabled = enable;
             this.buttonApplyPreset1.Enabled = enable;
+            if (enable)
+            {
+                ReadPresetsFromViewModel(true, false);
+            }
             this.buttonResetMiddleTimeLocation.Enabled = enable;
         }
     }
