@@ -65,11 +65,11 @@
             // 
             // timerMain
             // 
-            this.timerMain.Tick += new System.EventHandler(this.timerMain_Tick);
+            this.timerMain.Tick += new System.EventHandler(this.timerRefreshUI_Tick);
             // 
             // timerAutoRefresh
             // 
-            this.timerAutoRefresh.Tick += new System.EventHandler(this.timerAutoRefresh_Tick);
+            this.timerAutoRefresh.Tick += new System.EventHandler(this.timerOCRProcess_Tick);
             // 
             // labelTitle
             // 

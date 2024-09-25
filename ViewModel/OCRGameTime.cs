@@ -429,6 +429,12 @@ namespace SkyStopwatch
                 return false;
             }
 
+            if (this.TimeChangeSource == TimeChangeSource.AppAutoUpdateBySecondary)
+            {
+                return false;
+            }
+
+
             //do not lock when game just start
             if (this.GameRemainingSeconds > 37 * 60)
             {

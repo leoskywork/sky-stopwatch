@@ -351,13 +351,17 @@ namespace SkyStopwatch
                 {
                     changeSource = TimeChangeSource.TargetAppExit;
                 }
+                else if(source == GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo)
+                {
+                    changeSource = TimeChangeSource.TargetAppStartup;
+                }
                 //else leotodo, do not need to know other cases now
 
                 this.Model.TimeChangeSource = changeSource;
 
                 GlobalData.Default.FireChangeGameStartTime(new ChangeGameStartTimeEventArgs(newTime, source));
-                bool saveScreen = newTime != DateTime.MinValue;
-                this.Log().SaveAsync($"set start: {newTime.ToString(GlobalData.TimeFormat6Digits)}, detail: {detail}", source, saveScreen);
+                bool saveScreenShot = newTime != DateTime.MinValue;
+                this.Log().SaveAsync($"set start: {newTime.ToString(GlobalData.TimeFormat6Digits)}, detail: {detail}", source, saveScreenShot);
             }
         }
 
@@ -629,7 +633,7 @@ namespace SkyStopwatch
             }
         }
 
-        private void timerMain_Tick(object sender, EventArgs e)
+        private void timerRefreshUI_Tick(object sender, EventArgs e)
         {
             try
             {
@@ -677,11 +681,19 @@ namespace SkyStopwatch
                     GlobalData.Default.EnableTopMost = isTargetRunning;
                     _HasTargetProcessExit = !isTargetRunning;
 
-                    if (!isTargetRunning)
+                    if (isTargetRunning)
+                    {
+                        if (this.Model.TimeAroundGameStart == DateTime.MinValue && this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
+                        {
+                            this.labelTimer.Text = ".";
+                            SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo, "target app running");
+                        }
+                    }
+                    else
                     {
                         this.labelTimer.Text = "--";
-                        SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target process exit");
-                        System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
+                        SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app exit");
+                        //System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
                     }
 
                     this.labelTimer.Tag = checkedSign;
@@ -758,7 +770,7 @@ namespace SkyStopwatch
             }
         }
 
-        private void timerAutoRefresh_Tick(object sender, EventArgs e)
+        private void timerOCRProcess_Tick(object sender, EventArgs e)
         {
             try
             {

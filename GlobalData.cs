@@ -18,6 +18,7 @@ namespace SkyStopwatch
         public static DateTime ExeUpdateDate = DateTime.MinValue;
 
         public const string ChangeTimeSourceOCRTimeIsNegativeOne = "ocrDisplayTime is -1";
+        public const string ChangeTimeSourceOCRTimeIsNegativeTwo = "ocrDisplayTime is -2";
         public const string ChangeTimeSourceClearButton = "OnClearOCR";
         public const string ChangeTimeSourceManualOCRButton = "ManualOCR";
         public const string ChangeTimeSourceNewGameButton = "NewGame";
