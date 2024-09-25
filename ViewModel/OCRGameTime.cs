@@ -281,7 +281,7 @@ namespace SkyStopwatch
 
             this._AutoOCREmptyInARowCount = 0;
 
-            var misreadKind = CheckMisreadInternal(ocrDisplayTime);
+            var misreadKind = CheckTopTimeInternal(ocrDisplayTime);
             if (misreadKind == TimeMisreadKind.Treat2xAs1x && !IsNearPhaseBossesTime())
             {
                 _HackMisread2xAs1xAndPauseReading = true;
@@ -294,7 +294,7 @@ namespace SkyStopwatch
             return misreadKind != TimeMisreadKind.None;
         }
 
-        private TimeMisreadKind CheckMisreadInternal(string ocrDisplayTime)
+        private TimeMisreadKind CheckTopTimeInternal(string ocrDisplayTime)
         {
             if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out TimeSpan ocrTimeSpan))
             {
@@ -303,14 +303,12 @@ namespace SkyStopwatch
                     return TimeMisreadKind.GreaterThanMaxMinute;
                 }
 
-                //do not tread as misread when game just start
                 if (ocrTimeSpan.TotalSeconds < 60)
                 {
                     System.Diagnostics.Debug.WriteLine($"--> not a misread, game just start");
                     return TimeMisreadKind.None;
                 }
 
-                //do not treat as misread when ocr min < 10 and last read near exit point
                 if (ocrTimeSpan.Minutes < 10 && IsNearPhaseBossesTime())
                 {
                     System.Diagnostics.Debug.WriteLine($"--> not a misread, last read near exit point");
@@ -326,6 +324,15 @@ namespace SkyStopwatch
                 var now = DateTime.Now;
                 var sinceGameStart = now - this._TimeAroundGameStart;
                 var sinceLastUpdate = now - this._GameTimeLastUpdateTime;
+
+                if (this.TimeChangeSource == TimeChangeSource.AppAutoUpdateBySecondary)
+                {
+                    if ((sinceGameStart - ocrTimeSpan).TotalSeconds < 60)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"--> first top read, replacing middle");
+                        return TimeMisreadKind.None;
+                    }
+                }
 
                 //coner case: sometimes, treat '2x' as '1x'(e.g. 23 as 13), ignore it
                 if (ocrTimeSpan.Minutes >= 10 && ocrTimeSpan.Minutes <= 19)

@@ -335,14 +335,15 @@ namespace SkyStopwatch
                 if (source == GlobalData.ChangeTimeSourceNewGameAuto)
                 {
                     changeSource = TimeChangeSource.AppAutoRestart;
-                } 
-                else if(source == GlobalData.ChangeTimeSourceNewGameButton)
+                }
+                else if (source == GlobalData.ChangeTimeSourceNewGameButton)
                 {
                     changeSource = TimeChangeSource.UserClickNewGame;
                 }
-                else if(source == GlobalData.ChangeTimeSourceTimerOCR)
+                else if (source == GlobalData.ChangeTimeSourceTimerOCR)
                 {
-                    changeSource = TimeChangeSource.AppAutoUpdate;
+                    bool isSecondary = this.EnableReadMiddleAsSecondary() && "true".Equals(detail, StringComparison.OrdinalIgnoreCase);
+                    changeSource = isSecondary ? TimeChangeSource.AppAutoUpdateBySecondary : TimeChangeSource.AppAutoUpdate;
                 }
                 //else leotodo, do not need to know other cases now
 
@@ -356,7 +357,7 @@ namespace SkyStopwatch
 
 
 
-        private void SetUIStopwatch(string ocrDisplayTime, int kickOffDelaySeconds, string source)
+        private void SetUIStopwatch(string ocrDisplayTime, int kickOffDelaySeconds, string source, string detail = null)
         {
             if (string.IsNullOrEmpty(ocrDisplayTime)) return;
             if (!_ShouldUpdatingPassedTime) return;
@@ -403,7 +404,8 @@ namespace SkyStopwatch
                 }
 
                 this.Model.AutoOCRTimeOfLastRead = ocrDisplayTime;
-                SetGameStartTime(DateTime.Now.AddSeconds(passedSeconds * -1), source, $"Change UIStopwatch, ocr: {ocrDisplayTime}");
+                var startTimeByOCR = DateTime.Now.AddSeconds(passedSeconds * -1);
+                SetGameStartTime(startTimeByOCR, source, detail);
                 this.labelTimer.Text = TimeSpan.FromSeconds(passedSeconds).ToString(GlobalData.UIElapsedTimeFormat);
             }
             else
@@ -772,7 +774,7 @@ namespace SkyStopwatch
 
                     string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
                     string ocrTime = this.Model.Find(data);
-                    System.Diagnostics.Debug.WriteLine($"ocr: [{ocrTime}]");
+                    System.Diagnostics.Debug.WriteLine($"primary: [{ocrTime}] - empty #{this.Model.EmptyCount}");
                     bool saveImage = false;// !string.IsNullOrWhiteSpace(ocrTime);
 
                     if (GlobalData.Default.IsDebugging || saveImage)
@@ -794,7 +796,7 @@ namespace SkyStopwatch
                         var middleImageBytes = this.Model.GetImageBytesMiddle();
                         var middleData = OCRBase.ReadImageFromMemory(_AutoOCREngine, middleImageBytes);
                         var middleTime = this.Model.Find(middleData);
-                        System.Diagnostics.Debug.WriteLine($"2nd middle: [{middleTime}], empty #{this.Model.EmptyCount}");
+                        System.Diagnostics.Debug.WriteLine($"middle: [{middleTime}]");
                         return Tuple.Create(middleTime, 2);
                     }
 
@@ -809,15 +811,15 @@ namespace SkyStopwatch
                     this.RunOnMain(() =>
                     {
                         string ocrDisplayTime = t.Result.Item1;
-                        bool isTopTime = t.Result.Item2 == 1;
-                        if (this.Model.IsOCRTopTimeMisread(isTopTime ? ocrDisplayTime : string.Empty)) return;
+                        bool isSecondary = t.Result.Item2 == 2;
+                        if (this.Model.IsOCRTopTimeMisread(isSecondary ? string.Empty : ocrDisplayTime)) return;
 
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
                             if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
                             {
                                 int delaySeconds = GlobalData.Default.IsUsingScreenTopTime ? 1 : OCRGameTime.AutoOCRDelaySeconds;
-                                SetUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR);
+                                SetUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR, isSecondary.ToString());
                                 TryAutoLockTime();
                             }
                             else
@@ -884,7 +886,7 @@ namespace SkyStopwatch
                 }
                 else if (this.Model.IsEmptyReadTooMany)
                 {
-                    int interval = this.EnableReadMiddleAsSecondary() ? 4000 : OCRGameTime.TimerAutoOCRSlowIntervalMS;
+                    int interval = this.EnableReadMiddleAsSecondary() ? 3000 : OCRGameTime.TimerAutoOCRSlowIntervalMS;
                     this.timerAutoRefresh.Interval = interval;
                     return OCRTimerSpeed.InGameMiniTopTimeSlowByTooManyEmpty;
                 }
