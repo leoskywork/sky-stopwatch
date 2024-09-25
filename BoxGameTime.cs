@@ -557,7 +557,7 @@ namespace SkyStopwatch
                 string data = this.Model.ReadImageFromFile(screenShotPath);
                 System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} ocr done");
                 //this.BeginInvoke((Action)(() => { labelTimer.Text = "read"; }));
-                string ocrDisplayTime = this.Model.Find(data);
+                string ocrDisplayTime = this.Model.Find(data, GlobalData.Default.IsUsingScreenTopTime);
 
                 if (this.IsDead()) return;
                 this.BeginInvoke((Action)(() =>
@@ -787,44 +787,21 @@ namespace SkyStopwatch
 
                 Task.Factory.StartNew(() =>
                 {
-                    byte[] screenShotBytes = this.Model.GetImageBytes();
-                    if (screenShotBytes == null) return null;
-
                     if (_AutoOCREngine == null)
                     {
                         _AutoOCREngine = this.Model.GetDefaultOCREngine();
                     }
 
-                    string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
-                    string ocrTime = this.Model.Find(data);
-                    System.Diagnostics.Debug.WriteLine($"ocr1: [{ocrTime}] - empty #{this.Model.EmptyCount}");
-                    bool saveImage = false;// !string.IsNullOrWhiteSpace(ocrTime);
+                    var ocrPrimaryTime = ScanPrimaryTime();
+                    var inGameFlagFound = ScanInGameFlagIfEnabled(ocrPrimaryTime);
+                    var middleTimeResult = ScanMiddleTimeIfEnabled(ocrPrimaryTime, inGameFlagFound);
 
-                    if (GlobalData.Default.IsDebugging || saveImage)
+                    if (middleTimeResult != null)
                     {
-                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}, parsed: {ocrTime}");
-                        string tmpPath = OCRBase.SaveTmpFile($"game-time-top-{GlobalData.Default.IsUsingScreenTopTime}", screenShotBytes);
-                        System.Diagnostics.Debug.WriteLine($"Tmp file: {tmpPath}");
+                        return middleTimeResult;
                     }
 
-                    //this bug occurs when run cf in small window mode e.g: [StartUIStopwatch, ocr: 22:44:34]: set game start: 21:06:04, screen shot saved
-                    if (ocrTime != null && ocrTime.Length > 2 && int.TryParse(ocrTime.Substring(0, 2), out int hour) && hour != 0)
-                    {
-                        this.Log().SaveAsync($"hour not 0, ocr: [{data}], parsed: [{ocrTime}]", "timerAutoRefresh_Tick", screenShotBytes);
-                        ocrTime = string.Empty; //do this as a temp fix
-                    }
-
-                    if (string.IsNullOrEmpty(ocrTime) && EnableReadMiddleAsSecondary())
-                    {
-                        var middleImageBytes = this.Model.GetImageBytesMiddle();
-                        var middleData = OCRBase.ReadImageFromMemory(_AutoOCREngine, middleImageBytes);
-                        var middleTime = this.Model.Find(middleData);
-                        System.Diagnostics.Debug.WriteLine($"ocr2: [{middleTime}]");
-                        return Tuple.Create(middleTime, 2);
-                    }
-
-                    return Tuple.Create(ocrTime, 1);
-
+                    return Tuple.Create(ocrPrimaryTime, 1);
                 }).ContinueWith(t =>
                 {
                     if (this.IsDead()) return;
@@ -858,6 +835,63 @@ namespace SkyStopwatch
             {
                 this.OnError(ex);
             }
+        }
+
+        private string ScanPrimaryTime()
+        {
+            byte[] screenShotBytes = this.Model.GetImageBytes();
+            if (screenShotBytes == null) return null;
+
+            string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
+            string ocrTime = this.Model.Find(data, GlobalData.Default.IsUsingScreenTopTime);
+            System.Diagnostics.Debug.WriteLine($"ocr1: [{ocrTime}] - empty #{this.Model.EmptyCount}");
+            bool saveImage = false;// !string.IsNullOrWhiteSpace(ocrTime);
+
+            if (GlobalData.Default.IsDebugging || saveImage)
+            {
+                System.Diagnostics.Debug.WriteLine($"OCR data: {data}, parsed: {ocrTime}");
+                string tmpPath = OCRBase.SaveTmpFile($"game-time-top-{GlobalData.Default.IsUsingScreenTopTime}", screenShotBytes);
+                System.Diagnostics.Debug.WriteLine($"Tmp file: {tmpPath}");
+            }
+
+            //this bug occurs when run cf in small window mode e.g: [StartUIStopwatch, ocr: 22:44:34]: set game start: 21:06:04, screen shot saved
+            if (ocrTime != null && ocrTime.Length > 2 && int.TryParse(ocrTime.Substring(0, 2), out int hour) && hour != 0)
+            {
+                this.Log().SaveAsync($"hour not 0, ocr: [{data}], parsed: [{ocrTime}]", "timerAutoRefresh_Tick", screenShotBytes);
+                ocrTime = string.Empty; //do this as a temp fix
+            }
+
+            return ocrTime;
+        }
+
+        private bool ScanInGameFlagIfEnabled(string ocrPrimaryTime)
+        {
+            if (!string.IsNullOrEmpty(ocrPrimaryTime)) return false;
+
+            var flagBytes = this.Model.GetImageBytesBy(TimeScanKind.InGameFlag);
+            if (flagBytes == null) return false;
+
+            var flagData = OCRBase.ReadImageFromMemory(_AutoOCREngine, flagBytes);
+            var flagResult = this.Model.FindInGameFlag(flagData);
+            System.Diagnostics.Debug.WriteLine($"ocr2: [{flagResult}] - #{this.Model.InGameFlagCount}");
+
+            return flagResult;
+        }
+
+        private Tuple<string, int> ScanMiddleTimeIfEnabled(string ocrPrimaryTime, bool inGameFlagFound)
+        {
+            if (string.IsNullOrEmpty(ocrPrimaryTime) && EnableReadMiddleAsSecondary() && !inGameFlagFound)
+            {
+                var middleImageBytes = this.Model.GetImageBytesBy(TimeScanKind.MiddleTime);
+                if (middleImageBytes == null) return null;
+
+                var middleData = OCRBase.ReadImageFromMemory(_AutoOCREngine, middleImageBytes);
+                var middleTime = this.Model.Find(middleData, false);
+                System.Diagnostics.Debug.WriteLine($"ocr3: [{middleTime}]");
+                return Tuple.Create(middleTime, 2);
+            }
+
+            return null;
         }
 
         private bool EnableReadMiddleAsSecondary()

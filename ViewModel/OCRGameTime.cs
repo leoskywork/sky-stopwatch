@@ -10,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Tesseract;
+using TesseractOCR.Pix;
 
 namespace SkyStopwatch
 {
@@ -59,7 +60,7 @@ namespace SkyStopwatch
         public const int EmptyLimit = 15;//30;
         public const int FailParseLimit = 3;
         public const int MisreadLimit = 70;// 50;
-         
+
         public int BootingArgs { get; set; } = 0;
         public string AutoOCRTimeOfLastRead { get; set; }
 
@@ -73,9 +74,9 @@ namespace SkyStopwatch
                 _GameTimeLastUpdateTime = DateTime.Now;
             }
         }
-        
+
         private DateTime _GameTimeLastUpdateTime;
-        
+
         private int _GameRemainingSeconds;
         public int GameRemainingSeconds
         {
@@ -95,6 +96,8 @@ namespace SkyStopwatch
         private int _AutoOCREmptyInARowCount = 0;
         private int _AutoOCRFailParseInARowCount = 0;
         private int _AutoOCRMisreadInARowCount = 0;
+        private int _AutoOCRInGameFlagInARowCount = 0;
+
         private bool _HackMisread2xAs1xAndPauseReading = false;
         public bool IsWithinOneGameRoundOrNap
         {
@@ -126,15 +129,11 @@ namespace SkyStopwatch
             }
         }
 
-        public bool IsEmptyReadTooMany
-        {
-            get { return _AutoOCREmptyInARowCount > EmptyLimit / 3; }
-        }
+        public bool IsEmptyReadTooMany { get { return _AutoOCREmptyInARowCount > EmptyLimit / 3; } }
 
-        public int EmptyCount
-        {
-            get { return _AutoOCREmptyInARowCount; }
-        }
+        public int EmptyCount { get { return _AutoOCREmptyInARowCount; } }
+
+        public int InGameFlagCount { get { return _AutoOCRInGameFlagInARowCount; } }
 
         public bool IsTimeLocked { get; set; }
 
@@ -144,7 +143,7 @@ namespace SkyStopwatch
 
         public OCRGameTime()
         {
-            
+
         }
 
         public override Tesseract.TesseractEngine GetDefaultOCREngine()
@@ -154,17 +153,9 @@ namespace SkyStopwatch
 
         public override Rectangle GetScreenBlock()
         {
-            return GetScreenBlockInternal(GlobalData.Default.IsUsingScreenTopTime);
-        }
+            var kind = GlobalData.Default.IsUsingScreenTopTime ? TimeScanKind.TopMiniTime : TimeScanKind.MiddleTime;
 
-        private static Rectangle GetScreenBlockInternal(bool isTopTime)
-        {
-            if (isTopTime)
-            {
-                return new Rectangle(TopXPoint, TopYPoint, TopBlockWidth, TopBlockHeight);
-            }
-
-            return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
+            return GetImagePreviewArgs(kind);
         }
 
         public static Rectangle GetDefaultTimeBlock(TimeScanKind scanKind)
@@ -186,17 +177,17 @@ namespace SkyStopwatch
         {
             using (var engine = GetDefaultOCREngine())
             {
-               return OCRBase.ReadImageFromFile(engine, imgPath, GetScreenBlock());
+                return OCRBase.ReadImageFromFile(engine, imgPath, GetScreenBlock());
             }
         }
 
 
-        public string Find(string data)
+        public string Find(string data, bool isTopTime)
         {
-            if(string.IsNullOrWhiteSpace(data)) return string.Empty;
+            if (string.IsNullOrWhiteSpace(data)) return string.Empty;
 
-            //leotodo, a tmp fix, screen top time has 4 digits(not 6)
-            if (GlobalData.Default.IsUsingScreenTopTime)
+            //screen top time has 4 digits(not 6)
+            if (isTopTime)
             {
                 data = "00:" + data;
             }
@@ -274,8 +265,8 @@ namespace SkyStopwatch
         }
 
 
-        public bool IsOCRTopTimeMisread(string ocrDisplayTime) 
-        { 
+        public bool IsOCRTopTimeMisread(string ocrDisplayTime)
+        {
             if (!GlobalData.Default.IsUsingScreenTopTime) return false;
 
             if (string.IsNullOrWhiteSpace(ocrDisplayTime))
@@ -382,7 +373,7 @@ namespace SkyStopwatch
                     System.Diagnostics.Debug.WriteLine($"--> misread #{_AutoOCRMisreadInARowCount}: {ocrDisplayTime}, should NOT less than {this.AutoOCRTimeOfLastRead} + {(int)sinceLastUpdate.TotalSeconds}");
                     System.Diagnostics.Debug.WriteLine($"--> since game start: {sinceGameStart}, since last update: {sinceLastUpdate}");
 
-                    if(_AutoOCRMisreadInARowCount < MisreadLimit)
+                    if (_AutoOCRMisreadInARowCount < MisreadLimit)
                     {
                         return TimeMisreadKind.LessThanLastRead;
                     }
@@ -425,7 +416,8 @@ namespace SkyStopwatch
             _AutoOCRSuccessCount = 0;
             _AutoOCREmptyInARowCount = 0;
             _AutoOCRFailParseInARowCount = 0;
-            _AutoOCRMisreadInARowCount= 0;
+            _AutoOCRMisreadInARowCount = 0;
+            _AutoOCRInGameFlagInARowCount = 0;
 
             this.IsTimeLocked = false;
             this.LockSource = source;
@@ -437,11 +429,17 @@ namespace SkyStopwatch
             _AutoOCRSuccessCount = 0;
             this.IsTimeLocked = false;
             this.LockSource = source;
-            _HackMisread2xAs1xAndPauseReading= false;
+            _HackMisread2xAs1xAndPauseReading = false;
         }
 
         public bool ShouldAutoLock()
         {
+            //do not lock if not in game
+            if (_AutoOCRInGameFlagInARowCount == 0)
+            {
+                return false;
+            }
+
             if (this.ShouldAutoUnlock())
             {
                 return false;
@@ -476,10 +474,10 @@ namespace SkyStopwatch
 
         public bool ShouldAutoUnlock()
         {
-            if(this.IsTimeLocked && this.LockSource == TimeLocKSource.UserClick) { return false; }
+            if (this.IsTimeLocked && this.LockSource == TimeLocKSource.UserClick) { return false; }
 
             int remaining = this.GameRemainingSeconds;
-            System.Diagnostics.Debug.WriteLine($"remaining：{remaining/60}:{remaining % 60}");
+            System.Diagnostics.Debug.WriteLine($"remaining：{remaining / 60}:{remaining % 60}");
 
             //game end
             if (remaining <= 0)
@@ -489,6 +487,11 @@ namespace SkyStopwatch
 
             if (IsNearPhaseBossesTime())
             {
+                if (_AutoOCRInGameFlagInARowCount > 0) //do not unlock if still in game
+                {
+                    return false;
+                }
+
                 return true;
             }
 
@@ -516,9 +519,9 @@ namespace SkyStopwatch
             return false;
         }
 
-        public byte[] GetImageBytesMiddle()
+        public byte[] GetImageBytesBy(TimeScanKind scanKind)
         {
-            var block = GetScreenBlockInternal(false);
+            var block = GetImagePreviewArgs(scanKind);
             var pair = PrintScreenAsBytes(block);
 
             if (pair == null || pair.Item1 == null)
@@ -527,6 +530,55 @@ namespace SkyStopwatch
             }
 
             return pair?.Item1;
+        }
+
+        public static Rectangle GetImagePreviewArgs(TimeScanKind scanKind)
+        {
+            if (scanKind == TimeScanKind.TopMiniTime)
+            {
+                return new Rectangle(OCRGameTime.TopXPoint, OCRGameTime.TopYPoint, OCRGameTime.TopBlockWidth, OCRGameTime.TopBlockHeight);
+            }
+
+            if (scanKind == TimeScanKind.InGameFlag)
+            {
+                return new Rectangle(OCRGameTime.InGameFlagXPoint, OCRGameTime.InGameFlagYPoint, OCRGameTime.InGameFlagBlockWidth, OCRGameTime.InGameFlagBlockHeight);
+            }
+
+            if (scanKind == TimeScanKind.MiddleTime)
+            {
+                return new Rectangle(OCRGameTime.XPoint, OCRGameTime.YPoint, OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public bool FindInGameFlag(string flagData)
+        {
+            if (string.IsNullOrEmpty(flagData))
+            {
+                _AutoOCRInGameFlagInARowCount = 0;
+            }
+            else
+            {
+                string[] lines = flagData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                bool found = lines[0].Trim() == "35";
+
+                if (found)
+                {
+                    _AutoOCRInGameFlagInARowCount++;
+                }
+                else
+                {
+                    _AutoOCRInGameFlagInARowCount = 0;
+                }
+            }
+
+            if (_AutoOCRInGameFlagInARowCount == 0)
+            {
+                _HackMisread2xAs1xAndPauseReading = false;
+            }
+
+            return _AutoOCRInGameFlagInARowCount > 0;
         }
     }
 

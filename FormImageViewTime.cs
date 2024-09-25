@@ -87,27 +87,14 @@ namespace SkyStopwatch
 
         private void ReadImageArgsFromViewModel(TimeScanKind scanKind)
         {
-            var defaultArgs = GetPreviewArgs(scanKind);
+            var defaultArgs = OCRGameTime.GetImagePreviewArgs(scanKind);
             this.numericUpDownX.Value = defaultArgs.X;
             this.numericUpDownY.Value = defaultArgs.Y;
             this.numericUpDownWidth.Value = defaultArgs.Width;
             this.numericUpDownHeight.Value = defaultArgs.Height;
         }
 
-        private static Rectangle GetPreviewArgs(TimeScanKind scanKind)
-        {
-            if (scanKind == TimeScanKind.TopMiniTime)
-            {
-                return new Rectangle(OCRGameTime.TopXPoint, OCRGameTime.TopYPoint, OCRGameTime.TopBlockWidth, OCRGameTime.TopBlockHeight);
-            }
-
-            if (scanKind == TimeScanKind.InGameFlag)
-            {
-                return new Rectangle(OCRGameTime.InGameFlagXPoint, OCRGameTime.InGameFlagYPoint, OCRGameTime.InGameFlagBlockWidth, OCRGameTime.InGameFlagBlockHeight);
-            }
-
-            return new Rectangle(OCRGameTime.XPoint, OCRGameTime.YPoint, OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
-        }
+      
 
 
         private void ReadSettingsFromViewModel()
