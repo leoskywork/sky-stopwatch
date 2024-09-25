@@ -695,7 +695,6 @@ namespace SkyStopwatch
                         {
                             this.labelTimer.Text = "..";//"--";
                             SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app exit");
-                            //System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
                         }
                     }
 
