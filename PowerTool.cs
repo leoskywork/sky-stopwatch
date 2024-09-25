@@ -207,7 +207,7 @@ namespace SkyStopwatch
     public static class FormLEOExt
     {
         public const int DisableControlDelayMS = 300;
-        public const int SelectControlDelayMS = DisableControlDelayMS + 20;
+        public const int SelectControlDelayMS = DisableControlDelayMS + 10;
 
         public static void OnError(this Form form, Exception e)
         {

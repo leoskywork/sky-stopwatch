@@ -227,6 +227,8 @@ namespace SkyStopwatch
 
         private void InitGUILayoutV4()
         {
+            this.buttonToolBox.Text = null;
+
             //shrink width when hide ocr button
             //this.buttonOCR.Hide();
             //this.Controls.Remove(this.buttonOCR);
@@ -310,7 +312,15 @@ namespace SkyStopwatch
         private void SyncTopMost()
         {
             this.TopMost = GlobalData.Default.EnableTopMost;
-            this.buttonToolBox.Text = GlobalData.Default.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+
+            if ((PopupBoxTheme)this.Model.BootingArgs == PopupBoxTheme.ThinOCRTime)
+            {
+                this.buttonToolBox.Text = null;
+            }
+            else
+            {
+                this.buttonToolBox.Text = GlobalData.Default.EnableTopMost ? "+" : "-";//this._TopMost ? "Pin" : "-P";
+            }
         }
 
         private void SetGameStartTime(DateTime newTime, string source, string detail)
@@ -753,11 +763,7 @@ namespace SkyStopwatch
                 Task.Factory.StartNew(() =>
                 {
                     byte[] screenShotBytes = this.Model.GetImageBytes();
-                    if (screenShotBytes == null)
-                    {
-                        System.Diagnostics.Debug.WriteLine("screenShotBytes is null");
-                        return null;
-                    }
+                    if (screenShotBytes == null) return null;
 
                     if (_AutoOCREngine == null)
                     {
@@ -765,25 +771,34 @@ namespace SkyStopwatch
                     }
 
                     string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
-                    string timeString = this.Model.Find(data);
-                    bool saveImage = false;// !string.IsNullOrWhiteSpace(timeString); //false;
+                    string ocrTime = this.Model.Find(data);
+                    System.Diagnostics.Debug.WriteLine($"ocr: [{ocrTime}]");
+                    bool saveImage = false;// !string.IsNullOrWhiteSpace(ocrTime);
+
                     if (GlobalData.Default.IsDebugging || saveImage)
                     {
-                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}");
-                        System.Diagnostics.Debug.WriteLine($"OCR time: {timeString}");
+                        System.Diagnostics.Debug.WriteLine($"OCR data: {data}, parsed: {ocrTime}");
                         string tmpPath = OCRBase.SaveTmpFile($"game-time-top-{GlobalData.Default.IsUsingScreenTopTime}", screenShotBytes);
                         System.Diagnostics.Debug.WriteLine($"Tmp file: {tmpPath}");
                     }
 
-                    //this bug occurs when run cf in small window mode
-                    //bug: 21:06:04.969 [StartUIStopwatch, ocr: 22:44:34]: set game start: 21:06:04, screen shot saved
-                    if (timeString != null && timeString.Length > 2 && int.TryParse(timeString.Substring(0, 2), out int hour) && hour != 0)
+                    //this bug occurs when run cf in small window mode e.g: [StartUIStopwatch, ocr: 22:44:34]: set game start: 21:06:04, screen shot saved
+                    if (ocrTime != null && ocrTime.Length > 2 && int.TryParse(ocrTime.Substring(0, 2), out int hour) && hour != 0)
                     {
-                        this.Log().SaveAsync($"hour not 0, ocr: [{data}], parsed: [{timeString}]", "timerAutoRefresh_Tick", screenShotBytes);
-                        timeString = string.Empty; //do this as a temp fix
+                        this.Log().SaveAsync($"hour not 0, ocr: [{data}], parsed: [{ocrTime}]", "timerAutoRefresh_Tick", screenShotBytes);
+                        ocrTime = string.Empty; //do this as a temp fix
                     }
 
-                    return timeString;
+                    if (string.IsNullOrEmpty(ocrTime) && EnableReadMiddleAsSecondary())
+                    {
+                        var middleImageBytes = this.Model.GetImageBytesMiddle();
+                        var middleData = OCRBase.ReadImageFromMemory(_AutoOCREngine, middleImageBytes);
+                        var middleTime = this.Model.Find(middleData);
+                        System.Diagnostics.Debug.WriteLine($"2nd middle: [{middleTime}], empty #{this.Model.EmptyCount}");
+                        return Tuple.Create(middleTime, 2);
+                    }
+
+                    return Tuple.Create(ocrTime, 1);
 
                 }).ContinueWith(t =>
                 {
@@ -793,9 +808,9 @@ namespace SkyStopwatch
 
                     this.RunOnMain(() =>
                     {
-                        string ocrDisplayTime = t.Result;
-                        System.Diagnostics.Debug.WriteLine($"ocr - [{ocrDisplayTime}]");
-                        if (this.Model.IsOCRTimeMisread(ocrDisplayTime)) return;
+                        string ocrDisplayTime = t.Result.Item1;
+                        bool isTopTime = t.Result.Item2 == 1;
+                        if (this.Model.IsOCRTopTimeMisread(isTopTime ? ocrDisplayTime : string.Empty)) return;
 
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
@@ -808,7 +823,7 @@ namespace SkyStopwatch
                             else
                             {
                                 //the same, the time of this read is a repeat read, no need to update
-                                System.Diagnostics.Debug.WriteLine($"same as last: {ocrDisplayTime}");
+                                System.Diagnostics.Debug.WriteLine($"same as last, ocr: {ocrDisplayTime}");
                             }
                         }//else just use last result
                     });
@@ -818,6 +833,11 @@ namespace SkyStopwatch
             {
                 this.OnError(ex);
             }
+        }
+
+        private bool EnableReadMiddleAsSecondary()
+        {
+            return GlobalData.Default.IsUsingScreenTopTime && GlobalData.Default.EnableTimeViewMiddleAsSecondary;
         }
 
         private bool TryAutoLockTime()
@@ -864,7 +884,8 @@ namespace SkyStopwatch
                 }
                 else if (this.Model.IsEmptyReadTooMany)
                 {
-                    this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
+                    int interval = this.EnableReadMiddleAsSecondary() ? 4000 : OCRGameTime.TimerAutoOCRSlowIntervalMS;
+                    this.timerAutoRefresh.Interval = interval;
                     return OCRTimerSpeed.InGameMiniTopTimeSlowByTooManyEmpty;
                 }
                 else

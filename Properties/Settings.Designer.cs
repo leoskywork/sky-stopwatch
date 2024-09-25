@@ -97,7 +97,7 @@ namespace SkyStopwatch.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10:30\\r\\n20:30\\r\\n35:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10:00\\r\\n20:00\\r\\n35:00\\r\\n38:00")]
         public string TimeNodeCheckingList {
             get {
                 return ((string)(this["TimeNodeCheckingList"]));

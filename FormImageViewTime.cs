@@ -24,10 +24,10 @@ namespace SkyStopwatch
         {
             InitializeComponent();
 
-            ReadPreviewArgsFromViewModel();
+            ReadSettingsFromViewModel();
             ReadPresetsFromViewModel(true, true);
-
             SetPresetLocationsControlState(GlobalData.Default.IsUsingScreenTopTime);
+            ReadImageArgsFromViewModel(GlobalData.Default.IsUsingScreenTopTime);
         }
 
         private void SetPresetLocationsControlState(bool usingTop)
@@ -46,14 +46,28 @@ namespace SkyStopwatch
             }
         }
 
-        private void ReadPreviewArgsFromViewModel()
+        private void ReadImageArgsFromViewModel(bool isUsingScreenTopTime)
         {
-            var defaultArgs = GetPreviewArgs();
+            var defaultArgs = GetPreviewArgs(isUsingScreenTopTime);
             this.numericUpDownX.Value = defaultArgs.X;
             this.numericUpDownY.Value = defaultArgs.Y;
             this.numericUpDownWidth.Value = defaultArgs.Width;
             this.numericUpDownHeight.Value = defaultArgs.Height;
+        }
 
+        private static Rectangle GetPreviewArgs(bool isUsingScreenTopTime)
+        {
+            if (isUsingScreenTopTime)
+            {
+                return new Rectangle(OCRGameTime.TopXPoint, OCRGameTime.TopYPoint, OCRGameTime.TopBlockWidth, OCRGameTime.TopBlockHeight);
+            }
+
+            return new Rectangle(OCRGameTime.XPoint, OCRGameTime.YPoint, OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
+        }
+
+
+        private void ReadSettingsFromViewModel()
+        {
             this._EnableScreenTopTime = GlobalData.Default.IsUsingScreenTopTime;
             this._EnableAutoLock = GlobalData.Default.EnableScreenTopTimeAutoLock;
             this._ScanMiddleDelaySecond = GlobalData.Default.TimeViewScanMiddleDelaySecond;
@@ -66,16 +80,6 @@ namespace SkyStopwatch
             this.buttonResetMiddleTimeLocation.Enabled = !_EnableScreenTopTime;
             this.numericUpDownDelaySecond.Value = _ScanMiddleDelaySecond;
             this.checkBoxScanBothLocations.Checked = _EnableMiddleAsSecondary;
-        }
-
-        private Rectangle GetPreviewArgs()
-        {
-            if (GlobalData.Default.IsUsingScreenTopTime)
-            {
-                return new Rectangle(OCRGameTime.TopXPoint, OCRGameTime.TopYPoint, OCRGameTime.TopBlockWidth, OCRGameTime.TopBlockHeight);
-            }
-
-            return new Rectangle(OCRGameTime.XPoint, OCRGameTime.YPoint, OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);
         }
 
         private void ReadPresetsFromViewModel(bool preset1, bool preset2)
@@ -291,11 +295,23 @@ namespace SkyStopwatch
 
         private void checkBoxReadTopTime_CheckedChanged(object sender, EventArgs e)
         {
+            this.checkBoxReadTopTime.Enabled = false;
+            this.RunOnMainAsync(() => this.checkBoxReadTopTime.Enabled = true, FormLEOExt.DisableControlDelayMS);
+
             _EnableScreenTopTime = this.checkBoxReadTopTime.Checked;
             checkBoxAutoLock.Enabled = _EnableScreenTopTime;
             checkBoxScanBothLocations.Enabled = _EnableScreenTopTime;
-            SetPresetLocationsControlState(_EnableScreenTopTime);
             SetButtonSaveSettingState();
+
+            //SetPresetLocationsControlState(_EnableScreenTopTime);
+            if (_EnableScreenTopTime)
+            {
+                this.labelChooseTop_Click(null, null);
+            }
+            else
+            {
+                this.labelChooseMiddle_Click(null, null);
+            }
         }
 
         private void numericUpDownDelaySecond_ValueChanged(object sender, EventArgs e)
@@ -375,17 +391,21 @@ namespace SkyStopwatch
         private void labelChooseMiddle_Click(object sender, EventArgs e)
         {
             this.DisableLabelShortTime(this.labelChooseMiddle);
+            this.RunOnMainAsync(() => SetLableSelected(labelChooseMiddle, labelChooseTop), FormLEOExt.SelectControlDelayMS);
             SetMiddleTimeEnableValue(true);
             SetTopTimeEnableValue(false);
-            this.RunOnMainAsync(() => SetLableSelected(labelChooseMiddle, labelChooseTop), FormLEOExt.SelectControlDelayMS);
+            ReadImageArgsFromViewModel(false);
+            TryUpdateImage(nameof(labelChooseMiddle_Click));
         }
 
         private void labelChooseTop_Click(object sender, EventArgs e)
         {
             this.DisableLabelShortTime(this.labelChooseTop);
+            this.RunOnMainAsync(() => SetLableSelected(labelChooseTop, labelChooseMiddle), FormLEOExt.SelectControlDelayMS);
             SetMiddleTimeEnableValue(false);
             SetTopTimeEnableValue(true);
-            this.RunOnMainAsync(() => SetLableSelected(labelChooseTop, labelChooseMiddle), FormLEOExt.SelectControlDelayMS);
+            ReadImageArgsFromViewModel(true);
+            TryUpdateImage(nameof (labelChooseTop_Click));
         }
 
         private static void SetLableSelected(Label selected, Label unselected)

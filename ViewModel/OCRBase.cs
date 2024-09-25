@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Security.Cryptography;
+using System.Collections.Concurrent;
 
 namespace SkyStopwatch
 {
@@ -301,8 +302,17 @@ namespace SkyStopwatch
 
         public virtual byte[] GetImageBytes() 
         {
-            var pair = PrintScreenAsBytes(GetScreenBlock());
+            var block = GetScreenBlock();
+            var pair = PrintScreenAsBytes(block);
+
+            if (pair == null || pair.Item1 == null)
+            {
+                System.Diagnostics.Debug.WriteLine("screenShotBytes is null");
+            }
+
             return pair?.Item1;
         }
+
+     
     }
 }

@@ -126,6 +126,11 @@ namespace SkyStopwatch
             get { return _AutoOCREmptyInARowCount > EmptyLimit / 3; }
         }
 
+        public int EmptyCount
+        {
+            get { return _AutoOCREmptyInARowCount; }
+        }
+
         public bool IsTimeLocked { get; set; }
 
         public TimeLocKSource LockSource { get; set; } = TimeLocKSource.Unset;
@@ -144,9 +149,14 @@ namespace SkyStopwatch
 
         public override Rectangle GetScreenBlock()
         {
-            if (GlobalData.Default.IsUsingScreenTopTime)
+            return GetScreenBlockInternal(GlobalData.Default.IsUsingScreenTopTime);
+        }
+
+        private static Rectangle GetScreenBlockInternal(bool isTopTime)
+        {
+            if (isTopTime)
             {
-                return new Rectangle(TopXPoint, TopYPoint, TopBlockWidth, TopBlockHeight); 
+                return new Rectangle(TopXPoint, TopYPoint, TopBlockWidth, TopBlockHeight);
             }
 
             return new Rectangle(XPoint, YPoint, BlockWidth, BlockHeight);
@@ -252,7 +262,7 @@ namespace SkyStopwatch
         }
 
 
-        public bool IsOCRTimeMisread(string ocrDisplayTime) 
+        public bool IsOCRTopTimeMisread(string ocrDisplayTime) 
         { 
             if (!GlobalData.Default.IsUsingScreenTopTime) return false;
 
@@ -468,6 +478,19 @@ namespace SkyStopwatch
             }
 
             return false;
+        }
+
+        public byte[] GetImageBytesMiddle()
+        {
+            var block = GetScreenBlockInternal(false);
+            var pair = PrintScreenAsBytes(block);
+
+            if (pair == null || pair.Item1 == null)
+            {
+                System.Diagnostics.Debug.WriteLine("screenShotBytes is null");
+            }
+
+            return pair?.Item1;
         }
     }
 

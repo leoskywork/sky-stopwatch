@@ -21,7 +21,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="TimeNodeCheckingList" Type="System.String" Scope="User">
-      <Value Profile="(Default)">10:30\r\n20:30\r\n35:00</Value>
+      <Value Profile="(Default)">10:00\r\n20:00\r\n35:00\r\n38:00</Value>
     </Setting>
     <Setting Name="EnableLogToFile" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
