@@ -671,32 +671,13 @@ namespace SkyStopwatch
                     }
                 }
 
-                if (DateTime.Now.Second % 20 == 0)
+                if (DateTime.Now.Second % 10 == 0)
                 {
                     object checkedSign = "-checked";
                     if (this.labelTimer.Tag == checkedSign) return;
 
-                    bool isTargetRunning = PowerTool.AnyTargetProcessRunning();
-                    this.TopMost = isTargetRunning;
-                    GlobalData.Default.EnableTopMost = isTargetRunning;
-                    _HasTargetProcessExit = !isTargetRunning;
-
-                    if (_ShouldUpdatingPassedTime)
-                    {
-                        if (isTargetRunning)
-                        {
-                            if (this.Model.TimeAroundGameStart == DateTime.MinValue && this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
-                            {
-                                this.labelTimer.Text = ".";
-                                SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo, "target app running");
-                            }
-                        }
-                        else
-                        {
-                            this.labelTimer.Text = "..";//"--";
-                            SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app exit");
-                        }
-                    }
+                    this.CheckTargetAppRunning();
+                    Task.Run(() => this.ScanInGameFlagIfEnabled(string.Empty));
 
                     this.labelTimer.Tag = checkedSign;
                     return;
@@ -707,6 +688,31 @@ namespace SkyStopwatch
             catch (Exception ex)
             {
                 this.OnError(ex);
+            }
+        }
+
+        private void CheckTargetAppRunning()
+        {
+            bool isTargetRunning = PowerTool.AnyTargetProcessRunning();
+            this.TopMost = isTargetRunning;
+            GlobalData.Default.EnableTopMost = isTargetRunning;
+            _HasTargetProcessExit = !isTargetRunning;
+
+            if (_ShouldUpdatingPassedTime)
+            {
+                if (isTargetRunning)
+                {
+                    if (this.Model.TimeAroundGameStart == DateTime.MinValue && this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
+                    {
+                        this.labelTimer.Text = ".";
+                        SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo, "target app running");
+                    }
+                }
+                else
+                {
+                    this.labelTimer.Text = "..";//"--";
+                    SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app exit");
+                }
             }
         }
 

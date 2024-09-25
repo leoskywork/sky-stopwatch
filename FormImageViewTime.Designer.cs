@@ -265,7 +265,7 @@
             this.labelChooseInGameFlag.BackColor = System.Drawing.SystemColors.Control;
             this.labelChooseInGameFlag.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelChooseInGameFlag.ForeColor = System.Drawing.Color.Black;
-            this.labelChooseInGameFlag.Location = new System.Drawing.Point(204, 39);
+            this.labelChooseInGameFlag.Location = new System.Drawing.Point(202, 39);
             this.labelChooseInGameFlag.Margin = new System.Windows.Forms.Padding(0);
             this.labelChooseInGameFlag.Name = "labelChooseInGameFlag";
             this.labelChooseInGameFlag.Padding = new System.Windows.Forms.Padding(4);
@@ -280,7 +280,7 @@
             this.labelChooseTop.BackColor = System.Drawing.SystemColors.Control;
             this.labelChooseTop.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelChooseTop.ForeColor = System.Drawing.Color.Black;
-            this.labelChooseTop.Location = new System.Drawing.Point(127, 39);
+            this.labelChooseTop.Location = new System.Drawing.Point(121, 39);
             this.labelChooseTop.Margin = new System.Windows.Forms.Padding(0);
             this.labelChooseTop.Name = "labelChooseTop";
             this.labelChooseTop.Padding = new System.Windows.Forms.Padding(4);
@@ -299,9 +299,9 @@
             this.labelChooseMiddle.Margin = new System.Windows.Forms.Padding(0);
             this.labelChooseMiddle.Name = "labelChooseMiddle";
             this.labelChooseMiddle.Padding = new System.Windows.Forms.Padding(4);
-            this.labelChooseMiddle.Size = new System.Drawing.Size(111, 23);
+            this.labelChooseMiddle.Size = new System.Drawing.Size(103, 23);
             this.labelChooseMiddle.TabIndex = 413;
-            this.labelChooseMiddle.Text = "Middle time ";
+            this.labelChooseMiddle.Text = "Middle time";
             this.labelChooseMiddle.Click += new System.EventHandler(this.labelChooseMiddle_Click);
             // 
             // buttonResetLocation
