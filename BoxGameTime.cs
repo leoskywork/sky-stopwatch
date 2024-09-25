@@ -681,19 +681,22 @@ namespace SkyStopwatch
                     GlobalData.Default.EnableTopMost = isTargetRunning;
                     _HasTargetProcessExit = !isTargetRunning;
 
-                    if (isTargetRunning)
+                    if (_ShouldUpdatingPassedTime)
                     {
-                        if (this.Model.TimeAroundGameStart == DateTime.MinValue && this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
+                        if (isTargetRunning)
                         {
-                            this.labelTimer.Text = ".";
-                            SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo, "target app running");
+                            if (this.Model.TimeAroundGameStart == DateTime.MinValue && this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
+                            {
+                                this.labelTimer.Text = ".";
+                                SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo, "target app running");
+                            }
                         }
-                    }
-                    else
-                    {
-                        this.labelTimer.Text = "..";//"--";
-                        SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app exit");
-                        //System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
+                        else
+                        {
+                            this.labelTimer.Text = "..";//"--";
+                            SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app exit");
+                            //System.Diagnostics.Debug.WriteLine($"target app exit, list: {string.Join(",", GlobalData.ProcessCheckingList)}");
+                        }
                     }
 
                     this.labelTimer.Tag = checkedSign;
