@@ -12,6 +12,7 @@ namespace SkyStopwatch.ViewModel
         AppAutoRestart,
         AppAutoUpdate,
         AppAutoUpdateBySecondary,
-        UserClickNewGame
+        UserClickNewGame,
+        TargetAppExit
     }
 }

@@ -327,9 +327,9 @@ namespace SkyStopwatch
 
         private void SetGameStartTime(DateTime newTime, string source, string detail)
         {
-            DateTime oldTime = this.Model.TimeAroundGameStart;
+            //DateTime oldTime = this.Model.TimeAroundGameStart;
 
-            if (oldTime != newTime)
+            //if (oldTime != newTime)
             {
                 this.Model.TimeAroundGameStart = newTime;
                 var changeSource = TimeChangeSource.Unset;
@@ -346,6 +346,10 @@ namespace SkyStopwatch
                 {
                     bool isSecondary = this.EnableReadMiddleAsSecondary() && "true".Equals(detail, StringComparison.OrdinalIgnoreCase);
                     changeSource = isSecondary ? TimeChangeSource.AppAutoUpdateBySecondary : TimeChangeSource.AppAutoUpdate;
+                }
+                else if (source == GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne)
+                {
+                    changeSource = TimeChangeSource.TargetAppExit;
                 }
                 //else leotodo, do not need to know other cases now
 
@@ -654,9 +658,12 @@ namespace SkyStopwatch
                             this.OnNewGameStart(true);
                         }
                     }
-                    else if(DateTime.Now.Millisecond > 700)
+                    else if(this.Model.TimeChangeSource != TimeChangeSource.TargetAppExit)
                     {
-                        this.labelTimer.Text = DateTime.Now.Second % 2 == 0 ? null : ".";
+                        if (DateTime.Now.Millisecond > 700)
+                        {
+                            this.labelTimer.Text = DateTime.Now.Second % 2 == 0 ? null : ".";
+                        }
                     }
                 }
 
