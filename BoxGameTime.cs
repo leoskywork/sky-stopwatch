@@ -120,8 +120,10 @@ namespace SkyStopwatch
                 var center = new Point(Screen.PrimaryScreen.Bounds.Width / 2, Screen.PrimaryScreen.Bounds.Height / 2);
                 //this.Location = new Point(center.X - 240, center.Y - 370); //right blow top mini time
                 //this.Location = new Point(center.X - 356, center.Y - 398); //ahead top mini time
-                this.Location = new Point(center.X - 470, center.Y - 398); //ahead top mini time 2 - larger space
+                //this.Location = new Point(center.X - 470, center.Y - 398); //ahead top mini time 2 - larger space
                 //this.Location = new Point(center.X + 360, center.Y - 390); //tail top mini time
+
+                this.Location = GlobalData.Default.BoxTimeLastCloseLocation;
             }
         }
 
@@ -926,6 +928,7 @@ namespace SkyStopwatch
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
+            GlobalData.Default.BoxTimeLastCloseLocation = this.Location;
             this.OnClearOCR();
         }
 

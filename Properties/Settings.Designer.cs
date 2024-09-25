@@ -334,5 +334,17 @@ namespace SkyStopwatch.Properties {
                 this["EnableTimeView2Blocks"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0, 0")]
+        public global::System.Drawing.Point BoxTimeLastCloseLocation {
+            get {
+                return ((global::System.Drawing.Point)(this["BoxTimeLastCloseLocation"]));
+            }
+            set {
+                this["BoxTimeLastCloseLocation"] = value;
+            }
+        }
     }
 }

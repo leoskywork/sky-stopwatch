@@ -1,6 +1,7 @@
 ﻿using SkyStopwatch.View;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -95,6 +96,8 @@ namespace SkyStopwatch
         public bool EnableTopMost { get; set; } = true;//false;
 
         public bool EnableTimeViewMiddleAsSecondary { get; set; }
+
+        public Point BoxTimeLastCloseLocation{ get; set; }
 
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
