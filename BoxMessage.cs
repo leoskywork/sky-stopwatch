@@ -116,7 +116,7 @@ namespace SkyStopwatch
             this.Close();
         }
 
-        public void ShowAside(Control parent)
+        public void ShowAside(Control parent, bool avoidOverlay)
         {
             if (parent != null)
             {
@@ -125,16 +125,18 @@ namespace SkyStopwatch
                 //this.Location = new Point(parent.Location.X + parent.Width + 10, parent.Location.Y - 2);
 
                 //msg below parnet
-                this.Location = new Point(parent.Location.X - 2, parent.Location.Y + parent.Height + GlobalData.MessageBoxVerticalGap);
+                const int magicOverlayOffset = 70; //should greater than boss warnning height
+                int y = parent.Location.Y + parent.Height + GlobalData.MessageBoxVerticalGap;
+                this.Location = new Point(parent.Location.X - 2, avoidOverlay ? y + magicOverlayOffset : y);
             }
 
             this.Show();
         }
 
-        public static void Show(string message, Control parent)
+        public static void Show(string message, Control parent, bool avoidOverlay)
         {
             var box = new BoxMessage(message, false, null);
-            box.ShowAside(parent);
+            box.ShowAside(parent, avoidOverlay);
         }
     }
 }

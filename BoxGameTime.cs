@@ -736,11 +736,9 @@ namespace SkyStopwatch
 
                 if (remainingSeconds > 0 && remainingSeconds < GlobalData.TimeNodeEarlyWarningSeconds)
                 {
-                    var warningBox = new BoxPhaseBossWarning(() => _HasTimeNodeWarningPopped = false);
                     _HasTimeNodeWarningPopped = true;
-                    warningBox.StartPosition = FormStartPosition.Manual;
-                    warningBox.Location = new Point(this.Location.X, this.Location.Y + this.Size.Height + GlobalData.MessageBoxVerticalGap);
-                    warningBox.Show();
+                    var warningBox = new BoxPhaseBossWarning(() => _HasTimeNodeWarningPopped = false);
+                    warningBox.ShowAside(this);
                     return;
                 }
             });
@@ -913,7 +911,7 @@ namespace SkyStopwatch
             {
                 this.IsTimeLocked = true;
                 this.Model.LockSource = DataModel.TimeLocKSource.AutoLockChecker;
-                this.RunOnMainAsync(() => BoxMessage.Show("Going to lock time", this));
+                this.RunOnMainAsync(() => BoxMessage.Show("Going to lock time", this, _HasTimeNodeWarningPopped));
                 this.SetTimerInterval();
                 return true;
             }

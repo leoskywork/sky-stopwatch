@@ -19,12 +19,12 @@ namespace SkyStopwatch
 
         public bool IsPermanent => false;
 
-        public BoxPhaseBossWarning(Action onClosing)
+        public BoxPhaseBossWarning(Action beforeClose)
         {
             InitializeComponent();
             this.InitBase();
 
-            _BeforeClose = onClosing;
+            _BeforeClose = beforeClose;
 
             this.TopMost = true;
             
@@ -102,6 +102,13 @@ namespace SkyStopwatch
         public void SetUserFriendlyTitle()
         {
             throw new NotImplementedException();
+        }
+
+        public void ShowAside(Control parent)
+        {
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(parent.Location.X, parent.Location.Y + parent.Size.Height + GlobalData.MessageBoxVerticalGap);
+            this.Show();
         }
     }
 }
