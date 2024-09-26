@@ -32,7 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BoxGameTime));
             this.buttonToolBox = new System.Windows.Forms.Button();
             this.labelTimer = new System.Windows.Forms.Label();
-            this.timerMain = new System.Windows.Forms.Timer(this.components);
+            this.timerMainUI = new System.Windows.Forms.Timer(this.components);
             this.timerAutoRefresh = new System.Windows.Forms.Timer(this.components);
             this.labelTitle = new System.Windows.Forms.Label();
             this.buttonDummyAcceptHighLight = new System.Windows.Forms.Button();
@@ -65,7 +65,7 @@
             // 
             // timerMain
             // 
-            this.timerMain.Tick += new System.EventHandler(this.timerRefreshUI_Tick);
+            this.timerMainUI.Tick += new System.EventHandler(this.timerRefreshUI_Tick);
             // 
             // timerAutoRefresh
             // 
@@ -132,7 +132,7 @@
 
         private System.Windows.Forms.Button buttonToolBox;
         private System.Windows.Forms.Label labelTimer;
-        private System.Windows.Forms.Timer timerMain;
+        private System.Windows.Forms.Timer timerMainUI;
         private System.Windows.Forms.Timer timerAutoRefresh;
         private System.Windows.Forms.Button buttonCloseOverlay;
         private System.Windows.Forms.Label labelTitle;

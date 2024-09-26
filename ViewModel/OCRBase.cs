@@ -260,7 +260,7 @@ namespace SkyStopwatch
         }
 
 
-        public Tesseract.TesseractEngine GetOCREngineWith(string allowChars)
+        public Tesseract.TesseractEngine CreateOCREngineWith(string allowChars)
         {
             if (string.IsNullOrEmpty(_ocrConfigFolder))
             {
@@ -298,7 +298,7 @@ namespace SkyStopwatch
 
         public abstract Rectangle GetScreenBlock();
 
-        public abstract Tesseract.TesseractEngine GetDefaultOCREngine();
+        public abstract Tesseract.TesseractEngine CreateOCREngine();
         
 
         public virtual byte[] GetImageBytes() 

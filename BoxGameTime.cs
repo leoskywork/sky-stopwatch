@@ -26,7 +26,8 @@ namespace SkyStopwatch
         /// only the first time matter, the time does not auto update on the game label
         /// </summary>
         private bool _IsAutoRefreshing = false;
-        private Tesseract.TesseractEngine _AutoOCREngine;
+        private Tesseract.TesseractEngine _DefaultOCREngine;
+        private Tesseract.TesseractEngine _AuxEngine;
         private bool _HasTimeNodeWarningPopped = false;
         private bool _HasTargetProcessExit = false;
 
@@ -67,7 +68,7 @@ namespace SkyStopwatch
         {
             this.labelTimer.Text = "unset";
             this.IsTimeLocked = false;
-            this.timerMain.Interval = OCRGameTime.TimerDisplayUIIntervalMS;
+            this.timerMainUI.Interval = OCRGameTime.TimerDisplayUIIntervalMS;
             this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRFastIntervalMS;
 
             //do the following in form_loaded
@@ -76,11 +77,11 @@ namespace SkyStopwatch
 
 
             //pre warm up
-            this.timerMain.Start();
+            this.timerMainUI.Start();
             this.labelTimer.Text = "run";
             Task.Factory.StartNew(() =>
             {
-                _AutoOCREngine = this.Model.GetDefaultOCREngine();
+                _DefaultOCREngine = this.Model.CreateOCREngine();
                 Thread.Sleep(500);
                 if (this.IsDead()) return;
 
@@ -372,9 +373,9 @@ namespace SkyStopwatch
             if (string.IsNullOrEmpty(ocrDisplayTime)) return;
             if (!_ShouldUpdatingPassedTime) return;
 
-            if (!this.timerMain.Enabled)
+            if (!this.timerMainUI.Enabled)
             {
-                this.timerMain.Start();
+                this.timerMainUI.Start();
             }
 
             if (TimeSpan.TryParseExact(ocrDisplayTime, GlobalData.TimeSpanFormat, System.Globalization.CultureInfo.InvariantCulture, out TimeSpan ocrTimeSpan))
@@ -677,7 +678,7 @@ namespace SkyStopwatch
                     if (this.labelTimer.Tag == checkedSign) return;
 
                     this.CheckTargetAppRunning();
-                    Task.Run(() => this.ScanInGameFlagIfEnabled(string.Empty));
+                    Task.Run(() => this.ScanInGameFlagIfEnabled(string.Empty, false));
 
                     this.labelTimer.Tag = checkedSign;
                     return;
@@ -748,27 +749,30 @@ namespace SkyStopwatch
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} clear");
+                System.Diagnostics.Debug.WriteLine("clear");
 
                 _ShouldUpdatingPassedTime = false;
                 SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton, "user clear");
                 _IsAutoRefreshing = false;
                 this.Model.ResetAutoOCR(TimeLocKSource.UserClick);
 
-
                 this.labelTimer.Text = "--";
-                //this.buttonOCR.Enabled = true;
-                //this.timerMain.Stop(); //still want to update the clock
                 this.timerAutoRefresh.Stop();
+                //this.timerMainUI.Stop(); //still want to update the clock
 
-                if (_AutoOCREngine != null)
+                if (_DefaultOCREngine != null)
                 {
-                    //_AutoOCREngine.Dispose(); //get error ?
-                    _AutoOCREngine.Dispose();
-                    _AutoOCREngine = null;
+                    _DefaultOCREngine.Dispose();
+                    _DefaultOCREngine = null;
                 }
 
-                System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} clear done");
+                if(_AuxEngine != null)
+                {
+                    _AuxEngine.Dispose();
+                    _AuxEngine = null;
+                }
+
+                System.Diagnostics.Debug.WriteLine("clear done");
             }
             catch (Exception ex)
             {
@@ -791,13 +795,13 @@ namespace SkyStopwatch
 
                 Task.Factory.StartNew(() =>
                 {
-                    if (_AutoOCREngine == null)
+                    if (_DefaultOCREngine == null)
                     {
-                        _AutoOCREngine = this.Model.GetDefaultOCREngine();
+                        _DefaultOCREngine = this.Model.CreateOCREngine();
                     }
 
                     var ocrPrimaryTime = ScanPrimaryTime();
-                    var inGameFlagFound = ScanInGameFlagIfEnabled(ocrPrimaryTime);
+                    var inGameFlagFound = ScanInGameFlagIfEnabled(ocrPrimaryTime, true);
                     var middleTimeResult = ScanMiddleTimeIfEnabled(ocrPrimaryTime, inGameFlagFound);
 
                     if (middleTimeResult != null)
@@ -828,8 +832,7 @@ namespace SkyStopwatch
                             }
                             else
                             {
-                                //the same, the time of this read is a repeat read, no need to update
-                                System.Diagnostics.Debug.WriteLine($"same as last, ocr: {ocrDisplayTime}");
+                                System.Diagnostics.Debug.WriteLine($"same as last, ocr: {ocrDisplayTime}"); //this read is a repeat read, no need to update
                             }
                         }//else just use last result
                     });
@@ -846,7 +849,7 @@ namespace SkyStopwatch
             byte[] screenShotBytes = this.Model.GetImageBytes();
             if (screenShotBytes == null) return null;
 
-            string data = OCRBase.ReadImageFromMemory(_AutoOCREngine, screenShotBytes);
+            string data = OCRBase.ReadImageFromMemory(_DefaultOCREngine, screenShotBytes);
             string ocrTime = this.Model.Find(data, GlobalData.Default.IsUsingScreenTopTime);
             System.Diagnostics.Debug.WriteLine($"ocr1: [{ocrTime}] - empty #{this.Model.EmptyCount}");
             bool saveImage = false;// !string.IsNullOrWhiteSpace(ocrTime);
@@ -868,14 +871,20 @@ namespace SkyStopwatch
             return ocrTime;
         }
 
-        private bool ScanInGameFlagIfEnabled(string ocrPrimaryTime)
+        private bool ScanInGameFlagIfEnabled(string ocrPrimaryTime, bool useDefalutEngine)
         {
             if (!string.IsNullOrEmpty(ocrPrimaryTime)) return false;
 
             var flagBytes = this.Model.GetImageBytesBy(TimeScanKind.InGameFlag);
             if (flagBytes == null) return false;
 
-            var flagData = OCRBase.ReadImageFromMemory(_AutoOCREngine, flagBytes);
+            if(_AuxEngine == null)
+            {
+                _AuxEngine = this.Model.CreateOCREngine();
+            }
+
+            var engine = useDefalutEngine ? _DefaultOCREngine : _AuxEngine;
+            var flagData = OCRBase.ReadImageFromMemory(engine, flagBytes);
             var flagResult = this.Model.FindInGameFlag(flagData);
             System.Diagnostics.Debug.WriteLine($"ocr2: [{flagResult}] - #{this.Model.InGameFlagCount}");
 
@@ -889,7 +898,7 @@ namespace SkyStopwatch
                 var middleImageBytes = this.Model.GetImageBytesBy(TimeScanKind.MiddleTime);
                 if (middleImageBytes == null) return null;
 
-                var middleData = OCRBase.ReadImageFromMemory(_AutoOCREngine, middleImageBytes);
+                var middleData = OCRBase.ReadImageFromMemory(_DefaultOCREngine, middleImageBytes);
                 var middleTime = this.Model.Find(middleData, false);
                 System.Diagnostics.Debug.WriteLine($"ocr3: [{middleTime}]");
                 return Tuple.Create(middleTime, 2);

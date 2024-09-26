@@ -146,9 +146,9 @@ namespace SkyStopwatch
 
         }
 
-        public override Tesseract.TesseractEngine GetDefaultOCREngine()
+        public override Tesseract.TesseractEngine CreateOCREngine()
         {
-            return GetOCREngineWith("0123456789:oO");
+            return CreateOCREngineWith("0123456789:oO");
         }
 
         public override Rectangle GetScreenBlock()
@@ -175,7 +175,7 @@ namespace SkyStopwatch
 
         public string ReadImageFromFile(string imgPath)
         {
-            using (var engine = GetDefaultOCREngine())
+            using (var engine = CreateOCREngine())
             {
                 return OCRBase.ReadImageFromFile(engine, imgPath, GetScreenBlock());
             }
@@ -478,6 +478,8 @@ namespace SkyStopwatch
 
             int remaining = this.GameRemainingSeconds;
             System.Diagnostics.Debug.WriteLine($"remaining：{remaining / 60}:{remaining % 60}");
+
+            if (_AutoOCRInGameFlagInARowCount == 0) return true;
 
             //game end
             if (remaining <= 0)

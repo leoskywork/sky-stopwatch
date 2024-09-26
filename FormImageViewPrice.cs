@@ -229,7 +229,7 @@ namespace SkyStopwatch
 
                     if (_AutoOCREngine == null)
                     {
-                        _AutoOCREngine = this.GetModels().Price.GetDefaultOCREngine();
+                        _AutoOCREngine = this.GetModels().Price.CreateOCREngine();
                         //System.Diagnostics.Debug.WriteLine($"{DateTime.Now.ToString("h:mm:ss.fff")} saving screen shot - auto - OCR created");
                     }
 

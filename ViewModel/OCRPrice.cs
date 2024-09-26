@@ -24,9 +24,9 @@ namespace SkyStopwatch
         public static int Aux2Price = 1002;
 
 
-        public override Tesseract.TesseractEngine GetDefaultOCREngine()
+        public override Tesseract.TesseractEngine CreateOCREngine()
         {
-            return GetOCREngineWith("0123456789oO"); //only look for pre-set chars for speed up
+            return CreateOCREngineWith("0123456789oO"); //only look for pre-set chars for speed up
         }
 
 

@@ -329,7 +329,7 @@ namespace SkyStopwatch
                 {
                     if (_AutoOCREngine == null)
                     {
-                        _AutoOCREngine = this.GetModels().BossCounting.GetDefaultOCREngine();
+                        _AutoOCREngine = this.GetModels().BossCounting.CreateOCREngine();
                     }
 
                     if (enable2SpotsCompare)
