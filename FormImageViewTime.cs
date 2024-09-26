@@ -136,27 +136,35 @@ namespace SkyStopwatch
             try
             {
                 this.buttonSave.Enabled = false;
-
                 ReadInputArgs(out int x, out int y, out int width, out int height);
-                //MainOCR.XPercent = decimal.Round(x / (decimal)screenRect.Width, MainOCR.XYPercentDecimalSize);
-                //MainOCR.YPercent = decimal.Round(y / (decimal)screenRect.Height, MainOCR.XYPercentDecimalSize);
 
-                if (GlobalData.Default.IsUsingScreenTopTime)
+                if (_CurrentScanKind == TimeScanKind.TopMiniTime)
                 {
                     OCRGameTime.TopXPoint = x;
                     OCRGameTime.TopYPoint = y;
                     OCRGameTime.TopBlockWidth = width;
                     OCRGameTime.TopBlockHeight = height;
                 }
-                else
+                else if(_CurrentScanKind == TimeScanKind.MiddleTime) 
                 {
                     OCRGameTime.XPoint = x;
                     OCRGameTime.YPoint = y;
                     OCRGameTime.BlockWidth = width;
                     OCRGameTime.BlockHeight = height;
                 }
+                else if(_CurrentScanKind == TimeScanKind.InGameFlag)
+                {
+                    OCRGameTime.InGameFlagXPoint = x;
+                    OCRGameTime.InGameFlagYPoint = y;
+                    OCRGameTime.InGameFlagBlockWidth = width;
+                    OCRGameTime.InGameFlagBlockHeight = height;
+                }
+                else
+                {
+                    throw new NotImplementedException();
+                }
 
-                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, "btn save"));
+                GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(this.ToString(), true, $"btn save - {_CurrentScanKind}"));
                 this.Close();
             }
             catch (Exception ex)
@@ -334,7 +342,6 @@ namespace SkyStopwatch
             checkBoxScanBothLocations.Enabled = _EnableScreenTopTime;
             SetButtonSaveSettingState();
 
-            //SetPresetLocationsControlState(_EnableScreenTopTime);
             if (_EnableScreenTopTime)
             {
                 this.labelChooseTop_Click(null, null);
