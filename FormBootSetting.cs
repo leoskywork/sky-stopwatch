@@ -192,6 +192,7 @@ namespace SkyStopwatch
         {
             this.groupBoxTimeNode.Enabled = this.checkBoxPopWarning.Checked;
             GlobalData.EnableCheckTimeNode = this.checkBoxPopWarning.Checked;
+            GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "enable boss warning"));
 
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
@@ -268,19 +269,18 @@ namespace SkyStopwatch
         {
             this.buttonChangeTheme.Enabled = false;
             this._Args.ThemeArgs++;
+
             SetMainOCRBootingArgsAndButtonText();
 
-          
-
             GlobalData.Default.FireChangeTheme();
+            GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "change theme"));
 
             Task.Delay(300).ContinueWith((_) =>
             {
                 if (this.IsDead()) return;
                 this.BeginInvoke((Action)(() =>
                 {
-                    this.buttonChangeTheme.Enabled = true;
-                    //Task.Delay(500).ContinueWith((__) => { this.Close(); });
+                    //this.buttonChangeTheme.Enabled = true;
                     this.Close();
                 }));
             });
@@ -331,9 +331,11 @@ namespace SkyStopwatch
                 _IsFirstAssign = false;
                 return;
             }
-          
 
-            System.Diagnostics.Debug.WriteLine($"----- checkBoxTopMost_CheckedChanged, checked: {this.checkBoxTopMost.Checked}");
+            System.Diagnostics.Debug.WriteLine($"--> top most, checked: {this.checkBoxTopMost.Checked}");
+            GlobalData.Default.EnableTopMost = !GlobalData.Default.EnableTopMost;
+            GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "switch top most"));
+
             _TopMostClick?.Invoke();
         }
 

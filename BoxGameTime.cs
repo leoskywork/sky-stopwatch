@@ -616,7 +616,6 @@ namespace SkyStopwatch
 
         private void OnSwitchTopMost()
         {
-            GlobalData.Default.EnableTopMost = !GlobalData.Default.EnableTopMost;
             SyncTopMost();
         }
 
