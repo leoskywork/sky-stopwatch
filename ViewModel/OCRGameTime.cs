@@ -435,7 +435,7 @@ namespace SkyStopwatch
         public bool ShouldAutoLock()
         {
             //do not lock if not in game
-            if (_AutoOCRInGameFlagInARowCount == 0)
+            if (_AutoOCRInGameFlagInARowCount <= 0)
             {
                 return false;
             }
@@ -479,7 +479,7 @@ namespace SkyStopwatch
             int remaining = this.GameRemainingSeconds;
             System.Diagnostics.Debug.WriteLine($"remaining：{remaining / 60}:{remaining % 60}");
 
-            if (_AutoOCRInGameFlagInARowCount == 0) return true;
+            if (_AutoOCRInGameFlagInARowCount < 0) return true; //do not unlock if the first time not find in-game-flag (count is 0)
 
             //game end
             if (remaining <= 0)
@@ -556,31 +556,43 @@ namespace SkyStopwatch
 
         public bool FindInGameFlag(string flagData)
         {
-            if (string.IsNullOrEmpty(flagData))
-            {
-                _AutoOCRInGameFlagInARowCount = 0;
-            }
-            else
+            bool found = false;
+
+            if (!string.IsNullOrEmpty(flagData))
             {
                 string[] lines = flagData.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-                bool found = lines[0].Trim() == "35";
+                found = lines[0].Trim() == "35";
+            }
 
-                if (found)
+            if(found)
+            {
+                if(_AutoOCRInGameFlagInARowCount > 0)
                 {
                     _AutoOCRInGameFlagInARowCount++;
                 }
                 else
                 {
+                    _AutoOCRInGameFlagInARowCount = 1;
+                }
+            }
+            else
+            {
+                if(_AutoOCRInGameFlagInARowCount > 0)
+                {
                     _AutoOCRInGameFlagInARowCount = 0;
+                }
+                else
+                {
+                    _AutoOCRInGameFlagInARowCount--;
                 }
             }
 
-            if (_AutoOCRInGameFlagInARowCount == 0)
+            if (_AutoOCRInGameFlagInARowCount <= 0)
             {
                 _HackMisread2xAs1xAndPauseReading = false;
             }
 
-            return _AutoOCRInGameFlagInARowCount > 0;
+            return found;
         }
     }
 

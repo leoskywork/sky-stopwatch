@@ -233,6 +233,7 @@ namespace SkyStopwatch
             System.Diagnostics.Debug.WriteLine($"new: {this.textBoxTimeSpanNodes.Text}");
 
             GlobalData.TimeNodeCheckingList = this.textBoxTimeSpanNodes.Text;
+            GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "save time nodes"));
             _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 

@@ -695,9 +695,13 @@ namespace SkyStopwatch
         private void CheckTargetAppRunning()
         {
             bool isTargetRunning = PowerTool.AnyTargetProcessRunning();
-            this.TopMost = isTargetRunning;
             GlobalData.Default.EnableTopMost = isTargetRunning;
             _HasTargetProcessExit = !isTargetRunning;
+
+            if (this.TopMost != isTargetRunning)
+            {
+                this.TopMost = isTargetRunning;
+            }
 
             if (_ShouldUpdatingPassedTime)
             {
@@ -729,7 +733,7 @@ namespace SkyStopwatch
 
             var elapsedSeconds = (DateTime.Now - this.Model.TimeAroundGameStart).TotalSeconds;
 
-            timeNodes.ForEach(node =>
+            foreach (var node in timeNodes)
             {
                 var fixedLengthNode = node.PadLeft(GlobalData.TImeSpanFormatNoHour.Length - 1, '0');
                 var parsedNode = TimeSpan.ParseExact(fixedLengthNode, GlobalData.TImeSpanFormatNoHour, System.Globalization.CultureInfo.InvariantCulture);
@@ -742,7 +746,7 @@ namespace SkyStopwatch
                     warningBox.ShowAside(this);
                     return;
                 }
-            });
+            }
         }
 
         private void OnClearOCR()
@@ -920,7 +924,12 @@ namespace SkyStopwatch
             {
                 this.IsTimeLocked = true;
                 this.Model.LockSource = DataModel.TimeLocKSource.AutoLockChecker;
-                this.RunOnMainAsync(() => BoxMessage.Show("Going to lock time", this, _HasTimeNodeWarningPopped));
+                this.RunOnMainAsync(() => 
+                {
+                    System.Diagnostics.Debug.WriteLine($"auto lock time, boss warning pop: {_HasTimeNodeWarningPopped}");
+                    BoxMessage.Show("Going to lock time", this, _HasTimeNodeWarningPopped);
+                });
+
                 this.SetTimerInterval();
                 return true;
             }

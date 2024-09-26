@@ -16,6 +16,7 @@ namespace SkyStopwatch
     {
         private DateTime _CreatedTime = DateTime.Now;
         private Action _BeforeClose;
+        private bool _IsTestingDualPopups;
 
         public bool IsPermanent => false;
 
@@ -36,14 +37,19 @@ namespace SkyStopwatch
 
         private void MainOCR_ChangeGameStartTime(object sender, ChangeGameStartTimeEventArgs e)
         {
-            this.Close();
+            if (_IsTestingDualPopups == false)
+            {
+                this.Close();
+            }
         }
 
         private void timerClose_Tick(object sender, EventArgs e)
         {
+            //_IsTestingDualPopups = true;
             var elapsedTime = DateTime.Now - _CreatedTime;
+            var threshold = _IsTestingDualPopups ? 10000 : GlobalData.TimeNodeWarningDurationSeconds;
 
-            if (elapsedTime.TotalSeconds < GlobalData.TimeNodeWarningDurationSeconds)
+            if (elapsedTime.TotalSeconds < threshold)
             {
                 this.labelMessage.ForeColor = DateTime.Now.Second % 2 == 0 ? Color.DarkGreen : Color.White;
             }

@@ -19,7 +19,7 @@ namespace SkyStopwatch
 
         public bool IsPermanent => false;
 
-        public BoxMessage(string message, bool showConfirmButton, Action confirm)
+        public BoxMessage(string message, bool showConfirmButton, Action confirmAction)
         {
             InitializeComponent();
             this.InitBase();
@@ -29,7 +29,7 @@ namespace SkyStopwatch
 
             if (showConfirmButton)
             {
-                this._AfterConfirm = confirm;
+                this._AfterConfirm = confirmAction;
                 this.buttonClose.Visible = true;
                 this.buttonConfirm.Visible = true;
             }
@@ -125,7 +125,7 @@ namespace SkyStopwatch
                 //this.Location = new Point(parent.Location.X + parent.Width + 10, parent.Location.Y - 2);
 
                 //msg below parnet
-                const int magicOverlayOffset = 70; //should greater than boss warnning height
+                const int magicOverlayOffset = 60; //should greater than boss warnning height
                 int y = parent.Location.Y + parent.Height + GlobalData.MessageBoxVerticalGap;
                 this.Location = new Point(parent.Location.X - 2, avoidOverlay ? y + magicOverlayOffset : y);
             }
