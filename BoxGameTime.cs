@@ -30,6 +30,7 @@ namespace SkyStopwatch
         private Tesseract.TesseractEngine _AuxEngine;
         private bool _HasTimeNodeWarningPopped = false;
         private bool _HasTargetProcessExit = false;
+        private bool _SkipTopTimeDueToOutOfGame = false;
 
 
         public DateTime CreateAt => DateTime.Now;
@@ -798,39 +799,29 @@ namespace SkyStopwatch
 
                 Task.Factory.StartNew(() =>
                 {
-                    if (_DefaultOCREngine == null)
-                    {
-                        _DefaultOCREngine = this.Model.CreateOCREngine();
-                    }
+                    var ocrPrimaryTime = _SkipTopTimeDueToOutOfGame ? string.Empty : ScanPrimaryTime();
+                    ScanInGameFlagIfEnabled(ocrPrimaryTime, true);
+                    var middleTimeResult = ScanMiddleTimeIfEnabled(ocrPrimaryTime, this.Model.InGameFlagCount);
 
-                    var ocrPrimaryTime = ScanPrimaryTime();
-                    var inGameFlagFound = ScanInGameFlagIfEnabled(ocrPrimaryTime, true);
-                    var middleTimeResult = ScanMiddleTimeIfEnabled(ocrPrimaryTime, inGameFlagFound);
-
-                    if (middleTimeResult != null)
-                    {
-                        return middleTimeResult;
-                    }
-
-                    return Tuple.Create(ocrPrimaryTime, 1);
+                    return  middleTimeResult ?? Tuple.Create(ocrPrimaryTime, 1);
                 }).ContinueWith(t =>
                 {
-                    if (this.IsDead()) return;
                     _IsAutoRefreshing = false;
+                    if (this.IsDead()) return;
                     if (t.IsFaulted){ this.OnError(t.Exception); return;}
 
                     this.RunOnMain(() =>
                     {
                         string ocrDisplayTime = t.Result.Item1;
-                        bool isSecondary = t.Result.Item2 == 2;
-                        if (this.Model.IsOCRTopTimeMisread(isSecondary ? string.Empty : ocrDisplayTime)) return;
+                        bool isSecondaryScan = t.Result.Item2 == 2;
+                        if (this.Model.IsOCRTopTimeMisread(isSecondaryScan ? string.Empty : ocrDisplayTime)) return;
 
                         if (!string.IsNullOrEmpty(ocrDisplayTime))
                         {
                             if (ocrDisplayTime != this.Model.AutoOCRTimeOfLastRead)
                             {
                                 int delaySeconds = GlobalData.Default.IsUsingScreenTopTime ? 1 : OCRGameTime.AutoOCRDelaySeconds;
-                                SetUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR, isSecondary.ToString());
+                                SetUIStopwatch(ocrDisplayTime, delaySeconds, GlobalData.ChangeTimeSourceTimerOCR, isSecondaryScan.ToString());
                                 TryAutoLockTime();
                             }
                             else
@@ -849,6 +840,11 @@ namespace SkyStopwatch
 
         private string ScanPrimaryTime()
         {
+            if (_DefaultOCREngine == null)
+            {
+                _DefaultOCREngine = this.Model.CreateOCREngine();
+            }
+
             byte[] screenShotBytes = this.Model.GetImageBytes();
             if (screenShotBytes == null) return null;
 
@@ -894,9 +890,9 @@ namespace SkyStopwatch
             return flagResult;
         }
 
-        private Tuple<string, int> ScanMiddleTimeIfEnabled(string ocrPrimaryTime, bool inGameFlagFound)
+        private Tuple<string, int> ScanMiddleTimeIfEnabled(string ocrPrimaryTime, int inGameFlagCount)
         {
-            if (string.IsNullOrEmpty(ocrPrimaryTime) && EnableReadMiddleAsSecondary() && !inGameFlagFound)
+            if (string.IsNullOrEmpty(ocrPrimaryTime) && EnableReadMiddleAsSecondary() && inGameFlagCount <= 0)
             {
                 var middleImageBytes = this.Model.GetImageBytesBy(TimeScanKind.MiddleTime);
                 if (middleImageBytes == null) return null;
@@ -904,9 +900,12 @@ namespace SkyStopwatch
                 var middleData = OCRBase.ReadImageFromMemory(_DefaultOCREngine, middleImageBytes);
                 var middleTime = this.Model.Find(middleData, false);
                 System.Diagnostics.Debug.WriteLine($"ocr3: [{middleTime}]");
+                //_SkipTopTimeDueToOutOfGame = inGameFlagCount < 0;
+                _SkipTopTimeDueToOutOfGame = !string.IsNullOrEmpty(middleTime) && inGameFlagCount < 0; //do not skip it that easy
                 return Tuple.Create(middleTime, 2);
             }
 
+            _SkipTopTimeDueToOutOfGame = false;
             return null;
         }
 
@@ -956,7 +955,7 @@ namespace SkyStopwatch
             {
                 if (this.IsTimeLocked || this.Model.IsWithinOneGameRoundOrNap)
                 {
-                    System.Diagnostics.Debug.WriteLine("within one round/nap/locked, going to skip");
+                    System.Diagnostics.Debug.WriteLine("within a round/nap/locked, going to skip");
                     _IsAutoRefreshing = false;
 
                     this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
