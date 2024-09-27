@@ -41,14 +41,17 @@ namespace SkyStopwatch
             if(_CurrentScanKind == TimeScanKind.MiddleTime)
             {
                 title = "middle time";
+                this.buttonApplyRelativeToTopTime.Visible = false;
             }
             else if(_CurrentScanKind == TimeScanKind.TopMiniTime)
             {
                 title = "top time";
+                this.buttonApplyRelativeToTopTime.Visible = false;
             }
             else if(_CurrentScanKind == TimeScanKind.InGameFlag)
             {
                 title = "in-game-flag";
+                this.buttonApplyRelativeToTopTime.Visible = true;
             }
             else
             {
@@ -61,28 +64,32 @@ namespace SkyStopwatch
 
         private void SetPresetLocationsControlState(TimeScanKind scanKind)
         {
+            Label current;
+
             if (scanKind == TimeScanKind.TopMiniTime)
             {
                 SetMiddleTimeEnableValue(false);
                 SetTopTimeEnableValue(true);
-                this.RunOnMainAsync(() => SetLableSelectedAppearance(labelChooseTop), FormLEOExt.SelectControlDelayMS);
+                current = this.labelChooseTop;
             }
             else if (scanKind == TimeScanKind.InGameFlag)
             {
                 SetMiddleTimeEnableValue(false);
                 SetTopTimeEnableValue(false);
-                this.RunOnMainAsync(() => SetLableSelectedAppearance(labelChooseInGameFlag), FormLEOExt.SelectControlDelayMS);
+                current = this.labelChooseInGameFlag;
             }
-            else if(scanKind == TimeScanKind.MiddleTime)
+            else if (scanKind == TimeScanKind.MiddleTime)
             {
                 SetMiddleTimeEnableValue(true);
                 SetTopTimeEnableValue(false);
-                this.RunOnMainAsync(() => SetLableSelectedAppearance(labelChooseMiddle), FormLEOExt.SelectControlDelayMS);
+                current = this.labelChooseMiddle;
             }
             else
             {
-                throw new NotImplementedException(scanKind.ToString()); 
+                throw new NotImplementedException(scanKind.ToString());
             }
+
+            this.RunOnMainAsync(() => SetLableSelectedAppearance(current), FormLEOExt.SelectControlDelayMS);
         }
 
         private void ReadImageArgsFromViewModel(TimeScanKind scanKind)
@@ -274,6 +281,20 @@ namespace SkyStopwatch
             this.TryUpdateImage(nameof(buttonApplyPreset2_Click));
         }
 
+        private void buttonApplyRelativeToTopTime_Click(object sender, EventArgs e)
+        {
+            this.DisableButtonShortTime(this.buttonApplyRelativeToTopTime);
+            const int magicOffsetX = 486;
+            const int magicOffsetY = 34;
+            this.numericUpDownX.Value = OCRGameTime.TopXPoint + OCRGameTime.TopBlockWidth + magicOffsetX;
+            this.numericUpDownY.Value = OCRGameTime.TopYPoint + magicOffsetY;
+
+            var rectangle = OCRGameTime.GetDefaultTimeBlock(TimeScanKind.InGameFlag);
+            this.numericUpDownWidth.Value = rectangle.Width;
+            this.numericUpDownHeight.Value = rectangle.Height;
+            this.TryUpdateImage(nameof(buttonApplyRelativeToTopTime_Click));
+        }
+
         private void buttonSetAsPreset1_Click(object sender, EventArgs e)
         {
             try
@@ -438,6 +459,15 @@ namespace SkyStopwatch
             SetSaveAndResetLocationButtonsAppearance();
             ReadImageArgsFromViewModel(_CurrentScanKind);
             TryUpdateImage(source);
+
+            if(scanKind == TimeScanKind.InGameFlag)
+            {
+                this.buttonApplyRelativeToTopTime.Visible = true;
+            }
+            else
+            {
+                this.buttonApplyRelativeToTopTime.Visible = false;
+            }
         }
 
         private void SetLableSelectedAppearance(Label selected)
@@ -482,6 +512,6 @@ namespace SkyStopwatch
             }
         }
 
-       
+      
     }
 }
