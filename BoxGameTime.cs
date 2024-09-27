@@ -25,12 +25,13 @@ namespace SkyStopwatch
         /// <summary>
         /// only the first time matter, the time does not auto update on the game label
         /// </summary>
-        private bool _IsAutoRefreshing = false;
+        private bool _IsAutoOCRRefreshing = false;
         private Tesseract.TesseractEngine _DefaultOCREngine;
         private Tesseract.TesseractEngine _AuxEngine;
         private bool _HasTimeNodeWarningPopped = false;
         private bool _HasTargetProcessExit = false;
         private bool _SkipTopTimeDueToOutOfGame = false;
+        private bool _EnableAutoChangeTopMost = true;
 
 
         public DateTime CreateAt => DateTime.Now;
@@ -582,11 +583,18 @@ namespace SkyStopwatch
         private void OnNewGameStart(bool autoRestart)
         {
             _ShouldUpdatingPassedTime = true;
-            //this.buttonOCR.Enabled = false;
+
+            if (!autoRestart)
+            {
+                this.TopMost = true;
+                GlobalData.Default.EnableTopMost = true;
+                this._EnableAutoChangeTopMost = true;
+            }
 
             //reset flags/history values
             //flag 1
-            this.Model.ResetAutoOCR(autoRestart ? TimeLocKSource.AutoLockChecker : TimeLocKSource.UserClick);
+            var lockSource = autoRestart ? TimeLocKSource.AutoLockChecker : TimeLocKSource.UserClick;
+            this.Model.ResetAutoOCR(lockSource);
 
             //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
             var source = autoRestart ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGameButton;
@@ -617,6 +625,9 @@ namespace SkyStopwatch
 
         private void OnSwitchTopMost()
         {
+            _EnableAutoChangeTopMost = false;
+            GlobalData.Default.EnableTopMost = !GlobalData.Default.EnableTopMost;
+            GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "switch top most"));
             SyncTopMost();
         }
 
@@ -644,41 +655,20 @@ namespace SkyStopwatch
                     this.labelTitle.Text = DateTime.Now.ToString(GlobalData.TimeFormatNoSecond);
                 }
 
-                if (!this.labelTimer.Visible) return;
-
-                if (_ShouldUpdatingPassedTime)
-                {
-                    if (this.Model.TimeAroundGameStart != DateTime.MinValue)
-                    {
-                        this.CheckTimeNodes();
-
-                        var passed = DateTime.Now - this.Model.TimeAroundGameStart;
-                        if (passed <= TimeSpan.FromSeconds(GlobalData.GameRoundMaxMinute * 60 + GlobalData.GameRoundAdjustSeconds))
-                        {
-                            this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
-                            this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
-                        }
-                        else
-                        {
-                            this.OnNewGameStart(true);
-                        }
-                    }
-                    else if(this.Model.TimeChangeSource != TimeChangeSource.TargetAppExit)
-                    {
-                        if (DateTime.Now.Millisecond > 700)
-                        {
-                            this.labelTimer.Text = DateTime.Now.Second % 2 == 0 ? null : ".";
-                        }
-                    }
-                }
+                UpdateOCRStopwatchUI();
 
                 if (DateTime.Now.Second % 10 == 0)
                 {
                     object checkedSign = "-checked";
                     if (this.labelTimer.Tag == checkedSign) return;
 
-                    this.CheckTargetAppRunning();
-                    Task.Run(() => this.ScanInGameFlagIfEnabled(string.Empty, false));
+                    //------------------------------begin work
+                    if (this.labelTimer.Visible)
+                    {
+                        this.CheckTargetAppRunning();
+                        Task.Run(() => this.ScanInGameFlagIfEnabled(string.Empty, false));
+                    }
+                    //------------------------------end
 
                     this.labelTimer.Tag = checkedSign;
                     return;
@@ -692,15 +682,49 @@ namespace SkyStopwatch
             }
         }
 
+        private void UpdateOCRStopwatchUI()
+        {
+            if (!this.labelTimer.Visible) return;
+
+            if (_ShouldUpdatingPassedTime)
+            {
+                if (this.Model.TimeAroundGameStart != DateTime.MinValue)
+                {
+                    this.CheckTimeNodes();
+
+                    var passed = DateTime.Now - this.Model.TimeAroundGameStart;
+                    if (passed <= TimeSpan.FromSeconds(GlobalData.GameRoundMaxMinute * 60 + GlobalData.GameRoundAdjustSeconds))
+                    {
+                        this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
+                        this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
+                    }
+                    else
+                    {
+                        this.OnNewGameStart(true);
+                    }
+                }
+                else if (this.Model.TimeChangeSource != TimeChangeSource.TargetAppExit)
+                {
+                    if (DateTime.Now.Millisecond > 700)
+                    {
+                        this.labelTimer.Text = DateTime.Now.Second % 2 == 0 ? null : ".";
+                    }
+                }
+            }
+        }
+
         private void CheckTargetAppRunning()
         {
             bool isTargetRunning = PowerTool.AnyTargetProcessRunning();
-            GlobalData.Default.EnableTopMost = isTargetRunning;
             _HasTargetProcessExit = !isTargetRunning;
 
-            if (this.TopMost != isTargetRunning)
+            if (_EnableAutoChangeTopMost)
             {
-                this.TopMost = isTargetRunning;
+                GlobalData.Default.EnableTopMost = isTargetRunning;
+                if (this.TopMost != isTargetRunning)
+                {
+                    this.TopMost = isTargetRunning;
+                }
             }
 
             if (_ShouldUpdatingPassedTime)
@@ -715,7 +739,7 @@ namespace SkyStopwatch
                 }
                 else
                 {
-                    this.labelTimer.Text = "..";//"--";
+                    this.labelTimer.Text = ".."; //"--";
                     SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app exit");
                 }
             }
@@ -753,11 +777,11 @@ namespace SkyStopwatch
         {
             try
             {
-                System.Diagnostics.Debug.WriteLine("clear");
+                System.Diagnostics.Debug.WriteLine("ocr clear");
 
                 _ShouldUpdatingPassedTime = false;
                 SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton, "user clear");
-                _IsAutoRefreshing = false;
+                _IsAutoOCRRefreshing = false;
                 this.Model.ResetAutoOCR(TimeLocKSource.UserClick);
 
                 this.labelTimer.Text = "--";
@@ -776,6 +800,11 @@ namespace SkyStopwatch
                     _AuxEngine = null;
                 }
 
+                _EnableAutoChangeTopMost = false;
+                GlobalData.Default.EnableTopMost = false;
+                this.RunOnMainAsync(() => this.TopMost = false, GlobalData.UIUpdateDelayLongMS); //sometimes not working with async ?
+                //this.RunOnMain(() => this.TopMost = false, GlobalData.UIUpdateDelayMS);
+
                 System.Diagnostics.Debug.WriteLine("clear done");
             }
             catch (Exception ex)
@@ -790,23 +819,23 @@ namespace SkyStopwatch
             {
                 if (_HasTargetProcessExit) return;
                 if (!labelTimer.Visible) return;
-                if (_IsAutoRefreshing) return;
+                if (_IsAutoOCRRefreshing) return;
                 if (this.IsTimeLocked && !TryAutoUnlockTime()) return;
 
                 var intervalKind = SetTimerInterval();
                 if (intervalKind == OCRTimerSpeed.InGameMiniTopTimeSlow) return;
-                _IsAutoRefreshing = true;
+                _IsAutoOCRRefreshing = true;
 
                 Task.Factory.StartNew(() =>
                 {
                     var ocrPrimaryTime = _SkipTopTimeDueToOutOfGame ? string.Empty : ScanPrimaryTime();
                     ScanInGameFlagIfEnabled(ocrPrimaryTime, true);
-                    var middleTimeResult = ScanMiddleTimeIfEnabled(ocrPrimaryTime, this.Model.InGameFlagCount);
+                    var middleTimeResult = ScanSecondaryTimeIfEnabled(ocrPrimaryTime, this.Model.InGameFlagCount);
 
                     return  middleTimeResult ?? Tuple.Create(ocrPrimaryTime, 1);
                 }).ContinueWith(t =>
                 {
-                    _IsAutoRefreshing = false;
+                    _IsAutoOCRRefreshing = false;
                     if (this.IsDead()) return;
                     if (t.IsFaulted){ this.OnError(t.Exception); return;}
 
@@ -890,12 +919,17 @@ namespace SkyStopwatch
             return flagResult;
         }
 
-        private Tuple<string, int> ScanMiddleTimeIfEnabled(string ocrPrimaryTime, int inGameFlagCount)
+        private Tuple<string, int> ScanSecondaryTimeIfEnabled(string ocrPrimaryTime, int inGameFlagCount)
         {
             if (string.IsNullOrEmpty(ocrPrimaryTime) && EnableReadMiddleAsSecondary() && inGameFlagCount <= 0)
             {
                 var middleImageBytes = this.Model.GetImageBytesBy(TimeScanKind.MiddleTime);
                 if (middleImageBytes == null) return null;
+
+                if (_DefaultOCREngine == null)
+                {
+                    _DefaultOCREngine = this.Model.CreateOCREngine();
+                }
 
                 var middleData = OCRBase.ReadImageFromMemory(_DefaultOCREngine, middleImageBytes);
                 var middleTime = this.Model.Find(middleData, false);
@@ -956,7 +990,7 @@ namespace SkyStopwatch
                 if (this.IsTimeLocked || this.Model.IsWithinOneGameRoundOrNap)
                 {
                     System.Diagnostics.Debug.WriteLine("within a round/nap/locked, going to skip");
-                    _IsAutoRefreshing = false;
+                    _IsAutoOCRRefreshing = false;
 
                     this.timerAutoRefresh.Interval = OCRGameTime.TimerAutoOCRSlowIntervalMS;
                     return OCRTimerSpeed.InGameMiniTopTimeSlow;

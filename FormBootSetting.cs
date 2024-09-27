@@ -25,6 +25,8 @@ namespace SkyStopwatch
         private string _OriginalTimeNodes;
         private BootSettingArgs _Args;
         private bool _IsFirstAssign = true;
+        private bool _DefalutValueOfCheckBoxTopMost;
+        private bool _FirstAssignValueOfTopMost;
 
         private FormBootSetting()
         {
@@ -93,7 +95,9 @@ namespace SkyStopwatch
             SetMainOCRBootingArgsAndButtonText();
 
             this.buttonTopMost.Visible = false;
-            this.checkBoxTopMost.Checked = GlobalData.Default.EnableTopMost;
+            _DefalutValueOfCheckBoxTopMost = this.checkBoxTopMost.Checked;
+            _FirstAssignValueOfTopMost = GlobalData.Default.EnableTopMost;
+            this.checkBoxTopMost.Checked = _FirstAssignValueOfTopMost;
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
@@ -326,17 +330,18 @@ namespace SkyStopwatch
 
         private void checkBoxTopMost_CheckedChanged(object sender, EventArgs e)
         {
-            if (_IsFirstAssign) //avoid recursive invoke
+            //this will be triggered when the default value(true) is different with the assigned value(false, in this case) in ctor
+            //in the case we want to skip the first trigger, for the other case(they 2 have same value), should not skip the first trigger
+            if (_IsFirstAssign && _DefalutValueOfCheckBoxTopMost != _FirstAssignValueOfTopMost)
             {
+                System.Diagnostics.Debug.WriteLine($"--> top most, checked: {this.checkBoxTopMost.Checked}, first assign");
                 _IsFirstAssign = false;
                 return;
             }
 
             System.Diagnostics.Debug.WriteLine($"--> top most, checked: {this.checkBoxTopMost.Checked}");
-            GlobalData.Default.EnableTopMost = !GlobalData.Default.EnableTopMost;
-            GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "switch top most"));
-
             _TopMostClick?.Invoke();
+            this.Close();
         }
 
         private void labelMessage_MouseHover(object sender, EventArgs e)

@@ -61,6 +61,8 @@ namespace SkyStopwatch
         public const int GameRoundAdjustSeconds = 30;
         public const int MinBossCallTimeSeconds = 5 + 1;//5 + 2;
         public const int MessageBoxVerticalGap = 10;
+        public const int UIUpdateDelayMS = 200;
+        public const int UIUpdateDelayLongMS = 1000;
 
         private static GlobalData _instance;
         public static GlobalData Default
