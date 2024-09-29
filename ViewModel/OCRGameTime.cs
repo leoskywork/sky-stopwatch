@@ -141,6 +141,8 @@ namespace SkyStopwatch
 
         public TimeChangeSource TimeChangeSource { get; set; } = TimeChangeSource.Unset;
 
+        public TopMostSender TopMostSender { get; set; } = TopMostSender.Unset;
+
         public OCRGameTime()
         {
 

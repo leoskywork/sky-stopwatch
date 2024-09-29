@@ -31,7 +31,7 @@ namespace SkyStopwatch
         private bool _HasTimeNodeWarningPopped = false;
         private bool _HasTargetProcessExit = false;
         private bool _SkipTopTimeDueToOutOfGame = false;
-        private bool _EnableAutoChangeTopMost = true;
+        //private bool _EnableAutoChangeTopMost = true;
 
 
         public DateTime CreateAt => DateTime.Now;
@@ -588,7 +588,7 @@ namespace SkyStopwatch
             {
                 this.TopMost = true;
                 GlobalData.Default.EnableTopMost = true;
-                this._EnableAutoChangeTopMost = true;
+                this.Model.TopMostSender = TopMostSender.UserClickNewGame;
             }
 
             //reset flags/history values
@@ -625,7 +625,7 @@ namespace SkyStopwatch
 
         private void OnSwitchTopMost()
         {
-            _EnableAutoChangeTopMost = false;
+            this.Model.TopMostSender = TopMostSender.UserClickTopMost;
             GlobalData.Default.EnableTopMost = !GlobalData.Default.EnableTopMost;
             GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "switch top most"));
             SyncTopMost();
@@ -718,9 +718,11 @@ namespace SkyStopwatch
             bool isTargetRunning = PowerTool.AnyTargetProcessRunning();
             _HasTargetProcessExit = !isTargetRunning;
 
-            if (_EnableAutoChangeTopMost)
+            if (this.Model.TopMostSender != TopMostSender.UserClickTopMost)
             {
                 GlobalData.Default.EnableTopMost = isTargetRunning;
+                this.Model.TopMostSender = TopMostSender.AppAutoTimer;
+
                 if (this.TopMost != isTargetRunning)
                 {
                     this.TopMost = isTargetRunning;
@@ -800,8 +802,8 @@ namespace SkyStopwatch
                     _AuxEngine = null;
                 }
 
-                _EnableAutoChangeTopMost = false;
                 GlobalData.Default.EnableTopMost = false;
+                this.Model.TopMostSender = TopMostSender.UserClickClear;
                 this.RunOnMainAsync(() => this.TopMost = false, GlobalData.UIUpdateDelayLongMS); //sometimes not working with async ?
                 //this.RunOnMain(() => this.TopMost = false, GlobalData.UIUpdateDelayMS);
 
