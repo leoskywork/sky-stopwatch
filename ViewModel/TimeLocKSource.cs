@@ -10,6 +10,7 @@ namespace SkyStopwatch.DataModel
     {
         Unset = 0,
         AutoLockChecker,
-        UserClick
+        UserClick,
+        UserClickForced
     }
 }

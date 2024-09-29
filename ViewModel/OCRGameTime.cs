@@ -476,7 +476,9 @@ namespace SkyStopwatch
 
         public bool ShouldAutoUnlock()
         {
-            if (this.IsTimeLocked && this.LockSource == TimeLocKSource.UserClick) { return false; }
+            if (this.IsTimeLocked == false) return false;
+
+            if (this.IsTimeLocked && (this.LockSource == TimeLocKSource.UserClick || this.LockSource == TimeLocKSource.UserClickForced)) return false;
 
             int remaining = this.GameRemainingSeconds;
             System.Diagnostics.Debug.WriteLine($"remaining：{remaining / 60}:{remaining % 60}");
@@ -595,6 +597,11 @@ namespace SkyStopwatch
             }
 
             return found;
+        }
+
+        public bool ShouldEnableForceLockButton()
+        {
+            return this.TimeAroundGameStart != DateTime.MinValue && (this.IsTimeLocked  == false || this.LockSource != TimeLocKSource.UserClickForced);
         }
     }
 

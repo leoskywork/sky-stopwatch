@@ -20,7 +20,7 @@ namespace SkyStopwatch
         private Action _ClearClick;
         private Action<int> _AddSecondsClick;
         private Action<string> _ChangeTimeNodes;
-        private Action _LockClick;
+        private Action<bool> _LockClick;
 
         private string _OriginalTimeNodes;
         private BootSettingArgs _Args;
@@ -41,15 +41,17 @@ namespace SkyStopwatch
             Action clear,
             Action<int> addSeconds,
             Action<string> changeTimeNodes,
-            Action lockTime
+            Action<bool> lockTime
             ) : this()
         {
             this._Args = args ?? throw new ArgumentNullException("args");
             this.pictureBoxOne.Image = args.Image;
             args.Image = null;
             this.labelMessage.Text = "<hover to show config>";
+            this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
             this.buttonLockTime.Text = args.IsTimeLocked ? "Unlock" : "Lock";
             this.buttonLockTime.Enabled = args.EnableLockButton;
+            this.buttonForceLock.Enabled = args.EnableForceLockButton;
 
             _RunOCR = runOCR;
             _NewGameClick = onNewGame;
@@ -68,21 +70,15 @@ namespace SkyStopwatch
             //        this.BeginInvoke(new Action(() => { this.Close(); }));
             //    }
             //});
-            this.timerAutoClose.Interval = 30 * 1000;
+            this.timerAutoClose.Interval = 60 * 1000;
             this.timerAutoClose.Start();
-
-            this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
-
-           
 
             this.checkBoxPopWarning.Checked = GlobalData.EnableCheckTimeNode;
             this.textBoxTimeSpanNodes.Text = GlobalData.TimeNodeCheckingList;
             this.checkBoxDebugging.Checked = GlobalData.Default.IsDebugging;
 
-
             if (GlobalData.Default.IsDebugging)
             {
-
                 //this.textBoxTimeSpanNodes.Text = "1:00";
                 //this.textBoxTimeSpanNodes.Text = "01:00";
                 //this.textBoxTimeSpanNodes.Text = "10:30\r\n20:30\r\n35:00";
@@ -123,6 +119,12 @@ namespace SkyStopwatch
             {
                 this.StartPosition = FormStartPosition.CenterScreen;
             }
+        }
+
+        public void ShowAside(Control parent)
+        {
+            this.SetLocation(parent);
+            this.Show();
         }
 
         private void buttonNewGame_Click(object sender, EventArgs e)
@@ -346,6 +348,20 @@ namespace SkyStopwatch
 
         private void labelMessage_MouseHover(object sender, EventArgs e)
         {
+            ToolTip tip = CreateDefaultToolTip();
+
+            StringBuilder builder = new StringBuilder();
+            builder.Append($"{nameof(GlobalData.EnableLogToFile)}: {GlobalData.EnableLogToFile}");
+            builder.Append(Environment.NewLine);
+            builder.Append($"{nameof(GlobalData.ProcessCheckingList)}: ");
+            GlobalData.ProcessCheckingList.ForEach(p => builder.Append(p + ","));
+            builder.Remove(builder.Length - 1, 1); //remove the last comma (,)
+
+            tip.SetToolTip(this.labelMessage, builder.ToString());
+        }
+
+        private ToolTip CreateDefaultToolTip()
+        {
             ToolTip tip = new ToolTip();
 
             tip.AutoPopDelay = 5000;//提示信息的可见时间
@@ -353,15 +369,7 @@ namespace SkyStopwatch
             tip.ReshowDelay = 500;//指针从一个控件移向另一个控件时，经过多久才会显示下一个提示框
             tip.ShowAlways = true;
 
-            StringBuilder builder = new StringBuilder();
-            builder.Append($"{nameof(GlobalData.EnableLogToFile)}: {GlobalData.EnableLogToFile}");
-            builder.Append(Environment.NewLine);
-
-            builder.Append($"{nameof(GlobalData.ProcessCheckingList)}: ");
-            GlobalData.ProcessCheckingList.ForEach(p => builder.Append(p + ","));
-            builder.Remove(builder.Length - 1, 1); //remove the last comma (,)
-
-            tip.SetToolTip(this.labelMessage, builder.ToString());
+            return tip;
         }
 
         private void buttonCount_Click(object sender, EventArgs e)
@@ -380,7 +388,7 @@ namespace SkyStopwatch
 
         private void buttonLockTime_Click(object sender, EventArgs e)
         {
-            _LockClick();
+            _LockClick?.Invoke(false);
             this.Close();
         }
 
@@ -388,6 +396,18 @@ namespace SkyStopwatch
         {
             this.DisableButtonWithTime(this.buttonReduceSeconds, 10);
             _AddSecondsClick?.Invoke(OCRBase.Decrement10Seconds * -1);
+        }
+
+        private void buttonForceLock_Click(object sender, EventArgs e)
+        {
+            _LockClick?.Invoke(true);
+            this.Close();
+        }
+
+        private void buttonForceLock_MouseHover(object sender, EventArgs e)
+        {
+            var toolTip = CreateDefaultToolTip();
+            toolTip.SetToolTip(this.buttonForceLock, $"Force manual lock, this overrides the auto lock by timer");
         }
     }
 }

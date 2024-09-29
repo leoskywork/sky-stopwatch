@@ -472,9 +472,8 @@ namespace SkyStopwatch
                 //can not use using block here, since we pass the bitmap into a form and show it
                 Bitmap cloneBitmap = bitPic.Clone(this.Model.GetScreenBlock(), bitPic.PixelFormat);
 
-                FormBootSetting tool = CreateToolBox(cloneBitmap);
-                tool.SetLocation(this);
-                tool.Show();
+                var tool = CreateToolBox(cloneBitmap);
+                tool.ShowAside(this);
                 return tool;
             }
         }
@@ -487,6 +486,7 @@ namespace SkyStopwatch
                 IsTimeLocked = this.IsTimeLocked,
                 LockSource = this.Model.LockSource,
                 EnableLockButton = this.Model.TimeAroundGameStart != DateTime.MinValue,
+                EnableForceLockButton = this.Model.ShouldEnableForceLockButton()
             };
 
 
@@ -498,7 +498,7 @@ namespace SkyStopwatch
                                () => { this.OnClearOCR(); },
                                (_) => { this.OnAddSeconds(_); },
                                (_) => { this.OnChangeTimeNodes(_); },
-                               () => { this.OnSwitchTimeLockState(); } );
+                               (_) => { this.OnSwitchTimeLockState(_); } );
 
             return tool;
         }
@@ -631,17 +631,22 @@ namespace SkyStopwatch
             SyncTopMost();
         }
 
-        private void OnSwitchTimeLockState()
+        private void OnSwitchTimeLockState(bool isForcedLock)
         {
-            this.IsTimeLocked = !this.IsTimeLocked;
-
-            if (this.IsTimeLocked)
+            if (isForcedLock)
             {
-                this.Model.LockSource = DataModel.TimeLocKSource.UserClick;
+                this.IsTimeLocked = true;
+                this.Model.LockSource = TimeLocKSource.UserClickForced;
             }
             else
             {
-                this.Model.ResetAutoLockArgs(TimeLocKSource.UserClick);
+                this.IsTimeLocked = !this.IsTimeLocked;
+                this.Model.LockSource = DataModel.TimeLocKSource.UserClick;
+
+                if (!this.IsTimeLocked)
+                {
+                    this.Model.ResetAutoLockArgs(TimeLocKSource.UserClick);
+                }
             }
         }
 
