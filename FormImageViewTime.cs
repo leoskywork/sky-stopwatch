@@ -25,6 +25,7 @@ namespace SkyStopwatch
         public FormImageViewTime()
         {
             InitializeComponent();
+            this.labelMessage.ForeColor = Color.DeepSkyBlue;
             _AllSelectLabels = new [] {this.labelChooseMiddle, this.labelChooseTop, this.labelChooseInGameFlag};
 
             ReadSettingsFromViewModel(); //do this first to init args correctly
