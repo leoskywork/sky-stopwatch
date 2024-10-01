@@ -249,6 +249,7 @@ namespace SkyStopwatch
             //this.labelTimer.BackColor = Color.LightGray;
             this.labelTimer.Size = new System.Drawing.Size(80, 32);
             this.labelTimer.Location = new System.Drawing.Point(2, 3);
+            this.labelTimer.BackColor = System.Drawing.Color.White;
 
             //button tool box
             this.buttonToolBox.Text = null;
@@ -258,6 +259,7 @@ namespace SkyStopwatch
             this.buttonToolBox.FlatAppearance.BorderSize = 0;
             this.buttonToolBox.BackgroundImage = global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
             this.buttonToolBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.buttonToolBox.BackColor = System.Drawing.Color.White;
 
             //the x out button
             this.buttonCloseOverlay.Visible = false;
