@@ -703,7 +703,16 @@ namespace SkyStopwatch
                     if (passed <= TimeSpan.FromSeconds(GlobalData.GameRoundMaxMinute * 60 + GlobalData.GameRoundAdjustSeconds))
                     {
                         this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
-                        this.labelTimer.ForeColor = this.Model.IsTimeLocked ? Color.MediumBlue : Color.Black;
+                        bool isLockedByUser = this.Model.LockSource == TimeLocKSource.UserClick || this.Model.LockSource == TimeLocKSource.UserClickForced;
+                        //this.labelTimer.ForeColor = this.Model.IsTimeLocked ? (isLockedByUser ? Color.MediumBlue : Color.Brown) : Color.Black;
+
+                        var newForeColor = Color.Black;
+                        if (this.Model.IsTimeLocked)
+                        {
+                            newForeColor = isLockedByUser ? Color.MediumBlue : Color.OrangeRed;
+                        }
+                        this.labelTimer.ForeColor = newForeColor;
+                        this.buttonToolBox.ForeColor = newForeColor;
                     }
                     else
                     {
