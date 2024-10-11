@@ -187,12 +187,12 @@
             // buttonForceLock
             // 
             this.buttonForceLock.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonForceLock.Location = new System.Drawing.Point(100, 284);
+            this.buttonForceLock.Location = new System.Drawing.Point(60, 284);
             this.buttonForceLock.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonForceLock.Name = "buttonForceLock";
-            this.buttonForceLock.Size = new System.Drawing.Size(40, 30);
+            this.buttonForceLock.Size = new System.Drawing.Size(80, 30);
             this.buttonForceLock.TabIndex = 306;
-            this.buttonForceLock.Text = "F.";
+            this.buttonForceLock.Text = "F-Lock";
             this.buttonForceLock.UseVisualStyleBackColor = true;
             this.buttonForceLock.Click += new System.EventHandler(this.buttonForceLock_Click);
             this.buttonForceLock.MouseHover += new System.EventHandler(this.buttonForceLock_MouseHover);
@@ -215,11 +215,12 @@
             this.buttonLockTime.Location = new System.Drawing.Point(21, 284);
             this.buttonLockTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonLockTime.Name = "buttonLockTime";
-            this.buttonLockTime.Size = new System.Drawing.Size(80, 30);
+            this.buttonLockTime.Size = new System.Drawing.Size(40, 30);
             this.buttonLockTime.TabIndex = 304;
-            this.buttonLockTime.Text = "Lock";
+            this.buttonLockTime.Text = "L";
             this.buttonLockTime.UseVisualStyleBackColor = true;
             this.buttonLockTime.Click += new System.EventHandler(this.buttonLockTime_Click);
+            this.buttonLockTime.MouseHover += new System.EventHandler(this.buttonLockTime_MouseHover);
             // 
             // buttonReduceMinute
             // 

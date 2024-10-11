@@ -49,7 +49,7 @@ namespace SkyStopwatch
             args.Image = null;
             this.labelMessage.Text = "<hover to show config>";
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
-            this.buttonLockTime.Text = args.IsTimeLocked ? "Unlock" : "Lock";
+            this.buttonLockTime.Text = args.IsTimeLocked ? "U" : "L";
             this.buttonLockTime.Enabled = args.EnableLockButton;
             this.buttonForceLock.Enabled = args.EnableForceLockButton;
 
@@ -408,6 +408,12 @@ namespace SkyStopwatch
         {
             var toolTip = CreateDefaultToolTip();
             toolTip.SetToolTip(this.buttonForceLock, $"Force manual lock, this overrides the auto lock by timer");
+        }
+
+        private void buttonLockTime_MouseHover(object sender, EventArgs e)
+        {
+            var toolTip = CreateDefaultToolTip();
+            toolTip.SetToolTip(this.buttonLockTime, $"L = Lock, U = Unlock game time");
         }
     }
 }
