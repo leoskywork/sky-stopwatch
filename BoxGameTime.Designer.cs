@@ -50,6 +50,7 @@
             this.buttonToolBox.Text = "+";
             this.buttonToolBox.UseVisualStyleBackColor = true;
             this.buttonToolBox.Click += new System.EventHandler(this.buttonToolBox_Click);
+            this.buttonToolBox.MouseHover += new System.EventHandler(this.buttonToolBox_MouseHover);
             // 
             // labelTimer
             // 
@@ -62,8 +63,9 @@
             this.labelTimer.TabIndex = 3;
             this.labelTimer.Text = "39:48";
             this.labelTimer.MouseDown += new System.Windows.Forms.MouseEventHandler(this.labelTimer_MouseDown);
+            this.labelTimer.MouseHover += new System.EventHandler(this.labelTimer_MouseHover);
             // 
-            // timerMain
+            // timerMainUI
             // 
             this.timerMainUI.Tick += new System.EventHandler(this.timerRefreshUI_Tick);
             // 
@@ -124,6 +126,7 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Main_FormClosing);
             this.Load += new System.EventHandler(this.Main_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
+            this.MouseHover += new System.EventHandler(this.BoxGameTime_MouseHover);
             this.ResumeLayout(false);
 
         }

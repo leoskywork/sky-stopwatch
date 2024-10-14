@@ -786,6 +786,7 @@ namespace SkyStopwatch
             {
                 if (isTargetRunning)
                 {
+                    this.Opacity = 1;
                     if (this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
                     {
                         this.labelTimer.Text = ".";
@@ -794,6 +795,7 @@ namespace SkyStopwatch
                 }
                 else
                 {
+                    this.Opacity = 0.2;
                     this.labelTimer.Text = ".."; //"--";
                     SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app not running");
                 }
@@ -1221,6 +1223,30 @@ namespace SkyStopwatch
         public void SetUserFriendlyTitle()
         {
             this.SetVersion();
+        }
+
+        private void BoxGameTime_MouseHover(object sender, EventArgs e)
+        {
+            this.highlightTimeBox();
+        }
+
+        private void labelTimer_MouseHover(object sender, EventArgs e)
+        {
+            this.highlightTimeBox();
+        }
+
+        private void buttonToolBox_MouseHover(object sender, EventArgs e)
+        {
+            this.highlightTimeBox();
+        }
+
+        private void highlightTimeBox()
+        {
+            //var oldValue = this.Opacity;
+
+            this.Opacity = 1;
+
+            //this.RunOnMainAsync(() =>  { this.Opacity = oldValue; }, 3000);
         }
     }
 }
