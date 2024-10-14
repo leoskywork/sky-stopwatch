@@ -41,7 +41,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.buttonForceLock = new System.Windows.Forms.Button();
             this.buttonReduceSeconds = new System.Windows.Forms.Button();
-            this.buttonLockTime = new System.Windows.Forms.Button();
+            this.buttonUnlockTime = new System.Windows.Forms.Button();
             this.buttonReduceMinute = new System.Windows.Forms.Button();
             this.buttonAddMinute = new System.Windows.Forms.Button();
             this.buttonAddSeconds = new System.Windows.Forms.Button();
@@ -167,7 +167,7 @@
             // 
             this.groupBox1.Controls.Add(this.buttonForceLock);
             this.groupBox1.Controls.Add(this.buttonReduceSeconds);
-            this.groupBox1.Controls.Add(this.buttonLockTime);
+            this.groupBox1.Controls.Add(this.buttonUnlockTime);
             this.groupBox1.Controls.Add(this.buttonReduceMinute);
             this.groupBox1.Controls.Add(this.buttonAddMinute);
             this.groupBox1.Controls.Add(this.buttonAddSeconds);
@@ -187,12 +187,12 @@
             // buttonForceLock
             // 
             this.buttonForceLock.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonForceLock.Location = new System.Drawing.Point(60, 284);
+            this.buttonForceLock.Location = new System.Drawing.Point(21, 287);
             this.buttonForceLock.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonForceLock.Name = "buttonForceLock";
-            this.buttonForceLock.Size = new System.Drawing.Size(80, 30);
+            this.buttonForceLock.Size = new System.Drawing.Size(50, 30);
             this.buttonForceLock.TabIndex = 306;
-            this.buttonForceLock.Text = "F-Lock";
+            this.buttonForceLock.Text = "Lock";
             this.buttonForceLock.UseVisualStyleBackColor = true;
             this.buttonForceLock.Click += new System.EventHandler(this.buttonForceLock_Click);
             this.buttonForceLock.MouseHover += new System.EventHandler(this.buttonForceLock_MouseHover);
@@ -209,18 +209,18 @@
             this.buttonReduceSeconds.UseVisualStyleBackColor = true;
             this.buttonReduceSeconds.Click += new System.EventHandler(this.buttonReduceSeconds_Click);
             // 
-            // buttonLockTime
+            // buttonUnlockTime
             // 
-            this.buttonLockTime.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonLockTime.Location = new System.Drawing.Point(21, 284);
-            this.buttonLockTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.buttonLockTime.Name = "buttonLockTime";
-            this.buttonLockTime.Size = new System.Drawing.Size(40, 30);
-            this.buttonLockTime.TabIndex = 304;
-            this.buttonLockTime.Text = "L";
-            this.buttonLockTime.UseVisualStyleBackColor = true;
-            this.buttonLockTime.Click += new System.EventHandler(this.buttonLockTime_Click);
-            this.buttonLockTime.MouseHover += new System.EventHandler(this.buttonLockTime_MouseHover);
+            this.buttonUnlockTime.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.buttonUnlockTime.Location = new System.Drawing.Point(71, 287);
+            this.buttonUnlockTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.buttonUnlockTime.Name = "buttonUnlockTime";
+            this.buttonUnlockTime.Size = new System.Drawing.Size(70, 30);
+            this.buttonUnlockTime.TabIndex = 304;
+            this.buttonUnlockTime.Text = "Unlock";
+            this.buttonUnlockTime.UseVisualStyleBackColor = true;
+            this.buttonUnlockTime.Click += new System.EventHandler(this.buttonLockTime_Click);
+            this.buttonUnlockTime.MouseHover += new System.EventHandler(this.buttonLockTime_MouseHover);
             // 
             // buttonReduceMinute
             // 
@@ -501,7 +501,7 @@
         private System.Windows.Forms.CheckBox checkBoxTopMost;
         private System.Windows.Forms.Button buttonCount;
         private System.Windows.Forms.Button buttonCountRun;
-        private System.Windows.Forms.Button buttonLockTime;
+        private System.Windows.Forms.Button buttonUnlockTime;
         private System.Windows.Forms.Button buttonReduceSeconds;
         private System.Windows.Forms.Button buttonForceLock;
     }

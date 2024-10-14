@@ -49,8 +49,8 @@ namespace SkyStopwatch
             args.Image = null;
             this.labelMessage.Text = "<hover to show config>";
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
-            this.buttonLockTime.Text = args.IsTimeLocked ? "U" : "L";
-            this.buttonLockTime.Enabled = args.EnableLockButton;
+            //this.buttonLockTime.Text = args.IsTimeLocked ? "U" : "L";
+            this.buttonUnlockTime.Enabled = args.EnableUnlockButton;
             this.buttonForceLock.Enabled = args.EnableForceLockButton;
 
             _RunOCR = runOCR;
@@ -413,7 +413,7 @@ namespace SkyStopwatch
         private void buttonLockTime_MouseHover(object sender, EventArgs e)
         {
             var toolTip = CreateDefaultToolTip();
-            toolTip.SetToolTip(this.buttonLockTime, $"L = Lock, U = Unlock game time");
+            toolTip.SetToolTip(this.buttonUnlockTime, "Unlock time and resume OCR reading");// $"L = Lock, U = Unlock game time");
         }
     }
 }

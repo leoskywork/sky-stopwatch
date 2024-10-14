@@ -13,7 +13,7 @@ namespace SkyStopwatch
     public class GlobalData
     {
         public const string Version = "1.9";
-        public const string Subversion = "4";
+        public const string Subversion = "5";
         public static DateTime ExeCreateDate = DateTime.MinValue;
         public static DateTime ExeUpdateDate = DateTime.MinValue;
 
@@ -21,7 +21,7 @@ namespace SkyStopwatch
         public const string ChangeTimeSourceOCRTimeIsNegativeTwo = "ocrDisplayTime is -2";
         public const string ChangeTimeSourceClearButton = "OnClearOCR";
         public const string ChangeTimeSourceManualOCRButton = "ManualOCR";
-        public const string ChangeTimeSourceNewGameButton = "NewGame";
+        public const string ChangeTimeSourceNewGameButton = "NewGame-UserClick";
         public const string ChangeTimeSourceNewGameAuto = "NewGame-AutoReset";
         public const string ChangeTimeSourceAdjustTimeButton = "ManualAdjustButtons";
         public const string ChangeTimeSourceTimerOCR = "AutoTimerOCR";

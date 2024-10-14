@@ -489,7 +489,7 @@ namespace SkyStopwatch
                 Image = bitmap,
                 IsTimeLocked = this.IsTimeLocked,
                 LockSource = this.Model.LockSource,
-                EnableLockButton = this.Model.TimeAroundGameStart != DateTime.MinValue,
+                EnableUnlockButton = this.Model.TimeAroundGameStart != DateTime.MinValue && this.IsTimeLocked,
                 EnableForceLockButton = this.Model.ShouldEnableForceLockButton()
             };
 
@@ -747,11 +747,11 @@ namespace SkyStopwatch
                 }
             }
 
-            if (_ShouldUpdatingPassedTime)
+            if (_ShouldUpdatingPassedTime && this.Model.TimeAroundGameStart == DateTime.MinValue)
             {
                 if (isTargetRunning)
                 {
-                    if (this.Model.TimeAroundGameStart == DateTime.MinValue && this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
+                    if (this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
                     {
                         this.labelTimer.Text = ".";
                         SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo, "target app running");

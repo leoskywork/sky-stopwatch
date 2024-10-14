@@ -17,7 +17,7 @@ namespace SkyStopwatch.ViewModel
 
         public TimeLocKSource LockSource { get; set; }
 
-        public bool EnableLockButton { get; set; }
+        public bool EnableUnlockButton { get; set; }
 
         public bool EnableForceLockButton { get; set; }
 
