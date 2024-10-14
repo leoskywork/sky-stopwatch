@@ -61,8 +61,15 @@ namespace SkyStopwatch
         public const int FailParseLimit = 3;
         public const int MisreadLimit = 70;// 50;
 
-        public int BootingArgs { get; set; } = 0;
-        public PopupBoxTheme BootingTheme { get { return (PopupBoxTheme)this.BootingArgs; } }
+
+        private int _BootingArgs = 0;
+        public void SetBootingArgs(int value) { _BootingArgs = value; }
+
+
+        public PopupBoxTheme BootingTheme { get { return (PopupBoxTheme)this._BootingArgs; } }
+
+        public bool BootingThemeIsThinOCR { get { return this.BootingTheme == PopupBoxTheme.ThinOCRTime || this.BootingTheme == PopupBoxTheme.Default; } }
+
         public string AutoOCRTimeOfLastRead { get; set; }
 
         private DateTime _TimeAroundGameStart;

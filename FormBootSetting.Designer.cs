@@ -471,7 +471,7 @@
             this.MaximizeBox = false;
             this.Name = "FormBootSetting";
             this.Text = "Tool Box - auto close in  60 sec";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ToolBox_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormToolBox_FormClosing);
             this.Load += new System.EventHandler(this.FormToolBox_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);

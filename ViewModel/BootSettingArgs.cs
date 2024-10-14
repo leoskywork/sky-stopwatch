@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SkyStopwatch.ViewModel
 {
@@ -23,5 +24,18 @@ namespace SkyStopwatch.ViewModel
 
         public bool EnableDarkMode { get; set; }
 
+    }
+
+    public class BootSettingActonList
+    {
+        public Action<Button, string> OnInit { get; set; }
+        public Action RunOCR { get; set; }
+        public Action OnNewGame { get; set; }
+        public Action TopMost { get; set; }
+        public Action Clear { get; set; }
+        public Action<int> AddSeconds { get; set; }
+        public Action<string> ChangeTimeNodes { get; set; }
+        public Action<bool> LockTime { get; set; }
+        public Action<bool> SwitchDarkMode { get; set; }
     }
 }

@@ -93,6 +93,16 @@ namespace SkyStopwatch.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap more_arrow_128_small_w {
+            get {
+                object obj = ResourceManager.GetObject("more_arrow_128_small_w", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap power_off_512_w {
             get {
                 object obj = ResourceManager.GetObject("power-off-512-w", resourceCulture);

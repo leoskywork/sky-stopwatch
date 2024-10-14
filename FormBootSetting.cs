@@ -14,56 +14,31 @@ namespace SkyStopwatch
 {
     public partial class FormBootSetting : Form
     {
-        private Action _RunOCR;
-        private Action _NewGameClick;
-        private Action _TopMostClick;
-        private Action _ClearClick;
-        private Action<int> _AddSecondsClick;
-        private Action<string> _ChangeTimeNodes;
-        private Action<bool> _LockClick;
-        private Action<bool> _SwitchDarkMode;
-
         private string _OriginalTimeNodes;
         private BootSettingArgs _Args;
-        private bool _IsFirstAssign = true;
-        private bool _DefalutValueOfCheckBoxTopMost;
-        private bool _FirstAssignValueOfTopMost;
+        private BootSettingActonList _Hooks;
+        //private bool _IsFirstAssign = true;
+        //private bool _DefalutValueOfCheckBoxTopMost;
+        //private bool _FirstAssignValueOfTopMost;
+        private bool _IsLoaded;
 
         private FormBootSetting()
         {
             InitializeComponent();
         }
 
-        public FormBootSetting(BootSettingArgs args,
-            Action<Button, string> onInit,
-            Action runOCR,
-            Action onNewGame,
-            Action topMost,
-            Action clear,
-            Action<int> addSeconds,
-            Action<string> changeTimeNodes,
-            Action<bool> lockTime,
-            Action<bool> switchDarkMode
-            ) : this()
+        public FormBootSetting(BootSettingArgs args, BootSettingActonList hooks) : this()
         {
+            this._Hooks = hooks;
             this._Args = args ?? throw new ArgumentNullException("args");
             this.pictureBoxOne.Image = args.Image;
             args.Image = null;
             this.labelMessage.Text = "<hover to show config>";
             this.labelSize.Text = $"out box: {this.pictureBoxOne.Size.Width} x {this.pictureBoxOne.Size.Height}";
-            //this.buttonLockTime.Text = args.IsTimeLocked ? "U" : "L";
             this.buttonUnlockTime.Enabled = args.EnableUnlockButton;
             this.buttonForceLock.Enabled = args.EnableForceLockButton;
             this.checkBoxDarkMode.Checked = args.EnableDarkMode;
 
-            _RunOCR = runOCR;
-            _NewGameClick = onNewGame;
-            _TopMostClick = topMost;
-            _ClearClick = clear;
-            _AddSecondsClick = addSeconds;
-            _ChangeTimeNodes = changeTimeNodes;
-            _LockClick = lockTime;
-            _SwitchDarkMode = switchDarkMode;
 
             //got error when call this.close(), cross threads issue, thus use ui control timer instead
             //Task.Factory.StartNew(() =>
@@ -95,13 +70,13 @@ namespace SkyStopwatch
             SetMainOCRBootingArgsAndButtonText();
 
             this.buttonTopMost.Visible = false;
-            _DefalutValueOfCheckBoxTopMost = this.checkBoxTopMost.Checked;
-            _FirstAssignValueOfTopMost = GlobalData.Default.EnableTopMost;
-            this.checkBoxTopMost.Checked = _FirstAssignValueOfTopMost;
+            //_DefalutValueOfCheckBoxTopMost = this.checkBoxTopMost.Checked;
+            //_FirstAssignValueOfTopMost = GlobalData.Default.EnableTopMost;
+            this.checkBoxTopMost.Checked = GlobalData.Default.EnableTopMost;
 
             //do this at last
             this._OriginalTimeNodes = this.textBoxTimeSpanNodes.Text;
-            onInit?.Invoke(this.buttonOCR, _OriginalTimeNodes);
+            hooks.OnInit?.Invoke(this.buttonOCR, _OriginalTimeNodes);
         }
 
 
@@ -133,7 +108,7 @@ namespace SkyStopwatch
 
         private void buttonNewGame_Click(object sender, EventArgs e)
         {
-            _NewGameClick?.Invoke();
+            _Hooks.OnNewGame?.Invoke();
             this.Close();
         }
 
@@ -146,45 +121,40 @@ namespace SkyStopwatch
 
         private void buttonTopMost_Click(object sender, EventArgs e)
         {
-            _TopMostClick?.Invoke();
+            _Hooks.TopMost?.Invoke();
             this.Close();
         }
 
-        private void ToolBox_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormToolBox_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _RunOCR = null;
-            _NewGameClick = null;
-            _TopMostClick = null;
-            _ClearClick = null;
-            _AddSecondsClick = null;
+            _Hooks = null;
             this.pictureBoxOne.Image = null;
-            _ChangeTimeNodes = null;
         }
 
         private void buttonClear_Click(object sender, EventArgs e)
         {
-            _ClearClick?.Invoke();
+            _Hooks.Clear?.Invoke();
             this.Close();
         }
 
         private void buttonAddFewSeconds_Click(object sender, EventArgs e)
         {
             buttonClear.Enabled = false;
-            _AddSecondsClick?.Invoke(OCRBase.Increment2Seconds);
+            _Hooks.AddSeconds?.Invoke(OCRBase.Increment2Seconds);
             buttonClear.Enabled = true;
         }
 
         private void buttonAddSeconds_Click(object sender, EventArgs e)
         {
             buttonClear.Enabled = false;
-            _AddSecondsClick?.Invoke(OCRBase.Increment10Seconds);
+            _Hooks.AddSeconds?.Invoke(OCRBase.Increment10Seconds);
             buttonClear.Enabled = true;
         }
 
 
         private void buttonOCR_Click(object sender, EventArgs e)
         {
-            _RunOCR?.Invoke();
+            _Hooks.RunOCR?.Invoke();
             this.Close();
         }
 
@@ -204,7 +174,7 @@ namespace SkyStopwatch
             GlobalData.EnableCheckTimeNode = this.checkBoxPopWarning.Checked;
             GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "enable boss warning"));
 
-            _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
+            _Hooks.ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 
         private void textBoxTimeSpanNodes_TextChanged(object sender, EventArgs e)
@@ -245,7 +215,7 @@ namespace SkyStopwatch
 
             GlobalData.TimeNodeCheckingList = this.textBoxTimeSpanNodes.Text;
             GlobalData.Default.FireChangeAppConfig(new ChangeAppConfigEventArgs(nameof(FormBootSetting), true, "save time nodes"));
-            _ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
+            _Hooks.ChangeTimeNodes?.Invoke(this.textBoxTimeSpanNodes.Text);
         }
 
         private void checkBoxDebugging_CheckedChanged(object sender, EventArgs e)
@@ -263,7 +233,7 @@ namespace SkyStopwatch
                 GlobalData.ExeUpdateDate = System.IO.File.GetLastWriteTime(assemblyPath);
             }
 
-            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {this.timerAutoClose.Interval/1000}s";
+            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {this.timerAutoClose.Interval / 1000}s";
             string exeTime = GlobalData.ExeUpdateDate.ToString("yyyy.MMdd.HHmm");
             string suffix = $"Time locked: {this._Args.IsTimeLocked}_{this._Args.LockSource}";
             this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion} - {exeTime} - {suffix}";
@@ -272,6 +242,7 @@ namespace SkyStopwatch
 
         private void FormToolBox_Load(object sender, EventArgs e)
         {
+            _IsLoaded = true;
             UpdateSaveButtonState();
         }
 
@@ -309,7 +280,7 @@ namespace SkyStopwatch
         private void buttonAddMinute_Click(object sender, EventArgs e)
         {
             this.buttonAddMinute.Enabled = false;
-            _AddSecondsClick?.Invoke(OCRBase.IncrementMinute * 60);
+            _Hooks.AddSeconds?.Invoke(OCRBase.IncrementMinute * 60);
             this.buttonAddMinute.Enabled = true;
         }
 
@@ -317,7 +288,7 @@ namespace SkyStopwatch
         {
             this.buttonReduceMinute.Enabled = false;
 
-            _AddSecondsClick?.Invoke(OCRBase.DecrementMinute * -60);
+            _Hooks.AddSeconds?.Invoke(OCRBase.DecrementMinute * -60);
             this.buttonReduceMinute.Enabled = true;
         }
 
@@ -338,16 +309,20 @@ namespace SkyStopwatch
         {
             //this will be triggered when the default value(true) is different with the assigned value(false, in this case) in ctor
             //in the case we want to skip the first trigger, for the other case(they 2 have same value), should not skip the first trigger
-            if (_IsFirstAssign && _DefalutValueOfCheckBoxTopMost != _FirstAssignValueOfTopMost)
-            {
-                System.Diagnostics.Debug.WriteLine($"--> top most, checked: {this.checkBoxTopMost.Checked}, first assign");
-                _IsFirstAssign = false;
-                return;
-            }
+            //if (_IsFirstAssign && _DefalutValueOfCheckBoxTopMost != _FirstAssignValueOfTopMost)
+            //{
+            //    System.Diagnostics.Debug.WriteLine($"--> top most, checked: {this.checkBoxTopMost.Checked}, first assign");
+            //    _IsFirstAssign = false;
+            //    return;
+            //}
 
-            System.Diagnostics.Debug.WriteLine($"--> top most, checked: {this.checkBoxTopMost.Checked}");
-            _TopMostClick?.Invoke();
-            this.Close();
+            System.Diagnostics.Debug.WriteLine($"--> top most, checked: {this.checkBoxTopMost.Checked}, loaded： {_IsLoaded}");
+
+            if (_IsLoaded)
+            {
+                _Hooks.TopMost?.Invoke();
+                this.Close();
+            }
         }
 
         private void labelMessage_MouseHover(object sender, EventArgs e)
@@ -392,19 +367,19 @@ namespace SkyStopwatch
 
         private void buttonLockTime_Click(object sender, EventArgs e)
         {
-            _LockClick?.Invoke(false);
+            _Hooks.LockTime?.Invoke(false);
             this.Close();
         }
 
         private void buttonReduceSeconds_Click(object sender, EventArgs e)
         {
             this.DisableButtonWithTime(this.buttonReduceSeconds, 10);
-            _AddSecondsClick?.Invoke(OCRBase.Decrement10Seconds * -1);
+            _Hooks.AddSeconds?.Invoke(OCRBase.Decrement10Seconds * -1);
         }
 
         private void buttonForceLock_Click(object sender, EventArgs e)
         {
-            _LockClick?.Invoke(true);
+            _Hooks.LockTime?.Invoke(true);
             this.Close();
         }
 
@@ -422,9 +397,16 @@ namespace SkyStopwatch
 
         private void checkBoxDarkMode_CheckedChanged(object sender, EventArgs e)
         {
-            _SwitchDarkMode?.Invoke(checkBoxDarkMode.Checked);
-            //leotodo, skip first set when assign value diff with default value
+            System.Diagnostics.Debug.WriteLine($"----------------- dark mode: {checkBoxDarkMode.Checked}, loaded: {_IsLoaded}");
+
+
+            //[done] by adding loaded check - leotodo, skip first set when assign value diff with default value
             //this.Close();
+            if (_IsLoaded)
+            {
+                _Hooks.SwitchDarkMode?.Invoke(checkBoxDarkMode.Checked);
+                this.Close();
+            }
         }
     }
 }

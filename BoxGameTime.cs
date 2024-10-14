@@ -61,7 +61,7 @@ namespace SkyStopwatch
             InitializeComponent();
             this.InitBase();
 
-            this.Model.BootingArgs = args;
+            this.Model.SetBootingArgs(args);
 
             InitStopwatch();
             SyncTopMost();
@@ -231,6 +231,21 @@ namespace SkyStopwatch
             this.buttonCloseOverlay.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
         }
 
+        private void InitGUILayoutV4DarkMode()
+        {
+            //System.Diagnostics.Debug.WriteLine($"------------------ dark theme - {_EnableDarkMode}");
+
+            var unifyBackColor = _EnableDarkMode ? Color.Black : Color.White;
+            var unifyForeColor = _EnableDarkMode ? Color.White : Color.Black;
+            var toolImage = _EnableDarkMode ? global::SkyStopwatch.Properties.Resources.more_arrow_128_small_w : global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
+
+            this.BackColor = unifyBackColor;
+            this.buttonToolBox.BackColor = unifyBackColor;
+            this.buttonToolBox.BackgroundImage = toolImage;
+
+            this.labelTimer.BackColor = unifyBackColor;
+            this.labelTimer.ForeColor = unifyForeColor;
+        }
 
         private void InitGUILayoutV4()
         {
@@ -258,26 +273,12 @@ namespace SkyStopwatch
             this.buttonToolBox.Location = new System.Drawing.Point(80, 4);
             this.buttonToolBox.FlatStyle = FlatStyle.Flat;
             this.buttonToolBox.FlatAppearance.BorderSize = 0;
-            this.buttonToolBox.BackgroundImage = global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
             this.buttonToolBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
 
             //the x out button
             this.buttonCloseOverlay.Visible = false;
 
-            InitGUILayoutV4_SetColors();
-        }
-
-        private void InitGUILayoutV4_SetColors()
-        {
-            var unifyBackColor = _EnableDarkMode ? Color.Black : Color.White;
-            var unifyForeColor = _EnableDarkMode ? Color.White : Color.Black;
-          
-
-            this.BackColor = unifyBackColor;
-            this.buttonToolBox.BackColor = unifyBackColor;
-
-            this.labelTimer.BackColor = unifyBackColor;
-            this.labelTimer.ForeColor = unifyForeColor;
+            InitGUILayoutV4DarkMode();
         }
 
         private void InitGUILayoutV5()
@@ -335,7 +336,7 @@ namespace SkyStopwatch
         {
             this.TopMost = GlobalData.Default.EnableTopMost;
 
-            if ((PopupBoxTheme)this.Model.BootingArgs == PopupBoxTheme.ThinOCRTime)
+            if (this.Model.BootingThemeIsThinOCR)
             {
                 this.buttonToolBox.Text = null;
             }
@@ -467,7 +468,13 @@ namespace SkyStopwatch
                 ShowToolBox();
                 //buttonToolBox.Enabled = true;
                 //this.DisableButtonShortTime(buttonToolBox);
-                this.DisableButtonWithTime(buttonToolBox, 1000);
+                //this.DisableButtonWithTime(buttonToolBox, 1000);
+
+                //leotodo, fixme, put it here to fix setting button display issue(after user click, in dark mode)
+                this.RunOnMain(() => {
+                    InitGUILayoutV4DarkMode();
+                    this.buttonToolBox.Enabled = true;
+                });
             }
             catch (Exception ex)
             {
@@ -507,19 +514,20 @@ namespace SkyStopwatch
                 EnableDarkMode = _EnableDarkMode
             };
 
+            var hooks = new BootSettingActonList()
+            {
+                OnInit = this.OnInitToolBox,
+                RunOCR = () => this.OnRunOCR(null, GlobalData.ChangeTimeSourceManualOCRButton),
+                OnNewGame = () => this.OnNewGameStart(false),
+                TopMost = this.OnSwitchTopMost,
+                Clear = this.OnClearOCR,
+                AddSeconds = this.OnAddSeconds,
+                ChangeTimeNodes = this.OnChangeTimeNodes,
+                LockTime = this.OnSwitchTimeLockState,
+                SwitchDarkMode = this.OnSwitchDarkMode
+            };
 
-            FormBootSetting tool = new FormBootSetting(args,
-                               (_, __) => { this.OnInitToolBox(_, __); },
-                               () => { this.OnRunOCR(null, GlobalData.ChangeTimeSourceManualOCRButton); },
-                               () => { this.OnNewGameStart(false); },
-                               () => { this.OnSwitchTopMost(); },
-                               () => { this.OnClearOCR(); },
-                               (_) => { this.OnAddSeconds(_); },
-                               (_) => { this.OnChangeTimeNodes(_); },
-                               (_) => { this.OnSwitchTimeLockState(_); },
-                               (_) => this.OnSwitchDarkMode(_)
-                               );
-
+            var tool = new FormBootSetting(args, hooks);
             return tool;
         }
 
@@ -675,9 +683,9 @@ namespace SkyStopwatch
             _EnableDarkMode = enable;
 
             //leotodo, a better way, 
-            if (this.Model.BootingTheme == PopupBoxTheme.ThinOCRTime || this.Model.BootingTheme  == PopupBoxTheme.Default)
+            if (this.Model.BootingThemeIsThinOCR)
             {
-                InitGUILayoutV4_SetColors();
+                InitGUILayoutV4DarkMode();
             }
         }
 
