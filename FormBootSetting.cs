@@ -21,6 +21,7 @@ namespace SkyStopwatch
         private Action<int> _AddSecondsClick;
         private Action<string> _ChangeTimeNodes;
         private Action<bool> _LockClick;
+        private Action<bool> _SwitchDarkMode;
 
         private string _OriginalTimeNodes;
         private BootSettingArgs _Args;
@@ -41,7 +42,8 @@ namespace SkyStopwatch
             Action clear,
             Action<int> addSeconds,
             Action<string> changeTimeNodes,
-            Action<bool> lockTime
+            Action<bool> lockTime,
+            Action<bool> switchDarkMode
             ) : this()
         {
             this._Args = args ?? throw new ArgumentNullException("args");
@@ -52,6 +54,7 @@ namespace SkyStopwatch
             //this.buttonLockTime.Text = args.IsTimeLocked ? "U" : "L";
             this.buttonUnlockTime.Enabled = args.EnableUnlockButton;
             this.buttonForceLock.Enabled = args.EnableForceLockButton;
+            this.checkBoxDarkMode.Checked = args.EnableDarkMode;
 
             _RunOCR = runOCR;
             _NewGameClick = onNewGame;
@@ -60,6 +63,7 @@ namespace SkyStopwatch
             _AddSecondsClick = addSeconds;
             _ChangeTimeNodes = changeTimeNodes;
             _LockClick = lockTime;
+            _SwitchDarkMode = switchDarkMode;
 
             //got error when call this.close(), cross threads issue, thus use ui control timer instead
             //Task.Factory.StartNew(() =>
@@ -414,6 +418,13 @@ namespace SkyStopwatch
         {
             var toolTip = CreateDefaultToolTip();
             toolTip.SetToolTip(this.buttonUnlockTime, "Unlock time and resume OCR reading");// $"L = Lock, U = Unlock game time");
+        }
+
+        private void checkBoxDarkMode_CheckedChanged(object sender, EventArgs e)
+        {
+            _SwitchDarkMode?.Invoke(checkBoxDarkMode.Checked);
+            //leotodo, skip first set when assign value diff with default value
+            //this.Close();
         }
     }
 }

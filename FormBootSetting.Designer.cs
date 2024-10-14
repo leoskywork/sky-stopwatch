@@ -51,6 +51,7 @@
             this.buttonPriceList = new System.Windows.Forms.Button();
             this.checkBoxDebugging = new System.Windows.Forms.CheckBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.checkBoxDarkMode = new System.Windows.Forms.CheckBox();
             this.checkBoxTopMost = new System.Windows.Forms.CheckBox();
             this.buttonChangeTheme = new System.Windows.Forms.Button();
             this.buttonCloseApp = new System.Windows.Forms.Button();
@@ -104,7 +105,7 @@
             // buttonTopMost
             // 
             this.buttonTopMost.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonTopMost.Location = new System.Drawing.Point(80, 368);
+            this.buttonTopMost.Location = new System.Drawing.Point(156, 367);
             this.buttonTopMost.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonTopMost.Name = "buttonTopMost";
             this.buttonTopMost.Size = new System.Drawing.Size(100, 30);
@@ -324,6 +325,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.checkBoxDarkMode);
             this.groupBox3.Controls.Add(this.checkBoxTopMost);
             this.groupBox3.Controls.Add(this.buttonChangeTheme);
             this.groupBox3.Controls.Add(this.buttonCloseApp);
@@ -339,12 +341,24 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Setting";
             // 
+            // checkBoxDarkMode
+            // 
+            this.checkBoxDarkMode.AutoSize = true;
+            this.checkBoxDarkMode.Location = new System.Drawing.Point(29, 62);
+            this.checkBoxDarkMode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.checkBoxDarkMode.Name = "checkBoxDarkMode";
+            this.checkBoxDarkMode.Size = new System.Drawing.Size(101, 19);
+            this.checkBoxDarkMode.TabIndex = 409;
+            this.checkBoxDarkMode.Text = "Dark mode";
+            this.checkBoxDarkMode.UseVisualStyleBackColor = true;
+            this.checkBoxDarkMode.CheckedChanged += new System.EventHandler(this.checkBoxDarkMode_CheckedChanged);
+            // 
             // checkBoxTopMost
             // 
             this.checkBoxTopMost.AutoSize = true;
             this.checkBoxTopMost.Checked = true;
             this.checkBoxTopMost.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxTopMost.Location = new System.Drawing.Point(29, 39);
+            this.checkBoxTopMost.Location = new System.Drawing.Point(29, 26);
             this.checkBoxTopMost.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.checkBoxTopMost.Name = "checkBoxTopMost";
             this.checkBoxTopMost.Size = new System.Drawing.Size(93, 19);
@@ -355,7 +369,7 @@
             // 
             // buttonChangeTheme
             // 
-            this.buttonChangeTheme.Location = new System.Drawing.Point(29, 90);
+            this.buttonChangeTheme.Location = new System.Drawing.Point(29, 98);
             this.buttonChangeTheme.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonChangeTheme.Name = "buttonChangeTheme";
             this.buttonChangeTheme.Size = new System.Drawing.Size(227, 30);
@@ -369,7 +383,7 @@
             this.buttonCloseApp.BackColor = System.Drawing.Color.OrangeRed;
             this.buttonCloseApp.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.buttonCloseApp.ForeColor = System.Drawing.Color.White;
-            this.buttonCloseApp.Location = new System.Drawing.Point(155, 32);
+            this.buttonCloseApp.Location = new System.Drawing.Point(155, 20);
             this.buttonCloseApp.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonCloseApp.Name = "buttonCloseApp";
             this.buttonCloseApp.Size = new System.Drawing.Size(100, 30);
@@ -498,11 +512,12 @@
         private System.Windows.Forms.Button buttonReduceMinute;
         private System.Windows.Forms.Button buttonCloseApp;
         private System.Windows.Forms.Button buttonPriceList;
-        private System.Windows.Forms.CheckBox checkBoxTopMost;
         private System.Windows.Forms.Button buttonCount;
         private System.Windows.Forms.Button buttonCountRun;
         private System.Windows.Forms.Button buttonUnlockTime;
         private System.Windows.Forms.Button buttonReduceSeconds;
         private System.Windows.Forms.Button buttonForceLock;
+        private System.Windows.Forms.CheckBox checkBoxDarkMode;
+        private System.Windows.Forms.CheckBox checkBoxTopMost;
     }
 }

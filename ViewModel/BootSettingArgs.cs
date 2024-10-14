@@ -21,5 +21,7 @@ namespace SkyStopwatch.ViewModel
 
         public bool EnableForceLockButton { get; set; }
 
+        public bool EnableDarkMode { get; set; }
+
     }
 }

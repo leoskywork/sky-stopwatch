@@ -62,6 +62,7 @@ namespace SkyStopwatch
         public const int MisreadLimit = 70;// 50;
 
         public int BootingArgs { get; set; } = 0;
+        public PopupBoxTheme BootingTheme { get { return (PopupBoxTheme)this.BootingArgs; } }
         public string AutoOCRTimeOfLastRead { get; set; }
 
         private DateTime _TimeAroundGameStart;

@@ -54,6 +54,8 @@ namespace SkyStopwatch
             }
         }
 
+        private bool _EnableDarkMode;
+
         public BoxGameTime(int args)
         {
             InitializeComponent();
@@ -245,12 +247,10 @@ namespace SkyStopwatch
 
             this.labelTitle.Visible = false;
 
-            var unifyBackColor = Color.White;
             //time since game start
             //this.labelTimer.BackColor = Color.LightGray;
             this.labelTimer.Size = new System.Drawing.Size(80, 32);
             this.labelTimer.Location = new System.Drawing.Point(2, 3);
-            this.labelTimer.BackColor = unifyBackColor;
 
             //button tool box
             this.buttonToolBox.Text = null;
@@ -260,11 +260,24 @@ namespace SkyStopwatch
             this.buttonToolBox.FlatAppearance.BorderSize = 0;
             this.buttonToolBox.BackgroundImage = global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
             this.buttonToolBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.buttonToolBox.BackColor = unifyBackColor;
-            this.BackColor = unifyBackColor;
 
             //the x out button
             this.buttonCloseOverlay.Visible = false;
+
+            InitGUILayoutV4_SetColors();
+        }
+
+        private void InitGUILayoutV4_SetColors()
+        {
+            var unifyBackColor = _EnableDarkMode ? Color.Black : Color.White;
+            var unifyForeColor = _EnableDarkMode ? Color.White : Color.Black;
+          
+
+            this.BackColor = unifyBackColor;
+            this.buttonToolBox.BackColor = unifyBackColor;
+
+            this.labelTimer.BackColor = unifyBackColor;
+            this.labelTimer.ForeColor = unifyForeColor;
         }
 
         private void InitGUILayoutV5()
@@ -490,7 +503,8 @@ namespace SkyStopwatch
                 IsTimeLocked = this.IsTimeLocked,
                 LockSource = this.Model.LockSource,
                 EnableUnlockButton = this.Model.TimeAroundGameStart != DateTime.MinValue && this.IsTimeLocked,
-                EnableForceLockButton = this.Model.ShouldEnableForceLockButton()
+                EnableForceLockButton = this.Model.ShouldEnableForceLockButton(),
+                EnableDarkMode = _EnableDarkMode
             };
 
 
@@ -502,7 +516,9 @@ namespace SkyStopwatch
                                () => { this.OnClearOCR(); },
                                (_) => { this.OnAddSeconds(_); },
                                (_) => { this.OnChangeTimeNodes(_); },
-                               (_) => { this.OnSwitchTimeLockState(_); } );
+                               (_) => { this.OnSwitchTimeLockState(_); },
+                               (_) => this.OnSwitchDarkMode(_)
+                               );
 
             return tool;
         }
@@ -654,6 +670,17 @@ namespace SkyStopwatch
             }
         }
 
+        private void OnSwitchDarkMode(bool enable)
+        {
+            _EnableDarkMode = enable;
+
+            //leotodo, a better way, 
+            if (this.Model.BootingTheme == PopupBoxTheme.ThinOCRTime || this.Model.BootingTheme  == PopupBoxTheme.Default)
+            {
+                InitGUILayoutV4_SetColors();
+            }
+        }
+
         private void timerRefreshUI_Tick(object sender, EventArgs e)
         {
             try
@@ -708,7 +735,7 @@ namespace SkyStopwatch
                         bool isLockedByUser = this.Model.LockSource == TimeLocKSource.UserClick || this.Model.LockSource == TimeLocKSource.UserClickForced;
                         //this.labelTimer.ForeColor = this.Model.IsTimeLocked ? (isLockedByUser ? Color.MediumBlue : Color.Brown) : Color.Black;
 
-                        var newForeColor = Color.Black;
+                        var newForeColor = _EnableDarkMode ? Color.White : Color.Black;
                         if (this.Model.IsTimeLocked)
                         {
                             newForeColor = isLockedByUser ? Color.MediumBlue : Color.OrangeRed;
@@ -1094,8 +1121,7 @@ namespace SkyStopwatch
             // SetClassLong(this.Handle, GCL_STYLE, GetClassLong(this.Handle, GCL_STYLE) | CS_DropSHADOW);
 
 
-            PopupBoxTheme theme = (PopupBoxTheme)this.Model.BootingArgs;
-            switch (theme)
+            switch (this.Model.BootingTheme)
             {
                 case PopupBoxTheme.OCR2Line:
                     InitGUILayoutV1();
@@ -1115,9 +1141,11 @@ namespace SkyStopwatch
                 case PopupBoxTheme.BossCallCounting:
                     InitGUILayoutV6();
                     break;
-                default:
+                case PopupBoxTheme.Default:
                     InitGUILayoutV4();
                     break;
+                default:
+                    throw new NotImplementedException();
             }
         }
 
