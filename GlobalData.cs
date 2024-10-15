@@ -63,6 +63,8 @@ namespace SkyStopwatch
         public const int MessageBoxVerticalGap = 10;
         public const int UIUpdateDelayMS = 200;
         public const int UIUpdateDelayLongMS = 1000;
+        public const double AppOpacityDim = 0.2;
+        public const double AppOpacityHighlight = 1;
 
         private static GlobalData _instance;
         public static GlobalData Default

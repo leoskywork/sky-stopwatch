@@ -372,7 +372,7 @@ namespace SkyStopwatch
                 {
                     changeSource = TimeChangeSource.TargetAppExit;
                 }
-                else if(source == GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo)
+                else if (source == GlobalData.ChangeTimeSourceOCRTimeIsNegativeTwo)
                 {
                     changeSource = TimeChangeSource.TargetAppStartup;
                 }
@@ -471,7 +471,8 @@ namespace SkyStopwatch
                 //this.DisableButtonWithTime(buttonToolBox, 1000);
 
                 //leotodo, fixme, put it here to fix setting button display issue(after user click, in dark mode)
-                this.RunOnMain(() => {
+                this.RunOnMain(() =>
+                {
                     InitGUILayoutV4DarkMode();
                     this.buttonToolBox.Enabled = true;
                 });
@@ -611,21 +612,21 @@ namespace SkyStopwatch
         private void OnNewGameStart(bool autoRestart)
         {
             _ShouldUpdatingPassedTime = true;
+            var source = autoRestart ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGameButton;
 
-            if (!autoRestart)
+            if (source == GlobalData.ChangeTimeSourceNewGameButton)
             {
                 this.TopMost = true;
                 GlobalData.Default.EnableTopMost = true;
                 this.Model.TopMostSender = TopMostSender.UserClickNewGame;
+                this.Opacity = GlobalData.AppOpacityHighlight;
             }
 
             //reset flags/history values
-            //flag 1
             var lockSource = autoRestart ? TimeLocKSource.AutoLockChecker : TimeLocKSource.UserClick;
             this.Model.ResetAutoOCR(lockSource);
 
-            //flag 2 - this._TimeAroundGameStart, which will be updated in the following method
-            var source = autoRestart ? GlobalData.ChangeTimeSourceNewGameAuto : GlobalData.ChangeTimeSourceNewGameButton;
+            //this._TimeAroundGameStart, which will be updated in the following method
             SetUIStopwatch(TimeSpan.Zero.ToString(GlobalData.TimeSpanFormat), OCRGameTime.NewGameDelaySeconds, source);
 
             if (!this.timerAutoRefresh.Enabled)
@@ -786,7 +787,8 @@ namespace SkyStopwatch
             {
                 if (isTargetRunning)
                 {
-                    this.Opacity = 1;
+                    this.Opacity = GlobalData.AppOpacityHighlight;
+
                     if (this.Model.TimeChangeSource != TimeChangeSource.TargetAppStartup)
                     {
                         this.labelTimer.Text = ".";
@@ -795,7 +797,7 @@ namespace SkyStopwatch
                 }
                 else
                 {
-                    this.Opacity = 0.2;
+                    this.Opacity = GlobalData.AppOpacityDim;
                     this.labelTimer.Text = ".."; //"--";
                     SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app not running");
                 }
@@ -837,11 +839,13 @@ namespace SkyStopwatch
                 System.Diagnostics.Debug.WriteLine("ocr clear");
 
                 _ShouldUpdatingPassedTime = false;
-                SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton, "user clear");
                 _IsAutoOCRRefreshing = false;
+                SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceClearButton, "user clear");
                 this.Model.ResetAutoOCR(TimeLocKSource.UserClick);
 
                 this.labelTimer.Text = "--";
+                this.Opacity = GlobalData.AppOpacityDim;
+
                 this.timerAutoRefresh.Stop();
                 //this.timerMainUI.Stop(); //still want to update the clock
 
@@ -851,7 +855,7 @@ namespace SkyStopwatch
                     _DefaultOCREngine = null;
                 }
 
-                if(_AuxEngine != null)
+                if (_AuxEngine != null)
                 {
                     _AuxEngine.Dispose();
                     _AuxEngine = null;
@@ -859,8 +863,8 @@ namespace SkyStopwatch
 
                 GlobalData.Default.EnableTopMost = false;
                 this.Model.TopMostSender = TopMostSender.UserClickClear;
-                this.RunOnMainAsync(() => this.TopMost = false, GlobalData.UIUpdateDelayLongMS); //sometimes not working with async ?
-                //this.RunOnMain(() => this.TopMost = false, GlobalData.UIUpdateDelayMS);
+                this.TopMost = false;
+                //this.RunOnMainAsync(() => this.TopMost = false, GlobalData.UIUpdateDelayLongMS); //sometimes not working with async ?
 
                 System.Diagnostics.Debug.WriteLine("clear done");
             }
@@ -889,12 +893,12 @@ namespace SkyStopwatch
                     ScanInGameFlagIfEnabled(ocrPrimaryTime, true);
                     var middleTimeResult = ScanSecondaryTimeIfEnabled(ocrPrimaryTime, this.Model.InGameFlagCount);
 
-                    return  middleTimeResult ?? Tuple.Create(ocrPrimaryTime, 1);
+                    return middleTimeResult ?? Tuple.Create(ocrPrimaryTime, 1);
                 }).ContinueWith(t =>
                 {
                     _IsAutoOCRRefreshing = false;
                     if (this.IsDead()) return;
-                    if (t.IsFaulted){ this.OnError(t.Exception); return;}
+                    if (t.IsFaulted) { this.OnError(t.Exception); return; }
 
                     this.RunOnMain(() =>
                     {
@@ -963,7 +967,7 @@ namespace SkyStopwatch
             var flagBytes = this.Model.GetImageBytesBy(TimeScanKind.InGameFlag);
             if (flagBytes == null) return false;
 
-            if(_AuxEngine == null)
+            if (_AuxEngine == null)
             {
                 _AuxEngine = this.Model.CreateOCREngine();
             }
@@ -1013,7 +1017,7 @@ namespace SkyStopwatch
             {
                 this.IsTimeLocked = true;
                 this.Model.LockSource = DataModel.TimeLocKSource.AutoLockChecker;
-                this.RunOnMainAsync(() => 
+                this.RunOnMainAsync(() =>
                 {
                     System.Diagnostics.Debug.WriteLine($"auto lock time, boss warning pop: {_HasTimeNodeWarningPopped}");
                     BoxMessage.Show("Going to lock time", this, _HasTimeNodeWarningPopped);
@@ -1244,7 +1248,7 @@ namespace SkyStopwatch
         {
             //var oldValue = this.Opacity;
 
-            this.Opacity = 1;
+            this.Opacity = GlobalData.AppOpacityHighlight;
 
             //this.RunOnMainAsync(() =>  { this.Opacity = oldValue; }, 3000);
         }
