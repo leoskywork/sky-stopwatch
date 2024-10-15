@@ -794,7 +794,7 @@ namespace SkyStopwatch
                 }
             }
 
-            if (_ShouldUpdatingPassedTime && this.Model.TimeAroundGameStart == DateTime.MinValue)
+            if (_ShouldUpdatingPassedTime && (this.Model.TimeAroundGameStart == DateTime.MinValue || this.Model.TimeChangeSource == TimeChangeSource.AppAutoRestart))
             {
                 if (isTargetRunning)
                 {
@@ -983,7 +983,7 @@ namespace SkyStopwatch
                 _AuxEngine = this.Model.CreateOCREngine();
             }
 
-            if(_DefaultOCREngine == null)
+            if (_DefaultOCREngine == null)
             {
                 _DefaultOCREngine = this.Model.CreateOCREngine();
             }
