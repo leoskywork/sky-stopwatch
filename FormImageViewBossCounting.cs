@@ -346,7 +346,7 @@ namespace SkyStopwatch
                 {
                     _IsComparing = false;
 
-                    if (this.IsDead()) return;
+                    if (this.IsDeadExt()) return;
 
                     if (t.IsFaulted)
                     {

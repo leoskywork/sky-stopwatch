@@ -40,8 +40,6 @@ namespace SkyStopwatch
                 }
             };
 
-            //Application.Run(new FormMain());
-            //Application.Run(new FormBoot());
             var boot = new FormBoot();
             boot.FormClosed += (_, __) => SaveAppConfig();
             Application.Run(boot);

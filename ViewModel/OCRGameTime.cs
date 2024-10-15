@@ -68,7 +68,15 @@ namespace SkyStopwatch
 
         public PopupBoxTheme BootingTheme { get { return (PopupBoxTheme)this._BootingArgs; } }
 
-        public bool BootingThemeIsThinOCR { get { return this.BootingTheme == PopupBoxTheme.ThinOCRTime || this.BootingTheme == PopupBoxTheme.Default; } }
+        public bool IsUsingImageAsButtonToolboxIcon
+        {
+            get
+            {
+                var theme = this.BootingTheme;
+
+                return theme == PopupBoxTheme.ThinOCRTime || theme == PopupBoxTheme.Default || theme == PopupBoxTheme.ThinSystemTime ;
+            }
+        }
 
         public string AutoOCRTimeOfLastRead { get; set; }
 
@@ -576,9 +584,9 @@ namespace SkyStopwatch
                 found = lines[0].Trim() == "35";
             }
 
-            if(found)
+            if (found)
             {
-                if(_AutoOCRInGameFlagInARowCount > 0)
+                if (_AutoOCRInGameFlagInARowCount > 0)
                 {
                     _AutoOCRInGameFlagInARowCount++;
                 }
@@ -589,7 +597,7 @@ namespace SkyStopwatch
             }
             else
             {
-                if(_AutoOCRInGameFlagInARowCount > 0)
+                if (_AutoOCRInGameFlagInARowCount > 0)
                 {
                     _AutoOCRInGameFlagInARowCount = 0;
                 }
@@ -609,7 +617,7 @@ namespace SkyStopwatch
 
         public bool ShouldEnableForceLockButton()
         {
-            return this.TimeAroundGameStart != DateTime.MinValue && (this.IsTimeLocked  == false || this.LockSource != TimeLocKSource.UserClickForced);
+            return this.TimeAroundGameStart != DateTime.MinValue && (this.IsTimeLocked == false || this.LockSource != TimeLocKSource.UserClickForced);
         }
     }
 

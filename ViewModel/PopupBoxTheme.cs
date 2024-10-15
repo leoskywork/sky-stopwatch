@@ -16,8 +16,8 @@ namespace SkyStopwatch
         OCR1LineLong= 2,
         OCR1LineNoSystemTime = 3,
 
-        ThinSystemTime = 4,
-        ThinOCRTime = 5,
+        ThinOCRTime = 4,
+        ThinSystemTime = 5,
 
         BossCallCounting = 6
     }

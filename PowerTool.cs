@@ -243,7 +243,7 @@ namespace SkyStopwatch
         }
        
 
-        public static bool IsDead(this Form form)
+        public static bool IsDeadExt(this Form form)
         {
             return form.Disposing || form.IsDisposed;
         }
@@ -251,12 +251,12 @@ namespace SkyStopwatch
         public static void RunOnMain(this Form form, Action action)
         {
             if (action == null) return;
-            if (form.IsDead()) return;
+            if (form.IsDeadExt()) return;
 
             //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed} - before if");
             if (form.InvokeRequired)
             {
-                if (form.IsDead()) return; //not sure why, the is dead check above not working sometimes, do it again here
+                if (form.IsDeadExt()) return; //not sure why, the is dead check above not working sometimes, do it again here
                 if (form.Disposing || form.IsDisposed) return;
                 //System.Diagnostics.Debug.WriteLine($"RunOnMain - is dead: {form.IsDead()}, disp: {form.Disposing}, disped:{form.IsDisposed}");
                 form.Invoke(action);
@@ -279,7 +279,7 @@ namespace SkyStopwatch
         public static void RunOnMainAsync(this Form form, Action action)
         {
             if (action == null) return;
-            if (form.IsDead()) return;
+            if (form.IsDeadExt()) return;
 
             if (form.InvokeRequired)
             {

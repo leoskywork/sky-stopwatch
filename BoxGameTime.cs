@@ -18,7 +18,7 @@ using System.Windows.Forms;
 
 namespace SkyStopwatch
 {
-    public partial class BoxGameTime : Form, IPopupBox, ITopForm
+    public partial class BoxGameTime : Form, IPopupBox, ITopForm, IMainBox
     {
         private bool _ShouldUpdatingPassedTime = false;
 
@@ -53,6 +53,8 @@ namespace SkyStopwatch
                 System.Diagnostics.Debug.WriteLine($"set locked: {value}");
             }
         }
+
+        public MainBoxCloseSource CloseSource { get; set; }
 
         private bool _EnableDarkMode;
 
@@ -231,20 +233,29 @@ namespace SkyStopwatch
             this.buttonCloseOverlay.BackColor = System.Drawing.Color.MediumVioletRed;//PaleVioletRed;
         }
 
-        private void InitGUILayoutV4DarkMode()
+        private void InitGUILayoutDarkModeIfAppliable()
         {
             //System.Diagnostics.Debug.WriteLine($"------------------ dark theme - {_EnableDarkMode}");
 
             var unifyBackColor = _EnableDarkMode ? Color.Black : Color.White;
             var unifyForeColor = _EnableDarkMode ? Color.White : Color.Black;
-            var toolImage = _EnableDarkMode ? global::SkyStopwatch.Properties.Resources.more_arrow_128_small_w : global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
+
+            if (this.labelTimer.Visible)
+            {
+                this.labelTimer.BackColor = unifyBackColor;
+                this.labelTimer.ForeColor = unifyForeColor;
+            }
+
+            if (this.labelTitle.Visible)
+            {
+                this.labelTitle.BackColor = unifyBackColor;
+                this.labelTitle.ForeColor = unifyForeColor;
+            }
 
             this.BackColor = unifyBackColor;
-            this.buttonToolBox.BackColor = unifyBackColor;
+            var toolImage = _EnableDarkMode ? global::SkyStopwatch.Properties.Resources.more_arrow_128_small_w : global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
             this.buttonToolBox.BackgroundImage = toolImage;
-
-            this.labelTimer.BackColor = unifyBackColor;
-            this.labelTimer.ForeColor = unifyForeColor;
+            this.buttonToolBox.BackColor = unifyBackColor;
         }
 
         private void InitGUILayoutV4()
@@ -278,7 +289,7 @@ namespace SkyStopwatch
             //the x out button
             this.buttonCloseOverlay.Visible = false;
 
-            InitGUILayoutV4DarkMode();
+            InitGUILayoutDarkModeIfAppliable();
         }
 
         private void InitGUILayoutV5()
@@ -336,7 +347,7 @@ namespace SkyStopwatch
         {
             this.TopMost = GlobalData.Default.EnableTopMost;
 
-            if (this.Model.BootingThemeIsThinOCR)
+            if (this.Model.IsUsingImageAsButtonToolboxIcon)
             {
                 this.buttonToolBox.Text = null;
             }
@@ -473,7 +484,7 @@ namespace SkyStopwatch
                 //leotodo, fixme, put it here to fix setting button display issue(after user click, in dark mode)
                 this.RunOnMain(() =>
                 {
-                    InitGUILayoutV4DarkMode();
+                    InitGUILayoutDarkModeIfAppliable();
                     this.buttonToolBox.Enabled = true;
                 });
             }
@@ -684,9 +695,9 @@ namespace SkyStopwatch
             _EnableDarkMode = enable;
 
             //leotodo, a better way, 
-            if (this.Model.BootingThemeIsThinOCR)
+            if (this.Model.IsUsingImageAsButtonToolboxIcon)
             {
-                InitGUILayoutV4DarkMode();
+                InitGUILayoutDarkModeIfAppliable();
             }
         }
 
@@ -930,13 +941,13 @@ namespace SkyStopwatch
 
         private string ScanPrimaryTime()
         {
+            byte[] screenShotBytes = this.Model.GetImageBytes();
+            if (screenShotBytes == null) return null;
+
             if (_DefaultOCREngine == null)
             {
                 _DefaultOCREngine = this.Model.CreateOCREngine();
             }
-
-            byte[] screenShotBytes = this.Model.GetImageBytes();
-            if (screenShotBytes == null) return null;
 
             string data = OCRBase.ReadImageFromMemory(_DefaultOCREngine, screenShotBytes);
             string ocrTime = this.Model.Find(data, GlobalData.Default.IsUsingScreenTopTime);
@@ -970,6 +981,11 @@ namespace SkyStopwatch
             if (_AuxEngine == null)
             {
                 _AuxEngine = this.Model.CreateOCREngine();
+            }
+
+            if(_DefaultOCREngine == null)
+            {
+                _DefaultOCREngine = this.Model.CreateOCREngine();
             }
 
             var engine = useDefalutEngine ? _DefaultOCREngine : _AuxEngine;
@@ -1100,6 +1116,19 @@ namespace SkyStopwatch
         {
             GlobalData.Default.BoxTimeLastCloseLocation = this.Location;
             this.OnClearOCR();
+
+            if (this.CloseSource == MainBoxCloseSource.Unset)
+            {
+                this.CloseSource = MainBoxCloseSource.UserXOut;
+            }
+
+            var closeArgs = new CloseMainBoxEventArgs()
+            {
+                Kind = MainBoxKind.GameTime,
+                Source = this.CloseSource
+            };
+
+            GlobalData.Default.FireCloseMainBox(closeArgs);
         }
 
         private void buttonCloseOverlay_Click(object sender, EventArgs e)
@@ -1251,6 +1280,11 @@ namespace SkyStopwatch
             this.Opacity = GlobalData.AppOpacityHighlight;
 
             //this.RunOnMainAsync(() =>  { this.Opacity = oldValue; }, 3000);
+        }
+
+        public bool IsDead()
+        {
+            return this.IsDeadExt();
         }
     }
 }

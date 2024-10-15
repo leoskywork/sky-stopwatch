@@ -254,7 +254,7 @@ namespace SkyStopwatch
 
                 }).ContinueWith(t =>
                 {
-                    if (this.IsDead()) return;
+                    if (this.IsDeadExt()) return;
 
                     if (t.IsFaulted)
                     {

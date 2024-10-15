@@ -26,4 +26,11 @@ namespace SkyStopwatch.View
 
         void Close();
     }
+
+    public interface IMainBox : ISkyView {
+
+        MainBoxCloseSource CloseSource { get; set; }
+
+        bool IsDead();
+    }
 }

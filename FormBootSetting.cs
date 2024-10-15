@@ -258,7 +258,7 @@ namespace SkyStopwatch
 
             Task.Delay(300).ContinueWith((_) =>
             {
-                if (this.IsDead()) return;
+                if (this.IsDeadExt()) return;
                 this.BeginInvoke((Action)(() =>
                 {
                     //this.buttonChangeTheme.Enabled = true;

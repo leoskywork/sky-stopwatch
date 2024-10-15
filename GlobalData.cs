@@ -43,6 +43,7 @@ namespace SkyStopwatch
 
         public event EventHandler ChangeTheme;
         public event EventHandler CloseApp;
+        public event EventHandler<CloseMainBoxEventArgs> CloseMainBox;
         public event EventHandler<ChangeAppConfigEventArgs> ChangeAppConfig;
         public event EventHandler<ChangeGameStartTimeEventArgs> ChangeGameStartTime;
 
@@ -128,6 +129,11 @@ namespace SkyStopwatch
             CloseApp?.Invoke(null, null);
         }
 
+        public void FireCloseMainBox(CloseMainBoxEventArgs e)
+        {
+            CloseMainBox?.Invoke(null, e);
+        }
+
         public void FireChangeAppConfig(ChangeAppConfigEventArgs e)
         {
             ChangeAppConfig?.Invoke(null, e);
@@ -186,5 +192,24 @@ namespace SkyStopwatch
             NewTime = time;
             Source = source;
         }
+    }
+
+    public class CloseMainBoxEventArgs : EventArgs
+    {
+        public MainBoxKind Kind { get; set; }
+        public MainBoxCloseSource Source{ get; set; }
+    }
+
+    public enum MainBoxKind
+    {
+        GameTime,
+        BossCounting
+    }
+
+    public enum MainBoxCloseSource
+    {
+        Unset,
+        ChangeTheme,
+        UserXOut
     }
 }
