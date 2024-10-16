@@ -105,6 +105,8 @@ namespace SkyStopwatch
 
         public Point BoxTimeLastCloseLocation{ get; set; }
 
+        public bool BoxTimeEnableDarkMode { get; set; }
+
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
         //public static bool IsDebugging { get; set; } = false; //moved to global data

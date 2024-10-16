@@ -56,7 +56,7 @@ namespace SkyStopwatch
 
         public MainBoxCloseSource CloseSource { get; set; }
 
-        private bool _EnableDarkMode;
+        //private bool _EnableDarkMode;
 
         public BoxGameTime(int args)
         {
@@ -237,8 +237,8 @@ namespace SkyStopwatch
         {
             //System.Diagnostics.Debug.WriteLine($"------------------ dark theme - {_EnableDarkMode}");
 
-            var unifyBackColor = _EnableDarkMode ? Color.Black : Color.White;
-            var unifyForeColor = _EnableDarkMode ? Color.White : Color.Black;
+            var unifyBackColor =  GlobalData.Default.BoxTimeEnableDarkMode ? Color.Black : Color.White;
+            var unifyForeColor = GlobalData.Default.BoxTimeEnableDarkMode ? Color.White : Color.Black;
 
             if (this.labelTimer.Visible)
             {
@@ -253,7 +253,7 @@ namespace SkyStopwatch
             }
 
             this.BackColor = unifyBackColor;
-            var toolImage = _EnableDarkMode ? global::SkyStopwatch.Properties.Resources.more_arrow_128_small_w : global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
+            var toolImage = GlobalData.Default.BoxTimeEnableDarkMode ? global::SkyStopwatch.Properties.Resources.more_arrow_128_small_w : global::SkyStopwatch.Properties.Resources.more_arrow_128_small_b;
             this.buttonToolBox.BackgroundImage = toolImage;
             this.buttonToolBox.BackColor = unifyBackColor;
         }
@@ -523,7 +523,7 @@ namespace SkyStopwatch
                 LockSource = this.Model.LockSource,
                 EnableUnlockButton = this.Model.TimeAroundGameStart != DateTime.MinValue && this.IsTimeLocked,
                 EnableForceLockButton = this.Model.ShouldEnableForceLockButton(),
-                EnableDarkMode = _EnableDarkMode
+                EnableDarkMode = GlobalData.Default.BoxTimeEnableDarkMode
             };
 
             var hooks = new BootSettingActonList()
@@ -692,7 +692,7 @@ namespace SkyStopwatch
 
         private void OnSwitchDarkMode(bool enable)
         {
-            _EnableDarkMode = enable;
+            GlobalData.Default.BoxTimeEnableDarkMode = enable;
 
             //leotodo, a better way, 
             if (this.Model.IsUsingImageAsButtonToolboxIcon)
@@ -755,11 +755,32 @@ namespace SkyStopwatch
                         bool isLockedByUser = this.Model.LockSource == TimeLocKSource.UserClick || this.Model.LockSource == TimeLocKSource.UserClickForced;
                         //this.labelTimer.ForeColor = this.Model.IsTimeLocked ? (isLockedByUser ? Color.MediumBlue : Color.Brown) : Color.Black;
 
-                        var newForeColor = _EnableDarkMode ? Color.White : Color.Black;
-                        if (this.Model.IsTimeLocked)
+                        Color newForeColor;
+
+                        if (GlobalData.Default.BoxTimeEnableDarkMode)
                         {
-                            newForeColor = isLockedByUser ? Color.MediumBlue : Color.OrangeRed;
+                            if (this.Model.IsTimeLocked)
+                            {
+                                newForeColor = isLockedByUser ? Color.RosyBrown : Color.OrangeRed;
+                            }
+                            else
+                            {
+                                newForeColor = Color.White;
+                            }
                         }
+                        else
+                        {
+                            if (this.Model.IsTimeLocked)
+                            {
+                                newForeColor = isLockedByUser ? Color.MediumBlue : Color.OrangeRed;
+                                //newForeColor = isLockedByUser ? Color.RosyBrown : Color.OrangeRed;
+                            }
+                            else
+                            {
+                                newForeColor = Color.Black;
+                            }
+                        }
+
                         this.labelTimer.ForeColor = newForeColor;
                         this.buttonToolBox.ForeColor = newForeColor;
                     }

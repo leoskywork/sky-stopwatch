@@ -89,5 +89,8 @@
     <Setting Name="TimeViewInGameFlagSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">24, 20</Value>
     </Setting>
+    <Setting Name="BoxTimeEnableDarkMode" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
