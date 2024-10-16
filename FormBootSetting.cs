@@ -17,10 +17,14 @@ namespace SkyStopwatch
         private string _OriginalTimeNodes;
         private BootSettingArgs _Args;
         private BootSettingActonList _Hooks;
-        //private bool _IsFirstAssign = true;
-        //private bool _DefalutValueOfCheckBoxTopMost;
-        //private bool _FirstAssignValueOfTopMost;
         private bool _IsLoaded;
+        private const int DefaultLiveSeconds = 60;
+        private DateTime _ShowAt;
+
+        public int RemainingSeconds
+        {
+            get { return DefaultLiveSeconds - (int)(DateTime.Now - _ShowAt).TotalSeconds; }
+        }
 
         private FormBootSetting()
         {
@@ -49,7 +53,7 @@ namespace SkyStopwatch
             //        this.BeginInvoke(new Action(() => { this.Close(); }));
             //    }
             //});
-            this.timerAutoClose.Interval = 60 * 1000;
+            this.timerAutoClose.Interval = 10 * 1000;
             this.timerAutoClose.Start();
 
             this.checkBoxPopWarning.Checked = GlobalData.EnableCheckTimeNode;
@@ -103,7 +107,9 @@ namespace SkyStopwatch
         public void ShowAside(Control parent)
         {
             this.SetLocation(parent);
+            _ShowAt = DateTime.Now;
             this.Show();
+            this.Focus();
         }
 
         private void buttonNewGame_Click(object sender, EventArgs e)
@@ -114,9 +120,14 @@ namespace SkyStopwatch
 
         private void timerAutoClose_Tick(object sender, EventArgs e)
         {
+            SetDialogTitle();
+
             if (this.checkBoxDebugging.Checked) return;
 
-            this.Close();
+            if (this.RemainingSeconds < 0)
+            {
+                this.Close();
+            }
         }
 
         private void buttonTopMost_Click(object sender, EventArgs e)
@@ -233,7 +244,8 @@ namespace SkyStopwatch
                 GlobalData.ExeUpdateDate = System.IO.File.GetLastWriteTime(assemblyPath);
             }
 
-            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {this.timerAutoClose.Interval / 1000}s";
+            int remaining = _ShowAt == DateTime.MinValue ? DefaultLiveSeconds : this.RemainingSeconds;
+            string prefix = GlobalData.Default.IsDebugging ? $"debugging - OCR data {GlobalData.OCRTesseractDataFolder}" : $"Auto close in {remaining}s";
             string exeTime = GlobalData.ExeUpdateDate.ToString("yyyy.MMdd.HHmm");
             string suffix = $"Time locked: {this._Args.IsTimeLocked}_{this._Args.LockSource}";
             this.Text = $"{prefix} - V{GlobalData.Version}.{GlobalData.Subversion} - {exeTime} - {suffix}";
