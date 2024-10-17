@@ -27,7 +27,7 @@ namespace SkyStopwatch
 
             _BeforeClose = beforeClose;
 
-            this.TopMost = true;
+            this.TopMost = GlobalData.Default.EnableTopMost;
             
             //do this at last
             this.timerClose.Interval = 1000;
