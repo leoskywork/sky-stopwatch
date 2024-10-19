@@ -398,7 +398,7 @@ namespace SkyStopwatch
         private void buttonForceLock_MouseHover(object sender, EventArgs e)
         {
             var toolTip = CreateDefaultToolTip();
-            toolTip.SetToolTip(this.buttonForceLock, $"Force manual lock, this overrides the auto lock by timer");
+            toolTip.SetToolTip(this.buttonForceLock, $"Manual lock, this overrides the auto lock by timer");
         }
 
         private void buttonLockTime_MouseHover(object sender, EventArgs e)

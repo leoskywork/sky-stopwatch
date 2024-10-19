@@ -761,7 +761,9 @@ namespace SkyStopwatch
                         {
                             if (this.Model.IsTimeLocked)
                             {
-                                newForeColor = isLockedByUser ? Color.RosyBrown : Color.OrangeRed;
+                                //newForeColor = isLockedByUser ? Color.RosyBrown : Color.OrangeRed;
+                                //newForeColor = isLockedByUser ? Color.MediumBlue : Color.OrangeRed;
+                                newForeColor = isLockedByUser ? Color.LightSkyBlue : Color.OrangeRed;
                             }
                             else
                             {
@@ -772,8 +774,8 @@ namespace SkyStopwatch
                         {
                             if (this.Model.IsTimeLocked)
                             {
-                                newForeColor = isLockedByUser ? Color.MediumBlue : Color.OrangeRed;
                                 //newForeColor = isLockedByUser ? Color.RosyBrown : Color.OrangeRed;
+                                newForeColor = isLockedByUser ? Color.MediumBlue : Color.OrangeRed;
                             }
                             else
                             {

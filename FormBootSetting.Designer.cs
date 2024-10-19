@@ -193,7 +193,7 @@
             this.buttonForceLock.Name = "buttonForceLock";
             this.buttonForceLock.Size = new System.Drawing.Size(53, 30);
             this.buttonForceLock.TabIndex = 306;
-            this.buttonForceLock.Text = "Lock";
+            this.buttonForceLock.Text = "ML";
             this.buttonForceLock.UseVisualStyleBackColor = true;
             this.buttonForceLock.Click += new System.EventHandler(this.buttonForceLock_Click);
             this.buttonForceLock.MouseHover += new System.EventHandler(this.buttonForceLock_MouseHover);
