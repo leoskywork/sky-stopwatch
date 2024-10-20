@@ -191,9 +191,9 @@
             this.buttonForceLock.Location = new System.Drawing.Point(21, 287);
             this.buttonForceLock.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonForceLock.Name = "buttonForceLock";
-            this.buttonForceLock.Size = new System.Drawing.Size(53, 30);
+            this.buttonForceLock.Size = new System.Drawing.Size(50, 30);
             this.buttonForceLock.TabIndex = 306;
-            this.buttonForceLock.Text = "ML";
+            this.buttonForceLock.Text = "Lock";
             this.buttonForceLock.UseVisualStyleBackColor = true;
             this.buttonForceLock.Click += new System.EventHandler(this.buttonForceLock_Click);
             this.buttonForceLock.MouseHover += new System.EventHandler(this.buttonForceLock_MouseHover);
@@ -213,12 +213,12 @@
             // buttonUnlockTime
             // 
             this.buttonUnlockTime.Font = new System.Drawing.Font("SimSun", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.buttonUnlockTime.Location = new System.Drawing.Point(87, 287);
+            this.buttonUnlockTime.Location = new System.Drawing.Point(70, 287);
             this.buttonUnlockTime.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.buttonUnlockTime.Name = "buttonUnlockTime";
-            this.buttonUnlockTime.Size = new System.Drawing.Size(53, 30);
+            this.buttonUnlockTime.Size = new System.Drawing.Size(70, 30);
             this.buttonUnlockTime.TabIndex = 304;
-            this.buttonUnlockTime.Text = "UL";
+            this.buttonUnlockTime.Text = "Unlock";
             this.buttonUnlockTime.UseVisualStyleBackColor = true;
             this.buttonUnlockTime.Click += new System.EventHandler(this.buttonLockTime_Click);
             this.buttonUnlockTime.MouseHover += new System.EventHandler(this.buttonLockTime_MouseHover);
