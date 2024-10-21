@@ -61,6 +61,7 @@ namespace SkyStopwatch
             GlobalData.Default.EnableTimeViewMiddleAsSecondary = Properties.Settings.Default.EnableTimeView2Blocks;
             GlobalData.Default.BoxTimeLastCloseLocation = Properties.Settings.Default.BoxTimeLastCloseLocation;
             GlobalData.Default.BoxTimeEnableDarkMode = Properties.Settings.Default.BoxTimeEnableDarkMode;
+            GlobalData.Default.BoxTimeIdleOpacity = Properties.Settings.Default.BoxTimeIdleOpacity;
 
 
             OCRGameTime.XPoint = Properties.Settings.Default.TimeViewPoint.X;
@@ -154,6 +155,7 @@ namespace SkyStopwatch
                 Properties.Settings.Default.EnableTimeView2Blocks = GlobalData.Default.EnableTimeViewMiddleAsSecondary;
                 Properties.Settings.Default.BoxTimeLastCloseLocation = GlobalData.Default.BoxTimeLastCloseLocation;
                 Properties.Settings.Default.BoxTimeEnableDarkMode = GlobalData.Default.BoxTimeEnableDarkMode;
+                Properties.Settings.Default.BoxTimeIdleOpacity = GlobalData.Default.BoxTimeIdleOpacity;
 
                 Properties.Settings.Default.TimeViewPoint = new System.Drawing.Point(OCRGameTime.XPoint, OCRGameTime.YPoint);
                 Properties.Settings.Default.TimeViewSize = new System.Drawing.Size(OCRGameTime.BlockWidth, OCRGameTime.BlockHeight);

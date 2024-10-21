@@ -382,5 +382,17 @@ namespace SkyStopwatch.Properties {
                 this["BoxTimeEnableDarkMode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
+        public float BoxTimeIdleOpacity {
+            get {
+                return ((float)(this["BoxTimeIdleOpacity"]));
+            }
+            set {
+                this["BoxTimeIdleOpacity"] = value;
+            }
+        }
     }
 }

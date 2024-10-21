@@ -753,8 +753,6 @@ namespace SkyStopwatch
                     {
                         this.labelTimer.Text = passed.ToString(GlobalData.UIElapsedTimeFormat);
                         bool isLockedByUser = this.Model.LockSource == TimeLocKSource.UserClick || this.Model.LockSource == TimeLocKSource.UserClickForced;
-                        //this.labelTimer.ForeColor = this.Model.IsTimeLocked ? (isLockedByUser ? Color.MediumBlue : Color.Brown) : Color.Black;
-
                         Color newForeColor;
 
                         if (GlobalData.Default.BoxTimeEnableDarkMode)
@@ -831,7 +829,7 @@ namespace SkyStopwatch
                 }
                 else
                 {
-                    this.Opacity = GlobalData.AppOpacityDim;
+                    this.Opacity = GlobalData.Default.BoxTimeIdleOpacity;
                     this.labelTimer.Text = ".."; //"--";
                     SetGameStartTime(DateTime.MinValue, GlobalData.ChangeTimeSourceOCRTimeIsNegativeOne, "target app not running");
                 }
@@ -878,7 +876,7 @@ namespace SkyStopwatch
                 this.Model.ResetAutoOCR(TimeLocKSource.UserClick);
 
                 this.labelTimer.Text = "--";
-                this.Opacity = GlobalData.AppOpacityDim;
+                this.Opacity = GlobalData.Default.BoxTimeIdleOpacity;
 
                 this.timerAutoRefresh.Stop();
                 //this.timerMainUI.Stop(); //still want to update the clock

@@ -64,7 +64,7 @@ namespace SkyStopwatch
         public const int MessageBoxVerticalGap = 10;
         public const int UIUpdateDelayMS = 200;
         public const int UIUpdateDelayLongMS = 1000;
-        public const double AppOpacityDim = 0.2;
+        //public const double AppOpacityDim = 0.2;
         public const double AppOpacityHighlight = 1;
 
         private static GlobalData _instance;
@@ -106,6 +106,8 @@ namespace SkyStopwatch
         public Point BoxTimeLastCloseLocation{ get; set; }
 
         public bool BoxTimeEnableDarkMode { get; set; }
+
+        public float BoxTimeIdleOpacity { get; set; }
 
 
         //leotodo - potential multi threads issue, but simple coding to pass values between forms by static fields
