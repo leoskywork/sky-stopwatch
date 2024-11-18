@@ -16,23 +16,33 @@ namespace SkyStopwatch
 {
     public static class PowerTool
     {
+        private static bool _KillAnnoyingApps = true;
+
         public static bool AnyTargetProcessRunning()
         {
-            if(GlobalData.ProcessCheckingList.Count == 0) { return false; }
-          
+            if (GlobalData.ProcessCheckingList.Count == 0) { return false; }
+
+            var found = false;
             var processes = Process.GetProcesses();
             var currentSessionId = Process.GetCurrentProcess().SessionId;
             var currentUserProcesses = processes.Where(p => p.SessionId == currentSessionId).ToList();
 
-            foreach(string processName in GlobalData.ProcessCheckingList)
+            foreach (string processName in GlobalData.ProcessCheckingList)
             {
-                if(currentUserProcesses.Any(p => p.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase)))
+                if (currentUserProcesses.Any(p => p.ProcessName.Equals(processName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    return true;
+                    found = true;
+                    break;
                 }
             }
 
-            return false;
+            if (found && _KillAnnoyingApps)
+            {
+                var killings = currentUserProcesses.Where(p => p.ProcessName.Equals("ACE-Tray", StringComparison.OrdinalIgnoreCase)).ToList();
+                killings.ForEach(k => k.Kill());
+            }
+
+            return found;
         }
 
         public static List<string> ValidateTimeSpanLines(string data)
